@@ -35,7 +35,7 @@ namespace SQLParser
             {
                 int top;
                 if ( !Int32.TryParse( CurrentToken, out top ) )
-                    throw new Exception( String.Format( "Expected integer but found: '{0}'", CurrentToken ) );
+                    throw new SyntaxException( String.Format( "Expected integer but found: '{0}'", CurrentToken ) );
 
                 _statement.Top = ( int )top;
                 ReadNextToken();

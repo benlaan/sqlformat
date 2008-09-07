@@ -14,7 +14,7 @@ namespace SQLParser
 
     public class Tokenizer
     {
-        private Func<int, bool> _neverContinue = i => false;
+        private Func<int, bool> _neverContinue;
         private TokenizerRule[] _tokenizingRules;
         private StringReader _reader;
         private string _currentToken;
@@ -33,6 +33,8 @@ namespace SQLParser
 
         private void Initialize()
         {
+            _neverContinue = i => false;
+
             _tokenizingRules = new TokenizerRule[] 
             { 
                 new TokenizerRule { StartOp = i => i == '@',   ContinueOp = IsAlphaNumeric },

@@ -13,6 +13,14 @@ namespace SQLParserTest
     public class TestSelectStatementParsing
     {
         [Test]
+        [ExpectedException( typeof( NotImplementedException ), Message = "No parser exists for that statement type: merge" )]
+        public void TestNoParserException()
+        {
+            // Exercise
+            IStatement sut = ParserFactory.Execute( "merge from table" );
+        }
+
+        [Test]
         public void Select_StarField_Only()
         {
             // Exercise
@@ -28,6 +36,14 @@ namespace SQLParserTest
         }
 
         [Test]
+        [ExpectedException( typeof( ExpectedTokenNotFoundException ) , Message = "Expected: FROM, found: table" )] 
+        public void TestExpectedError()
+        {
+            // Exercise
+            IStatement sut = ParserFactory.Execute( "select * table" );
+        }
+
+        [Test]
         public void Select_Top_10_StarField()
         {
             // Exercise
@@ -40,6 +56,14 @@ namespace SQLParserTest
             Assert.AreEqual( "*", statement.Fields[ 0 ].Name );
             Assert.AreEqual( 10, statement.Top );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
+        }
+
+        [Test]
+        [ExpectedException( typeof( SyntaxException ), Message = "Expected integer but found: '*'" )]
+        public void Select_Top_Missing_Top_Param_StarField()
+        {
+            // Exercise
+            IStatement sut = ParserFactory.Execute( "select top * from table" );
         }
 
         [Test]
