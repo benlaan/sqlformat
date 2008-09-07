@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace SQLParser
 {
@@ -14,6 +15,10 @@ namespace SQLParser
         private const string RIGHT = "RIGHT";
         private const string FULL = "FULL";
         private const string COMMA = ",";
+        private const string EQUALS = "=";
+
+        private string[] FieldTerminatorSet = { FROM, COMMA };
+        private string[] FromTerminatorSet =  { INNER, JOIN, LEFT, RIGHT, FULL, COMMA };
 
         SelectStatement _statement;
 
@@ -32,7 +37,7 @@ namespace SQLParser
                 if ( !Int32.TryParse( CurrentToken, out top ) )
                     throw new Exception( String.Format( "Expected integer but found: '{0}'", CurrentToken ) );
 
-                _statement.Top = (int) top;
+                _statement.Top = ( int )top;
                 ReadNextToken();
             }
         }
@@ -48,20 +53,32 @@ namespace SQLParser
 
         private void ProcessField()
         {
-            //string field = CurrentToken;
-            //string? alias = null;
-            //if (Tokenizer.TokenEquals(AS) || IsNextTokenWithinSet(new[] { COMMA }))
-            //{
-            //    alias = field;
-            //    ReadNextToken();
-            //    field = CurrentToken;
-            //}
+            string token = CurrentToken;
 
-            //_statement.Fields.Add(new Field() { Name = field, Alias = alias });
-            //ReadNextToken();
+            string alias = null;
+            string field = token;
 
-            _statement.Fields.Add( new Field() { Name = CurrentToken } );
             ReadNextToken();
+
+            if ( Tokenizer.TokenEquals( AS ) )
+            {
+                field = token;
+                alias = CurrentToken;
+                ReadNextToken();
+            }
+            else if ( Tokenizer.TokenEquals( EQUALS ) )
+            {
+                alias = token;
+                field = CurrentToken;
+                ReadNextToken();
+            }
+            else if ( !IsTokenInSet( FieldTerminatorSet ) )
+            {
+                alias = CurrentToken;
+                ReadNextToken();
+            }
+
+            _statement.Fields.Add( new Field() { Name = field, Alias = alias } );
         }
 
         private void ProcessFrom()
@@ -70,9 +87,9 @@ namespace SQLParser
             do
             {
                 Table table = new Table() { Name = ProcessTableName() };
-                _statement.From.Add(table );
+                _statement.From.Add( table );
 
-                if ( Tokenizer.TokenEquals( AS ) || IsNextTokenWithinSet( new[] { INNER, JOIN, LEFT, RIGHT, FULL, COMMA } ))
+                if ( Tokenizer.TokenEquals( AS ) || !IsTokenInSet( FromTerminatorSet ) )
                 {
                     table.Alias = CurrentToken;
                     ReadNextToken();

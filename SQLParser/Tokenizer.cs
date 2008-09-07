@@ -35,6 +35,8 @@ namespace SQLParser
         {
             _tokenizingRules = new TokenizerRule[] 
             { 
+                new TokenizerRule { StartOp = i => i == '@',   ContinueOp = IsAlphaNumeric },
+                new TokenizerRule { StartOp = i => IsWithinSet( i, new char[] { '>', '<', '!' } ), ContinueOp =  i => i == '=' },
                 new TokenizerRule { StartOp = IsAlpha,   ContinueOp = IsAlphaNumeric },
                 new TokenizerRule { StartOp = IsNumeric, ContinueOp = IsNumeric }, 
                 new TokenizerRule { StartOp = IsSpecialChar, ContinueOp = _neverContinue }, 
@@ -45,7 +47,7 @@ namespace SQLParser
 
         private bool IsWithinSet( int readChar, char[] set )
         {
-            return set.Contains( (char) readChar );
+            return set.Contains( ( char )readChar );
         }
 
         private bool IsBetween( int readChar, char fromChar, char toChar )
@@ -55,14 +57,14 @@ namespace SQLParser
 
         private bool IsSpecialChar( int readChar )
         {
-            return IsWithinSet( readChar, new char[] { '.', ',', '@', '/', '*', '^', '(', ')', '[', ']', '\'', '"' } );
+            return IsWithinSet( readChar, new char[] { '.', ',', '/', '*', '^', '(', ')', '[', ']', '\'', '"', '=', ';' } );
         }
 
         private bool IsAlpha( int readChar )
         {
-            return 
-                IsBetween( readChar, 'A', 'Z' ) || 
-                IsBetween( readChar, 'a', 'z' ) || 
+            return
+                IsBetween( readChar, 'A', 'Z' ) ||
+                IsBetween( readChar, 'a', 'z' ) ||
                 IsWithinSet( readChar, new char[] { '_' } );
         }
 
@@ -87,7 +89,7 @@ namespace SQLParser
                 do
                 {
                     readChar = _reader.Read();
-                    tokenBuilder.Append( (char) readChar );
+                    tokenBuilder.Append( ( char )readChar );
                     readChar = _reader.Peek();
                 }
                 while ( readChar != -1 && continuingAction( readChar ) );
@@ -117,7 +119,7 @@ namespace SQLParser
 
             return areEqual;
         }
-        
+
         /// <summary>
         /// Consumes the input stream until the next token is found
         /// </summary>
@@ -149,6 +151,6 @@ namespace SQLParser
         {
             get { return _currentToken; }
         }
-        
+
     }
 }

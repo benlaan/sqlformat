@@ -24,7 +24,7 @@ namespace SQLParserTest
             Assert.AreEqual( 1, statement.Fields.Count );
             Assert.AreEqual( "*", statement.Fields[ 0 ].Name );
             Assert.IsNull( statement.Top );
-            Assert.AreEqual( "table", statement.From );
+            Assert.AreEqual( "table", statement.From[ 0 ].Name );
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace SQLParserTest
             Assert.AreEqual( 1, statement.Fields.Count );
             Assert.AreEqual( "*", statement.Fields[ 0 ].Name );
             Assert.AreEqual( 10, statement.Top );
-            Assert.AreEqual( "table", statement.From );
+            Assert.AreEqual( "table", statement.From[ 0 ].Name );
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace SQLParserTest
             Assert.AreEqual( "*", statement.Fields[ 0 ].Name );
             Assert.AreEqual( 10, statement.Top );
             Assert.IsTrue( statement.Distinct );
-            Assert.AreEqual( "table", statement.From );
+            Assert.AreEqual( "table", statement.From[ 0 ].Name );
         }
 
         [Test]
@@ -71,10 +71,10 @@ namespace SQLParserTest
 
             var expectedFields = new string[] { "fielda", "field2", "fie3ld" };
             int index = 0;
-            foreach (var field in expectedFields)
+            foreach ( var field in expectedFields )
                 Assert.AreEqual( field, statement.Fields[ index++ ].Name );
 
-            Assert.AreEqual( "table", statement.From );
+            Assert.AreEqual( "table", statement.From[ 0 ].Name );
         }
 
         [Test]
@@ -141,21 +141,24 @@ namespace SQLParserTest
         public void Select_Multiple_Fields_With_Aliases()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "select fielda a, field2 as b, 'alias' = t1.fie3ld from table" );
+            IStatement sut = ParserFactory.Execute( "select field, fielda a, field2 as b, alias = fie3ld from table" );
             SelectStatement statement = sut as SelectStatement;
 
             // Verify outcome
             Assert.IsNotNull( statement );
-            Assert.AreEqual( 3, statement.Fields.Count );
+            Assert.AreEqual( 4, statement.Fields.Count );
 
-            Assert.AreEqual( "fielda", statement.Fields[ 0 ].Name );
-            Assert.AreEqual( "a", statement.Fields[ 0 ].Alias );
-            
-            Assert.AreEqual( "field2", statement.Fields[ 1 ].Name );
-            Assert.AreEqual( "b", statement.Fields[ 1 ].Alias );
+            Assert.AreEqual( "field", statement.Fields[ 0 ].Name );
+            Assert.IsNull( statement.Fields[ 0 ].Alias );
 
-            Assert.AreEqual( "fie3ld", statement.Fields[ 2 ].Name );
-            Assert.AreEqual( "alias", statement.Fields[ 2 ].Alias );
+            Assert.AreEqual( "fielda", statement.Fields[ 1 ].Name );
+            Assert.AreEqual( "a", statement.Fields[ 1 ].Alias );
+
+            Assert.AreEqual( "field2", statement.Fields[ 2 ].Name );
+            Assert.AreEqual( "b", statement.Fields[ 2 ].Alias );
+
+            Assert.AreEqual( "fie3ld", statement.Fields[ 3 ].Name );
+            Assert.AreEqual( "alias", statement.Fields[ 3 ].Alias );
         }
 
         [Test]
@@ -176,7 +179,7 @@ namespace SQLParserTest
 
             //Assert.AreEqual( "table", statement.From );
         }
-        
+
         [Test]
         public void Select_With_Inner_Join_Condition()
         {

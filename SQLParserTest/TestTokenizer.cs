@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gallio.Framework;
-using MbUnit.Framework;
-using SQLParser;
 using System.IO;
+
+using MbUnit.Framework;
+
+using SQLParser;
 
 namespace SQLParserTest
 {
@@ -84,6 +85,11 @@ namespace SQLParserTest
             @"Ben(Test1234), Laan(9876) ""12"" [Hello, 'World']",
             new[] { "Ben", "(", "Test1234", ")", ",", "Laan", "(", "9876", ")", "\"", "12", "\"", "[", "Hello", ",", "'", "World", "'", "]" } )
         ]
+        [Row(
+            "A = 1, 2 <= 5; A != B; 33 >= 12", 
+            new[] { "A", "=", "1", ",", "2", "<=", "5", ";", "A", "!=", "B", ";", "33", ">=", "12" } )
+        ]
+        [Row( "@Ben_Laan", new[] { "@Ben_Laan" } )]
         public void Tokenize_Alpha_Numeric_And_Special_Strings( string input, string[] tokens )
         {
             var sut = new Tokenizer( input );

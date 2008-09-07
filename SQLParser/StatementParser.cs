@@ -30,13 +30,13 @@ namespace SQLParser
             get { return Tokenizer.Current; }
         }
 
-        protected bool IsNextTokenWithinSet( string[] tokenSet )
+        protected bool IsTokenInSet( string[] tokenSet )
         {
             foreach ( var token in tokenSet )
                 if ( token.ToLower() == CurrentToken.ToLower() )
-                    return false;
+                    return true;
 
-            return true;
+            return false;
         }
 
         protected Tokenizer Tokenizer { get; private set; }
