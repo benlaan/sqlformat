@@ -1,0 +1,50 @@
+using System;
+
+namespace SQLParser
+{
+    /// <summary>
+    /// Base class for parsing an SQL statement
+    /// </summary>
+    public abstract class StatementParser
+    {
+        public StatementParser( Tokenizer tokenizer )
+        {
+            Tokenizer = tokenizer;
+        }
+
+        protected void ExpectToken( string token )
+        {
+            if ( CurrentToken.ToLower() != token.ToLower() )
+                throw new ExpectedTokenNotFoundException( token, CurrentToken );
+            else
+                ReadNextToken();
+        }
+
+        protected void ReadNextToken()
+        {
+            Tokenizer.ReadNextToken();
+        }
+
+        protected string CurrentToken
+        {
+            get { return Tokenizer.Current; }
+        }
+
+        protected bool IsNextTokenWithinSet( string[] tokenSet )
+        {
+            foreach ( var token in tokenSet )
+                if ( token.ToLower() == CurrentToken.ToLower() )
+                    return false;
+
+            return true;
+        }
+
+        protected Tokenizer Tokenizer { get; private set; }
+
+        /// <summary>
+        /// Returns an IStatement reference for the given statement type
+        /// </summary>
+        /// <returns></returns>
+        public abstract IStatement Execute();
+    }
+}
