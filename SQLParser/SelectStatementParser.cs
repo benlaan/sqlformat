@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace SQLParser
+namespace Laan.SQLParser
 {
     public class SelectStatementParser : StatementParser
     {

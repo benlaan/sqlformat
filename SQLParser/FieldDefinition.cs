@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
-namespace SQLParser
+namespace Laan.SQLParser
 {
     public enum Nullability
     {

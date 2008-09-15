@@ -1,6 +1,6 @@
 using System;
 
-namespace SQLParser
+namespace Laan.SQLParser
 {
     /// <summary>
     /// Base class for parsing an SQL statement

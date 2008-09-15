@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 
-namespace SQLParser
+namespace Laan.SQLParser
 {
     public interface IStatement
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace SQLParser
+namespace Laan.SQLParser
 {
     public class ExpectedTokenNotFoundException : Exception
     {

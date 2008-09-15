@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using SQLParser;
-
 using MbUnit.Framework;
 
-namespace SQLParserTest
+namespace Laan.SQLParser.Test
 {
     [TestFixture]
     public class TestSelectStatementParsing
