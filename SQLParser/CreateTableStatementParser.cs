@@ -25,10 +25,9 @@ namespace Laan.SQLParser
             ReadNextToken();
 
             ExpectToken( OPEN_BRACKET );
-
             do
             {
-                ProcessField();
+                ProcessFieldDefinition();
 
             } while ( Tokenizer.TokenEquals( COMMA ) );
 
@@ -59,7 +58,7 @@ namespace Laan.SQLParser
             return typeName;
         }
 
-        private void ProcessField()
+        private void ProcessFieldDefinition()
         {
             Nullability nullability = Nullability.Nullable;
             bool isPrimaryKey = false;
