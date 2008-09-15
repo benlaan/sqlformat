@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestCreateTable.cs" />
     <Compile Include="TestTokenizer.cs" />
     <Compile Include="TestSelectStatementParsing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

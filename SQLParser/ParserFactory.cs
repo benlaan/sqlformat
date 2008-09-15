@@ -6,6 +6,8 @@ namespace SQLParser
     {
         private const string SELECT = "SELECT";
         private const string INSERT = "INSERT";
+        private const string TABLE = "TABLE";
+        private const string CREATE = "CREATE";
 
         public static IStatement Execute( string sql )
         {
@@ -16,10 +18,20 @@ namespace SQLParser
             {
                 _tokenizer.ReadNextToken();
 
-                SelectStatementParser parser = null;
+                StatementParser parser = null;
 
                 if ( _tokenizer.TokenEquals( SELECT ) )
                     parser = new SelectStatementParser( _tokenizer );
+
+                if ( _tokenizer.TokenEquals( CREATE ) )
+                {
+                    if ( _tokenizer.TokenEquals( TABLE ) )
+                        parser = new CreateTableStatementParser( _tokenizer );
+
+                    //if ( _tokenizer.TokenEquals( INDEX ) )
+                    //    parser = new CreateIndexStatementParser( _tokenizer );
+
+                }
 
                 //if ( _tokenizer.TokenEquals( INSERT ) )
                 //    parser = new InsertStatementParser( _tokenizer );

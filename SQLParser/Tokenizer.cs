@@ -59,7 +59,7 @@ namespace SQLParser
 
         private bool IsSpecialChar( int readChar )
         {
-            return IsWithinSet( readChar, new char[] { '.', ',', '/', '*', '^', '(', ')', '[', ']', '\'', '"', '=', ';' } );
+            return IsWithinSet( readChar, new char[] { '.', ',', '/', '*', '^', '(', ')', '[', ']', '\'', '"', '=', ';', '{', '}' } );
         }
 
         private bool IsAlpha( int readChar )

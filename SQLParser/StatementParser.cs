@@ -7,6 +7,8 @@ namespace SQLParser
     /// </summary>
     public abstract class StatementParser
     {
+        protected const string COMMA = ",";
+
         public StatementParser( Tokenizer tokenizer )
         {
             Tokenizer = tokenizer;

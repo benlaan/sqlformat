@@ -14,7 +14,6 @@ namespace SQLParser
         private const string LEFT = "LEFT";
         private const string RIGHT = "RIGHT";
         private const string FULL = "FULL";
-        private const string COMMA = ",";
         private const string EQUALS = "=";
 
         private string[] FieldTerminatorSet = { FROM, COMMA };

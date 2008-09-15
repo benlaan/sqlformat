@@ -45,8 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateTableStatement.cs" />
+    <Compile Include="CreateTableStatementParser.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Field.cs" />
+    <Compile Include="FieldDefinition.cs" />
     <Compile Include="ParserFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelectStatementParser.cs" />

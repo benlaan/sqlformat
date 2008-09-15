@@ -1,17 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
 
 namespace SQLParser
 {
+    public enum Nullability
+    {
+        NotNullable,
+        Nullable
+    }
+
+    [DebuggerDisplay( "{Name} ({Alias})" )]
     public class Field
     {
-        public Field()
-        {
-        }
-
-        public string Name { get; set; }
         public string Alias { get; set; }
+        public string Name { get; set; }
     }
 }
