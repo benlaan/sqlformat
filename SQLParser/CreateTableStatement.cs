@@ -7,10 +7,10 @@ namespace Laan.SQLParser
     {
         public CreateTableStatement()
         {
-            Fields = new List<FieldDefinition>();
+            Fields = new FieldDefinitions();
         }
 
         public string TableName { get; set; }
-        public List<FieldDefinition> Fields { get; set; }        
+        public FieldDefinitions Fields { get; set; }        
     }
 }

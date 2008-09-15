@@ -48,6 +48,7 @@
     <Compile Include="CreateTableStatement.cs" />
     <Compile Include="CreateTableStatementParser.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="FieldDefinition.cs" />
     <Compile Include="ParserFactory.cs" />

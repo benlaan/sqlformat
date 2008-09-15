@@ -13,10 +13,15 @@ namespace Laan.SQLParser
         private const string DOT = ".";
         private const string OPEN_SQUARE_BRACE = "[";
         private const string CLOSE_SQUARE_BRACE = "]";
+        private const string CONSTRAINT = "CONSTRAINT";
+        private const string CLUSTERED = "CLUSTERED";
+        private const string ASC = "ASC";
+        private const string DESC = "DESC";
 
         CreateTableStatement _statement;
 
-        internal CreateTableStatementParser( Tokenizer tokenizer ) : base( tokenizer )
+        internal CreateTableStatementParser( Tokenizer tokenizer )
+            : base( tokenizer )
         {
         }
 
@@ -68,7 +73,7 @@ namespace Laan.SQLParser
             string typeName = CurrentToken;
             ReadNextToken();
 
-            if (Tokenizer.TokenEquals( OPEN_BRACKET ) )
+            if ( Tokenizer.TokenEquals( OPEN_BRACKET ) )
             {
                 typeName += OPEN_BRACKET;
                 do
@@ -108,34 +113,58 @@ namespace Laan.SQLParser
             Nullability nullability = Nullability.Nullable;
             bool isPrimaryKey = false;
 
-            string fieldName = GetFieldName();
-            string typeName = GetTypeName();
-
-            if ( Tokenizer.TokenEquals( NULL ) )
+            string orderBy = "";
+            if ( Tokenizer.TokenEquals( CONSTRAINT ) )
             {
-                nullability = Nullability.Nullable;
-            }
-            else if ( Tokenizer.TokenEquals( NOT ) )
-            {
-                ExpectToken( NULL );
-                nullability = Nullability.NotNullable;
-            }
-            else if ( Tokenizer.TokenEquals( PRIMARY ) )
-            {
+                string keyName = GetFieldName();
+                ExpectToken( PRIMARY );
                 ExpectToken( KEY );
-                nullability = Nullability.NotNullable;
-                isPrimaryKey = true;
-            }
+                ExpectToken( CLUSTERED );
 
-            _statement.Fields.Add( 
-                new FieldDefinition() 
+                ExpectToken( OPEN_BRACKET );
+                string keyFieldName = GetFieldName();
+
+                FieldDefinition keyField = _statement.Fields.FindByName( keyFieldName );
+                if ( keyField != null )
+                    keyField.IsPrimaryKey = true;
+
+                string token = CurrentToken;
+                if ( Tokenizer.TokenEquals( ASC ) || Tokenizer.TokenEquals( DESC ) )
+                    orderBy = token;
+
+                ExpectToken( CLOSE_BRACKET );
+            }
+            else
+            {
+                string fieldName = GetFieldName();
+                string typeName = GetTypeName();
+
+                if ( Tokenizer.TokenEquals( NULL ) )
                 {
-                    Name = fieldName,
-                    Type = typeName,
-                    Nullability = nullability,
-                    IsPrimaryKey = isPrimaryKey
-                } 
-            );
+                    nullability = Nullability.Nullable;
+                }
+                else if ( Tokenizer.TokenEquals( NOT ) )
+                {
+                    ExpectToken( NULL );
+                    nullability = Nullability.NotNullable;
+                }
+                else if ( Tokenizer.TokenEquals( PRIMARY ) )
+                {
+                    ExpectToken( KEY );
+                    nullability = Nullability.NotNullable;
+                    isPrimaryKey = true;
+                }
+
+                _statement.Fields.Add(
+                    new FieldDefinition()
+                    {
+                        Name = fieldName,
+                        Type = typeName,
+                        Nullability = nullability,
+                        IsPrimaryKey = isPrimaryKey
+                    }
+                );
+            } 
         }
     }
 }

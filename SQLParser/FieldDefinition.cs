@@ -12,13 +12,20 @@ namespace Laan.SQLParser
         Nullable
     }
 
+    public class FieldDefinitions : List<FieldDefinition>
+    {
+        public FieldDefinition FindByName( string name )
+        {
+            return base.Find( field => field.Name.WithBrackets() == name.WithBrackets() );
+        }
+    }
+
     [DebuggerDisplay( "{Name}: {Type} {Descriptor}" )]
     public class FieldDefinition
     {
         public Nullability Nullability { get; set; }
 
-        // TODO: This type needs to be converted to a complex type, to 
-        //       record
+        // TODO: This type needs to be converted to a complex type, to record the type name, length, precision, etc.
         public string Type { get; set; }
         public string Name { get; set; }
         public bool IsPrimaryKey { get; set; }
@@ -42,17 +49,21 @@ namespace Laan.SQLParser
 
         public override int GetHashCode()
         {
-            return Type.GetHashCode() + Name.GetHashCode() + IsPrimaryKey.GetHashCode() + Nullability.GetHashCode();
+            return 
+                Type.GetHashCode() + 
+                Name.GetHashCode() + 
+                IsPrimaryKey.GetHashCode() + 
+                Nullability.GetHashCode();
         }
 
-        public override bool Equals( object obj )
+        public override bool Equals( object fieldDefinition )
         {
-            FieldDefinition def = (FieldDefinition) obj;
+            var other = (FieldDefinition) fieldDefinition;
             return
-                def.Type == Type &&
-                def.Name == Name &&
-                def.Nullability == Nullability &&
-                def.IsPrimaryKey == IsPrimaryKey;
+                other.Type == Type &&
+                other.Name.WithBrackets() == Name.WithBrackets() &&
+                other.Nullability == Nullability &&
+                other.IsPrimaryKey == IsPrimaryKey;
         }
     }
 }

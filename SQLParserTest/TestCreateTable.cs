@@ -149,5 +149,37 @@ namespace Laan.SQLParser.Test
 
             CollectionAssert.AreElementsEqual( expected, statement.Fields );
         }
+
+        [Test]
+        public void Test_Primary_Key_As_Constraint()
+        {
+            // Setup
+            var statement = ParserFactory.Execute<CreateTableStatement>( @"
+
+                create table Test 
+                ( 
+                    id1 int           not null, 
+                    id2 varchar(10), 
+                    id3 varchar       not null, 
+                    id4 decimal(10,2) not null, 
+            
+                    constraint [PK_Name] primary key clustered ( [id1] ASC )
+                )"
+            );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( "Test", statement.TableName );
+
+            var expected = new[] 
+            { 
+                new FieldDefinition() { Name = "id1", Type = "int", IsPrimaryKey = true, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id2", Type = "varchar(10)", IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { Name = "id3", Type = "varchar", IsPrimaryKey = false, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id4", Type = "decimal(10,2)", IsPrimaryKey = false, Nullability = Nullability.NotNullable },
+            };
+
+            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+        }
     }
 }
