@@ -9,6 +9,23 @@ namespace Laan.SQLParser
         private const string TABLE = "TABLE";
         private const string CREATE = "CREATE";
 
+        /// <summary>
+        /// This method is used if you know what type will be returned from the parser
+        /// - only use it if 100% confident, otherwise you will get an exception
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public static T Execute<T>( string sql ) where T : class, IStatement
+        {
+            return Execute( sql ) as T;
+        }
+
+        /// <summary>
+        /// This will parse any statement, and return only the interface (IStatement)
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
         public static IStatement Execute( string sql )
         {
             Tokenizer _tokenizer = new Tokenizer( sql );
