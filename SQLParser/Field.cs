@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Laan.SQLParser
+namespace Laan.SQL.Parser
 {
     [DebuggerDisplay( "{Name} ({Alias})" )]
     public class Field

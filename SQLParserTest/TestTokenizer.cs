@@ -6,7 +6,7 @@ using System.IO;
 
 using MbUnit.Framework;
 
-namespace Laan.SQLParser.Test
+namespace Laan.SQL.Parser.Test
 {
     [TestFixture]
     public class TestTokenizer

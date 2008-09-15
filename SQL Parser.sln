@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQLParser", "SQLParser\Laan.SQLParser.csproj", "{E972B2B2-F549-418E-B830-FB5D97101168}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Parser", "SQLParser\Laan.SQL.Parser.csproj", "{E972B2B2-F549-418E-B830-FB5D97101168}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQLParser.Test", "SQLParserTest\Laan.SQLParser.Test.csproj", "{1D0DE8C1-0D05-433B-93E7-AAB7A34A93BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Parser.Test", "SQLParserTest\Laan.SQL.Parser.Test.csproj", "{1D0DE8C1-0D05-433B-93E7-AAB7A34A93BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

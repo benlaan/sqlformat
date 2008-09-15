@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 
-namespace Laan.SQLParser
+namespace Laan.SQL.Parser
 {
     public class Table
     {

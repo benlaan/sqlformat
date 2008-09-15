@@ -1,6 +1,6 @@
 using System;
 
-namespace Laan.SQLParser
+namespace Laan.SQL.Parser
 {
     internal static class Extensions
     {
