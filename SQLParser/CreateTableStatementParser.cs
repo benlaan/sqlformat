@@ -104,11 +104,8 @@ namespace Laan.SQLParser
             string identifier = ProcessSquareBracketedIdentifier();
             string orderBy = "";
 
-            ExpectToken( PRIMARY );
-            ExpectToken( KEY );
-            ExpectToken( CLUSTERED );
+            ExpectTokens( new[] { PRIMARY, KEY, CLUSTERED, OPEN_BRACKET } );
 
-            ExpectToken( OPEN_BRACKET );
             string keyFieldName = ProcessSquareBracketedIdentifier();
 
             FieldDefinition keyField = _statement.Fields.FindByName( keyFieldName );
