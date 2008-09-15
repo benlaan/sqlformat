@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 namespace SQLParser
 {
@@ -9,6 +10,7 @@ namespace SQLParser
             Fields = new List<FieldDefinition>();
         }
 
+        public string TableName { get; set; }
         public List<FieldDefinition> Fields { get; set; }        
     }
 }
