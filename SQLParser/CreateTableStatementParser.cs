@@ -34,7 +34,10 @@ namespace Laan.SQLParser
             ExpectToken( OPEN_BRACKET );
             do
             {
-                ProcessFieldDefinition();
+                if ( Tokenizer.TokenEquals( CONSTRAINT ) )
+                    ProcessPrimaryKeyConstraint();
+                else
+                    ProcessFieldDefinition(); 
 
             } while ( Tokenizer.TokenEquals( COMMA ) );
 
@@ -43,69 +46,80 @@ namespace Laan.SQLParser
             return _statement;
         }
 
-
         private string GetTableName()
         {
             string tableName = "";
             do
             {
-                if ( Tokenizer.TokenEquals( OPEN_SQUARE_BRACE ) )
-                {
-                    string seperator = tableName != "" ? DOT : "";
-                    tableName += seperator + OPEN_SQUARE_BRACE + CurrentToken + CLOSE_SQUARE_BRACE;
-                    ReadNextToken();
-                    ExpectToken( CLOSE_SQUARE_BRACE );
-                }
+                string identifier = ProcessSquareBracketedIdentifier();
+                tableName += ( tableName != "" ? DOT : "" ) + identifier;
             }
             while ( Tokenizer.TokenEquals( DOT ) );
-
-            if ( tableName == "" )
-            {
-                tableName = CurrentToken;
-                ReadNextToken();
-            }
 
             return tableName;
         }
 
-        private string GetTypeName()
+        private SqlType ProcessType()
         {
-            string typeName = CurrentToken;
-            ReadNextToken();
+            string identifier = ProcessSquareBracketedIdentifier();
+            SqlType result = new SqlType( identifier );
 
             if ( Tokenizer.TokenEquals( OPEN_BRACKET ) )
             {
-                typeName += OPEN_BRACKET;
-                do
+                string token = CurrentToken;
+                ReadNextToken();
+                result.Length = Int32.Parse( token );
+
+                if ( Tokenizer.TokenEquals( COMMA ) )
                 {
-                    typeName += CurrentToken;
+                    result.Scale = Int32.Parse( CurrentToken );
                     ReadNextToken();
                 }
-                while ( CurrentToken != CLOSE_BRACKET );
-                typeName += CLOSE_BRACKET;
-                ReadNextToken();
-            }
 
-            return typeName;
+                ExpectToken( CLOSE_BRACKET );
+            }
+            return result;
         }
 
-
-        private string GetFieldName()
+        private string ProcessSquareBracketedIdentifier()
         {
-            string fieldName = "";
+            string identifier = "";
             if ( Tokenizer.TokenEquals( OPEN_SQUARE_BRACE ) )
             {
-                fieldName += OPEN_SQUARE_BRACE + CurrentToken + CLOSE_SQUARE_BRACE;
+                identifier += OPEN_SQUARE_BRACE + CurrentToken + CLOSE_SQUARE_BRACE;
                 ReadNextToken();
                 ExpectToken( CLOSE_SQUARE_BRACE );
             }
             else
             {
-                fieldName = CurrentToken;
+                identifier = CurrentToken;
                 ReadNextToken();
             }
+            return identifier;
+        }
 
-            return fieldName;
+        private void ProcessPrimaryKeyConstraint()
+        {
+            // this is the name of the constraint - not currenly used!
+            string identifier = ProcessSquareBracketedIdentifier();
+            string orderBy = "";
+
+            ExpectToken( PRIMARY );
+            ExpectToken( KEY );
+            ExpectToken( CLUSTERED );
+
+            ExpectToken( OPEN_BRACKET );
+            string keyFieldName = ProcessSquareBracketedIdentifier();
+
+            FieldDefinition keyField = _statement.Fields.FindByName( keyFieldName );
+            if ( keyField != null )
+                keyField.IsPrimaryKey = true;
+
+            string token = CurrentToken;
+            if ( Tokenizer.TokenEquals( ASC ) || Tokenizer.TokenEquals( DESC ) )
+                orderBy = token;
+
+            ExpectToken( CLOSE_BRACKET );
         }
 
         private void ProcessFieldDefinition()
@@ -113,58 +127,34 @@ namespace Laan.SQLParser
             Nullability nullability = Nullability.Nullable;
             bool isPrimaryKey = false;
 
-            string orderBy = "";
-            if ( Tokenizer.TokenEquals( CONSTRAINT ) )
+            string fieldName = ProcessSquareBracketedIdentifier();
+            SqlType type = ProcessType();
+
+            if ( Tokenizer.TokenEquals( NULL ) )
             {
-                string keyName = GetFieldName();
-                ExpectToken( PRIMARY );
-                ExpectToken( KEY );
-                ExpectToken( CLUSTERED );
-
-                ExpectToken( OPEN_BRACKET );
-                string keyFieldName = GetFieldName();
-
-                FieldDefinition keyField = _statement.Fields.FindByName( keyFieldName );
-                if ( keyField != null )
-                    keyField.IsPrimaryKey = true;
-
-                string token = CurrentToken;
-                if ( Tokenizer.TokenEquals( ASC ) || Tokenizer.TokenEquals( DESC ) )
-                    orderBy = token;
-
-                ExpectToken( CLOSE_BRACKET );
+                nullability = Nullability.Nullable;
             }
-            else
+            else if ( Tokenizer.TokenEquals( NOT ) )
             {
-                string fieldName = GetFieldName();
-                string typeName = GetTypeName();
+                ExpectToken( NULL );
+                nullability = Nullability.NotNullable;
+            }
+            else if ( Tokenizer.TokenEquals( PRIMARY ) )
+            {
+                ExpectToken( KEY );
+                nullability = Nullability.NotNullable;
+                isPrimaryKey = true;
+            }
 
-                if ( Tokenizer.TokenEquals( NULL ) )
+            _statement.Fields.Add(
+                new FieldDefinition()
                 {
-                    nullability = Nullability.Nullable;
+                    Name = fieldName,
+                    Type = type,
+                    Nullability = nullability,
+                    IsPrimaryKey = isPrimaryKey
                 }
-                else if ( Tokenizer.TokenEquals( NOT ) )
-                {
-                    ExpectToken( NULL );
-                    nullability = Nullability.NotNullable;
-                }
-                else if ( Tokenizer.TokenEquals( PRIMARY ) )
-                {
-                    ExpectToken( KEY );
-                    nullability = Nullability.NotNullable;
-                    isPrimaryKey = true;
-                }
-
-                _statement.Fields.Add(
-                    new FieldDefinition()
-                    {
-                        Name = fieldName,
-                        Type = typeName,
-                        Nullability = nullability,
-                        IsPrimaryKey = isPrimaryKey
-                    }
-                );
-            } 
+            );
         }
     }
 }

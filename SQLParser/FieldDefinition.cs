@@ -20,13 +20,42 @@ namespace Laan.SQLParser
         }
     }
 
+    public class SqlType
+    {
+        public SqlType( string name, int length, int scale ) : this ( name, length )
+        {
+            Scale = scale;
+        }
+
+        public SqlType( string name, int length ) : this ( name )
+        {
+            Length = length;
+        }
+
+        public SqlType( string name )
+        {
+            Name = name;
+        }
+
+        public string Name { get; set; }
+        public int? Length { get; set; }
+        public int? Scale { get; set; }
+
+        public override string ToString()
+        {
+            string lengthDisplay = Length.HasValue ? String.Format( "({0})", Length ) : null;
+            string precisionDisplay = Scale.HasValue ? String.Format( "({0}, {1})", Length, Scale ) : null;
+            return String.Format( "{0}{1}", Name, precisionDisplay ?? lengthDisplay ?? "" );
+        }
+    }
+
     [DebuggerDisplay( "{Name}: {Type} {Descriptor}" )]
     public class FieldDefinition
     {
         public Nullability Nullability { get; set; }
 
         // TODO: This type needs to be converted to a complex type, to record the type name, length, precision, etc.
-        public string Type { get; set; }
+        public SqlType Type { get; set; }
         public string Name { get; set; }
         public bool IsPrimaryKey { get; set; }
 
@@ -49,10 +78,10 @@ namespace Laan.SQLParser
 
         public override int GetHashCode()
         {
-            return 
-                Type.GetHashCode() + 
-                Name.GetHashCode() + 
-                IsPrimaryKey.GetHashCode() + 
+            return
+                Type.GetHashCode() +
+                Name.GetHashCode() +
+                IsPrimaryKey.GetHashCode() +
                 Nullability.GetHashCode();
         }
 
@@ -60,7 +89,7 @@ namespace Laan.SQLParser
         {
             var other = (FieldDefinition) fieldDefinition;
             return
-                other.Type == Type &&
+                other.Type.Name.WithBrackets() == Type.Name.WithBrackets() &&
                 other.Name.WithBrackets() == Name.WithBrackets() &&
                 other.Nullability == Nullability &&
                 other.IsPrimaryKey == IsPrimaryKey;

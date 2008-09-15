@@ -21,7 +21,7 @@ namespace Laan.SQLParser.Test
             Assert.AreEqual( "Test", statement.TableName );
             Assert.AreEqual( 1, statement.Fields.Count );
             Assert.AreEqual( "id", statement.Fields[ 0 ].Name );
-            Assert.AreEqual( "int", statement.Fields[ 0 ].Type );
+            Assert.AreEqual( "int", statement.Fields[ 0 ].Type.Name );
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace Laan.SQLParser.Test
             Assert.AreEqual( "dbo.Test", statement.TableName );
             Assert.AreEqual( 1, statement.Fields.Count );
             Assert.AreEqual( "id", statement.Fields[ 0 ].Name );
-            Assert.AreEqual( "int", statement.Fields[ 0 ].Type );
+            Assert.AreEqual( "int", statement.Fields[ 0 ].Type.Name );
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace Laan.SQLParser.Test
             for ( int i = 0; i < 3; i++ )
             {
                 Assert.AreEqual( String.Format( "id{0}", i + 1 ), statement.Fields[ i ].Name );
-                Assert.AreEqual( "int", statement.Fields[ i ].Type );
+                Assert.AreEqual( "int", statement.Fields[ i ].Type.Name );
             }
         }
 
@@ -85,9 +85,9 @@ namespace Laan.SQLParser.Test
 
             var expected = new[] 
             { 
-                new FieldDefinition() { Name = "[id1]", Type = "int", IsPrimaryKey = false, Nullability = Nullability.Nullable },
-                new FieldDefinition() { Name = "id2", Type = "int", IsPrimaryKey = false, Nullability = Nullability.Nullable },
-                new FieldDefinition() { Name = "[id3]", Type = "int", IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { Name = "[id1]", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { Name = "id2", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { Name = "[id3]", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
             };
 
             CollectionAssert.AreElementsEqual( expected, statement.Fields );
@@ -113,9 +113,9 @@ namespace Laan.SQLParser.Test
 
             var expected = new[] 
             { 
-                new FieldDefinition() { Name = "id1", Type = "int", IsPrimaryKey = true, Nullability = Nullability.NotNullable },
-                new FieldDefinition() { Name = "id2", Type = "int", IsPrimaryKey = false, Nullability = Nullability.Nullable },
-                new FieldDefinition() { Name = "id3", Type = "int", IsPrimaryKey = false, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id1", Type = new SqlType( "int" ), IsPrimaryKey = true, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id2", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { Name = "id3", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.NotNullable },
             };
 
             CollectionAssert.AreElementsEqual( expected, statement.Fields );
@@ -128,10 +128,11 @@ namespace Laan.SQLParser.Test
 
                 create table Test 
                 ( 
-                    id1 int           primary key, 
+                    id1 int primary key, 
                     id2 varchar(10), 
-                    id3 varchar       not null, 
-                    id4 decimal(10,2) not null 
+                    id3 varchar not null, 
+                    id4 decimal(10,2) not null,
+                    id5 [decimal](25, 3) null 
                 )"
             );
 
@@ -141,10 +142,11 @@ namespace Laan.SQLParser.Test
 
             var expected = new[] 
             { 
-                new FieldDefinition() { Name = "id1", Type = "int", IsPrimaryKey = true, Nullability = Nullability.NotNullable },
-                new FieldDefinition() { Name = "id2", Type = "varchar(10)", IsPrimaryKey = false, Nullability = Nullability.Nullable },
-                new FieldDefinition() { Name = "id3", Type = "varchar", IsPrimaryKey = false, Nullability = Nullability.NotNullable },
-                new FieldDefinition() { Name = "id4", Type = "decimal(10,2)", IsPrimaryKey = false, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id1", Type = new SqlType( "int" ), IsPrimaryKey = true, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id2", Type = new SqlType( "varchar", 10 ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { Name = "id3", Type = new SqlType( "varchar" ), IsPrimaryKey = false, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id4", Type = new SqlType( "decimal", 10, 2) , IsPrimaryKey = false, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id5", Type = new SqlType( "decimal", 25, 3) , IsPrimaryKey = false, Nullability = Nullability.Nullable },
             };
 
             CollectionAssert.AreElementsEqual( expected, statement.Fields );
@@ -161,7 +163,7 @@ namespace Laan.SQLParser.Test
                     id1 int           not null, 
                     id2 varchar(10), 
                     id3 varchar       not null, 
-                    id4 decimal(10,2) not null, 
+                    id4 [decimal](10,2) not null, 
             
                     constraint [PK_Name] primary key clustered ( [id1] ASC )
                 )"
@@ -173,10 +175,10 @@ namespace Laan.SQLParser.Test
 
             var expected = new[] 
             { 
-                new FieldDefinition() { Name = "id1", Type = "int", IsPrimaryKey = true, Nullability = Nullability.NotNullable },
-                new FieldDefinition() { Name = "id2", Type = "varchar(10)", IsPrimaryKey = false, Nullability = Nullability.Nullable },
-                new FieldDefinition() { Name = "id3", Type = "varchar", IsPrimaryKey = false, Nullability = Nullability.NotNullable },
-                new FieldDefinition() { Name = "id4", Type = "decimal(10,2)", IsPrimaryKey = false, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id1", Type = new SqlType( "int" ), IsPrimaryKey = true, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id2", Type = new SqlType( "varchar", 10 ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { Name = "id3", Type = new SqlType( "varchar" ), IsPrimaryKey = false, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id4", Type = new SqlType( "decimal", 10,2) , IsPrimaryKey = false, Nullability = Nullability.NotNullable },
             };
 
             CollectionAssert.AreElementsEqual( expected, statement.Fields );

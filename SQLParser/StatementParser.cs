@@ -22,6 +22,12 @@ namespace Laan.SQLParser
                 ReadNextToken();
         }
 
+        protected void ExpectTokens( string[] tokens )
+        {
+            foreach ( string token in tokens )
+                ExpectToken( token );
+        }
+
         protected void ReadNextToken()
         {
             Tokenizer.ReadNextToken();
