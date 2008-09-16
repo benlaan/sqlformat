@@ -47,6 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlterTableStatement.cs" />
+    <Compile Include="AlterTableStatementParser.cs" />
+    <Compile Include="CreateNonClusteredIndexParser.cs" />
     <Compile Include="CreateTableStatement.cs" />
     <Compile Include="CreateTableStatementParser.cs" />
     <Compile Include="Exceptions.cs" />
@@ -59,6 +62,7 @@
     <Compile Include="Statement.cs" />
     <Compile Include="StatementParser.cs" />
     <Compile Include="Table.cs" />
+    <Compile Include="TableStatementParser.cs" />
     <Compile Include="Tokenizer.cs" />
   </ItemGroup>
   <ItemGroup>

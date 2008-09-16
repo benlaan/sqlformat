@@ -219,5 +219,156 @@ namespace Laan.SQL.Parser.Test
 
             CollectionAssert.AreElementsEqual( expected, statement.Fields );
         }
+
+        [Test]
+        public void Test_Int_Column_With_Identity_After_Not_Null()
+        {
+            // Setup
+            var statement = ParserFactory.Execute<CreateTableStatement>( @"
+
+                create table Test 
+                ( 
+                    id1 [int] NOT NULL IDENTITY(100, 1),
+                    id2 varchar(10)
+                )"
+            );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( "Test", statement.TableName );
+
+            var expected = new[] 
+            { 
+                new FieldDefinition() 
+                { 
+                    Name = "id1", 
+                    Type = new SqlType( "int" ), 
+                    IsPrimaryKey = false,
+                    Nullability = Nullability.NotNullable, 
+                    Identity = new Identity() { Start = 100, Increment = 1 } 
+                },
+                new FieldDefinition() 
+                { 
+                    Name = "id2", Type = new SqlType( "varchar", 10 ), IsPrimaryKey = false, Nullability = Nullability.Nullable 
+                },
+            };
+
+            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+        }
+
+        [Test]
+        public void Test_VarChar_Column_With_Collation()
+        {
+            // Setup
+            var statement = ParserFactory.Execute<CreateTableStatement>( @"
+
+                create table Test 
+                ( 
+                    id1 int,
+                    id2 varchar(10) collate Latin1_General_CI_AS null
+                )"
+            );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( "Test", statement.TableName );
+
+            var expected = new[] 
+            { 
+                new FieldDefinition() { Name = "id1", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { 
+                    Name = "id2", 
+                    Type = new SqlType( "varchar", 10 ) { Collation = "Latin1_General_CI_AS" } , 
+                    IsPrimaryKey = false, 
+                    Nullability = Nullability.Nullable 
+                },
+            };
+
+            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+        }
+
+        [Test]
+        public void Test_VarChar_Column_With_Constraint()
+        {
+            // Setup
+            var statement = ParserFactory.Execute<CreateTableStatement>( @"
+
+                create table Test 
+                ( 
+                    id1 int,
+                    id2 bit,
+                    id3 varchar(10) not null constraint [Name] default ((1))
+                )"
+            );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( "Test", statement.TableName );
+
+            var expected = new[] 
+            { 
+                new FieldDefinition() { Name = "id1", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { 
+                    Name = "id2", 
+                    Type = new SqlType( "bit" ),
+                    IsPrimaryKey = false, 
+                    Nullability = Nullability.Nullable 
+                },
+                new FieldDefinition() { 
+                    Name = "id3", 
+                    Type = new SqlType( "varchar", 10 ),
+                    IsPrimaryKey = false, 
+                    Nullability = Nullability.NotNullable 
+                },
+            };
+
+            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+        }
+
+        [Test]
+        public void Test_VarChar_Column_With_Constraint_As_Complex_Expressions()
+        {
+            // Setup
+            var statement = ParserFactory.Execute<CreateTableStatement>( @"
+
+                create table Test 
+                ( 
+                    id1 int,
+                    id2 bit,
+                    id3 uniqueidentifier not null constraint [Name] default (newid()),
+                    id4 varchar(10) not null constraint [Name] default ('Hello')
+
+                )"
+            );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( "Test", statement.TableName );
+
+            var expected = new[] 
+            { 
+                new FieldDefinition() { Name = "id1", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { 
+                    Name = "id2", 
+                    Type = new SqlType( "bit" ),
+                    IsPrimaryKey = false, 
+                    Nullability = Nullability.Nullable 
+                },
+                new FieldDefinition() { 
+                    Name = "id3", 
+                    Type = new SqlType( "uniqueidentifier" ),
+                    IsPrimaryKey = false, 
+                    Nullability = Nullability.NotNullable 
+                },
+                new FieldDefinition() { 
+                    Name = "id4", 
+                    Type = new SqlType( "varchar", 10 ),
+                    IsPrimaryKey = false, 
+                    Nullability = Nullability.NotNullable 
+                },
+            };
+
+            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+        }
     }
 }

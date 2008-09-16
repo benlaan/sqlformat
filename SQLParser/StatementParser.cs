@@ -8,6 +8,12 @@ namespace Laan.SQL.Parser
     public abstract class StatementParser
     {
         protected const string COMMA = ",";
+        protected const string OPEN_BRACKET = "(";
+        protected const string CLOSE_BRACKET = ")";
+        private const string OPEN_SQUARE_BRACE = "[";
+        private const string CLOSE_SQUARE_BRACE = "]";
+        private const string QUOTE = "'";
+        protected const string DOT = ".";
 
         public StatementParser( Tokenizer tokenizer )
         {
@@ -48,6 +54,70 @@ namespace Laan.SQL.Parser
         }
 
         protected Tokenizer Tokenizer { get; private set; }
+
+        protected string GetIdentifier()
+        {
+            string identifier = "";
+            if ( Tokenizer.TokenEquals( OPEN_SQUARE_BRACE ) )
+            {
+                identifier += OPEN_SQUARE_BRACE + CurrentToken + CLOSE_SQUARE_BRACE;
+                ReadNextToken();
+                ExpectToken( CLOSE_SQUARE_BRACE );
+            }
+            else
+            {
+                identifier = CurrentToken;
+                ReadNextToken();
+            }
+            return identifier;
+        }
+
+        protected string GetTableName()
+        {
+            string tableName = "";
+            do
+            {
+                string identifier = GetIdentifier();
+                tableName += ( tableName != "" ? DOT : "" ) + identifier;
+            }
+            while ( Tokenizer.TokenEquals( DOT ) );
+
+            return tableName;
+        }
+
+        protected string GetExpression()
+        {
+            if ( Tokenizer.TokenEquals( OPEN_BRACKET ) )
+            {
+                string result = GetExpression();
+                ExpectToken( CLOSE_BRACKET );
+                return result;
+            }
+            else
+            {
+                string token = "";
+                if ( Tokenizer.TokenEquals( QUOTE ) )
+                {
+                    token += CurrentToken;
+                    ReadNextToken();
+                    ExpectToken( QUOTE );
+                }
+                else
+                {
+                    token = CurrentToken;
+                    ReadNextToken();
+
+                    // test whether the current token is a function - ie. SomeToken()
+                    if ( Tokenizer.TokenEquals( OPEN_BRACKET ) )
+                    {
+                        // TODO: This needs to be implemented as a param list of expressions
+                        token += "()";
+                        ExpectToken( CLOSE_BRACKET );
+                    }
+                }
+                return token;
+            }
+        }
 
         /// <summary>
         /// Returns an IStatement reference for the given statement type

@@ -2,27 +2,19 @@ using System;
 
 namespace Laan.SQL.Parser
 {
-    public class CreateTableStatementParser : StatementParser
+    public class CreateTableStatementParser : TableStatementParser
     {
-        private const string OPEN_BRACKET = "(";
-        private const string CLOSE_BRACKET = ")";
         private const string NOT = "NOT";
         private const string NULL = "NULL";
-        private const string PRIMARY = "PRIMARY";
-        private const string KEY = "KEY";
-        private const string DOT = ".";
-        private const string OPEN_SQUARE_BRACE = "[";
-        private const string CLOSE_SQUARE_BRACE = "]";
-        private const string CONSTRAINT = "CONSTRAINT";
-        private const string CLUSTERED = "CLUSTERED";
         private const string ASC = "ASC";
         private const string DESC = "DESC";
         private const string IDENTITY = "IDENTITY";
+        private const string COLLATE = "COLLATE";
+        private const string DEFAULT = "DEFAULT";
 
         CreateTableStatement _statement;
 
-        internal CreateTableStatementParser( Tokenizer tokenizer )
-            : base( tokenizer )
+        internal CreateTableStatementParser( Tokenizer tokenizer ) : base( tokenizer )
         {
         }
 
@@ -47,22 +39,9 @@ namespace Laan.SQL.Parser
             return _statement;
         }
 
-        private string GetTableName()
-        {
-            string tableName = "";
-            do
-            {
-                string identifier = ProcessSquareBracketedIdentifier();
-                tableName += ( tableName != "" ? DOT : "" ) + identifier;
-            }
-            while ( Tokenizer.TokenEquals( DOT ) );
-
-            return tableName;
-        }
-
         private SqlType ProcessType()
         {
-            string identifier = ProcessSquareBracketedIdentifier();
+            string identifier = GetIdentifier();
             SqlType result = new SqlType( identifier );
 
             if ( Tokenizer.TokenEquals( OPEN_BRACKET ) )
@@ -82,32 +61,15 @@ namespace Laan.SQL.Parser
             return result;
         }
 
-        private string ProcessSquareBracketedIdentifier()
-        {
-            string identifier = "";
-            if ( Tokenizer.TokenEquals( OPEN_SQUARE_BRACE ) )
-            {
-                identifier += OPEN_SQUARE_BRACE + CurrentToken + CLOSE_SQUARE_BRACE;
-                ReadNextToken();
-                ExpectToken( CLOSE_SQUARE_BRACE );
-            }
-            else
-            {
-                identifier = CurrentToken;
-                ReadNextToken();
-            }
-            return identifier;
-        }
-
         private void ProcessPrimaryKeyConstraint()
         {
             // this is the name of the constraint - not currenly used!
-            string identifier = ProcessSquareBracketedIdentifier();
+            string identifier = GetIdentifier();
             string orderBy = "";
 
             ExpectTokens( new[] { PRIMARY, KEY, CLUSTERED, OPEN_BRACKET } );
 
-            string keyFieldName = ProcessSquareBracketedIdentifier();
+            string keyFieldName = GetIdentifier();
 
             FieldDefinition keyField = _statement.Fields.FindByName( keyFieldName );
             if ( keyField != null )
@@ -126,29 +88,50 @@ namespace Laan.SQL.Parser
             bool isPrimaryKey = false;
             Identity identity = null;
 
-            string fieldName = ProcessSquareBracketedIdentifier();
+            string fieldName = GetIdentifier();
             SqlType type = ProcessType();
 
             if ( Tokenizer.TokenEquals( IDENTITY ) )
             {
                 identity = ProcessIdentity();
             }
+
+            if ( Tokenizer.TokenEquals( COLLATE ) )
+            {
+                type.Collation = CurrentToken;
+                ReadNextToken();
+            }
+
             if ( Tokenizer.TokenEquals( NULL ) )
             {
                 nullability = Nullability.Nullable;
             }
-            else if ( Tokenizer.TokenEquals( NOT ) )
+            
+            if ( Tokenizer.TokenEquals( NOT ) )
             {
                 ExpectToken( NULL );
                 nullability = Nullability.NotNullable;
             }
-            else if ( Tokenizer.TokenEquals( PRIMARY ) )
+
+            if ( Tokenizer.TokenEquals( IDENTITY ) )
+            {
+                identity = ProcessIdentity();
+            }
+
+            if ( Tokenizer.TokenEquals( PRIMARY ) )
             {
                 ExpectToken( KEY );
                 nullability = Nullability.NotNullable;
                 isPrimaryKey = true;
             }
-
+            
+            if ( Tokenizer.TokenEquals( CONSTRAINT ))
+            {
+                // TODO: process column constraint
+                string name = GetIdentifier();
+                ExpectToken( DEFAULT );
+                string defaultValue = GetExpression();
+            }
             _statement.Fields.Add(
                 new FieldDefinition()
                 {
