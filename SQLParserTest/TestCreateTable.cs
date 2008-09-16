@@ -39,6 +39,20 @@ namespace Laan.SQL.Parser.Test
         }
 
         [Test]
+        public void Test_One_Column_With_Multi_Scope_Table_Name()
+        {
+            // Exercise
+            var statement = ParserFactory.Execute<CreateTableStatement>( "create table SomeDatabase.dbo.Schema.Test ( id int )" );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( "SomeDatabase.dbo.Schema.Test", statement.TableName );
+            Assert.AreEqual( 1, statement.Fields.Count );
+            Assert.AreEqual( "id", statement.Fields[ 0 ].Name );
+            Assert.AreEqual( "int", statement.Fields[ 0 ].Type.Name );
+        }
+
+        [Test]
         public void Test_Multiple_Int_Columns()
         {
             // Exercise
@@ -276,7 +290,8 @@ namespace Laan.SQL.Parser.Test
             var expected = new[] 
             { 
                 new FieldDefinition() { Name = "id1", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
-                new FieldDefinition() { 
+                new FieldDefinition() 
+                { 
                     Name = "id2", 
                     Type = new SqlType( "varchar", 10 ) { Collation = "Latin1_General_CI_AS" } , 
                     IsPrimaryKey = false, 
@@ -308,13 +323,15 @@ namespace Laan.SQL.Parser.Test
             var expected = new[] 
             { 
                 new FieldDefinition() { Name = "id1", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
-                new FieldDefinition() { 
+                new FieldDefinition() 
+                { 
                     Name = "id2", 
                     Type = new SqlType( "bit" ),
                     IsPrimaryKey = false, 
                     Nullability = Nullability.Nullable 
                 },
-                new FieldDefinition() { 
+                new FieldDefinition() 
+                { 
                     Name = "id3", 
                     Type = new SqlType( "varchar", 10 ),
                     IsPrimaryKey = false, 
@@ -348,7 +365,8 @@ namespace Laan.SQL.Parser.Test
             var expected = new[] 
             { 
                 new FieldDefinition() { Name = "id1", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
-                new FieldDefinition() { 
+                new FieldDefinition() 
+                { 
                     Name = "id2", 
                     Type = new SqlType( "bit" ),
                     IsPrimaryKey = false, 
@@ -360,7 +378,8 @@ namespace Laan.SQL.Parser.Test
                     IsPrimaryKey = false, 
                     Nullability = Nullability.NotNullable 
                 },
-                new FieldDefinition() { 
+                new FieldDefinition() 
+                { 
                     Name = "id4", 
                     Type = new SqlType( "varchar", 10 ),
                     IsPrimaryKey = false, 

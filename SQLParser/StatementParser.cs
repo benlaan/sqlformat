@@ -10,9 +10,9 @@ namespace Laan.SQL.Parser
         protected const string COMMA = ",";
         protected const string OPEN_BRACKET = "(";
         protected const string CLOSE_BRACKET = ")";
-        private const string OPEN_SQUARE_BRACE = "[";
-        private const string CLOSE_SQUARE_BRACE = "]";
-        private const string QUOTE = "'";
+        protected const string OPEN_SQUARE_BRACE = "[";
+        protected const string CLOSE_SQUARE_BRACE = "]";
+        protected const string QUOTE = "'";
         protected const string DOT = ".";
 
         public StatementParser( Tokenizer tokenizer )

@@ -7,22 +7,21 @@ namespace Laan.SQL.Parser
         private const string INDEX = "INDEX";
         private const string ON = "ON";
 
-        public CreateNonClusteredIndexParser( Tokenizer tokenizer ) : base( tokenizer )
-        {
-        }
+        public CreateNonClusteredIndexParser( Tokenizer tokenizer ) : base( tokenizer ) { }
 
         public override IStatement Execute()
         {
+            CreateNonClusteredIndex statement = new CreateNonClusteredIndex();
+
             ExpectToken( INDEX );
-            string name = GetIdentifier();
+            statement.ConstraintName = GetIdentifier();
             ExpectToken( ON );
-            string tableName = GetTableName();
+            statement.TableName = GetTableName();
             ExpectToken( OPEN_BRACKET );
-            string keyName = GetIdentifier();
+            statement.KeyName = GetIdentifier();
             ExpectToken( CLOSE_BRACKET );
 
-            // TODO: There is current no actual CreateNonClusteredIndex statement to return
-            return null;
+            return statement;
         }
     }
 }

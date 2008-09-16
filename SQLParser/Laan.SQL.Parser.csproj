@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="AlterTableStatement.cs" />
     <Compile Include="AlterTableStatementParser.cs" />
+    <Compile Include="CreateNonClusteredIndex.cs" />
     <Compile Include="CreateNonClusteredIndexParser.cs" />
     <Compile Include="CreateTableStatement.cs" />
     <Compile Include="CreateTableStatementParser.cs" />
