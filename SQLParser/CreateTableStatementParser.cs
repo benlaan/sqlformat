@@ -17,6 +17,7 @@ namespace Laan.SQL.Parser
         private const string CLUSTERED = "CLUSTERED";
         private const string ASC = "ASC";
         private const string DESC = "DESC";
+        private const string IDENTITY = "IDENTITY";
 
         CreateTableStatement _statement;
 
@@ -37,7 +38,7 @@ namespace Laan.SQL.Parser
                 if ( Tokenizer.TokenEquals( CONSTRAINT ) )
                     ProcessPrimaryKeyConstraint();
                 else
-                    ProcessFieldDefinition(); 
+                    ProcessFieldDefinition();
 
             } while ( Tokenizer.TokenEquals( COMMA ) );
 
@@ -123,10 +124,15 @@ namespace Laan.SQL.Parser
         {
             Nullability nullability = Nullability.Nullable;
             bool isPrimaryKey = false;
+            Identity identity = null;
 
             string fieldName = ProcessSquareBracketedIdentifier();
             SqlType type = ProcessType();
 
+            if ( Tokenizer.TokenEquals( IDENTITY ) )
+            {
+                identity = ProcessIdentity();
+            }
             if ( Tokenizer.TokenEquals( NULL ) )
             {
                 nullability = Nullability.Nullable;
@@ -146,12 +152,28 @@ namespace Laan.SQL.Parser
             _statement.Fields.Add(
                 new FieldDefinition()
                 {
-                    Name = fieldName,
-                    Type = type,
-                    Nullability = nullability,
-                    IsPrimaryKey = isPrimaryKey
+                    Name = fieldName, Type = type, Nullability = nullability, IsPrimaryKey = isPrimaryKey, Identity = identity
                 }
             );
+        }
+
+        private Identity ProcessIdentity()
+        {
+            Identity result = new Identity();
+
+            ExpectToken( OPEN_BRACKET );
+
+            result.Start = Int32.Parse( CurrentToken );
+            ReadNextToken();
+
+            ExpectToken( COMMA );
+
+            result.Increment = Int32.Parse( CurrentToken );
+            ReadNextToken();
+
+            ExpectToken( CLOSE_BRACKET );
+
+            return result;
         }
     }
 }

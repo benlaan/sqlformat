@@ -183,5 +183,41 @@ namespace Laan.SQL.Parser.Test
 
             CollectionAssert.AreElementsEqual( expected, statement.Fields );
         }
+
+        [Test]
+        public void Test_Int_Column_With_Identity()
+        {
+            // Setup
+            var statement = ParserFactory.Execute<CreateTableStatement>( @"
+
+                create table Test 
+                ( 
+                    id1 [int] IDENTITY(100, 1) NOT NULL,
+                    id2 varchar(10)
+                )"
+            );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( "Test", statement.TableName );
+
+            var expected = new[] 
+            { 
+                new FieldDefinition() 
+                { 
+                    Name = "id1", 
+                    Type = new SqlType( "int" ), 
+                    IsPrimaryKey = false,
+                    Nullability = Nullability.NotNullable, 
+                    Identity = new Identity() { Start = 100, Increment = 1 } 
+                },
+                new FieldDefinition() 
+                { 
+                    Name = "id2", Type = new SqlType( "varchar", 10 ), IsPrimaryKey = false, Nullability = Nullability.Nullable 
+                },
+            };
+
+            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+        }
     }
 }

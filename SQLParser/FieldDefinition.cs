@@ -20,6 +20,23 @@ namespace Laan.SQL.Parser
         }
     }
 
+    public class Identity
+    {
+        public int Start { get; set; }
+        public int Increment { get; set; }
+
+        public override int GetHashCode()
+        {
+            return Start.GetHashCode() + Increment.GetHashCode();
+        }
+
+        public override bool Equals( object obj )
+        {
+            Identity other = ( Identity ) obj;
+            return Start == other.Start && Increment == other.Increment;
+        }
+    }
+
     public class SqlType
     {
         public SqlType( string name, int length, int scale ) : this ( name, length )
@@ -58,20 +75,24 @@ namespace Laan.SQL.Parser
         public SqlType Type { get; set; }
         public string Name { get; set; }
         public bool IsPrimaryKey { get; set; }
+        public Identity Identity { get; set; }
 
         public string Descriptor
         {
             get
             {
+                string result = "";
+                if ( Identity != null )
+                    result = "IDENTITY ";
+
                 if ( IsPrimaryKey )
-                    return "(PK)";
+                    return result + "(PK)";
                 else
                 {
-                    string result = "";
                     if ( Nullability == Nullability.NotNullable )
-                        result = "NOT ";
+                        result += "NOT ";
 
-                    return result + "NULL";
+                    return result += "NULL";
                 }
             }
         }
@@ -85,6 +106,18 @@ namespace Laan.SQL.Parser
                 Nullability.GetHashCode();
         }
 
+
+        private bool CompareIdentity( Laan.SQL.Parser.FieldDefinition other )
+        {
+            if ( Identity == null && other.Identity == null )
+                return true;
+
+            if ( ( Identity != null && other.Identity == null ) || ( other.Identity != null && Identity == null ) ) 
+                return false;
+
+            return other.Identity.Equals( Identity );
+        }
+
         public override bool Equals( object fieldDefinition )
         {
             var other = (FieldDefinition) fieldDefinition;
@@ -92,7 +125,8 @@ namespace Laan.SQL.Parser
                 other.Type.Name.WithBrackets() == Type.Name.WithBrackets() &&
                 other.Name.WithBrackets() == Name.WithBrackets() &&
                 other.Nullability == Nullability &&
-                other.IsPrimaryKey == IsPrimaryKey;
+                other.IsPrimaryKey == IsPrimaryKey &&
+                CompareIdentity( other );
         }
     }
 }
