@@ -106,13 +106,12 @@ namespace Laan.SQL.Parser
                 Nullability.GetHashCode();
         }
 
-
-        private bool CompareIdentity( Laan.SQL.Parser.FieldDefinition other )
+        private bool CompareIdentity( FieldDefinition other )
         {
             if ( Identity == null && other.Identity == null )
                 return true;
 
-            if ( ( Identity != null && other.Identity == null ) || ( other.Identity != null && Identity == null ) ) 
+            if ( ( Identity != null && other.Identity == null ) || ( other.Identity != null && Identity == null ) )
                 return false;
 
             return other.Identity.Equals( Identity );
