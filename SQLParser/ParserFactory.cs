@@ -33,10 +33,11 @@ namespace Laan.SQL.Parser
             Tokenizer _tokenizer = new Tokenizer( sql );
             IStatement _statement = null;
 
-            while ( _tokenizer.HasMoreTokens )
-            {
+            if ( ( String.IsNullOrEmpty( _tokenizer.Current ) ) )
                 _tokenizer.ReadNextToken();
 
+            while ( _tokenizer.HasMoreTokens )
+            {
                 StatementParser parser = null;
 
                 if ( _tokenizer.TokenEquals( SELECT ) )
@@ -70,12 +71,14 @@ namespace Laan.SQL.Parser
                 //    parser = new DeleteStatementParser( _tokenizer );
 
                 if ( parser == null && _tokenizer.Current != null )
-                    throw new NotImplementedException( 
-                        "No parser exists for that statement type: " + _tokenizer.Current 
+                    throw new NotImplementedException(
+                        "No parser exists for that statement type: " + _tokenizer.Current
                     );
 
                 if ( _tokenizer.Current != null )
                     _statement = parser.Execute();
+
+                _tokenizer.ReadNextToken();
             }
 
             return _statement;
