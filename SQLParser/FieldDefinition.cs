@@ -62,7 +62,7 @@ namespace Laan.SQL.Parser
 
         public override string ToString()
         {
-            string lengthDisplay = Length.HasValue ? String.Format( "({0})" + (" " + Collation) ?? "", Length ) : null;
+            string lengthDisplay = Length.HasValue ? String.Format( "({0})" + (Collation != null ? " " + Collation : ""), Length ) : null;
             string precisionDisplay = Scale.HasValue ? String.Format( "({0}, {1})", Length, Scale ) : null;
             return String.Format( "{0}{1}", Name, precisionDisplay ?? lengthDisplay ?? "" );
         }
