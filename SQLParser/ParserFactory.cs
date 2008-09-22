@@ -10,6 +10,7 @@ namespace Laan.SQL.Parser
         private const string CREATE = "CREATE";
         private const string NONCLUSTERED = "NONCLUSTERED";
         private const string ALTER = "ALTER";
+        private const string VIEW = "VIEW";
 
         /// <summary>
         /// This method is used if you know what type will be returned from the parser
@@ -48,8 +49,11 @@ namespace Laan.SQL.Parser
                     if ( _tokenizer.TokenEquals( TABLE ) )
                         parser = new CreateTableStatementParser( _tokenizer );
 
-                    else if ( _tokenizer.TokenEquals( NONCLUSTERED ) )
-                        parser = new CreateNonClusteredIndexParser( _tokenizer );
+                    if ( _tokenizer.TokenEquals( VIEW ) )
+                        parser = new CreateViewStatementParser( _tokenizer );
+
+                    //else if ( _tokenizer.TokenEquals( NONCLUSTERED ) )
+                    //    parser = new CreateNonClusteredIndexParser( _tokenizer );
 
                     //if ( _tokenizer.TokenEquals( INDEX ) )
                     //    parser = new CreateIndexStatementParser( _tokenizer );

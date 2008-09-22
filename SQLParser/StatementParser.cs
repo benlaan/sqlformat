@@ -28,7 +28,7 @@ namespace Laan.SQL.Parser
                 ReadNextToken();
         }
 
-        protected void ExpectTokens( string[] tokens )
+        protected void ExpectTokens( params string[] tokens )
         {
             foreach ( string token in tokens )
                 ExpectToken( token );
