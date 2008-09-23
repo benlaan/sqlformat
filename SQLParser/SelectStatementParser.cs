@@ -16,8 +16,8 @@ namespace Laan.SQL.Parser
         private const string FULL = "FULL";
         private const string EQUALS = "=";
 
-        private string[] FieldTerminatorSet = { FROM, COMMA };
-        private string[] FromTerminatorSet =  { INNER, JOIN, LEFT, RIGHT, FULL, COMMA };
+        private string[] FieldTerminatorSet = { FROM, Constants.COMMA };
+        private string[] FromTerminatorSet = { INNER, JOIN, LEFT, RIGHT, FULL, Constants.COMMA };
 
         SelectStatement _statement;
 
@@ -47,42 +47,42 @@ namespace Laan.SQL.Parser
             {
                 ProcessField();
 
-            } while ( Tokenizer.TokenEquals( COMMA ) );
+            } while ( Tokenizer.TokenEquals( Constants.COMMA ) );
         }
 
         private void ProcessField()
         {
-            string token = CurrentToken;
-
+            Expression token = ProcessExpression();
             string alias = null;
-            string field = token;
 
-            ReadNextToken();
+            Expression expression = null;
 
             if ( Tokenizer.TokenEquals( AS ) )
             {
-                field = token;
                 alias = CurrentToken;
+                expression = token;
                 ReadNextToken();
             }
             else if ( Tokenizer.TokenEquals( EQUALS ) )
             {
-                alias = token;
-                field = CurrentToken;
-                ReadNextToken();
+                alias = token.Value;
+                expression = ProcessExpression();
             }
             else if ( !IsTokenInSet( FieldTerminatorSet ) )
             {
                 alias = CurrentToken;
+                expression = token;
                 ReadNextToken();
             }
+            else
+                expression = token;
 
-            _statement.Fields.Add( new Field() { Name = field, Alias = alias } );
+            _statement.Fields.Add( new Field() { Expression = expression, Alias = alias } );
         }
 
         private void ProcessFrom()
         {
-            ExpectToken( FROM );
+            Tokenizer.ExpectToken( FROM );
             do
             {
                 Table table = new Table() { Name = ProcessTableName() };
@@ -94,7 +94,7 @@ namespace Laan.SQL.Parser
                     ReadNextToken();
                 }
 
-            } while ( Tokenizer.TokenEquals( COMMA ) );
+            } while ( Tokenizer.TokenEquals( Constants.COMMA ) );
 
             // ProcessJoins
         }

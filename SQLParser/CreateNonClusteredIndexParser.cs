@@ -13,13 +13,13 @@ namespace Laan.SQL.Parser
         {
             CreateNonClusteredIndex statement = new CreateNonClusteredIndex();
 
-            ExpectToken( INDEX );
+            Tokenizer.ExpectToken( INDEX );
             statement.ConstraintName = GetIdentifier();
-            ExpectToken( ON );
+            Tokenizer.ExpectToken( ON );
             statement.TableName = GetTableName();
-            ExpectToken( OPEN_BRACKET );
+            Tokenizer.ExpectToken( Constants.OPEN_BRACKET );
             statement.KeyName = GetIdentifier();
-            ExpectToken( CLOSE_BRACKET );
+            Tokenizer.ExpectToken( Constants.CLOSE_BRACKET );
 
             return statement;
         }

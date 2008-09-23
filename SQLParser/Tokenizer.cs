@@ -14,10 +14,12 @@ namespace Laan.SQL.Parser
 
     public class Tokenizer
     {
+        private TokenizerRule _acceptSpacesRule;
         private Func<int, bool> _neverContinue;
-        private TokenizerRule[] _tokenizingRules;
+        private List<TokenizerRule> _tokenizingRules;
         private StringReader _reader;
         private string _currentToken;
+        private bool _acceptSpaces;
 
         public Tokenizer( string sql )
         {
@@ -33,7 +35,12 @@ namespace Laan.SQL.Parser
 
         private void Initialize()
         {
+            _acceptSpaces = false;
             _neverContinue = i => false;
+
+            // this rule is injected into the start rules list when required, by setting the AcceptSpaces flag
+            // when no longer required, it should be removed to ensure that spaces aren't considered normal tokens
+            _acceptSpacesRule = new TokenizerRule { StartOp = i => i == ' ', ContinueOp = _neverContinue };
 
             _tokenizingRules = new TokenizerRule[] 
             { 
@@ -42,7 +49,7 @@ namespace Laan.SQL.Parser
                 new TokenizerRule { StartOp = IsAlpha,   ContinueOp = IsAlphaNumeric },
                 new TokenizerRule { StartOp = IsNumeric, ContinueOp = IsNumeric }, 
                 new TokenizerRule { StartOp = IsSpecialChar, ContinueOp = _neverContinue }, 
-            };
+            }.ToList();
         }
 
         #region Utilities
@@ -77,7 +84,7 @@ namespace Laan.SQL.Parser
 
         private bool IsAlphaNumeric( int readChar )
         {
-            return IsAlpha( readChar ) || IsNumeric( readChar );
+            return IsAlpha( readChar ) || IsBetween( readChar, '0', '9' );
         }
 
         #endregion
@@ -152,6 +159,36 @@ namespace Laan.SQL.Parser
         public string Current
         {
             get { return _currentToken; }
+        }
+
+        public bool AcceptSpaces
+        {
+            get { return _acceptSpaces; }
+            set
+            {
+                if (_acceptSpaces == value)
+            		return;
+
+                _acceptSpaces = value;
+                if ( _acceptSpaces )
+                    _tokenizingRules.Insert( 0, _acceptSpacesRule );
+                else
+                    _tokenizingRules.Remove( _acceptSpacesRule );
+            }
+        }
+
+        public void ExpectToken( string token )
+        {
+            if ( Current.ToLower() != token.ToLower() )
+                throw new ExpectedTokenNotFoundException( token, Current );
+            else
+                ReadNextToken();
+        }
+
+        public void ExpectTokens( string[] tokens )
+        {
+            foreach ( string token in tokens )
+                ExpectToken( token );
         }
 
     }

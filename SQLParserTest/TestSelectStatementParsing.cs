@@ -28,13 +28,13 @@ namespace Laan.SQL.Parser.Test
             // Verify outcome
             Assert.IsNotNull( statement );
             Assert.AreEqual( 1, statement.Fields.Count );
-            Assert.AreEqual( "*", statement.Fields[ 0 ].Name );
+            Assert.AreEqual( "*", statement.Fields[ 0 ].Expression.Value );
             Assert.IsNull( statement.Top );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
         }
 
         [Test]
-        [ExpectedException( typeof( ExpectedTokenNotFoundException ) , Message = "Expected: FROM, found: table" )] 
+        [ExpectedException( typeof( ExpectedTokenNotFoundException ), Message = "Expected: FROM, found: table" )]
         public void TestExpectedError()
         {
             // Exercise
@@ -51,7 +51,7 @@ namespace Laan.SQL.Parser.Test
             // Verify outcome
             Assert.IsNotNull( statement );
             Assert.AreEqual( 1, statement.Fields.Count );
-            Assert.AreEqual( "*", statement.Fields[ 0 ].Name );
+            Assert.AreEqual( "*", statement.Fields[ 0 ].Expression.Value );
             Assert.AreEqual( 10, statement.Top );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
         }
@@ -74,7 +74,7 @@ namespace Laan.SQL.Parser.Test
             // Verify outcome
             Assert.IsNotNull( statement );
             Assert.AreEqual( 1, statement.Fields.Count );
-            Assert.AreEqual( "*", statement.Fields[ 0 ].Name );
+            Assert.AreEqual( "*", statement.Fields[ 0 ].Expression.Value );
             Assert.AreEqual( 10, statement.Top );
             Assert.IsTrue( statement.Distinct );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
@@ -94,7 +94,7 @@ namespace Laan.SQL.Parser.Test
             var expectedFields = new string[] { "fielda", "field2", "fie3ld" };
             int index = 0;
             foreach ( var field in expectedFields )
-                Assert.AreEqual( field, statement.Fields[ index++ ].Name );
+                Assert.AreEqual( field, statement.Fields[ index++ ].Expression.Value );
 
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
         }
@@ -170,16 +170,16 @@ namespace Laan.SQL.Parser.Test
             Assert.IsNotNull( statement );
             Assert.AreEqual( 4, statement.Fields.Count );
 
-            Assert.AreEqual( "field", statement.Fields[ 0 ].Name );
+            Assert.AreEqual( "field", statement.Fields[ 0 ].Expression.Value );
             Assert.IsNull( statement.Fields[ 0 ].Alias );
 
-            Assert.AreEqual( "fielda", statement.Fields[ 1 ].Name );
+            Assert.AreEqual( "fielda", statement.Fields[ 1 ].Expression.Value );
             Assert.AreEqual( "a", statement.Fields[ 1 ].Alias );
 
-            Assert.AreEqual( "field2", statement.Fields[ 2 ].Name );
+            Assert.AreEqual( "field2", statement.Fields[ 2 ].Expression.Value );
             Assert.AreEqual( "b", statement.Fields[ 2 ].Alias );
 
-            Assert.AreEqual( "fie3ld", statement.Fields[ 3 ].Name );
+            Assert.AreEqual( "fie3ld", statement.Fields[ 3 ].Expression.Value );
             Assert.AreEqual( "alias", statement.Fields[ 3 ].Alias );
         }
 
@@ -187,19 +187,23 @@ namespace Laan.SQL.Parser.Test
         public void Select_Multiple_Fields_With_Table_Alias_Prefix()
         {
             // Exercise
-            //IStatement sut = ParserFactory.Execute( "select t1.fielda, t1.field2, t1.fie3ld from table as t1" );
-            //SelectStatement statement = sut as SelectStatement;
+            IStatement sut = ParserFactory.Execute( "select t1.fielda, t1.field2, SomeDb.dbo.fie3ld from table as t1" );
+            SelectStatement statement = sut as SelectStatement;
 
-            //// Verify outcome
-            //Assert.IsNotNull( statement );
-            //Assert.AreEqual( 3, statement.Fields.Count );
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 3, statement.Fields.Count );
 
-            //var expectedFields = new string[] { "fielda", "field2", "fie3ld" };
-            //int index = 0;
-            //foreach (var field in expectedFields)
-            //    Assert.AreEqual( field, statement.Fields[ index++ ].Name );
+            var expectedFields = new string[] { "t1.fielda", "t1.field2", "SomeDb.dbo.fie3ld" };
+            int index = 0;
+            foreach ( var field in expectedFields )
+            {
+                Field column = statement.Fields[ index++ ];
+                Assert.IsTrue( column.Expression is Expression );
+                Assert.AreEqual( field, column.Expression.Value );
+            }
 
-            //Assert.AreEqual( "table", statement.From );
+            Assert.AreEqual( "table", statement.From[ 0 ].Name );
         }
 
         [Test]

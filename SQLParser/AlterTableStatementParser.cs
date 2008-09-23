@@ -32,27 +32,27 @@ namespace Laan.SQL.Parser
                 
             // TODO: future changes will include a ADD/DELETE operation field, and an entity COLUMN/CONSTRAINT/etc
             //       to affect, and various options to cater for the constraint syntax
-            ExpectTokens( new[] { ADD, CONSTRAINT } );
+            Tokenizer.ExpectTokens( new[] { ADD, CONSTRAINT } );
             _statement.ConstraintName = GetIdentifier();
 
             if (Tokenizer.TokenEquals( PRIMARY ) )
             {
-                ExpectTokens( new[] { KEY, CLUSTERED, OPEN_BRACKET } );
+                Tokenizer.ExpectTokens( new[] { KEY, CLUSTERED, Constants.OPEN_BRACKET } );
                 _statement.PrimaryKey = GetIdentifier();
-                ExpectToken( CLOSE_BRACKET );
+                Tokenizer.ExpectToken( Constants.CLOSE_BRACKET );
             }
             else if ( Tokenizer.TokenEquals( FOREIGN ) )
             {
                 // TODO: these fields are being consumed, but not stored into a constrain object
                 //       this is not required (for my current task) at this stage.
-                ExpectTokens( new[] { KEY, OPEN_BRACKET } );
+                Tokenizer.ExpectTokens( new[] { KEY, Constants.OPEN_BRACKET } );
                 string keyID = GetIdentifier();
-                ExpectTokens( new[] { CLOSE_BRACKET, REFERENCES } );
+                Tokenizer.ExpectTokens( new[] { Constants.CLOSE_BRACKET, REFERENCES } );
                 string refereringTable = GetTableName();
 
-                ExpectToken( OPEN_BRACKET );
+                Tokenizer.ExpectToken( Constants.OPEN_BRACKET );
                 string result = GetIdentifier();
-                ExpectToken( CLOSE_BRACKET );
+                Tokenizer.ExpectToken( Constants.CLOSE_BRACKET );
             }
 
             return _statement;

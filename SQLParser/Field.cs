@@ -2,10 +2,10 @@ using System.Diagnostics;
 
 namespace Laan.SQL.Parser
 {
-    [DebuggerDisplay( "{Name} ({Alias})" )]
+    [DebuggerDisplay( "{Expression.Value} ({Alias})" )]
     public class Field
     {
         public string Alias { get; set; }
-        public string Name { get; set; }
+        public Expression Expression { get; set; }
     }
 }

@@ -52,8 +52,8 @@ namespace Laan.SQL.Parser
                     if ( _tokenizer.TokenEquals( VIEW ) )
                         parser = new CreateViewStatementParser( _tokenizer );
 
-                    //else if ( _tokenizer.TokenEquals( NONCLUSTERED ) )
-                    //    parser = new CreateNonClusteredIndexParser( _tokenizer );
+                    else if ( _tokenizer.TokenEquals( NONCLUSTERED ) )
+                        parser = new CreateNonClusteredIndexParser( _tokenizer );
 
                     //if ( _tokenizer.TokenEquals( INDEX ) )
                     //    parser = new CreateIndexStatementParser( _tokenizer );
