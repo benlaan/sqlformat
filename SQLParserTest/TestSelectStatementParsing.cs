@@ -15,15 +15,14 @@ namespace Laan.SQL.Parser.Test
         public void TestNoParserException()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "merge from table" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "merge from table" );
         }
 
         [Test]
         public void Select_StarField_Only()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "select * from table" );
-            SelectStatement statement = sut as SelectStatement;
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table" );
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -38,15 +37,14 @@ namespace Laan.SQL.Parser.Test
         public void TestExpectedError()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "select * table" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * table" );
         }
 
         [Test]
         public void Select_Top_10_StarField()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "select top 10 * from table" );
-            SelectStatement statement = sut as SelectStatement;
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select top 10 * from table" );
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -61,15 +59,14 @@ namespace Laan.SQL.Parser.Test
         public void Select_Top_Missing_Top_Param_StarField()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "select top * from table" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select top * from table" );
         }
 
         [Test]
         public void Select_Distinct_Top_10_StarField()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "select distinct top 10 * from table" );
-            SelectStatement statement = sut as SelectStatement;
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select distinct top 10 * from table" );
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -84,8 +81,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_Multiple_Fields()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "select fielda, field2, fie3ld from table" );
-            SelectStatement statement = sut as SelectStatement;
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select fielda, field2, fie3ld from table" );
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -103,8 +99,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Aliased_Table_With_As()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "select * from table as t" );
-            SelectStatement statement = sut as SelectStatement;
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table as t" );
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -117,8 +112,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Aliased_Table_Without_As()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "select * from table t" );
-            SelectStatement statement = sut as SelectStatement;
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table t" );
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -131,8 +125,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Two_Aliased_Table_With_As()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "select * from table1 as t1, table2 as t2" );
-            SelectStatement statement = sut as SelectStatement;
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table1 as t1, table2 as t2" );
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -147,8 +140,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Two_Aliased_Table_Without_As()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "select * from table1 t1, table2 t2 " );
-            SelectStatement statement = sut as SelectStatement;
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table1 t1, table2 t2 " );
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -163,8 +155,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_Multiple_Fields_With_Aliases()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "select field, fielda a, field2 as b, alias = fie3ld from table" );
-            SelectStatement statement = sut as SelectStatement;
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select field, fielda a, field2 as b, alias = fie3ld from table" );
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -187,8 +178,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_Multiple_Fields_With_Table_Alias_Prefix()
         {
             // Exercise
-            IStatement sut = ParserFactory.Execute( "select t1.fielda, t1.field2, SomeDb.dbo.fie3ld from table as t1" );
-            SelectStatement statement = sut as SelectStatement;
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select t1.fielda, t1.field2, SomeDb.dbo.fie3ld from table as t1" );
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -210,36 +200,35 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Inner_Join_Condition()
         {
             // Exercise
-            //IStatement sut = ParserFactory.Execute( "select fielda from table1 t1 join table2 t2 on t1.field1 = t2.field2" );
-            //SelectStatement statement = sut as SelectStatement;
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select fielda from table1 t1 inner join table2 t2 on t1.field1 = t2.field2" );
 
-            //// Verify outcome
-            //Assert.IsNotNull( statement );
+            // Verify outcome
+            Assert.IsNotNull( statement );
 
-            //// Test From
-            //Assert.AreEqual( 1, statement.From.Count );
-            //Assert.AreEqual( "table1", statement.From[ 0 ].Name );
-            //Assert.AreEqual( "t1", statement.From[ 0 ].Alias );
+            // Test From
+            Assert.AreEqual( 1, statement.From.Count );
+            Assert.AreEqual( "table1", statement.From[ 0 ].Name );
+            Assert.AreEqual( "t1", statement.From[ 0 ].Alias );
 
-            //// Test Join
-            //Assert.AreEqual( 1, statement.Joins.Count );
+            // Test Join
+            Assert.AreEqual( 1, statement.Joins.Count );
 
-            //Join join = statement.Joins[ 0 ];
+            Join join = statement.Joins[ 0 ];
 
-            //Assert.AreEqual( "table2", join.Name );
-            //Assert.AreEqual( "t2", join.Alias );
+            Assert.AreEqual( "table2", join.Name );
+            Assert.AreEqual( "t2", join.Alias );
 
-            //Assert.AreEqual( JoinType.InnerJoin, join.Type );
-            //Assert.AreEqual( "=", join.Condition.Operation );
-            //Assert.AreEqual( "t1", join.Condition.LeftExpression.Alias );
-            //Assert.AreEqual( "field1", join.Condition.LeftExpression.Field );
-            //Assert.AreEqual( "t1.field1", join.Condition.LeftExpression );
+            Assert.AreEqual( JoinType.InnerJoin, join.Type );
+            Assert.AreEqual( "=", join.Condition.Operator );
+            //Assert.AreEqual( "t1", join.Condition.Left.Alias );
+            //Assert.AreEqual( "field1", join.Condition.Left.Expression.Value );
+            Assert.AreEqual( "t1.field1", join.Condition.Left.Value );
 
-            //Assert.AreEqual( "t2", join.Condition.RightExpression.Alias );
-            //Assert.AreEqual( "field2", join.Condition.RightExpression.Field );
-            //Assert.AreEqual( "t2.field2", join.Condition.RightExpression );
+            //Assert.AreEqual( "t2", join.Condition.Right.Alias );
+            //Assert.AreEqual( "field2", join.Condition.Right.Expression.Value );
+            Assert.AreEqual( "t2.field2", join.Condition.Right.Value );
 
-            //Assert.AreEqual( "t1.field1 = t2.field2", join.Condition );
+            Assert.AreEqual( "t1.field1 = t2.field2", join.Condition.Value );
         }
     }
 

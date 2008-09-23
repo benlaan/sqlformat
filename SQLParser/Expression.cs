@@ -7,12 +7,14 @@ namespace Laan.SQL.Parser
         public virtual string Value { get; set; }
     }
 
-    public class NestedSelectExpression
+    public class CriteriaExpression
     {
-    }
+        public CriteriaExpression()
+        {
+            Left = new Expression();
+            Right = new Expression();
+        }
 
-    public class BinaryExpression
-    {
         public Expression Left { get; set; }
         public Expression Right { get; set; }
         public string Operator { get; set; }

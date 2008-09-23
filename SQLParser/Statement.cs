@@ -8,6 +8,28 @@ namespace Laan.SQL.Parser
 
     }
 
+    public enum JoinType
+    {
+        InnerJoin,
+        LeftJoin,
+        RightJoin,
+        FullJoin,
+        CrossJoin
+    }
+
+    public class Join
+    {
+        public Join()
+        {
+            Condition = new CriteriaExpression();
+        }
+
+        public string Name { get; set; }
+        public string Alias { get; set; }
+        public JoinType Type { get; set; }
+        public CriteriaExpression Condition { get; set; }
+    }
+
     public class SelectStatement : IStatement
     {
         public SelectStatement()
@@ -16,6 +38,7 @@ namespace Laan.SQL.Parser
             Top = null;
             Fields = new List<Field>();
             From = new List<Table>();
+            Joins = new List<Join>();
         }
 
         public bool Distinct { get; set; }
@@ -23,5 +46,6 @@ namespace Laan.SQL.Parser
 
         public List<Table> From { get; set; }
         public List<Field> Fields { get; set; }
+        public List<Join> Joins { get; set; }
     }
 }

@@ -96,7 +96,50 @@ namespace Laan.SQL.Parser
 
             } while ( Tokenizer.TokenEquals( Constants.COMMA ) );
 
-            // ProcessJoins
+            ProcessJoins();
+        }
+
+        private void ProcessJoins()
+        {
+            do
+            {
+                JoinType? joinType = null;
+
+                if ( Tokenizer.TokenEquals( "INNER" ) || IsTokenInSet( "JOIN" ) )
+                {
+                    joinType = JoinType.InnerJoin;
+                }
+                if ( Tokenizer.TokenEquals( "LEFT" ) )
+                {
+                    joinType = JoinType.LeftJoin;
+                    if ( Tokenizer.TokenEquals( "OUTER" ) )
+                        ; // consume this redundant token..
+                }
+                if ( Tokenizer.TokenEquals( "RIGHT" ) )
+                {
+                    joinType = JoinType.RightJoin;
+                    if ( Tokenizer.TokenEquals( "OUTER" ) )
+                        ; // consume this redundant token..
+                }
+                if ( joinType == null )
+                    return;
+
+                ExpectToken( "JOIN" );
+                Join join = new Join() { Type = ( JoinType )joinType };
+
+                join.Name = GetTableName();
+
+                if ( Tokenizer.TokenEquals( "AS" ) || !Tokenizer.TokenEquals( "ON" ) )
+                    join.Alias = GetIdentifier();
+
+                ExpectToken( "ON" );
+
+                join.Condition = ProcessCriteriaExpression();
+
+                _statement.Joins.Add( join );
+            }
+            while ( Tokenizer.HasMoreTokens && !IsTokenInSet( "ORDER", "GROUP" ) );
+            
         }
 
         private string ProcessTableName()

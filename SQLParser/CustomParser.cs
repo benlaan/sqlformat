@@ -50,6 +50,28 @@ namespace Laan.SQL.Parser
             return parser.Execute();
         }
 
+        private string GetOperator()
+        {
+            if ( IsTokenInSet( "=", ">=", "<=", "!=", "<>", "IN", "ANY" ) )
+            {
+                string token = Tokenizer.Current;
+                ReadNextToken();
+                return token;
+            }
+            else
+                throw new ExpectedTokenNotFoundException( "'=', '>=', '<=', '!=', '<>', 'IN', 'ANY'", CurrentToken );
+
+        }
+
+        protected CriteriaExpression ProcessCriteriaExpression()
+        {
+            CriteriaExpression expression = new CriteriaExpression();
+            expression.Left = ProcessExpression();
+            expression.Operator = GetOperator();
+            expression.Right = ProcessExpression();
+
+            return expression;
+        }
 
         protected string GetIdentifierUntilTerminated( string terminator )
         {
