@@ -353,7 +353,8 @@ namespace Laan.SQL.Parser.Test
                     id1 int,
                     id2 bit,
                     id3 uniqueidentifier not null constraint [Name] default (newid()),
-                    id4 varchar(10) not null constraint [Name] default ('Hello')
+                    id4 varchar(10) not null constraint [Name] default ('Hello'),
+                    id5 varchar(10) not null default (newid())
 
                 )"
             );
@@ -385,9 +386,55 @@ namespace Laan.SQL.Parser.Test
                     IsPrimaryKey = false, 
                     Nullability = Nullability.NotNullable 
                 },
+                new FieldDefinition() 
+                { 
+                    Name = "id5", 
+                    Type = new SqlType( "varchar", 10 ),
+                    IsPrimaryKey = false, 
+                    Nullability = Nullability.NotNullable
+                },
             };
 
             CollectionAssert.AreElementsEqual( expected, statement.Fields );
+        }
+
+        [Test]
+        public void Test()
+        {
+            // Setup
+            var statement = ParserFactory.Execute<CreateTableStatement>( @"
+                CREATE TABLE Stage.[Parcels_Updates]
+                (
+                [ParcelID] [int] NOT NULL,
+                [ParcelNumber] [varchar] (32) COLLATE Latin1_General_CI_AS NULL,
+                [TransactionType] [int] NULL,
+                [OwnerOrderNumber] [varchar] (16) COLLATE Latin1_General_CI_AS NULL,
+                [IsWarehouser] [bit] NULL,
+                [StartDateTime] [datetime] NULL,
+                [ExpiryDate] [datetime] NULL,
+                [TransportMode] [int] NULL,
+                [IsFulfilled] [bit] NULL,
+                [Responsibility] [nvarchar] (32) COLLATE Latin1_General_CI_AS NULL,
+                [SpecialInstructions] [nvarchar] (64) COLLATE Latin1_General_CI_AS NULL,
+                [CustomerID] [int] NULL,
+                [SeasonID] [int] NULL,
+                [CommodityID] [int] NULL,
+                [BinGradeID] [int] NULL,
+                [ToSiteID] [int] NULL,
+                [FromSiteID] [int] NULL,
+                [TotalWeightKilograms] [int] NULL,
+                [VariancePercentage] [float] NULL,
+                [VarianceAbsoluteKilograms] [int] NULL,
+                [ReceiverShortName] [nvarchar] (32) COLLATE Latin1_General_CI_AS NULL,
+                [ReceiverLongName] [nchar] (255) COLLATE Latin1_General_CI_AS NULL
+                )
+                "
+            );
+
+            // Exercise
+
+            // Verify outcome
+
         }
     }
 }

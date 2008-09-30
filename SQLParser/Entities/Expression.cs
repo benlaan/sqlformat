@@ -2,6 +2,15 @@ using System;
 
 namespace Laan.SQL.Parser
 {
+    public class FieldExpression : Expression
+    {
+        internal FieldExpression()
+        {
+        }
+
+        public override string Value { get; set; }
+    }
+
     public class Expression
     {
         public virtual string Value { get; set; }

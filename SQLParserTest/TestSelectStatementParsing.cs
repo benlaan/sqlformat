@@ -200,7 +200,9 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Inner_Join_Condition()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select fielda from table1 t1 inner join table2 t2 on t1.field1 = t2.field2" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( 
+                "select fielda from table1 t1 inner join table2 t2 on t1.field1 = t2.field2" 
+            );
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -220,6 +222,7 @@ namespace Laan.SQL.Parser.Test
 
             Assert.AreEqual( JoinType.InnerJoin, join.Type );
             Assert.AreEqual( "=", join.Condition.Operator );
+//            Assert.IsTrue( join.Condition.Left is FieldExpression );
             //Assert.AreEqual( "t1", join.Condition.Left.Alias );
             //Assert.AreEqual( "field1", join.Condition.Left.Expression.Value );
             Assert.AreEqual( "t1.field1", join.Condition.Left.Value );

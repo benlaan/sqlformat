@@ -20,75 +20,26 @@ namespace Laan.SQL.Parser
         }
     }
 
-    public class Identity
-    {
-        public int Start { get; set; }
-        public int Increment { get; set; }
-
-        public override int GetHashCode()
-        {
-            return Start.GetHashCode() + Increment.GetHashCode();
-        }
-
-        public override bool Equals( object obj )
-        {
-            Identity other = ( Identity ) obj;
-            return Start == other.Start && Increment == other.Increment;
-        }
-    }
-
-    public class SqlType
-    {
-        public SqlType( string name, int length, int scale ) : this ( name, length )
-        {
-            Scale = scale;
-        }
-
-        public SqlType( string name, int length ) : this ( name )
-        {
-            Length = length;
-        }
-
-        public SqlType( string name )
-        {
-            Name = name;
-            Collation = null;
-        }
-
-        public string Name { get; set; }
-        public string Collation { get; set; }
-        public int? Length { get; set; }
-        public int? Scale { get; set; }
-
-        public override string ToString()
-        {
-            string lengthDisplay = Length.HasValue ? String.Format( "({0})" + (Collation != null ? " " + Collation : ""), Length ) : null;
-            string precisionDisplay = Scale.HasValue ? String.Format( "({0}, {1})", Length, Scale ) : null;
-            return String.Format( "{0}{1}", Name, precisionDisplay ?? lengthDisplay ?? "" );
-        }
-    }
-
-    [DebuggerDisplay( "{Name}: {Type} {Descriptor}" )]
+    [DebuggerDisplay( "{Name}: {Type} {Description}" )]
     public class FieldDefinition
     {
         public Nullability Nullability { get; set; }
 
-        // TODO: This type needs to be converted to a complex type, to record the type name, length, precision, etc.
         public SqlType Type { get; set; }
         public string Name { get; set; }
         public bool IsPrimaryKey { get; set; }
         public Identity Identity { get; set; }
 
-        public string Descriptor
+        private string Description
         {
             get
             {
                 string result = "";
                 if ( Identity != null )
-                    result = "IDENTITY ";
+                    result = Identity.ToString() + " ";
 
                 if ( IsPrimaryKey )
-                    return result + "(PK)";
+                    return result + "PRIMARY KEY ";
                 else
                 {
                     if ( Nullability == Nullability.NotNullable )
@@ -97,6 +48,11 @@ namespace Laan.SQL.Parser
                     return result += "NULL";
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return Description;
         }
 
         public override int GetHashCode()

@@ -133,6 +133,13 @@ namespace Laan.SQL.Parser
                 Expression expression = ProcessExpression();
                 string defaultValue = expression.Value;
             }
+
+            if ( Tokenizer.TokenEquals( DEFAULT ) )
+            {
+                // TODO: process column constraint
+                Expression expression = ProcessExpression();
+                string defaultValue = expression.Value;
+            }
             _statement.Fields.Add(
                 new FieldDefinition()
                 {

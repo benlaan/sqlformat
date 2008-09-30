@@ -14,9 +14,10 @@ namespace Laan.SQL.Parser
 
         public override IStatement Execute()
         {
-            ExpectTokens( AS, SELECT );
-
             _statement = new CreateViewStatement();
+            _statement.Name = GetIdentifier();
+
+            ExpectTokens( AS, SELECT );
 
             SelectStatementParser parser = new SelectStatementParser( Tokenizer );
             _statement.SelectBlock = parser.Execute() as SelectStatement;

@@ -14,6 +14,7 @@ namespace Laan.SQL.Parser.Test
         [ExpectedException( typeof( NotImplementedException ), Message = "No parser exists for that statement type: merge" )]
         public void TestNoParserException()
         {
+            //TODO: needs to be moved into a ParserFactory specific unit test
             // Exercise
             CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "merge from table" );
         }
@@ -22,11 +23,12 @@ namespace Laan.SQL.Parser.Test
         public void Select_StarField_Only()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view as select * from table" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table" );
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
             Assert.IsNotNull( statement );
+            Assert.AreEqual( "v1", sut.Name );
             Assert.AreEqual( 1, statement.Fields.Count );
             Assert.AreEqual( "*", statement.Fields[ 0 ].Expression.Value );
             Assert.IsNull( statement.Top );
@@ -38,18 +40,19 @@ namespace Laan.SQL.Parser.Test
         public void TestExpectedError()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view as select * table" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * table" );
         }
 
         [Test]
         public void Select_Top_10_StarField()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view as select top 10 * from table" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select top 10 * from table" );
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
             Assert.IsNotNull( statement );
+            Assert.AreEqual( "v1", sut.Name );
             Assert.AreEqual( 1, statement.Fields.Count );
             Assert.AreEqual( "*", statement.Fields[ 0 ].Expression.Value );
             Assert.AreEqual( 10, statement.Top );
@@ -61,18 +64,19 @@ namespace Laan.SQL.Parser.Test
         public void Select_Top_Missing_Top_Param_StarField()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view as select top * from table" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select top * from table" );
         }
 
         [Test]
         public void Select_Distinct_Top_10_StarField()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view as select distinct top 10 * from table" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select distinct top 10 * from table" );
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
             Assert.IsNotNull( statement );
+            Assert.AreEqual( "v1", sut.Name );
             Assert.AreEqual( 1, statement.Fields.Count );
             Assert.AreEqual( "*", statement.Fields[ 0 ].Expression.Value );
             Assert.AreEqual( 10, statement.Top );
@@ -84,11 +88,12 @@ namespace Laan.SQL.Parser.Test
         public void Select_Multiple_Fields()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view as select fielda, field2, fie3ld from table" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select fielda, field2, fie3ld from table" );
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
             Assert.IsNotNull( statement );
+            Assert.AreEqual( "v1", sut.Name );
             Assert.AreEqual( 3, statement.Fields.Count );
 
             var expectedFields = new string[] { "fielda", "field2", "fie3ld" };
@@ -103,11 +108,12 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Aliased_Table_With_As()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view as select * from table as t" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table as t" );
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
             Assert.IsNotNull( statement );
+            Assert.AreEqual( "v1", sut.Name );
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
             Assert.AreEqual( "t", statement.From[ 0 ].Alias );
@@ -117,11 +123,12 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Aliased_Table_Without_As()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view as select * from table t" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table t" );
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
             Assert.IsNotNull( statement );
+            Assert.AreEqual( "v1", sut.Name );
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
             Assert.AreEqual( "t", statement.From[ 0 ].Alias );
@@ -131,11 +138,12 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Two_Aliased_Table_With_As()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view as select * from table1 as t1, table2 as t2" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table1 as t1, table2 as t2" );
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
             Assert.IsNotNull( statement );
+            Assert.AreEqual( "v1", sut.Name );
             Assert.AreEqual( 2, statement.From.Count );
             Assert.AreEqual( "table1", statement.From[ 0 ].Name );
             Assert.AreEqual( "t1", statement.From[ 0 ].Alias );
@@ -147,11 +155,13 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Two_Aliased_Table_Without_As()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view as select * from table1 t1, table2 t2 " );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table1 t1, table2 t2 " );
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
             Assert.IsNotNull( statement );
+            Assert.AreEqual( "v1", sut.Name );
+
             Assert.AreEqual( 2, statement.From.Count );
             Assert.AreEqual( "table1", statement.From[ 0 ].Name );
             Assert.AreEqual( "t1", statement.From[ 0 ].Alias );
@@ -163,11 +173,14 @@ namespace Laan.SQL.Parser.Test
         public void Select_Multiple_Fields_With_Aliases()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view as select field, fielda a, field2 as b, alias = fie3ld from table" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( 
+                "create view v1 as select field, fielda a, field2 as b, alias = fie3ld from table" 
+            );
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
             Assert.IsNotNull( statement );
+            Assert.AreEqual( "v1", sut.Name );
             Assert.AreEqual( 4, statement.Fields.Count );
 
             Assert.AreEqual( "field", statement.Fields[ 0 ].Expression.Value );
@@ -187,7 +200,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_Multiple_Fields_With_Table_Alias_Prefix()
         {
             // Exercise
-            //CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view as select t1.fielda, t1.field2, t1.fie3ld from table as t1" );
+            //CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view something as select t1.fielda, t1.field2, t1.fie3ld from table as t1" );
             //SelectStatement statement = sut.SelectBlock;
 
             //// Verify outcome
@@ -206,36 +219,41 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Inner_Join_Condition()
         {
             // Exercise
-            //CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view as select fielda from table1 t1 join table2 t2 on t1.field1 = t2.field2" );
-            //SelectStatement statement = sut.SelectBlock;
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( @"
 
-            //// Verify outcome
-            //Assert.IsNotNull( statement );
+                CREATE VIEW SomeView
+                AS 
+                    SELECT FieldA
+                    FROM Table1 T1 
+                    JOIN Table2 T2 
+                      ON T1.Field1 = T2.Field2"
+            );
+            SelectStatement statement = sut.SelectBlock;
 
-            //// Test From
-            //Assert.AreEqual( 1, statement.From.Count );
-            //Assert.AreEqual( "table1", statement.From[ 0 ].Name );
-            //Assert.AreEqual( "t1", statement.From[ 0 ].Alias );
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( "SomeView", sut.Name );
 
-            //// Test Join
-            //Assert.AreEqual( 1, statement.Joins.Count );
+            // Test From
+            Assert.AreEqual( 1, statement.From.Count );
+            Assert.AreEqual( "Table1", statement.From[ 0 ].Name );
+            Assert.AreEqual( "T1", statement.From[ 0 ].Alias );
 
-            //Join join = statement.Joins[ 0 ];
+            // Test Join
+            Assert.AreEqual( 1, statement.Joins.Count );
 
-            //Assert.AreEqual( "table2", join.Name );
-            //Assert.AreEqual( "t2", join.Alias );
+            Join join = statement.Joins[ 0 ];
 
-            //Assert.AreEqual( JoinType.InnerJoin, join.Type );
-            //Assert.AreEqual( "=", join.Condition.Operation );
-            //Assert.AreEqual( "t1", join.Condition.LeftExpression.Alias );
-            //Assert.AreEqual( "field1", join.Condition.LeftExpression.Field );
-            //Assert.AreEqual( "t1.field1", join.Condition.LeftExpression );
+            Assert.AreEqual( "Table2", join.Name );
+            Assert.AreEqual( "T2", join.Alias );
 
-            //Assert.AreEqual( "t2", join.Condition.RightExpression.Alias );
-            //Assert.AreEqual( "field2", join.Condition.RightExpression.Field );
-            //Assert.AreEqual( "t2.field2", join.Condition.RightExpression );
+            Assert.AreEqual( JoinType.InnerJoin, join.Type );
+            Assert.AreEqual( "=", join.Condition.Operator );
+            Assert.AreEqual( "T1.Field1", join.Condition.Left.Value );
 
-            //Assert.AreEqual( "t1.field1 = t2.field2", join.Condition );
+            Assert.AreEqual( "T2.Field2", join.Condition.Right.Value );
+
+            Assert.AreEqual( "T1.Field1 = T2.Field2", join.Condition.Value );
         }
     }
 
