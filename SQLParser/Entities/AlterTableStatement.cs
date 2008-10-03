@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Laan.SQL.Parser
 {
@@ -8,7 +9,7 @@ namespace Laan.SQL.Parser
         {
         }
 
-        public string PrimaryKey { get; set; }
+        public List<string> PrimaryKeys { get; set; }
         public string ConstraintName { get; set; }
         public string TableName { get; set; }
     }

@@ -38,7 +38,7 @@ namespace Laan.SQL.Parser
             if (Tokenizer.TokenEquals( PRIMARY ) )
             {
                 Tokenizer.ExpectTokens( new[] { KEY, CLUSTERED, Constants.OPEN_BRACKET } );
-                _statement.PrimaryKey = GetIdentifier();
+                _statement.PrimaryKeys = GetIdentifierList();
                 Tokenizer.ExpectToken( Constants.CLOSE_BRACKET );
             }
             else if ( Tokenizer.TokenEquals( FOREIGN ) )

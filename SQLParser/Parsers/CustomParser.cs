@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Laan.SQL.Parser
 {
@@ -110,6 +111,19 @@ namespace Laan.SQL.Parser
             return identifier;
         }
 
+        protected List<string> GetIdentifierList()
+        {
+            List<string> identifiers = new List<string>();
+
+            do
+            {
+                identifiers.Add( GetIdentifier() );
+            }
+            while ( Tokenizer.TokenEquals( Constants.COMMA ) );
+
+            return identifiers;
+        }
+        
         protected string GetDotNotationIdentifier()
         {
             string token;
