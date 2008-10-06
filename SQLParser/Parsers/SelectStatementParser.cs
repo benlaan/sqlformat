@@ -68,7 +68,7 @@ namespace Laan.SQL.Parser
                 alias = token.Value;
                 expression = ProcessExpression();
             }
-            else if ( !IsTokenInSet( FieldTerminatorSet ) )
+            else if ( !IsNextToken( FieldTerminatorSet ) )
             {
                 alias = CurrentToken;
                 expression = token;
@@ -88,7 +88,7 @@ namespace Laan.SQL.Parser
                 Table table = new Table() { Name = ProcessTableName() };
                 _statement.From.Add( table );
 
-                if ( Tokenizer.TokenEquals( AS ) || !IsTokenInSet( FromTerminatorSet ) )
+                if ( Tokenizer.TokenEquals( AS ) || !IsNextToken( FromTerminatorSet ) )
                 {
                     table.Alias = CurrentToken;
                     ReadNextToken();
@@ -105,7 +105,7 @@ namespace Laan.SQL.Parser
             {
                 JoinType? joinType = null;
 
-                if ( Tokenizer.TokenEquals( "INNER" ) || IsTokenInSet( "JOIN" ) )
+                if ( Tokenizer.TokenEquals( "INNER" ) || IsNextToken( "JOIN" ) )
                 {
                     joinType = JoinType.InnerJoin;
                 }
@@ -138,7 +138,7 @@ namespace Laan.SQL.Parser
 
                 _statement.Joins.Add( join );
             }
-            while ( Tokenizer.HasMoreTokens && !IsTokenInSet( "ORDER", "GROUP" ) );
+            while ( Tokenizer.HasMoreTokens && !IsNextToken( "ORDER", "GROUP" ) );
             
         }
 

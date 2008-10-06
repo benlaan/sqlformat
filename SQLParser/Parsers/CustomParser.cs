@@ -34,7 +34,7 @@ namespace Laan.SQL.Parser
             get { return Tokenizer.Current; }
         }
 
-        protected bool IsTokenInSet( params string[] tokenSet )
+        protected bool IsNextToken( params string[] tokenSet )
         {
             foreach ( var token in tokenSet )
                 if ( token.ToLower() == CurrentToken.ToLower() )
@@ -53,7 +53,7 @@ namespace Laan.SQL.Parser
 
         private string GetOperator()
         {
-            if ( IsTokenInSet( "=", ">=", "<=", "!=", "<>", "IN", "ANY" ) )
+            if ( IsNextToken( "=", ">=", "<=", "!=", "<>", "IN", "ANY" ) )
             {
                 string token = Tokenizer.Current;
                 ReadNextToken();
@@ -85,7 +85,7 @@ namespace Laan.SQL.Parser
                     token += CurrentToken;
                     ReadNextToken();
                 }
-                while ( !IsTokenInSet( terminator ) );
+                while ( !IsNextToken( terminator ) );
 
             }
             finally

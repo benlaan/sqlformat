@@ -200,8 +200,15 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Inner_Join_Condition()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( 
-                "select fielda from table1 t1 inner join table2 t2 on t1.field1 = t2.field2" 
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
+
+                select fielda 
+
+                from table1 t1 
+
+                join table2 t2 
+                  on t1.field1 = t2.field2
+                " 
             );
 
             // Verify outcome
