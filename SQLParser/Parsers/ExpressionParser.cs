@@ -45,7 +45,7 @@ namespace Laan.SQL.Parser
             {
                 OperatorExpression result = new OperatorExpression();
                 result.Left = factor;
-                
+
                 result.Operator = CurrentToken;
                 ReadNextToken();
 
@@ -54,7 +54,7 @@ namespace Laan.SQL.Parser
                 return result;
             }
             else
-                return factor;            
+                return factor;
         }
 
         private Expression ReadFactor()
@@ -68,6 +68,17 @@ namespace Laan.SQL.Parser
             }
             else
             {
+
+                if ( IsNextToken( "SELECT" ) )
+                {
+                    ReadNextToken();
+                    SelectExpression selectExpression = new SelectExpression();
+
+                    var parser = new SelectStatementParser( Tokenizer );
+                    selectExpression.Statement = ( SelectStatement )parser.Execute();
+                    return selectExpression;
+                }
+
                 string token;
                 // check for quoted identifier (string expression) next
                 if ( Tokenizer.TokenEquals( Constants.QUOTE ) )

@@ -15,9 +15,10 @@ namespace Laan.SQL.Parser
         private const string RIGHT = "RIGHT";
         private const string FULL = "FULL";
         private const string EQUALS = "=";
+        private const string WHERE = "WHERE";
 
         private string[] FieldTerminatorSet = { FROM, Constants.COMMA };
-        private string[] FromTerminatorSet = { INNER, JOIN, LEFT, RIGHT, FULL, Constants.COMMA };
+        private string[] FromTerminatorSet = { INNER, JOIN, LEFT, RIGHT, FULL, Constants.COMMA, Constants.CLOSE_BRACKET };
 
         SelectStatement _statement;
 
@@ -139,7 +140,7 @@ namespace Laan.SQL.Parser
                 _statement.Joins.Add( join );
             }
             while ( Tokenizer.HasMoreTokens && !IsNextToken( "ORDER", "GROUP" ) );
-            
+
         }
 
         private string ProcessTableName()
@@ -150,6 +151,19 @@ namespace Laan.SQL.Parser
             return table;
         }
 
+        private void ProcessWhere()
+        {
+            if ( Tokenizer.TokenEquals( WHERE ) )
+            {
+                do
+                {
+                    _statement.Where.Add( ProcessCriteriaExpression() );
+                    
+                }
+                while ( IsNextToken( "AND", "OR" ) );
+            }
+        }
+
         public override IStatement Execute()
         {
             _statement = new SelectStatement();
@@ -158,8 +172,10 @@ namespace Laan.SQL.Parser
             ProcessTop();
             ProcessFields();
             ProcessFrom();
+            ProcessWhere();
 
             return _statement;
         }
+
     }
 }

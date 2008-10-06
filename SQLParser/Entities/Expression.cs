@@ -5,6 +5,12 @@ using System.Diagnostics;
 
 namespace Laan.SQL.Parser
 {
+    [DebuggerDisplay("{Value}")]
+    public class Expression
+    {
+        public virtual string Value { get; protected set; }
+    }
+
     public class OperatorExpression : Expression
     {
         public Expression Left { get; set; }
@@ -17,10 +23,20 @@ namespace Laan.SQL.Parser
         }
     }
 
-    [DebuggerDisplay("{Value}")]
-    public class Expression
+    public class SelectExpression : Expression
     {
-        public virtual string Value { get; protected set; }
+
+        public SelectExpression()
+        {
+            Statement = new SelectStatement();
+        }
+
+        public SelectStatement Statement { get; set; }
+
+        public override string Value
+        {
+            get { return Statement.ToString(); }
+        }
     }
 
     public class FunctionExpression : Expression
@@ -79,24 +95,5 @@ namespace Laan.SQL.Parser
         {
             get { return Constants.OPEN_BRACKET + Expression.Value + Constants.CLOSE_BRACKET; }
         }
-    }
-
-    public class CriteriaExpression
-    {
-        public CriteriaExpression()
-        {
-            Left = new Expression();
-            Right = new Expression();
-        }
-
-        public Expression Left { get; set; }
-        public Expression Right { get; set; }
-        public string Operator { get; set; }
-
-        public string Value
-        {
-            get { return String.Format( "{0} {1} {2}", Left.Value, Operator, Right.Value ); }
-        }
-
     }
 }

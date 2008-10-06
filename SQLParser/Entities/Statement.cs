@@ -39,6 +39,7 @@ namespace Laan.SQL.Parser
             Fields = new List<Field>();
             From = new List<Table>();
             Joins = new List<Join>();
+            Where = new List<CriteriaExpression>();
         }
 
         public bool Distinct { get; set; }
@@ -47,5 +48,6 @@ namespace Laan.SQL.Parser
         public List<Table> From { get; set; }
         public List<Field> Fields { get; set; }
         public List<Join> Joins { get; set; }
+        public List<CriteriaExpression> Where { get; set; }
     }
 }

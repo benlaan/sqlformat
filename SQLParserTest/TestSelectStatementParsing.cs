@@ -208,7 +208,7 @@ namespace Laan.SQL.Parser.Test
 
                 join table2 t2 
                   on t1.field1 = t2.field2
-                " 
+                "
             );
 
             // Verify outcome
@@ -229,16 +229,106 @@ namespace Laan.SQL.Parser.Test
 
             Assert.AreEqual( JoinType.InnerJoin, join.Type );
             Assert.AreEqual( "=", join.Condition.Operator );
-//            Assert.IsTrue( join.Condition.Left is FieldExpression );
-            //Assert.AreEqual( "t1", join.Condition.Left.Alias );
-            //Assert.AreEqual( "field1", join.Condition.Left.Expression.Value );
+            Assert.IsTrue( join.Condition.Left is IdentifierExpression );
+
+            var leftExpression = ( IdentifierExpression )join.Condition.Left;
+
+            Assert.AreEqual( "t1", leftExpression.Parts[ 0 ] );
+            Assert.AreEqual( "field1", leftExpression.Parts[ 1 ] );
             Assert.AreEqual( "t1.field1", join.Condition.Left.Value );
 
-            //Assert.AreEqual( "t2", join.Condition.Right.Alias );
-            //Assert.AreEqual( "field2", join.Condition.Right.Expression.Value );
+            var rightExpression = ( IdentifierExpression )join.Condition.Right;
+
+            Assert.AreEqual( "t2", rightExpression.Parts[ 0 ] );
+            Assert.AreEqual( "field2", rightExpression.Parts[ 1 ] );
             Assert.AreEqual( "t2.field2", join.Condition.Right.Value );
 
             Assert.AreEqual( "t1.field1 = t2.field2", join.Condition.Value );
+        }
+
+        [Test]
+        public void Select_With_Inner_Join_Condition_With_Complex_Expressions()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
+
+                select fielda 
+
+                from table1 t1 
+
+                join table2 t2 
+                  on (t1.field1 + 150) / 12 = ( t2.field2 + t1.fielda )
+                "
+            );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+
+            // Test From
+            Assert.AreEqual( 1, statement.From.Count );
+            Assert.AreEqual( "table1", statement.From[ 0 ].Name );
+            Assert.AreEqual( "t1", statement.From[ 0 ].Alias );
+
+            // Test Join
+            Assert.AreEqual( 1, statement.Joins.Count );
+
+            Join join = statement.Joins[ 0 ];
+
+            Assert.AreEqual( "table2", join.Name );
+            Assert.AreEqual( "t2", join.Alias );
+
+            Assert.AreEqual( JoinType.InnerJoin, join.Type );
+            Assert.AreEqual( "=", join.Condition.Operator );
+            Assert.IsTrue( join.Condition.Left is OperatorExpression );
+
+            var leftExpression = ( OperatorExpression )join.Condition.Left;
+            Assert.AreEqual( "/", leftExpression.Operator );
+
+            Assert.IsTrue( leftExpression.Left is NestedExpression );
+            var leftLeftExpression = ( NestedExpression )leftExpression.Left;
+
+            Assert.IsTrue( leftLeftExpression.Expression is OperatorExpression );
+
+            OperatorExpression leftOperatorExpression = ( OperatorExpression )leftLeftExpression.Expression;
+
+            Assert.AreEqual( "t1.field1", leftOperatorExpression.Left.Value );
+            Assert.AreEqual( "+", leftOperatorExpression.Operator );
+            Assert.AreEqual( "150", leftOperatorExpression.Right.Value );
+
+            IdentifierExpression rightIdentifierExpression = ( IdentifierExpression )leftExpression.Right;
+
+            Assert.AreEqual( "12", rightIdentifierExpression.Value );
+
+
+            //Assert.AreEqual( "t1", leftExpression.Parts[ 0 ] );
+            //Assert.AreEqual( "field1", leftExpression.Parts[ 1 ] );
+            //Assert.AreEqual( "t1.field1", join.Condition.Left.Value );
+
+            var rightExpression = ( NestedExpression )join.Condition.Right;
+
+            //Assert.AreEqual( "t2", rightExpression.Parts[ 0 ] );
+            //Assert.AreEqual( "field2", rightExpression.Parts[ 1 ] );
+            //Assert.AreEqual( "t2.field2", join.Condition.Right.Value );
+
+        }
+
+
+        [Test]
+        public void Select_With_Where_Condition()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
+
+                select fielda 
+
+                from table1 t1 
+
+                where t1.fieldb = 'Hello'
+                "
+            );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
         }
     }
 

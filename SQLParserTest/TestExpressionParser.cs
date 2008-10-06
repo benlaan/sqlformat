@@ -247,5 +247,35 @@ namespace Laan.SQLParser.Test
 
             Assert.AreEqual( "50", operatorExpression.Right.Value );
         }
+
+        [Test]
+        public void Test_Expression_With_Nested_Select_Statement()
+        {
+            // setup
+            Tokenizer tokenizer = new Tokenizer( "( SELECT A.Field1 FROM Table ) * ( 50 + ( 20 * F.ID ) )" );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull( expression );
+            Assert.IsTrue( expression is OperatorExpression );
+            var operatorExpression = ( OperatorExpression )expression;
+
+            Assert.AreEqual( "*", operatorExpression.Operator );
+            Assert.IsTrue( operatorExpression.Left is NestedExpression );
+
+            NestedExpression leftExpression = ( NestedExpression )operatorExpression.Left;
+            Assert.IsTrue( leftExpression.Expression is SelectExpression );
+
+            SelectExpression leftOperatorExpression = ( SelectExpression )leftExpression.Expression;
+
+            Assert.AreEqual( "A.Field1", leftOperatorExpression.Statement.Fields[0].Expression.Value );
+            Assert.AreEqual( "Table", leftOperatorExpression.Statement.From[0].Name );
+
+        }
     }
 }
