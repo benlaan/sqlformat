@@ -84,6 +84,28 @@ namespace Laan.SQLParser.Test
         }
 
         [Test]
+        [Row( "''", "''" )]
+        [Row( " '' ", "''" )]
+        [Row( " ' ' ", "' '" )]
+        [Row( "' '", "' '" )]
+        public void Test_Expression_Reads_Empty_Quoted_String( string input, string output )
+        {
+            // setup
+            Tokenizer tokenizer = new Tokenizer( input );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull( expression );
+            Assert.AreEqual( output, expression.Value );
+            Assert.IsTrue( expression is StringExpression );
+        }
+
+        [Test]
         public void Test_Expression_Reads_Function_Expression_Without_Params()
         {
             // setup

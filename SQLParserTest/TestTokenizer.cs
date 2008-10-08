@@ -11,6 +11,19 @@ namespace Laan.SQL.Parser.Test
     [TestFixture]
     public class TestTokenizer
     {
+        private static void Verify( string input, string[] tokens )
+        {
+            Tokenizer tokenizer = new Tokenizer( input );
+
+            foreach ( string token in tokens )
+            {
+                Assert.IsTrue( tokenizer.HasMoreTokens );
+                tokenizer.ReadNextToken();
+                Assert.AreEqual( token, tokenizer.Current );
+            }
+            Assert.IsFalse( tokenizer.HasMoreTokens );
+        }
+
         [Test]
         public void Ensure_Empty_String_Returns_No_Tokens()
         {
@@ -26,15 +39,7 @@ namespace Laan.SQL.Parser.Test
         [Row( "Hello World", new[] { "Hello", "World" } )]
         public void Tokenize_Alpha_Strings( string input, string[] tokens )
         {
-            var sut = new Tokenizer( input );
-
-            foreach ( string token in tokens )
-            {
-                Assert.IsTrue( sut.HasMoreTokens );
-                sut.ReadNextToken();
-                Assert.AreEqual( token, sut.Current );
-            }
-            Assert.IsFalse( sut.HasMoreTokens );
+            Verify( input, tokens );
         }
 
         [Test]
@@ -43,15 +48,7 @@ namespace Laan.SQL.Parser.Test
         [Row( "12349876 123312 12312", new[] { "12349876", "123312", "12312" } )]
         public void Tokenize_Numeric_Strings( string input, string[] tokens )
         {
-            var sut = new Tokenizer( input );
-
-            foreach ( string token in tokens )
-            {
-                Assert.IsTrue( sut.HasMoreTokens );
-                sut.ReadNextToken();
-                Assert.AreEqual( token, sut.Current );
-            }
-            Assert.IsFalse( sut.HasMoreTokens );
+            Verify( input, tokens );
         }
 
         [Test]
@@ -59,15 +56,7 @@ namespace Laan.SQL.Parser.Test
         [Row( "Ben1234 Laan9876 12Hello 34World", new[] { "Ben1234", "Laan9876", "12", "Hello", "34", "World" } )]
         public void Tokenize_Alpha_Numeric_Strings( string input, string[] tokens )
         {
-            var sut = new Tokenizer( input );
-
-            foreach ( string token in tokens )
-            {
-                Assert.IsTrue( sut.HasMoreTokens );
-                sut.ReadNextToken();
-                Assert.AreEqual( token, sut.Current );
-            }
-            Assert.IsFalse( sut.HasMoreTokens );
+            Verify( input, tokens );
         }
 
         [Test]
@@ -81,7 +70,7 @@ namespace Laan.SQL.Parser.Test
         ]
         [Row( 
             @"Ben(Test1234), Laan(9876) ""12"" [Hello, 'World']",
-            new[] { "Ben", "(", "Test1234", ")", ",", "Laan", "(", "9876", ")", "\"", "12", "\"", "[", "Hello", ",", "'", "World", "'", "]" } )
+            new[] { "Ben", "(", "Test1234", ")", ",", "Laan", "(", "9876", ")", "\"", "12", "\"", "[", "Hello", ",", "'World'", "]" } )
         ]
         [Row(
             "A = 1, 2 <= 5; A != B; 33 >= 12", 
@@ -90,15 +79,19 @@ namespace Laan.SQL.Parser.Test
         [Row( "@Ben_Laan", new[] { "@Ben_Laan" } )]
         public void Tokenize_Alpha_Numeric_And_Special_Strings( string input, string[] tokens )
         {
-            var sut = new Tokenizer( input );
+            Verify( input, tokens );
+        }
 
-            foreach ( string token in tokens )
-            {
-                Assert.IsTrue( sut.HasMoreTokens );
-                sut.ReadNextToken();
-                Assert.AreEqual( token, sut.Current );
-            }
-            Assert.IsFalse( sut.HasMoreTokens );
+        [Test]
+        [Row( 
+            "CONVERT(INT, '10')", new[] { "CONVERT", "(", "INT", ",", "'10'", ")" })
+        ]
+        [Row(
+            "'Hello World'", new[] { "'Hello World'" } )
+        ]
+        public void Test_Can_Tokenize_Strings_As_Once_Token( string input, string[] tokens )
+        {
+            Verify( input, tokens );
         }
     }
 }

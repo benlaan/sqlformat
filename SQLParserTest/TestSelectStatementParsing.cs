@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -320,10 +320,8 @@ namespace Laan.SQL.Parser.Test
             SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
 
                 select fielda 
-
-                from table1 t1 
-
-                where t1.fieldb = 'Hello'
+                from table1 t1
+                where t1.fieldb = (select top 1 Name from table)
                 "
             );
 

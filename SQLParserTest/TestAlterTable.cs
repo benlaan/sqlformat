@@ -79,5 +79,21 @@ namespace Laan.SQL.Parser.Test
             Assert.IsNotNull( statement );
             Assert.AreEqual( "[dbo].[Test]", statement.TableName );
         }
+
+        [Test]
+        public void Test_Add_Unique_Non_Clustered_Index()
+        {
+            // Exercise
+            var statement = ParserFactory.Execute<AlterTableStatement>( @"
+
+                ALTER TABLE [dbo].[Computers] 
+                        ADD CONSTRAINT [IX_Computers] UNIQUE NONCLUSTERED ([MachineName])
+                "
+            );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( "[dbo].[Computers]", statement.TableName );
+        }
     }
 }
