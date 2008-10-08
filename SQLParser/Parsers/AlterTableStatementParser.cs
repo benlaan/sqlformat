@@ -9,6 +9,8 @@ namespace Laan.SQL.Parser
         private const string REFERENCES = "REFERENCES";
         private const string WITH = "WITH";
         private const string NOCHECK = "NOCHECK";
+        private const string UNIQUE = "UNIQUE";
+        private const string NONCLUSTERED = "NONCLUSTERED";
         private AlterTableStatement _statement;
 
         internal AlterTableStatementParser( Tokenizer tokenizer ) : base( tokenizer ) { }
@@ -35,9 +37,15 @@ namespace Laan.SQL.Parser
             Tokenizer.ExpectTokens( new[] { ADD, CONSTRAINT } );
             _statement.ConstraintName = GetIdentifier();
 
-            if (Tokenizer.TokenEquals( PRIMARY ) )
+            if ( Tokenizer.TokenEquals( PRIMARY ) )
             {
                 Tokenizer.ExpectTokens( new[] { KEY, CLUSTERED, Constants.OPEN_BRACKET } );
+                _statement.PrimaryKeys = GetIdentifierList();
+                Tokenizer.ExpectToken( Constants.CLOSE_BRACKET );
+            }
+            else if ( Tokenizer.TokenEquals( UNIQUE ) )
+            {
+                Tokenizer.ExpectTokens( new[] { NONCLUSTERED, Constants.OPEN_BRACKET } );
                 _statement.PrimaryKeys = GetIdentifierList();
                 Tokenizer.ExpectToken( Constants.CLOSE_BRACKET );
             }

@@ -65,11 +65,6 @@ namespace Laan.SQL.Parser
         {
             Value = value;
         }
-
-        public override string Value
-        {
-            get { return Constants.QUOTE + base.Value + Constants.QUOTE; }
-        }
     }
     
     public class IdentifierExpression : Expression

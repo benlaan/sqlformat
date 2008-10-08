@@ -80,12 +80,11 @@ namespace Laan.SQL.Parser
                 }
 
                 string token;
-                // check for quoted identifier (string expression) next
-                if ( Tokenizer.TokenEquals( Constants.QUOTE ) )
-                {
-                    token = GetIdentifierUntilTerminated( Constants.QUOTE );
-                    ExpectToken( Constants.QUOTE );
 
+                if ( Tokenizer.Current.StartsWith( "'" ) && Tokenizer.Current.EndsWith( "'" ) )
+                {
+                    token = Tokenizer.Current;
+                    ReadNextToken();
                     return new StringExpression( token );
                 }
 

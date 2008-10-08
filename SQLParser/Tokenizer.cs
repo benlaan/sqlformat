@@ -8,12 +8,19 @@ namespace Laan.SQL.Parser
 {
     public class TokenizerRule
     {
+        public TokenizerRule()
+        {
+            IncludeTerminalChar = false;
+        }
+
         public Func<int, bool> StartOp { get; set; }
         public Func<int, bool> ContinueOp { get; set; }
+        public bool IncludeTerminalChar { get; set; }
     }
 
     public class Tokenizer
     {
+        private const char SINGLE_QUOTE = '\'';
         private TokenizerRule _acceptSpacesRule;
         private Func<int, bool> _neverContinue;
         private List<TokenizerRule> _tokenizingRules;
@@ -44,6 +51,8 @@ namespace Laan.SQL.Parser
 
             _tokenizingRules = new TokenizerRule[] 
             { 
+                // within a quote, EVERYTHING is the same token
+                new TokenizerRule { StartOp = i => i == SINGLE_QUOTE,  ContinueOp = i => i != SINGLE_QUOTE, IncludeTerminalChar = true },
                 new TokenizerRule { StartOp = i => i == '@',   ContinueOp = IsAlphaNumeric },
                 new TokenizerRule { StartOp = i => IsWithinSet( i, new char[] { '>', '<', '!' } ), ContinueOp =  i => i == '=' },
                 new TokenizerRule { StartOp = IsAlpha,   ContinueOp = IsAlphaNumeric },
@@ -66,7 +75,7 @@ namespace Laan.SQL.Parser
 
         private bool IsSpecialChar( int readChar )
         {
-            return IsWithinSet( readChar, new char[] { '.', ',', '+', '-', '/', '*', '^', '%', '(', ')', '[', ']', '\'', '"', '=', ';', '{', '}' } );
+            return IsWithinSet( readChar, new char[] { '.', ',', '+', '-', '/', '*', '^', '%', '(', ')', '[', ']', '"', '=', ';', '{', '}' } );
         }
 
         private bool IsAlpha( int readChar )
@@ -89,10 +98,10 @@ namespace Laan.SQL.Parser
 
         #endregion
 
-        private bool GetToken( Func<int, bool> startAction, Func<int, bool> continuingAction, int readChar, out string token )
+        private bool GetToken( TokenizerRule rule, int readChar, out string token )
         {
             token = "";
-            if ( startAction( readChar ) )
+            if ( rule.StartOp( readChar ) )
             {
                 StringBuilder tokenBuilder = new StringBuilder();
                 do
@@ -101,7 +110,17 @@ namespace Laan.SQL.Parser
                     tokenBuilder.Append( ( char )readChar );
                     readChar = _reader.Peek();
                 }
-                while ( readChar != -1 && continuingAction( readChar ) );
+                while ( readChar != -1 && rule.ContinueOp( readChar ) );
+
+                // Usually the end of the continuation would exclude the next character.
+                // However, in the case of a quoted string token, we want to include the
+                // terminating character as well.  this could also work for - double quote,
+                // and square brackets, if required.
+                if ( rule.IncludeTerminalChar )
+                {
+                    tokenBuilder.Append( (char) readChar );
+                    readChar = _reader.Read();
+                }
 
                 token = tokenBuilder.ToString();
                 return true;
@@ -141,7 +160,7 @@ namespace Laan.SQL.Parser
                 readChar = _reader.Peek();
                 foreach ( var rule in _tokenizingRules )
                 {
-                    if ( GetToken( rule.StartOp, rule.ContinueOp, readChar, out token ) )
+                    if ( GetToken( rule, readChar, out token ) )
                     {
                         _currentToken = token;
                         return;
