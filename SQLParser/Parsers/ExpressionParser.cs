@@ -3,6 +3,7 @@ using System;
 namespace Laan.SQL.Parser
 {
     /*
+          <criteria>     ::= <expression> [=,<,>,<=,>=] <expression> | <expression>
           <expression>   ::= <term> [+,-] <expression> | <term>
           <term>         ::= <factor> [*,/,%,^] <term> | <factor>
           <factor>       ::= IDENTIFIER [ ( <expression> ) ] | ( <expression> ) 
@@ -14,9 +15,50 @@ namespace Laan.SQL.Parser
 
         public Expression Execute()
         {
-            return ReadExpression();
+            return ReadCriteriaList();
         }
 
+        private Expression ReadCriteriaList()
+        {
+            Expression expression = ReadCriteria();
+
+            if ( IsNextToken( "AND", "OR" ) )
+            {
+                CriteriaExpression result = new CriteriaExpression();
+                result.Left = expression;
+
+                result.Operator = CurrentToken;
+                ReadNextToken();
+
+                result.Right = ReadCriteriaList();
+
+                return result;
+            }
+            else
+                return expression;
+        }
+
+        private Expression ReadCriteria()
+        {
+            Expression expression = ReadExpression();
+
+            if ( IsNextToken( "=", ">=", "<=", ">", "<", "IN", "ANY" ) )
+            {
+                CriteriaExpression result = new CriteriaExpression();
+                result.Left = expression;
+
+                result.Operator = CurrentToken;
+                ReadNextToken();
+
+                result.Right = ReadExpression();
+
+                return result;
+            }
+            else
+                return expression;
+        }
+
+        
         private Expression ReadExpression()
         {
             Expression term = ReadTerm();
@@ -62,13 +104,12 @@ namespace Laan.SQL.Parser
             // nested expressions first
             if ( Tokenizer.TokenEquals( Constants.OPEN_BRACKET ) )
             {
-                Expression result = ReadExpression();
+                Expression result = ReadCriteriaList();
                 ExpectToken( Constants.CLOSE_BRACKET );
                 return new NestedExpression() { Expression = result };
             }
             else
             {
-
                 if ( IsNextToken( "SELECT" ) )
                 {
                     ReadNextToken();

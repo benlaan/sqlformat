@@ -119,7 +119,7 @@ namespace Laan.SQLParser.Test
 
             // verify
             Assert.IsNotNull( expression );
-            var function = ( FunctionExpression )expression;
+            var function = (FunctionExpression) expression;
 
             Assert.AreEqual( 0, function.Arguments.Count );
             Assert.AreEqual( "SomeFunction", function.Name );
@@ -141,7 +141,7 @@ namespace Laan.SQLParser.Test
             Assert.IsNotNull( expression );
             Assert.IsTrue( expression is FunctionExpression );
 
-            var function = ( FunctionExpression )expression;
+            var function = (FunctionExpression) expression;
 
             Assert.AreEqual( 2, function.Arguments.Count );
             Assert.AreEqual( "Max", function.Name );
@@ -166,7 +166,7 @@ namespace Laan.SQLParser.Test
             Assert.IsNotNull( expression );
             Assert.IsTrue( expression is OperatorExpression );
 
-            var operatorExpression = ( OperatorExpression )expression;
+            var operatorExpression = (OperatorExpression) expression;
 
             Assert.AreEqual( op, operatorExpression.Operator );
             Assert.IsTrue( operatorExpression.Left is IdentifierExpression );
@@ -192,7 +192,7 @@ namespace Laan.SQLParser.Test
             Assert.IsNotNull( expression );
             Assert.IsTrue( expression is OperatorExpression );
 
-            var operatorExpression = ( OperatorExpression )expression;
+            var operatorExpression = (OperatorExpression) expression;
 
             Assert.AreEqual( "+", operatorExpression.Operator );
             Assert.IsTrue( operatorExpression.Left is IdentifierExpression );
@@ -200,7 +200,7 @@ namespace Laan.SQLParser.Test
 
             Assert.AreEqual( "A.Field1", operatorExpression.Left.Value );
 
-            var rightExpression = ( OperatorExpression )operatorExpression.Right;
+            var rightExpression = (OperatorExpression) operatorExpression.Right;
             Assert.AreEqual( "120", rightExpression.Left.Value );
             Assert.AreEqual( "*", rightExpression.Operator );
             Assert.AreEqual( "50", rightExpression.Right.Value );
@@ -222,7 +222,7 @@ namespace Laan.SQLParser.Test
             Assert.IsNotNull( expression );
             Assert.IsTrue( expression is OperatorExpression );
 
-            var operatorExpression = ( OperatorExpression )expression;
+            var operatorExpression = (OperatorExpression) expression;
 
             Assert.AreEqual( "*", operatorExpression.Operator );
             Assert.IsTrue( operatorExpression.Left is IdentifierExpression );
@@ -230,7 +230,7 @@ namespace Laan.SQLParser.Test
 
             Assert.AreEqual( "A.Field1", operatorExpression.Left.Value );
 
-            var rightExpression = ( OperatorExpression )operatorExpression.Right;
+            var rightExpression = (OperatorExpression) operatorExpression.Right;
             Assert.AreEqual( "120", rightExpression.Left.Value );
             Assert.AreEqual( "+", rightExpression.Operator );
             Assert.AreEqual( "50", rightExpression.Right.Value );
@@ -252,16 +252,16 @@ namespace Laan.SQLParser.Test
             Assert.IsNotNull( expression );
             Assert.IsTrue( expression is OperatorExpression );
 
-            var operatorExpression = ( OperatorExpression )expression;
+            var operatorExpression = (OperatorExpression) expression;
 
             Assert.AreEqual( "*", operatorExpression.Operator );
             Assert.IsTrue( operatorExpression.Left is NestedExpression );
             Assert.IsTrue( operatorExpression.Right is IdentifierExpression );
 
-            NestedExpression leftExpression = ( NestedExpression )operatorExpression.Left;
+            NestedExpression leftExpression = (NestedExpression) operatorExpression.Left;
             Assert.IsTrue( leftExpression.Expression is OperatorExpression );
 
-            OperatorExpression leftOperatorExpression = ( OperatorExpression )leftExpression.Expression;
+            OperatorExpression leftOperatorExpression = (OperatorExpression) leftExpression.Expression;
 
             Assert.AreEqual( "A.Field1", leftOperatorExpression.Left.Value );
             Assert.AreEqual( "+", leftOperatorExpression.Operator );
@@ -285,19 +285,74 @@ namespace Laan.SQLParser.Test
             // verify
             Assert.IsNotNull( expression );
             Assert.IsTrue( expression is OperatorExpression );
-            var operatorExpression = ( OperatorExpression )expression;
+            var operatorExpression = (OperatorExpression) expression;
 
             Assert.AreEqual( "*", operatorExpression.Operator );
             Assert.IsTrue( operatorExpression.Left is NestedExpression );
 
-            NestedExpression leftExpression = ( NestedExpression )operatorExpression.Left;
+            NestedExpression leftExpression = (NestedExpression) operatorExpression.Left;
             Assert.IsTrue( leftExpression.Expression is SelectExpression );
 
-            SelectExpression leftOperatorExpression = ( SelectExpression )leftExpression.Expression;
+            SelectExpression leftOperatorExpression = (SelectExpression) leftExpression.Expression;
 
-            Assert.AreEqual( "A.Field1", leftOperatorExpression.Statement.Fields[0].Expression.Value );
-            Assert.AreEqual( "Table", leftOperatorExpression.Statement.From[0].Name );
+            Assert.AreEqual( "A.Field1", leftOperatorExpression.Statement.Fields[ 0 ].Expression.Value );
+            Assert.AreEqual( "Table", leftOperatorExpression.Statement.From[ 0 ].Name );
+        }
 
+        [Test]
+        [Row( "=" )]
+        [Row( "<" )]
+        [Row( ">" )]
+        [Row( "<=" )]
+        [Row( ">=" )]
+        public void Test_Simple_Criteria_Expression( string op )
+        {
+            // setup
+            Tokenizer tokenizer = new Tokenizer( String.Format( "A.Field1 {0} B.Field2", op ) );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull( expression );
+            Assert.IsTrue( expression is CriteriaExpression );
+            CriteriaExpression criteria = (CriteriaExpression) expression;
+            Assert.AreEqual( "A.Field1", criteria.Left.Value );
+            Assert.AreEqual( op, criteria.Operator );
+            Assert.AreEqual( "B.Field2", criteria.Right.Value );
+        }
+
+        [Test]
+        public void Test_Nested_Criteria_Expression()
+        {
+            // setup
+            Tokenizer tokenizer = new Tokenizer( "A.Field1 = (2 + B.Field2)" );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull( expression );
+            Assert.IsTrue( expression is CriteriaExpression );
+            CriteriaExpression criteria = (CriteriaExpression) expression;
+
+            Assert.AreEqual( "A.Field1", criteria.Left.Value );
+            Assert.AreEqual( "=", criteria.Operator );
+
+            Assert.IsTrue( criteria.Right is NestedExpression );
+            NestedExpression nestedCriteria = (NestedExpression) criteria.Right;
+
+            Assert.IsTrue( nestedCriteria.Expression is OperatorExpression );
+            OperatorExpression operatorExpression = (OperatorExpression) nestedCriteria.Expression;
+
+            Assert.AreEqual( "2", operatorExpression.Left.Value );
+            Assert.AreEqual( "B.Field2", operatorExpression.Right.Value );
         }
     }
 }

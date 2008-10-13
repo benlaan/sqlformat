@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace Laan.SQL.Parser
 {
@@ -58,16 +60,18 @@ namespace Laan.SQL.Parser
 
             Expression expression = null;
 
-            if ( Tokenizer.TokenEquals( AS ) )
+            if ( token is CriteriaExpression )
+            {
+                // this handles the non-stadard syntax of: Alias = Expression
+                CriteriaExpression criteriaExpression = (CriteriaExpression)token;
+                alias = criteriaExpression.Left.Value;
+                expression = criteriaExpression.Right;
+            }
+            else if ( Tokenizer.TokenEquals( AS ) )
             {
                 alias = CurrentToken;
                 expression = token;
                 ReadNextToken();
-            }
-            else if ( Tokenizer.TokenEquals( EQUALS ) )
-            {
-                alias = token.Value;
-                expression = ProcessExpression();
             }
             else if ( !IsNextToken( FieldTerminatorSet ) )
             {
@@ -86,7 +90,25 @@ namespace Laan.SQL.Parser
             Tokenizer.ExpectToken( FROM );
             do
             {
-                Table table = new Table() { Name = ProcessTableName() };
+                Table table = null;
+                if (Tokenizer.TokenEquals( Constants.OPEN_BRACKET ))
+                {
+                    DerivedTable derivedTable = new DerivedTable();
+
+                    if ( IsNextToken( "SELECT" ) )
+                    {
+                        ReadNextToken();
+                        var parser = new SelectStatementParser( Tokenizer );
+                        derivedTable.SelectStatement = ( SelectStatement )parser.Execute();
+                    }
+                    table = derivedTable;
+
+                    ExpectToken( Constants.CLOSE_BRACKET );
+                }
+                else
+                {
+                    table = new Table() { Name = GetTableName() };
+                }
                 _statement.From.Add( table );
 
                 if ( Tokenizer.TokenEquals( AS ) || !IsNextToken( FromTerminatorSet ) )
@@ -126,7 +148,7 @@ namespace Laan.SQL.Parser
                     return;
 
                 ExpectToken( "JOIN" );
-                Join join = new Join() { Type = ( JoinType )joinType };
+                Join join = new Join() { Type = (JoinType) joinType };
 
                 join.Name = GetTableName();
 
@@ -135,33 +157,21 @@ namespace Laan.SQL.Parser
 
                 ExpectToken( "ON" );
 
-                join.Condition = ProcessCriteriaExpression();
+                CriteriaExpression criteriaExpression = ProcessExpression() as CriteriaExpression;
+                if ( criteriaExpression == null )
+                    throw new SyntaxException( "Expected Criteria Expression" );
+
+                join.Condition = criteriaExpression;
 
                 _statement.Joins.Add( join );
             }
             while ( Tokenizer.HasMoreTokens && !IsNextToken( "ORDER", "GROUP" ) );
-
-        }
-
-        private string ProcessTableName()
-        {
-            //TODO: Allow processing of the full format: database.owner.table
-            string table = CurrentToken;
-            ReadNextToken();
-            return table;
         }
 
         private void ProcessWhere()
         {
             if ( Tokenizer.TokenEquals( WHERE ) )
-            {
-                do
-                {
-                    _statement.Where.Add( ProcessCriteriaExpression() );
-                    
-                }
-                while ( IsNextToken( "AND", "OR" ) );
-            }
+                _statement.Where = ProcessExpression();
         }
 
         public override IStatement Execute()

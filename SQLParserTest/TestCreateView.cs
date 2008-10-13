@@ -247,13 +247,15 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "Table2", join.Name );
             Assert.AreEqual( "T2", join.Alias );
 
+            CriteriaExpression expr = join.Condition as CriteriaExpression;
+
             Assert.AreEqual( JoinType.InnerJoin, join.Type );
-            Assert.AreEqual( "=", join.Condition.Operator );
-            Assert.AreEqual( "T1.Field1", join.Condition.Left.Value );
+            Assert.AreEqual( "=", expr.Operator );
+            Assert.AreEqual( "T1.Field1", expr.Left.Value );
 
-            Assert.AreEqual( "T2.Field2", join.Condition.Right.Value );
+            Assert.AreEqual( "T2.Field2", expr.Right.Value );
 
-            Assert.AreEqual( "T1.Field1 = T2.Field2", join.Condition.Value );
+            Assert.AreEqual( "T1.Field1 = T2.Field2", expr.Value );
         }
     }
 
