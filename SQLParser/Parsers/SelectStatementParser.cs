@@ -18,9 +18,15 @@ namespace Laan.SQL.Parser
         private const string FULL = "FULL";
         private const string EQUALS = "=";
         private const string WHERE = "WHERE";
+        private const string BY = "BY";
+        private const string ORDER = "ORDER";
+        private const string GROUP = "GROUP";
 
         private string[] FieldTerminatorSet = { FROM, Constants.COMMA };
-        private string[] FromTerminatorSet = { INNER, JOIN, LEFT, RIGHT, FULL, Constants.COMMA, Constants.CLOSE_BRACKET };
+        
+        private string[] FromTerminatorSet = { 
+            INNER, JOIN, LEFT, RIGHT, FULL, Constants.COMMA, Constants.CLOSE_BRACKET, ORDER, GROUP 
+        };
 
         SelectStatement _statement;
 
@@ -44,16 +50,16 @@ namespace Laan.SQL.Parser
             }
         }
 
-        private void ProcessFields()
+        private void ProcessFields( List<Field> fieldList )
         {
             do
             {
-                ProcessField();
+                ProcessField( fieldList );
 
             } while ( Tokenizer.TokenEquals( Constants.COMMA ) );
         }
 
-        private void ProcessField()
+        private void ProcessField( List<Field> fieldList )
         {
             Expression token = ProcessExpression();
             string alias = null;
@@ -63,7 +69,7 @@ namespace Laan.SQL.Parser
             if ( token is CriteriaExpression )
             {
                 // this handles the non-stadard syntax of: Alias = Expression
-                CriteriaExpression criteriaExpression = (CriteriaExpression)token;
+                CriteriaExpression criteriaExpression = ( CriteriaExpression )token;
                 alias = criteriaExpression.Left.Value;
                 expression = criteriaExpression.Right;
             }
@@ -82,16 +88,18 @@ namespace Laan.SQL.Parser
             else
                 expression = token;
 
-            _statement.Fields.Add( new Field() { Expression = expression, Alias = alias } );
+            fieldList.Add( new Field() { Expression = expression, Alias = alias } );
         }
 
         private void ProcessFrom()
         {
-            Tokenizer.ExpectToken( FROM );
+            if ( !Tokenizer.TokenEquals( FROM ) )
+                return;
+
             do
             {
                 Table table = null;
-                if (Tokenizer.TokenEquals( Constants.OPEN_BRACKET ))
+                if ( Tokenizer.TokenEquals( Constants.OPEN_BRACKET ) )
                 {
                     DerivedTable derivedTable = new DerivedTable();
 
@@ -106,9 +114,8 @@ namespace Laan.SQL.Parser
                     ExpectToken( Constants.CLOSE_BRACKET );
                 }
                 else
-                {
                     table = new Table() { Name = GetTableName() };
-                }
+
                 _statement.From.Add( table );
 
                 if ( Tokenizer.TokenEquals( AS ) || !IsNextToken( FromTerminatorSet ) )
@@ -148,7 +155,7 @@ namespace Laan.SQL.Parser
                     return;
 
                 ExpectToken( "JOIN" );
-                Join join = new Join() { Type = (JoinType) joinType };
+                Join join = new Join() { Type = ( JoinType )joinType };
 
                 join.Name = GetTableName();
 
@@ -165,7 +172,7 @@ namespace Laan.SQL.Parser
 
                 _statement.Joins.Add( join );
             }
-            while ( Tokenizer.HasMoreTokens && !IsNextToken( "ORDER", "GROUP" ) );
+            while ( Tokenizer.HasMoreTokens && !IsNextToken( ORDER, GROUP ) );
         }
 
         private void ProcessWhere()
@@ -174,18 +181,39 @@ namespace Laan.SQL.Parser
                 _statement.Where = ProcessExpression();
         }
 
+        private void ProcessOrderBy()
+        {
+            if ( Tokenizer.TokenEquals( ORDER ) )
+            {
+                ExpectToken( BY );
+                ProcessFields( _statement.OrderBy );
+            }
+        }
+
+        private void ProcessGroupBy()
+        {
+            if ( Tokenizer.TokenEquals( GROUP ) )
+            {
+                ExpectToken( BY );
+                ProcessFields( _statement.GroupBy );
+            }
+        }
+
         public override IStatement Execute()
         {
             _statement = new SelectStatement();
 
             ProcessDistinct();
             ProcessTop();
-            ProcessFields();
+            ProcessFields( _statement.Fields );
             ProcessFrom();
             ProcessWhere();
+            ProcessOrderBy();
+            ProcessGroupBy();
 
             return _statement;
         }
+
 
     }
 }

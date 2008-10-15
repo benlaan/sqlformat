@@ -33,11 +33,11 @@ namespace Laan.SQL.Parser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( ExpectedTokenNotFoundException ), Message = "Expected: FROM, found: table" )]
+        [ExpectedException( typeof( ExpectedTokenNotFoundException ), Message = "Expected: BY, found: field1" )]
         public void TestExpectedError()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * table" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table order field1" );
         }
 
         [Test]
@@ -435,19 +435,34 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "x", derivedTable.SelectStatement.From[ 0 ].Alias );
         }
 
-        //[Test]
-        //public void Select_With_Order_By()
-        //{
-        //    // Exercise
-        //    SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
-        //        select * from table order by field1, field2
-        //    " );
+        [Test]
+        public void Select_With_Order_By()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
+                select * from table order by field1, field2
+            " );
 
-        //    // Verify outcome
-        //    Assert.IsNotNull( statement );
-        //    Assert.AreEqual( 1, statement.From.Count );
-        //    Assert.AreEqual( "table", statement.From[ 0 ].Name );
-        //    Assert.AreEqual( 2, statement.OrderBy.Count );
-        //}
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 1, statement.From.Count );
+            Assert.AreEqual( "table", statement.From[ 0 ].Name );
+            Assert.AreEqual( 2, statement.OrderBy.Count );
+        }
+
+        [Test]
+        public void Select_With_Group_By()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
+                select * from table group by field1, field2
+            " );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 1, statement.From.Count );
+            Assert.AreEqual( "table", statement.From[ 0 ].Name );
+            Assert.AreEqual( 2, statement.GroupBy.Count );
+        }
     }
 }

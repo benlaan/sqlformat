@@ -39,6 +39,8 @@ namespace Laan.SQL.Parser
             Fields = new List<Field>();
             From = new List<Table>();
             Joins = new List<Join>();
+            OrderBy = new List<Field>();
+            GroupBy = new List<Field>();
         }
 
         public bool Distinct { get; set; }
@@ -48,5 +50,7 @@ namespace Laan.SQL.Parser
         public List<Field> Fields { get; set; }
         public List<Join> Joins { get; set; }
         public Expression Where { get; set; }
+        public List<Field> OrderBy { get; set; }
+        public List<Field> GroupBy { get; set; }
     }
 }

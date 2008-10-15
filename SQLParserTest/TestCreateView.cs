@@ -36,14 +36,6 @@ namespace Laan.SQL.Parser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( ExpectedTokenNotFoundException ), Message = "Expected: FROM, found: table" )]
-        public void TestExpectedError()
-        {
-            // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * table" );
-        }
-
-        [Test]
         public void Select_Top_10_StarField()
         {
             // Exercise
