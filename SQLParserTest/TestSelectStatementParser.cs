@@ -8,10 +8,10 @@ using MbUnit.Framework;
 namespace Laan.SQL.Parser.Test
 {
     [TestFixture]
-    public class TestSelectStatementParsing
+    public class TestSelectStatementParser
     {
         [Test]
-        [ExpectedException( typeof( NotImplementedException ), Message = "No parser exists for that statement type: merge" )]
+        [ExpectedException( typeof( NotImplementedException ), Message = "No parser exists for statement type: merge" )]
         public void TestNoParserException()
         {
             // Exercise
@@ -33,11 +33,11 @@ namespace Laan.SQL.Parser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( ExpectedTokenNotFoundException ), Message = "Expected: BY, found: field1" )]
+        [ExpectedException( typeof( ExpectedTokenNotFoundException ), Message = "Expected: BY, found: field" )]
         public void TestExpectedError()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table order field1" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table order field" );
         }
 
         [Test]
@@ -463,6 +463,36 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
             Assert.AreEqual( 2, statement.GroupBy.Count );
+        }
+
+        [Test]
+        public void Select_With_Group_By_With_Having()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
+                select * from table group by field1, field2 having sum( field2 ) > 0
+            " );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 1, statement.From.Count );
+            Assert.AreEqual( "table", statement.From[ 0 ].Name );
+            Assert.AreEqual( 2, statement.GroupBy.Count );
+            Assert.IsTrue( statement.Having is CriteriaExpression );
+
+            CriteriaExpression operatorExpression = (CriteriaExpression) statement.Having;
+            Assert.AreEqual( ">", operatorExpression.Operator );
+
+            // verify that the left part of the criteria expression is a function expression
+            Assert.IsTrue( operatorExpression.Left is FunctionExpression );
+            FunctionExpression functionExpression = (FunctionExpression) operatorExpression.Left;
+            Assert.AreEqual( "sum", functionExpression.Name );
+            Assert.AreEqual( 1, functionExpression.Arguments.Count );
+            Assert.AreEqual( "field2", functionExpression.Arguments[ 0 ].Value );
+
+            // the right branch is a simple IdentifierExpression
+            Assert.IsTrue( operatorExpression.Right is IdentifierExpression );
+            Assert.AreEqual( "0", operatorExpression.Right.Value );
         }
     }
 }

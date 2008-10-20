@@ -104,7 +104,7 @@ namespace Laan.SQL.Parser.Test
                 new FieldDefinition() { Name = "[id3]", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
             };
 
-            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreElementsEqual( expected, statement.Fields );
         }
 
         [Test]
@@ -132,7 +132,7 @@ namespace Laan.SQL.Parser.Test
                 new FieldDefinition() { Name = "id3", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.NotNullable },
             };
 
-            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreElementsEqual( expected, statement.Fields );
         }
 
         [Test]
@@ -163,7 +163,7 @@ namespace Laan.SQL.Parser.Test
                 new FieldDefinition() { Name = "id5", Type = new SqlType( "decimal", 25, 3) , IsPrimaryKey = false, Nullability = Nullability.Nullable },
             };
 
-            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreElementsEqual( expected, statement.Fields );
         }
 
         [Test]
@@ -195,7 +195,7 @@ namespace Laan.SQL.Parser.Test
                 new FieldDefinition() { Name = "id4", Type = new SqlType( "decimal", 10,2) , IsPrimaryKey = false, Nullability = Nullability.NotNullable },
             };
 
-            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreElementsEqual( expected, statement.Fields );
         }
 
         [Test]
@@ -231,7 +231,7 @@ namespace Laan.SQL.Parser.Test
                 },
             };
 
-            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreElementsEqual( expected, statement.Fields );
         }
 
         [Test]
@@ -267,7 +267,7 @@ namespace Laan.SQL.Parser.Test
                 },
             };
 
-            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreElementsEqual( expected, statement.Fields );
         }
 
         [Test]
@@ -299,7 +299,7 @@ namespace Laan.SQL.Parser.Test
                 },
             };
 
-            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreElementsEqual( expected, statement.Fields );
         }
 
         [Test]
@@ -339,7 +339,7 @@ namespace Laan.SQL.Parser.Test
                 },
             };
 
-            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreElementsEqual( expected, statement.Fields );
         }
 
         [Test]
@@ -395,7 +395,7 @@ namespace Laan.SQL.Parser.Test
                 },
             };
 
-            CollectionAssert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreElementsEqual( expected, statement.Fields );
         }
 
         [Test]

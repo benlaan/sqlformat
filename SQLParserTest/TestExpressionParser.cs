@@ -305,6 +305,7 @@ namespace Laan.SQLParser.Test
         [Row( ">" )]
         [Row( "<=" )]
         [Row( ">=" )]
+        [Row( "IS" )]
         public void Test_Simple_Criteria_Expression( string op )
         {
             // setup
