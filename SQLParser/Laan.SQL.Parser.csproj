@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E972B2B2-F549-418E-B830-FB5D97101168}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -49,8 +49,10 @@
   <ItemGroup>
     <Compile Include="Entities\AlterTableStatement.cs" />
     <Compile Include="Entities\CriteriaExpression.cs" />
+    <Compile Include="Entities\IStatement.cs" />
+    <Compile Include="Entities\Join.cs" />
     <Compile Include="Parsers\AlterTableStatementParser.cs" />
-    <Compile Include="Entities\CreateNonClusteredIndex.cs" />
+    <Compile Include="Entities\CreateIndex.cs" />
     <Compile Include="Parsers\CreateNonClusteredIndexParser.cs" />
     <Compile Include="Entities\CreateTableStatement.cs" />
     <Compile Include="Parsers\CreateTableStatementParser.cs" />
@@ -64,11 +66,13 @@
     <Compile Include="Entities\Field.cs" />
     <Compile Include="Entities\FieldDefinition.cs" />
     <Compile Include="Entities\Identity.cs" />
+    <Compile Include="Entities\InsertStatement.cs" />
+    <Compile Include="Parsers\InsertStatementParser.cs" />
     <Compile Include="Parsers\ParserFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parsers\SelectStatementParser.cs" />
     <Compile Include="Entities\SqlType.cs" />
-    <Compile Include="Entities\Statement.cs" />
+    <Compile Include="Entities\SelectStatement.cs" />
     <Compile Include="Parsers\StatementParser.cs" />
     <Compile Include="Entities\Table.cs" />
     <Compile Include="Parsers\TableStatementParser.cs" />

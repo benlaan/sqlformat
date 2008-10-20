@@ -8,7 +8,6 @@ namespace Laan.SQL.Parser
         private const string INSERT = "INSERT";
         private const string TABLE = "TABLE";
         private const string CREATE = "CREATE";
-        private const string NONCLUSTERED = "NONCLUSTERED";
         private const string ALTER = "ALTER";
         private const string VIEW = "VIEW";
 
@@ -52,12 +51,8 @@ namespace Laan.SQL.Parser
                     if ( _tokenizer.TokenEquals( VIEW ) )
                         parser = new CreateViewStatementParser( _tokenizer );
 
-                    else if ( _tokenizer.TokenEquals( NONCLUSTERED ) )
-                        parser = new CreateNonClusteredIndexParser( _tokenizer );
-
-                    //if ( _tokenizer.TokenEquals( INDEX ) )
-                    //    parser = new CreateIndexStatementParser( _tokenizer );
-
+                    if ( _tokenizer.IsNextToken( Constants.Unique, Constants.Clustered, Constants.NonClustered ) )
+                        parser = new CreateIndexParser( _tokenizer );
                 }
                 else if ( _tokenizer.TokenEquals( ALTER ) )
                 {
@@ -65,8 +60,8 @@ namespace Laan.SQL.Parser
                         parser = new AlterTableStatementParser( _tokenizer );
                 }
 
-                //if ( _tokenizer.TokenEquals( INSERT ) )
-                //    parser = new InsertStatementParser( _tokenizer );
+                if ( _tokenizer.TokenEquals( INSERT ) )
+                    parser = new InsertStatementParser( _tokenizer );
 
                 //if ( _tokenizer.TokenEquals( UPDATE ) )
                 //    parser = new UpdateStatementParser( _tokenizer );
@@ -76,7 +71,7 @@ namespace Laan.SQL.Parser
 
                 if ( parser == null && _tokenizer.Current != null )
                     throw new NotImplementedException(
-                        "No parser exists for that statement type: " + _tokenizer.Current
+                        "No parser exists for statement type: " + _tokenizer.Current
                     );
 
                 if ( _tokenizer.Current != null )

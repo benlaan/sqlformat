@@ -2,24 +2,36 @@ using System;
 
 namespace Laan.SQL.Parser
 {
-    public class CreateNonClusteredIndexParser : StatementParser
+    public class CreateIndexParser : StatementParser
     {
-        private const string INDEX = "INDEX";
-        private const string ON = "ON";
-
-        public CreateNonClusteredIndexParser( Tokenizer tokenizer ) : base( tokenizer ) { }
+        public CreateIndexParser( Tokenizer tokenizer ) : base( tokenizer ) { }
 
         public override IStatement Execute()
         {
-            CreateNonClusteredIndex statement = new CreateNonClusteredIndex();
+            // CREATE [UNIQUE] [CLUSTERED | NONCLUSTERED] INDEX index_name ON table (column [,...n])
 
-            Tokenizer.ExpectToken( INDEX );
-            statement.ConstraintName = GetIdentifier();
-            Tokenizer.ExpectToken( ON );
+            CreateIndex statement = new CreateIndex();
+
+            // optional
+            if ( Tokenizer.TokenEquals( Constants.Unique ) )
+                statement.Unique = true;
+
+            // optional
+            if ( Tokenizer.TokenEquals( Constants.NonClustered ) )
+                statement.Clustered = false;
+
+            // optional
+            if ( Tokenizer.TokenEquals( Constants.Clustered ) )
+                statement.Clustered = true;
+            
+            Tokenizer.ExpectToken( Constants.Index );
+            statement.IndexName = GetIdentifier();
+            Tokenizer.ExpectToken( Constants.On );
             statement.TableName = GetTableName();
-            Tokenizer.ExpectToken( Constants.OPEN_BRACKET );
-            statement.KeyName = GetIdentifier();
-            Tokenizer.ExpectToken( Constants.CLOSE_BRACKET );
+            
+            Tokenizer.ExpectToken( Constants.OpenBracket );
+            statement.Columns = GetIdentifierList();
+            Tokenizer.ExpectToken( Constants.CloseBracket );
 
             return statement;
         }

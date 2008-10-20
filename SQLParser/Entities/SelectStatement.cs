@@ -3,33 +3,6 @@ using System;
 
 namespace Laan.SQL.Parser
 {
-    public interface IStatement
-    {
-
-    }
-
-    public enum JoinType
-    {
-        InnerJoin,
-        LeftJoin,
-        RightJoin,
-        FullJoin,
-        CrossJoin
-    }
-
-    public class Join
-    {
-        public Join()
-        {
-            Condition = new CriteriaExpression();
-        }
-
-        public string Name { get; set; }
-        public string Alias { get; set; }
-        public JoinType Type { get; set; }
-        public Expression Condition { get; set; }
-    }
-
     public class SelectStatement : IStatement
     {
         public SelectStatement()
@@ -52,5 +25,6 @@ namespace Laan.SQL.Parser
         public Expression Where { get; set; }
         public List<Field> OrderBy { get; set; }
         public List<Field> GroupBy { get; set; }
+        public Expression Having { get; set; }
     }
 }

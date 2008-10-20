@@ -4,13 +4,18 @@ namespace Laan.SQL.Parser
 {
     public class Constants
     {
-        internal const string COMMA = ",";
-        internal const string OPEN_BRACKET = "(";
-        internal const string CLOSE_BRACKET = ")";
-        internal const string OPEN_SQUARE_BRACE = "[";
-        internal const string CLOSE_SQUARE_BRACE = "]";
-        internal const string QUOTE = "'";
-        internal const string DOT = ".";
+        internal const string On = "ON";
+        internal const string Comma = ",";
+        internal const string OpenBracket = "(";
+        internal const string CloseBracket = ")";
+        internal const string OpenSquareBracket = "[";
+        internal const string CloseSquareBracket = "]";
+        internal const string Quote = "'";
+        internal const string Dot = ".";
+        internal const string Clustered = "CLUSTERED";
+        internal const string NonClustered = "NONCLUSTERED";
+        internal const string Unique = "UNIQUE";
+        internal const string Index = "INDEX";
     }
 
     /// <summary>

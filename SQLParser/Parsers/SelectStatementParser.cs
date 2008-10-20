@@ -15,18 +15,17 @@ namespace Laan.SQL.Parser
         private const string JOIN = "JOIN";
         private const string LEFT = "LEFT";
         private const string RIGHT = "RIGHT";
+        private const string OUTER = "OUTER";
         private const string FULL = "FULL";
         private const string EQUALS = "=";
         private const string WHERE = "WHERE";
         private const string BY = "BY";
         private const string ORDER = "ORDER";
         private const string GROUP = "GROUP";
+        private const string HAVING = "HAVING";
 
-        private string[] FieldTerminatorSet = { FROM, Constants.COMMA };
-        
-        private string[] FromTerminatorSet = { 
-            INNER, JOIN, LEFT, RIGHT, FULL, Constants.COMMA, Constants.CLOSE_BRACKET, ORDER, GROUP 
-        };
+        private string[] FieldTerminatorSet = { FROM, Constants.Comma, HAVING };
+        private string[] FromTerminatorSet = { INNER, JOIN, LEFT, RIGHT, FULL, Constants.Comma, Constants.CloseBracket, ORDER, GROUP };
 
         SelectStatement _statement;
 
@@ -56,7 +55,7 @@ namespace Laan.SQL.Parser
             {
                 ProcessField( fieldList );
 
-            } while ( Tokenizer.TokenEquals( Constants.COMMA ) );
+            } while ( Tokenizer.TokenEquals( Constants.Comma ) );
         }
 
         private void ProcessField( List<Field> fieldList )
@@ -68,7 +67,7 @@ namespace Laan.SQL.Parser
 
             if ( token is CriteriaExpression )
             {
-                // this handles the non-stadard syntax of: Alias = Expression
+                // this handles the non-standard syntax of: Alias = Expression
                 CriteriaExpression criteriaExpression = ( CriteriaExpression )token;
                 alias = criteriaExpression.Left.Value;
                 expression = criteriaExpression.Right;
@@ -79,7 +78,7 @@ namespace Laan.SQL.Parser
                 expression = token;
                 ReadNextToken();
             }
-            else if ( !IsNextToken( FieldTerminatorSet ) )
+            else if ( !Tokenizer.IsNextToken( FieldTerminatorSet ) )
             {
                 alias = CurrentToken;
                 expression = token;
@@ -99,11 +98,11 @@ namespace Laan.SQL.Parser
             do
             {
                 Table table = null;
-                if ( Tokenizer.TokenEquals( Constants.OPEN_BRACKET ) )
+                if (Tokenizer.TokenEquals( Constants.OpenBracket ))
                 {
                     DerivedTable derivedTable = new DerivedTable();
 
-                    if ( IsNextToken( "SELECT" ) )
+                    if ( Tokenizer.IsNextToken( "SELECT" ) )
                     {
                         ReadNextToken();
                         var parser = new SelectStatementParser( Tokenizer );
@@ -111,58 +110,76 @@ namespace Laan.SQL.Parser
                     }
                     table = derivedTable;
 
-                    ExpectToken( Constants.CLOSE_BRACKET );
+                    ExpectToken( Constants.CloseBracket );
                 }
                 else
                     table = new Table() { Name = GetTableName() };
 
                 _statement.From.Add( table );
 
-                if ( Tokenizer.TokenEquals( AS ) || !IsNextToken( FromTerminatorSet ) )
+                if ( Tokenizer.TokenEquals( AS ) || !Tokenizer.IsNextToken( FromTerminatorSet ) )
                 {
                     table.Alias = CurrentToken;
                     ReadNextToken();
                 }
 
-            } while ( Tokenizer.TokenEquals( Constants.COMMA ) );
+            } while ( Tokenizer.TokenEquals( Constants.Comma ) );
 
             ProcessJoins();
+        }
+
+        private JoinType? GetJoinType()
+        {
+            JoinType? joinType = null;
+
+            if ( Tokenizer.TokenEquals( INNER ) || Tokenizer.IsNextToken( JOIN ) )
+            {
+                joinType = JoinType.InnerJoin;
+            }
+            else if ( Tokenizer.TokenEquals( FULL ) )
+            {
+                joinType = JoinType.FullJoin;
+                if ( Tokenizer.TokenEquals( OUTER ) )
+                {
+                    // just consume this 'legacy' token without using it..
+                }
+            }
+            else if ( Tokenizer.TokenEquals( LEFT ) )
+            {
+                joinType = JoinType.LeftJoin;
+                if ( Tokenizer.TokenEquals( OUTER ) )
+                {
+                    // just consume this 'legacy' token without using it..
+                }
+            }
+            else if ( Tokenizer.TokenEquals( RIGHT ) )
+            {
+                joinType = JoinType.RightJoin;
+                if ( Tokenizer.TokenEquals( OUTER ) )
+                {
+                    // consume this redundant token..
+                }
+            }
+            return joinType;
         }
 
         private void ProcessJoins()
         {
             do
             {
-                JoinType? joinType = null;
-
-                if ( Tokenizer.TokenEquals( "INNER" ) || IsNextToken( "JOIN" ) )
-                {
-                    joinType = JoinType.InnerJoin;
-                }
-                if ( Tokenizer.TokenEquals( "LEFT" ) )
-                {
-                    joinType = JoinType.LeftJoin;
-                    if ( Tokenizer.TokenEquals( "OUTER" ) )
-                        ; // consume this redundant token..
-                }
-                if ( Tokenizer.TokenEquals( "RIGHT" ) )
-                {
-                    joinType = JoinType.RightJoin;
-                    if ( Tokenizer.TokenEquals( "OUTER" ) )
-                        ; // consume this redundant token..
-                }
+                JoinType? joinType = GetJoinType();
                 if ( joinType == null )
                     return;
 
-                ExpectToken( "JOIN" );
+                ExpectToken( JOIN );
                 Join join = new Join() { Type = ( JoinType )joinType };
 
                 join.Name = GetTableName();
 
-                if ( Tokenizer.TokenEquals( "AS" ) || !Tokenizer.TokenEquals( "ON" ) )
+                if ( Tokenizer.TokenEquals( AS ) || !Tokenizer.TokenEquals( Constants.On ) )
                     join.Alias = GetIdentifier();
 
-                ExpectToken( "ON" );
+                ExpectToken( Constants.On );
 
                 CriteriaExpression criteriaExpression = ProcessExpression() as CriteriaExpression;
                 if ( criteriaExpression == null )
@@ -172,7 +189,7 @@ namespace Laan.SQL.Parser
 
                 _statement.Joins.Add( join );
             }
-            while ( Tokenizer.HasMoreTokens && !IsNextToken( ORDER, GROUP ) );
+            while ( Tokenizer.HasMoreTokens && !Tokenizer.IsNextToken( ORDER, GROUP ) );
         }
 
         private void ProcessWhere()
@@ -196,6 +213,9 @@ namespace Laan.SQL.Parser
             {
                 ExpectToken( BY );
                 ProcessFields( _statement.GroupBy );
+
+                if ( Tokenizer.TokenEquals( HAVING ) )
+                    _statement.Having = ProcessExpression();
             }
         }
 

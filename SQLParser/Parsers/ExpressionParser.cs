@@ -3,7 +3,7 @@ using System;
 namespace Laan.SQL.Parser
 {
     /*
-          <criteria>     ::= <expression> [=,<,>,<=,>=] <expression> | <expression>
+          <criteria>     ::= <expression> [=,<,>,<=,>=,IS] <expression> | <expression>
           <expression>   ::= <term> [+,-] <expression> | <term>
           <term>         ::= <factor> [*,/,%,^] <term> | <factor>
           <factor>       ::= IDENTIFIER [ ( <expression> ) ] | ( <expression> ) 
@@ -22,7 +22,7 @@ namespace Laan.SQL.Parser
         {
             Expression expression = ReadCriteria();
 
-            if ( IsNextToken( "AND", "OR" ) )
+            if ( Tokenizer.IsNextToken( "AND", "OR" ) )
             {
                 CriteriaExpression result = new CriteriaExpression();
                 result.Left = expression;
@@ -42,7 +42,7 @@ namespace Laan.SQL.Parser
         {
             Expression expression = ReadExpression();
 
-            if ( IsNextToken( "=", ">=", "<=", ">", "<", "IN", "ANY" ) )
+            if ( Tokenizer.IsNextToken( "=", ">=", "<=", ">", "<", "IS", "IN", "ANY" ) )
             {
                 CriteriaExpression result = new CriteriaExpression();
                 result.Left = expression;
@@ -63,7 +63,7 @@ namespace Laan.SQL.Parser
         {
             Expression term = ReadTerm();
 
-            if ( IsNextToken( "+", "-" ) )
+            if ( Tokenizer.IsNextToken( "+", "-" ) )
             {
                 OperatorExpression result = new OperatorExpression();
                 result.Left = term;
@@ -83,7 +83,7 @@ namespace Laan.SQL.Parser
         {
             Expression factor = ReadFactor();
 
-            if ( IsNextToken( "*", "/", "%", "^" ) )
+            if ( Tokenizer.IsNextToken( "*", "/", "%", "^" ) )
             {
                 OperatorExpression result = new OperatorExpression();
                 result.Left = factor;
@@ -102,15 +102,15 @@ namespace Laan.SQL.Parser
         private Expression ReadFactor()
         {
             // nested expressions first
-            if ( Tokenizer.TokenEquals( Constants.OPEN_BRACKET ) )
+            if ( Tokenizer.TokenEquals( Constants.OpenBracket ) )
             {
                 Expression result = ReadCriteriaList();
-                ExpectToken( Constants.CLOSE_BRACKET );
+                ExpectToken( Constants.CloseBracket );
                 return new NestedExpression() { Expression = result };
             }
             else
             {
-                if ( IsNextToken( "SELECT" ) )
+                if ( Tokenizer.IsNextToken( "SELECT" ) )
                 {
                     ReadNextToken();
                     SelectExpression selectExpression = new SelectExpression();
@@ -133,18 +133,18 @@ namespace Laan.SQL.Parser
                 token = GetDotNotationIdentifier();
 
                 // check for an open bracket, indicating that the previous identifier is actually a function
-                if ( Tokenizer.TokenEquals( Constants.OPEN_BRACKET ) )
+                if ( Tokenizer.TokenEquals( Constants.OpenBracket ) )
                 {
                     FunctionExpression result = new FunctionExpression();
                     result.Name = token;
-                    if ( !IsNextToken( Constants.CLOSE_BRACKET ) )
+                    if ( !Tokenizer.IsNextToken( Constants.CloseBracket ) )
                         do
                         {
                             result.Arguments.Add( ReadExpression() );
                         }
-                        while ( Tokenizer.TokenEquals( Constants.COMMA ) );
+                        while ( Tokenizer.TokenEquals( Constants.Comma ) );
 
-                    ExpectToken( Constants.CLOSE_BRACKET );
+                    ExpectToken( Constants.CloseBracket );
                     return result;
                 }
                 else

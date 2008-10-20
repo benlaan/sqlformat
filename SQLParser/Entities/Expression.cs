@@ -54,7 +54,7 @@ namespace Laan.SQL.Parser
             get
             {
                 string[] args = Arguments.Select( arg => arg.Value ).ToArray();
-                return String.Format( "{0}({1})", Name, String.Join( Constants.COMMA, args ) );
+                return String.Format( "{0}({1})", Name, String.Join( Constants.Comma, args ) );
             }
         }
     }
@@ -71,14 +71,14 @@ namespace Laan.SQL.Parser
     {
         public IdentifierExpression( string value )
         {
-            Parts = value.Split( new string[] { Constants.DOT }, StringSplitOptions.RemoveEmptyEntries ).ToList();
+            Parts = value.Split( new string[] { Constants.Dot }, StringSplitOptions.RemoveEmptyEntries ).ToList();
         }
 
         public List<string> Parts { get; set; }
 
         public override string Value
         {
-            get { return String.Join( Constants.DOT, Parts.ToArray() ); }
+            get { return String.Join( Constants.Dot, Parts.ToArray() ); }
         }
     }
     
@@ -88,7 +88,7 @@ namespace Laan.SQL.Parser
 
         public override string Value
         {
-            get { return Constants.OPEN_BRACKET + Expression.Value + Constants.CLOSE_BRACKET; }
+            get { return Constants.OpenBracket + Expression.Value + Constants.CloseBracket; }
         }
     }
 }

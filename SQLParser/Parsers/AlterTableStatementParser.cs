@@ -39,28 +39,28 @@ namespace Laan.SQL.Parser
 
             if ( Tokenizer.TokenEquals( PRIMARY ) )
             {
-                Tokenizer.ExpectTokens( new[] { KEY, CLUSTERED, Constants.OPEN_BRACKET } );
+                Tokenizer.ExpectTokens( new[] { KEY, CLUSTERED, Constants.OpenBracket } );
                 _statement.PrimaryKeys = GetIdentifierList();
-                Tokenizer.ExpectToken( Constants.CLOSE_BRACKET );
+                Tokenizer.ExpectToken( Constants.CloseBracket );
             }
             else if ( Tokenizer.TokenEquals( UNIQUE ) )
             {
-                Tokenizer.ExpectTokens( new[] { NONCLUSTERED, Constants.OPEN_BRACKET } );
+                Tokenizer.ExpectTokens( new[] { NONCLUSTERED, Constants.OpenBracket } );
                 _statement.PrimaryKeys = GetIdentifierList();
-                Tokenizer.ExpectToken( Constants.CLOSE_BRACKET );
+                Tokenizer.ExpectToken( Constants.CloseBracket );
             }
             else if ( Tokenizer.TokenEquals( FOREIGN ) )
             {
                 // TODO: these fields are being consumed, but not stored into a constrain object
                 //       this is not required (for my current task) at this stage.
-                Tokenizer.ExpectTokens( new[] { KEY, Constants.OPEN_BRACKET } );
+                Tokenizer.ExpectTokens( new[] { KEY, Constants.OpenBracket } );
                 string keyID = GetIdentifier();
-                Tokenizer.ExpectTokens( new[] { Constants.CLOSE_BRACKET, REFERENCES } );
+                Tokenizer.ExpectTokens( new[] { Constants.CloseBracket, REFERENCES } );
                 string refereringTable = GetTableName();
 
-                Tokenizer.ExpectToken( Constants.OPEN_BRACKET );
+                Tokenizer.ExpectToken( Constants.OpenBracket );
                 string result = GetIdentifier();
-                Tokenizer.ExpectToken( Constants.CLOSE_BRACKET );
+                Tokenizer.ExpectToken( Constants.CloseBracket );
             }
 
             return _statement;

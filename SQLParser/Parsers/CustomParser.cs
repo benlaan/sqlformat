@@ -34,15 +34,6 @@ namespace Laan.SQL.Parser
             get { return Tokenizer.Current; }
         }
 
-        protected bool IsNextToken( params string[] tokenSet )
-        {
-            foreach ( var token in tokenSet )
-                if ( token.ToLower() == CurrentToken.ToLower() )
-                    return true;
-
-            return false;
-        }
-
         protected Tokenizer Tokenizer { get; private set; }
 
         protected Expression ProcessExpression()
@@ -53,7 +44,7 @@ namespace Laan.SQL.Parser
 
         private string GetOperator()
         {
-            if ( IsNextToken( "=", ">=", "<=", "!=", "<>", "IN", "ANY" ) )
+            if ( Tokenizer.IsNextToken( "=", ">=", "<=", "!=", "<>", "IN", "ANY" ) )
             {
                 string token = Tokenizer.Current;
                 ReadNextToken();
@@ -85,7 +76,7 @@ namespace Laan.SQL.Parser
                     token += CurrentToken;
                     ReadNextToken();
                 }
-                while ( !IsNextToken( terminator ) );
+                while ( !Tokenizer.IsNextToken( terminator ) );
 
             }
             finally
@@ -98,10 +89,10 @@ namespace Laan.SQL.Parser
         protected string GetIdentifier()
         {
             string identifier = "";
-            if ( Tokenizer.TokenEquals( Constants.OPEN_SQUARE_BRACE ) )
+            if ( Tokenizer.TokenEquals( Constants.OpenSquareBracket ) )
             {
-                identifier += Constants.OPEN_SQUARE_BRACE + GetIdentifierUntilTerminated(Constants.CLOSE_SQUARE_BRACE) + Constants.CLOSE_SQUARE_BRACE;
-                Tokenizer.ExpectToken( Constants.CLOSE_SQUARE_BRACE );
+                identifier += Constants.OpenSquareBracket + GetIdentifierUntilTerminated(Constants.CloseSquareBracket) + Constants.CloseSquareBracket;
+                Tokenizer.ExpectToken( Constants.CloseSquareBracket );
             }
             else
             {
@@ -119,7 +110,7 @@ namespace Laan.SQL.Parser
             {
                 identifiers.Add( GetIdentifier() );
             }
-            while ( Tokenizer.TokenEquals( Constants.COMMA ) );
+            while ( Tokenizer.TokenEquals( Constants.Comma ) );
 
             return identifiers;
         }
@@ -130,9 +121,9 @@ namespace Laan.SQL.Parser
             token = "";
             do
             {
-                token += ( token != "" ? Constants.DOT : "" ) + GetIdentifier();
+                token += ( token != "" ? Constants.Dot : "" ) + GetIdentifier();
             }
-            while ( Tokenizer.TokenEquals( Constants.DOT ) );
+            while ( Tokenizer.TokenEquals( Constants.Dot ) );
             return token;
         }
     }

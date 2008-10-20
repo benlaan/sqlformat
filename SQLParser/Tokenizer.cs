@@ -133,6 +133,15 @@ namespace Laan.SQL.Parser
             get { return _reader.Peek() != -1; }
         }
 
+        public bool IsNextToken( params string[] tokenSet )
+        {
+            foreach ( var token in tokenSet )
+                if ( token.ToLower() == Current.ToLower() )
+                    return true;
+
+            return false;
+        }
+
         /// <summary>
         /// Utility (psuedo-function) to check that the current token equals the input parameter
         /// if so, the current token is advanced
