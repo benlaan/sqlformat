@@ -355,5 +355,71 @@ namespace Laan.SQLParser.Test
             Assert.AreEqual( "2", operatorExpression.Left.Value );
             Assert.AreEqual( "B.Field2", operatorExpression.Right.Value );
         }
+
+        [Test]
+        public void Test_Can_Read_Case_Switch_Expression()
+        {
+            // setup
+            Tokenizer tokenizer = new Tokenizer( "CASE A.Field1 WHEN 1 THEN 'Y' WHEN 2 THEN 'N' ELSE 'U' END" );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull( expression );
+            Assert.IsTrue( expression is CaseSwitchExpression );
+            CaseSwitchExpression caseSwitch = (CaseSwitchExpression) expression;
+
+            Assert.AreEqual( "A.Field1", caseSwitch.Switch.Value );
+            Assert.AreEqual( 2, caseSwitch.Cases.Count );
+
+            Assert.AreEqual( "1", caseSwitch.Cases[ 0 ].When.Value );
+            Assert.AreEqual( "'Y'", caseSwitch.Cases[ 0 ].Then.Value );
+
+            Assert.AreEqual( "2", caseSwitch.Cases[ 1 ].When.Value );
+            Assert.AreEqual( "'N'", caseSwitch.Cases[ 1 ].Then.Value );
+
+            Assert.AreEqual( "'U'", caseSwitch.Else.Value );
+        }
+
+        [Test]
+        public void Test_Can_Read_Case_When_Expression()
+        {
+            // setup
+            Tokenizer tokenizer = new Tokenizer( @"
+
+                CASE 
+                    WHEN A.Field1 < 1 THEN 'Y' 
+                    WHEN A.Field2 >= 2 + A.Field3 THEN 15 / (A.Field4 * 2)
+                ELSE 
+                    'U' 
+                END
+                "
+            );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull( expression );
+            Assert.IsTrue( expression is CaseWhenExpression );
+            CaseWhenExpression caseWhen = (CaseWhenExpression) expression;
+
+            Assert.AreEqual( 2, caseWhen.Cases.Count );
+
+            Assert.AreEqual( "A.Field1 < 1", caseWhen.Cases[ 0 ].When.Value );
+            Assert.AreEqual( "'Y'", caseWhen.Cases[ 0 ].Then.Value );
+
+            Assert.AreEqual( "A.Field2 >= 2 + A.Field3", caseWhen.Cases[ 1 ].When.Value );
+            Assert.AreEqual( "15 / (A.Field4 * 2)", caseWhen.Cases[ 1 ].Then.Value );
+
+            Assert.AreEqual( "'U'", caseWhen.Else.Value );
+        }
     }
 }

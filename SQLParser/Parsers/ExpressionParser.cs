@@ -110,7 +110,15 @@ namespace Laan.SQL.Parser
             }
             else
             {
-                if ( Tokenizer.IsNextToken( "SELECT" ) )
+                if ( Tokenizer.IsNextToken( "CASE" ) )
+                {
+                    ReadNextToken();
+                    if ( Tokenizer.IsNextToken( "WHEN" ) )
+                        return GetCaseWhenExpression();
+                    else
+                        return GetCaseSwitchExpression();
+                }
+                else if ( Tokenizer.IsNextToken( "SELECT" ) )
                 {
                     ReadNextToken();
                     SelectExpression selectExpression = new SelectExpression();
@@ -151,5 +159,42 @@ namespace Laan.SQL.Parser
                     return new IdentifierExpression( token );
             }
         }
+
+        private void ParseCaseExpression( CaseExpression caseExpression )
+        {
+            while ( Tokenizer.IsNextToken( "WHEN" ) )
+            {
+                ReadNextToken();
+                CaseSwitch caseSwitch = new CaseSwitch();
+                caseSwitch.When = ReadCriteriaList();
+
+                Tokenizer.ExpectToken( "THEN" );
+                caseSwitch.Then = ReadExpression();
+
+                caseExpression.Cases.Add( caseSwitch );
+            }
+
+            if ( Tokenizer.IsNextToken( "ELSE" ) )
+            {
+                ReadNextToken();
+                caseExpression.Else = ReadExpression();
+            }
+        }
+
+        private Expression GetCaseWhenExpression()
+        {
+            CaseWhenExpression result = new CaseWhenExpression();
+            ParseCaseExpression( result );
+            return result;
+        }
+
+        private Expression GetCaseSwitchExpression()
+        {
+            CaseSwitchExpression result = new CaseSwitchExpression();
+            result.Switch = ReadCriteriaList();
+            ParseCaseExpression( result );
+            return result;
+        }
     }
 }
+

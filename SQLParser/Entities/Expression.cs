@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace Laan.SQL.Parser
 {
@@ -89,6 +90,79 @@ namespace Laan.SQL.Parser
         public override string Value
         {
             get { return Constants.OpenBracket + Expression.Value + Constants.CloseBracket; }
+        }
+    }
+
+    public class CaseSwitch
+    {
+        public Expression When { get; set; }
+        public Expression Then { get; set; }
+
+        public CaseSwitch()
+        {
+            When = new Expression();
+            Then = new Expression();
+        }
+    }
+
+    public class CaseExpression : Expression
+    {
+        public List<CaseSwitch> Cases { get; set; }
+        public Expression Else { get; set; }
+
+        protected string GetElseToString()
+        {
+            return Else != null ? " ELSE " + Else.Value : "";
+        }
+        
+        protected string GetCasesToString()
+        {
+            StringBuilder cases = new StringBuilder();
+            foreach ( var caseSwitch in Cases )
+                cases.AppendFormat(
+                        "WHEN {0} THEN {1} ",
+                        caseSwitch.When.Value, caseSwitch.Then.Value
+                    );
+
+            return cases.ToString();
+        }
+
+        public CaseExpression()
+        {
+            Cases = new List<CaseSwitch>();
+        }
+    }
+
+    public class CaseSwitchExpression : CaseExpression
+    {
+        public Expression Switch { get; set; }
+
+        public CaseSwitchExpression() : base() { }
+
+        public override string Value
+        {
+            get
+            {
+                return String.Format(
+                    "CASE {0} {1}{2} END",
+                    Switch.Value, GetCasesToString(), GetElseToString() 
+                );
+            }
+        }
+    }
+
+    public class CaseWhenExpression : CaseExpression
+    {
+        public CaseWhenExpression() : base() { }
+
+        public override string Value
+        {
+            get
+            {
+                return String.Format(
+                    "CASE {0}{2} END", GetCasesToString(), GetElseToString()
+                );
+            }
         }
     }
 }
