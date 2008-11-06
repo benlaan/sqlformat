@@ -35,6 +35,32 @@ namespace Laan.SQL.Parser.Test
         }
 
         [Test]
+        public void Test_Can_Read_Non_Clustered_Index_Again()
+        {
+            // Exercise
+            var statement = ParserFactory.Execute<CreateIndex>( @"
+
+                CREATE NONCLUSTERED INDEX [IX_Weights_ByTransaction] 
+                                       ON [dbo].[Weights] ([Type],[TransactionID],[IsCancelled])
+                "
+            );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.IsFalse( statement.Clustered );
+            Assert.IsFalse( statement.Unique );
+            Assert.AreEqual( "[dbo].[Weights]", statement.TableName );
+            Assert.AreEqual( "[IX_Weights_ByTransaction]", statement.IndexName );
+            Assert.AreEqual( 3, statement.Columns.Count );
+
+            var columns = new[] { "[Type]", "[TransactionID]", "[IsCancelled]" };
+            int index = 0;
+            foreach ( var column in columns )
+                Assert.AreEqual( column, statement.Columns[ index++ ] );
+        }
+
+
+        [Test]
         public void Test_Can_Read_Clustered_Index()
         {
             // Exercise
