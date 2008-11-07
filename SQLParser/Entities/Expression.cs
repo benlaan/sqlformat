@@ -160,7 +160,7 @@ namespace Laan.SQL.Parser
             get
             {
                 return String.Format(
-                    "CASE {0}{2} END", GetCasesToString(), GetElseToString()
+                    "CASE {0}{1} END", GetCasesToString(), GetElseToString()
                 );
             }
         }
