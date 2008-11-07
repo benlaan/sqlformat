@@ -18,6 +18,33 @@ namespace Laan.SQL.Parser
         public bool IncludeTerminalChar { get; set; }
     }
 
+    public class Position
+    {
+        public int Column { get; set; }
+        public int Row { get; set; }
+
+        Tokenizer _tokenizer;
+
+        public Position( Tokenizer tokenizer )
+        {
+            _tokenizer = tokenizer;
+            Row = 1;
+            Column = 1;
+        }
+
+        public override string ToString()
+        {
+            int currentTokenLength = _tokenizer != null ? _tokenizer.Current.Length : 0;
+            return String.Format( "Row: {1}, Col: {0}", Row, Column - currentTokenLength );
+        }
+
+        internal void NewRow()
+        {
+            Row++;
+            Column = 1;
+        }
+    }
+
     public class Tokenizer
     {
         private const char SINGLE_QUOTE = '\'';
@@ -42,6 +69,8 @@ namespace Laan.SQL.Parser
 
         private void Initialize()
         {
+            Position = new Position( this );
+
             _acceptSpaces = false;
             _neverContinue = i => false;
 
@@ -53,7 +82,7 @@ namespace Laan.SQL.Parser
             { 
                 // within a quote, EVERYTHING is the same token
                 new TokenizerRule { StartOp = i => i == SINGLE_QUOTE,  ContinueOp = i => i != SINGLE_QUOTE, IncludeTerminalChar = true },
-                new TokenizerRule { StartOp = i => i == '@',   ContinueOp = IsAlphaNumeric },
+                new TokenizerRule { StartOp = i => i == '@', ContinueOp = IsVariableName },
                 new TokenizerRule { StartOp = i => IsWithinSet( i, new char[] { '>', '<', '!' } ), ContinueOp =  i => i == '=' },
                 new TokenizerRule { StartOp = IsAlpha,   ContinueOp = IsAlphaNumeric },
                 new TokenizerRule { StartOp = IsNumeric, ContinueOp = IsNumeric }, 
@@ -62,6 +91,11 @@ namespace Laan.SQL.Parser
         }
 
         #region Utilities
+
+        private bool IsVariableName(int readChar )
+        {
+            return readChar == '@' || IsAlphaNumeric( readChar );
+        }
 
         private bool IsWithinSet( int readChar, char[] set )
         {
@@ -75,7 +109,10 @@ namespace Laan.SQL.Parser
 
         private bool IsSpecialChar( int readChar )
         {
-            return IsWithinSet( readChar, new char[] { '.', ',', '+', '-', '/', '*', '^', '%', '(', ')', '[', ']', '"', '=', ';', '{', '}' } );
+            return IsWithinSet( 
+                readChar, 
+                new char[] { '.', ',', '+', '-', '/', '*', '^', '%', '(', ')', '[', ']', '"', '=', ';', '{', '}' } 
+            );
         }
 
         private bool IsAlpha( int readChar )
@@ -106,7 +143,7 @@ namespace Laan.SQL.Parser
                 StringBuilder tokenBuilder = new StringBuilder();
                 do
                 {
-                    readChar = _reader.Read();
+                    readChar = ReadChar();  
                     tokenBuilder.Append( ( char )readChar );
                     readChar = _reader.Peek();
                 }
@@ -119,13 +156,24 @@ namespace Laan.SQL.Parser
                 if ( rule.IncludeTerminalChar )
                 {
                     tokenBuilder.Append( (char) readChar );
-                    readChar = _reader.Read();
+                    readChar = ReadChar();
                 }
 
                 token = tokenBuilder.ToString();
                 return true;
             }
             return false;
+        }
+
+        private int ReadChar()
+        {
+            int read = _reader.Read();
+            if ( read == '\n' )
+                Position.NewRow();
+            else
+                Position.Column++;
+
+            return read;
         }
 
         public bool HasMoreTokens
@@ -177,7 +225,7 @@ namespace Laan.SQL.Parser
                 }
                 // at this point, all other chars need to be read (consumed) if not processed by any of the 
                 // above rules
-                readChar = _reader.Read();
+                readChar = ReadChar();
 
             } while ( readChar != -1 );
 
@@ -208,7 +256,7 @@ namespace Laan.SQL.Parser
         public void ExpectToken( string token )
         {
             if ( Current.ToLower() != token.ToLower() )
-                throw new ExpectedTokenNotFoundException( token, Current );
+                throw new ExpectedTokenNotFoundException( token, Current, Position );
             else
                 ReadNextToken();
         }
@@ -218,6 +266,8 @@ namespace Laan.SQL.Parser
             foreach ( string token in tokens )
                 ExpectToken( token );
         }
+
+        public Position Position { get; private set; }
 
     }
 }

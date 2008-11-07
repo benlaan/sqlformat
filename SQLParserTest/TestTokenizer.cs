@@ -25,6 +25,15 @@ namespace Laan.SQL.Parser.Test
         }
 
         [Test]
+        [Row( "SELECT @var, 1", new[] { "SELECT", "@var", ",", "1" } )]
+        [Row( "SELECT @@ROWCOUNT", new[] { "SELECT", "@@ROWCOUNT" } )]
+//        [Row( "@ROW@COUNT", new[] { "@ROW", "@COUNT" } )]
+        public void Test_Can_Tokenize_Variables( string input, string[] tokens )
+        {
+            Verify( input, tokens );
+        }
+
+        [Test]
         public void Ensure_Empty_String_Returns_No_Tokens()
         {
             var r = new StringReader( "" );

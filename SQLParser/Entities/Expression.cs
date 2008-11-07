@@ -105,7 +105,7 @@ namespace Laan.SQL.Parser
         }
     }
 
-    public class CaseExpression : Expression
+    public abstract class CaseExpression : Expression
     {
         public List<CaseSwitch> Cases { get; set; }
         public Expression Else { get; set; }

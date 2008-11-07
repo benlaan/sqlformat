@@ -13,7 +13,7 @@ namespace Laan.SQL.Parser
         protected void ExpectToken( string token )
         {
             if ( CurrentToken.ToLower() != token.ToLower() )
-                throw new ExpectedTokenNotFoundException( token, CurrentToken );
+                throw new ExpectedTokenNotFoundException( token, CurrentToken, Tokenizer.Position );
             else
                 ReadNextToken();
         }
@@ -51,7 +51,11 @@ namespace Laan.SQL.Parser
                 return token;
             }
             else
-                throw new ExpectedTokenNotFoundException( "'=', '>=', '<=', '!=', '<>', 'IN', 'ANY'", CurrentToken );
+                throw new ExpectedTokenNotFoundException( 
+                    "'=', '>=', '<=', '!=', '<>', 'IN', 'ANY'", 
+                    CurrentToken, 
+                    Tokenizer.Position 
+                );
 
         }
 
