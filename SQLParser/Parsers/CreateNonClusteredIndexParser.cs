@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Laan.SQL.Parser
 {
@@ -30,10 +31,31 @@ namespace Laan.SQL.Parser
             statement.TableName = GetTableName();
             
             Tokenizer.ExpectToken( Constants.OpenBracket );
-            statement.Columns = GetIdentifierList();
+            statement.Columns = GetIndexedColumnList();
             Tokenizer.ExpectToken( Constants.CloseBracket );
 
             return statement;
         }
+
+        private List<IndexedColumn> GetIndexedColumnList()
+        {
+            List<IndexedColumn> columns = new List<IndexedColumn>();
+            do
+            {
+                string name = GetIdentifier();
+
+                Order order = Order.Ascending;
+                if ( Tokenizer.TokenEquals( "DESC" ) )
+                    order = Order.Descending;
+
+                if ( Tokenizer.TokenEquals( "ASC" ) )
+                    order = Order.Ascending;
+
+                columns.Add( new IndexedColumn() { Name = name, Order = order } );
+            }
+            while ( Tokenizer.TokenEquals( Constants.Comma ) );
+
+            return columns;
+        } 
     }
 }

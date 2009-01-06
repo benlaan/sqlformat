@@ -31,7 +31,34 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( 3, statement.Columns.Count );
 
             for ( int index = 0; index < 3; index++ )
-                Assert.AreEqual( String.Format( "ID{0}", index + 1 ), statement.Columns[ index ] );
+                Assert.AreEqual( String.Format( "ID{0}", index + 1 ), statement.Columns[ index ].Name );
+        }
+
+        [Test]
+        public void Test_Can_Read_Non_Clustered_Index_In_Descending_Order()
+        {
+            // Exercise
+            var statement = ParserFactory.Execute<CreateIndex>( @"
+
+                CREATE NONCLUSTERED INDEX [_TransactionID] ON [dbo].[Transactions] (ID1 DESC, ID2, ID3 DESC)
+                "
+            );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.IsFalse( statement.Clustered );
+            Assert.IsFalse( statement.Unique );
+            Assert.AreEqual( "[dbo].[Transactions]", statement.TableName );
+            Assert.AreEqual( "[_TransactionID]", statement.IndexName );
+            Assert.AreEqual( 3, statement.Columns.Count );
+
+            var orders = new[] { Order.Descending, Order.Ascending, Order.Descending };
+
+            for ( int index = 0; index < 3; index++ )
+            {
+                Assert.AreEqual( String.Format( "ID{0}", index + 1 ), statement.Columns[ index ].Name );
+                Assert.AreEqual( orders[ index ], statement.Columns[ index ].Order );
+            }
         }
 
         [Test]
@@ -56,7 +83,7 @@ namespace Laan.SQL.Parser.Test
             var columns = new[] { "[Type]", "[TransactionID]", "[IsCancelled]" };
             int index = 0;
             foreach ( var column in columns )
-                Assert.AreEqual( column, statement.Columns[ index++ ] );
+                Assert.AreEqual( column, statement.Columns[ index++ ].Name );
         }
 
 
@@ -77,7 +104,7 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "dbo.Transactions", statement.TableName );
             Assert.AreEqual( "IX_TransactionID", statement.IndexName );
             Assert.AreEqual( 1, statement.Columns.Count );
-            Assert.AreEqual( "[ID1]", statement.Columns[ 0 ] );
+            Assert.AreEqual( "[ID1]", statement.Columns[ 0 ].Name );
         }
 
         [Test]
@@ -97,7 +124,7 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "dbo.Transactions", statement.TableName );
             Assert.AreEqual( "IX_TransactionID", statement.IndexName );
             Assert.AreEqual( 1, statement.Columns.Count );
-            Assert.AreEqual( "[ID1]", statement.Columns[ 0 ] );
+            Assert.AreEqual( "[ID1]", statement.Columns[ 0 ].Name );
         }
     }
 }

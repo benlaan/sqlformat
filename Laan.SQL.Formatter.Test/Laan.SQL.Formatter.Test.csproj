@@ -5,15 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E972B2B2-F549-418E-B830-FB5D97101168}</ProjectGuid>
+    <ProjectGuid>{0B133315-395D-46CC-8E50-513AB2E88A9E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laan.SQL.Parser</RootNamespace>
-    <AssemblyName>Laan.SQL.Parser</AssemblyName>
+    <RootNamespace>Laan.SQL.Formatter.Test</RootNamespace>
+    <AssemblyName>Laan.SQL.Formatter.Test</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,6 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Gallio, Version=3.0.4.481, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
+    <Reference Include="MbUnit, Version=3.0.4.481, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -47,41 +47,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\AlterTableStatement.cs" />
-    <Compile Include="Entities\CriteriaExpression.cs" />
-    <Compile Include="Entities\IndexedColumn.cs" />
-    <Compile Include="Entities\IProjection.cs" />
-    <Compile Include="Entities\IStatement.cs" />
-    <Compile Include="Entities\Join.cs" />
-    <Compile Include="Parsers\AlterTableStatementParser.cs" />
-    <Compile Include="Entities\CreateIndex.cs" />
-    <Compile Include="Parsers\CreateNonClusteredIndexParser.cs" />
-    <Compile Include="Entities\CreateTableStatement.cs" />
-    <Compile Include="Parsers\CreateTableStatementParser.cs" />
-    <Compile Include="Entities\CreateViewStatement.cs" />
-    <Compile Include="Parsers\CreateViewStatementParser.cs" />
-    <Compile Include="Parsers\CustomParser.cs" />
-    <Compile Include="Exceptions.cs" />
-    <Compile Include="Entities\Expression.cs" />
-    <Compile Include="Parsers\ExpressionParser.cs" />
-    <Compile Include="Entities\Extensions.cs" />
-    <Compile Include="Entities\Field.cs" />
-    <Compile Include="Entities\FieldDefinition.cs" />
-    <Compile Include="Entities\Identity.cs" />
-    <Compile Include="Entities\InsertStatement.cs" />
-    <Compile Include="Parsers\InsertStatementParser.cs" />
-    <Compile Include="Parsers\ParserFactory.cs" />
+    <Compile Include="TestFormattingEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Parsers\SelectStatementParser.cs" />
-    <Compile Include="Entities\SqlType.cs" />
-    <Compile Include="Entities\SelectStatement.cs" />
-    <Compile Include="Parsers\StatementParser.cs" />
-    <Compile Include="Entities\Table.cs" />
-    <Compile Include="Parsers\TableStatementParser.cs" />
-    <Compile Include="Tokenizer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="key.snk" />
+    <ProjectReference Include="..\Laan.SQL.Formatter\Laan.SQL.Formatter.csproj">
+      <Project>{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}</Project>
+      <Name>Laan.SQL.Formatter</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

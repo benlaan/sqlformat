@@ -5,6 +5,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Parser", "SQLParse
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Parser.Test", "SQLParserTest\Laan.SQL.Parser.Test.csproj", "{1D0DE8C1-0D05-433B-93E7-AAB7A34A93BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Formatter.Test", "Laan.SQL.Formatter.Test\Laan.SQL.Formatter.Test.csproj", "{0B133315-395D-46CC-8E50-513AB2E88A9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Formatter", "Laan.SQL.Formatter\Laan.SQL.Formatter.csproj", "{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0BCF224A-F0ED-4D7D-ACE7-398C75888F0F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{C76E8675-9290-4C7F-A3AC-2C9CA0C6F2E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,8 +27,22 @@ Global
 		{1D0DE8C1-0D05-433B-93E7-AAB7A34A93BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D0DE8C1-0D05-433B-93E7-AAB7A34A93BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D0DE8C1-0D05-433B-93E7-AAB7A34A93BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B133315-395D-46CC-8E50-513AB2E88A9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B133315-395D-46CC-8E50-513AB2E88A9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B133315-395D-46CC-8E50-513AB2E88A9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B133315-395D-46CC-8E50-513AB2E88A9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0B133315-395D-46CC-8E50-513AB2E88A9E} = {0BCF224A-F0ED-4D7D-ACE7-398C75888F0F}
+		{1D0DE8C1-0D05-433B-93E7-AAB7A34A93BC} = {0BCF224A-F0ED-4D7D-ACE7-398C75888F0F}
+		{5AF58723-F939-4955-9B29-2A6A0A4CFBA8} = {C76E8675-9290-4C7F-A3AC-2C9CA0C6F2E6}
+		{E972B2B2-F549-418E-B830-FB5D97101168} = {C76E8675-9290-4C7F-A3AC-2C9CA0C6F2E6}
 	EndGlobalSection
 EndGlobal

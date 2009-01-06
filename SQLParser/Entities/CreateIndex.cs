@@ -11,13 +11,13 @@ namespace Laan.SQL.Parser
         {
             Unique = false;
             Clustered = false;
-            Columns = new List<string>();
+            Columns = new List<IndexedColumn>();
         }
 
         public bool Clustered { get; set; }
         public bool Unique { get; set; }
         public string TableName { get; set; }
         public string IndexName { get; set; }
-        public List<string> Columns { get; set; }
+        public List<IndexedColumn> Columns { get; set; }
     }
 }
