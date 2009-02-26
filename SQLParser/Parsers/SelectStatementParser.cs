@@ -61,26 +61,29 @@ namespace Laan.SQL.Parser
         private void ProcessField( List<Field> fieldList )
         {
             Expression token = ProcessExpression();
-            string alias = null;
+            Alias alias = new Alias();
 
             Expression expression = null;
 
             if ( token is CriteriaExpression )
             {
                 // this handles the non-standard syntax of: Alias = Expression
-                CriteriaExpression criteriaExpression = ( CriteriaExpression )token;
-                alias = criteriaExpression.Left.Value;
+                CriteriaExpression criteriaExpression = (CriteriaExpression) token;
+                alias.Name = criteriaExpression.Left.Value;
+                alias.Type = AliasType.Equals;
                 expression = criteriaExpression.Right;
             }
             else if ( Tokenizer.TokenEquals( AS ) )
             {
-                alias = CurrentToken;
+                alias.Name = CurrentToken;
+                alias.Type = AliasType.As;
                 expression = token;
                 ReadNextToken();
             }
             else if ( !Tokenizer.IsNextToken( FieldTerminatorSet ) )
             {
-                alias = CurrentToken;
+                alias.Name = CurrentToken;
+                alias.Type = AliasType.Implicit;
                 expression = token;
                 ReadNextToken();
             }
@@ -117,9 +120,17 @@ namespace Laan.SQL.Parser
 
                 _statement.From.Add( table );
 
-                if ( Tokenizer.TokenEquals( AS ) || !Tokenizer.IsNextToken( FromTerminatorSet ) )
+                Alias alias = new Alias();
+                if ( Tokenizer.IsNextToken( AS ) )
                 {
-                    table.Alias = CurrentToken;
+                    alias.Type = AliasType.As;
+                    Tokenizer.ReadNextToken();
+                }
+
+                if ( alias.Type != AliasType.Implicit || !Tokenizer.IsNextToken( FromTerminatorSet ) )
+                {
+                    alias.Name = CurrentToken;
+                    table.Alias = alias;
                     ReadNextToken();
                 }
 
@@ -176,8 +187,18 @@ namespace Laan.SQL.Parser
 
                 join.Name = GetTableName();
 
-                if ( Tokenizer.TokenEquals( AS ) || !Tokenizer.TokenEquals( Constants.On ) )
-                    join.Alias = GetIdentifier();
+                Alias alias = new Alias();
+                if ( Tokenizer.IsNextToken( AS ) )
+                {
+                    alias.Type = AliasType.As;
+                    Tokenizer.ReadNextToken();
+                }
+
+                if ( alias.Type != AliasType.Implicit || !Tokenizer.TokenEquals( Constants.On ) )
+                {
+                    alias.Name = GetIdentifier();
+                    join.Alias = alias;
+                }
 
                 ExpectToken( Constants.On );
 

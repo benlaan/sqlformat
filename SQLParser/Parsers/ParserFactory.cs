@@ -10,6 +10,7 @@ namespace Laan.SQL.Parser
         private const string CREATE = "CREATE";
         private const string ALTER = "ALTER";
         private const string VIEW = "VIEW";
+        private const string GRANT = "GRANT";
 
         /// <summary>
         /// This method is used if you know what type will be returned from the parser
@@ -54,13 +55,16 @@ namespace Laan.SQL.Parser
                     if ( _tokenizer.IsNextToken( Constants.Unique, Constants.Clustered, Constants.NonClustered ) )
                         parser = new CreateIndexParser( _tokenizer );
                 }
+                else if ( _tokenizer.TokenEquals( GRANT ) )
+                {
+                    parser = new GrantParser( _tokenizer );
+                }
                 else if ( _tokenizer.TokenEquals( ALTER ) )
                 {
                     if ( _tokenizer.TokenEquals( TABLE ) )
                         parser = new AlterTableStatementParser( _tokenizer );
                 }
-
-                if ( _tokenizer.TokenEquals( INSERT ) )
+                else if ( _tokenizer.TokenEquals( INSERT ) )
                     parser = new InsertStatementParser( _tokenizer );
 
                 //if ( _tokenizer.TokenEquals( UPDATE ) )

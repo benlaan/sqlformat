@@ -12,7 +12,7 @@ namespace Laan.SQL.Parser
         CrossJoin
     }
 
-    public class Join
+    public class Join : AliasedEntity
     {
         public Join()
         {
@@ -20,8 +20,13 @@ namespace Laan.SQL.Parser
         }
 
         public string Name { get; set; }
-        public string Alias { get; set; }
         public JoinType Type { get; set; }
         public Expression Condition { get; set; }
+
+        public override string Value
+        {
+            get { return Name + Alias.Value + " ON " + Condition.Value; }
+            protected set { base.Value = value; }
+        }
     }
 }

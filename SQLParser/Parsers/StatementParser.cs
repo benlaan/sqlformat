@@ -16,6 +16,12 @@ namespace Laan.SQL.Parser
         internal const string NonClustered = "NONCLUSTERED";
         internal const string Unique = "UNIQUE";
         internal const string Index = "INDEX";
+        internal const string Select = "SELECT";
+        internal const string Insert = "INSERT";
+        internal const string Update = "UPDATE";
+        internal const string Delete = "DELETE";
+        internal const string All = "ALL";
+        internal const string To = "TO";
     }
 
     /// <summary>

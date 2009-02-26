@@ -108,7 +108,7 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "v1", sut.Name );
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
-            Assert.AreEqual( "t", statement.From[ 0 ].Alias );
+            Assert.AreEqual( "t", statement.From[ 0 ].Alias.Name );
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "v1", sut.Name );
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
-            Assert.AreEqual( "t", statement.From[ 0 ].Alias );
+            Assert.AreEqual( "t", statement.From[ 0 ].Alias.Name );
         }
 
         [Test]
@@ -138,9 +138,9 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "v1", sut.Name );
             Assert.AreEqual( 2, statement.From.Count );
             Assert.AreEqual( "table1", statement.From[ 0 ].Name );
-            Assert.AreEqual( "t1", statement.From[ 0 ].Alias );
+            Assert.AreEqual( "t1", statement.From[ 0 ].Alias.Name );
             Assert.AreEqual( "table2", statement.From[ 1 ].Name );
-            Assert.AreEqual( "t2", statement.From[ 1 ].Alias );
+            Assert.AreEqual( "t2", statement.From[ 1 ].Alias.Name );
         }
 
         [Test]
@@ -156,9 +156,9 @@ namespace Laan.SQL.Parser.Test
 
             Assert.AreEqual( 2, statement.From.Count );
             Assert.AreEqual( "table1", statement.From[ 0 ].Name );
-            Assert.AreEqual( "t1", statement.From[ 0 ].Alias );
+            Assert.AreEqual( "t1", statement.From[ 0 ].Alias.Name );
             Assert.AreEqual( "table2", statement.From[ 1 ].Name );
-            Assert.AreEqual( "t2", statement.From[ 1 ].Alias );
+            Assert.AreEqual( "t2", statement.From[ 1 ].Alias.Name );
         }
 
         [Test]
@@ -176,16 +176,16 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( 4, statement.Fields.Count );
 
             Assert.AreEqual( "field", statement.Fields[ 0 ].Expression.Value );
-            Assert.IsNull( statement.Fields[ 0 ].Alias );
+            Assert.IsNull( statement.Fields[ 0 ].Alias.Name );
 
             Assert.AreEqual( "fielda", statement.Fields[ 1 ].Expression.Value );
-            Assert.AreEqual( "a", statement.Fields[ 1 ].Alias );
+            Assert.AreEqual( "a", statement.Fields[ 1 ].Alias.Name );
 
             Assert.AreEqual( "field2", statement.Fields[ 2 ].Expression.Value );
-            Assert.AreEqual( "b", statement.Fields[ 2 ].Alias );
+            Assert.AreEqual( "b", statement.Fields[ 2 ].Alias.Name );
 
             Assert.AreEqual( "fie3ld", statement.Fields[ 3 ].Expression.Value );
-            Assert.AreEqual( "alias", statement.Fields[ 3 ].Alias );
+            Assert.AreEqual( "alias", statement.Fields[ 3 ].Alias.Name );
         }
 
         [Test]
@@ -229,7 +229,7 @@ namespace Laan.SQL.Parser.Test
             // Test From
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "Table1", statement.From[ 0 ].Name );
-            Assert.AreEqual( "T1", statement.From[ 0 ].Alias );
+            Assert.AreEqual( "T1", statement.From[ 0 ].Alias.Name );
 
             // Test Join
             Assert.AreEqual( 1, statement.Joins.Count );
@@ -237,7 +237,7 @@ namespace Laan.SQL.Parser.Test
             Join join = statement.Joins[ 0 ];
 
             Assert.AreEqual( "Table2", join.Name );
-            Assert.AreEqual( "T2", join.Alias );
+            Assert.AreEqual( "T2", join.Alias.Name );
 
             CriteriaExpression expr = join.Condition as CriteriaExpression;
 

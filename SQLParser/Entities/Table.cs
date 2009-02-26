@@ -5,16 +5,22 @@ using System.Diagnostics;
 namespace Laan.SQL.Parser
 {
 
-    public class Table
+    public class Table : AliasedEntity
     {
         public string Name { get; set; }
-        public string Alias { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the Table class.
+        /// </summary>
+        public Table()
+        {
+        }
 
         public virtual string Value
         {
             get
             {
-                return String.IsNullOrEmpty( Alias ) ? Name : String.Format( "{0} ({1})", Name, Alias );
+                return Alias != null ? Name : String.Format( "{0} ({1})", Name, Alias.Name );
             }
         }
     }

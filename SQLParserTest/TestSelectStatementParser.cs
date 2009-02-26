@@ -105,7 +105,8 @@ namespace Laan.SQL.Parser.Test
             Assert.IsNotNull( statement );
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
-            Assert.AreEqual( "t", statement.From[ 0 ].Alias );
+            Assert.AreEqual( "t", statement.From[ 0 ].Alias.Name );
+            Assert.AreEqual( AliasType.As, statement.From[ 0 ].Alias.Type );
         }
 
         [Test]
@@ -118,7 +119,8 @@ namespace Laan.SQL.Parser.Test
             Assert.IsNotNull( statement );
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
-            Assert.AreEqual( "t", statement.From[ 0 ].Alias );
+            Assert.AreEqual( "t", statement.From[ 0 ].Alias.Name );
+            Assert.AreEqual( AliasType.Implicit, statement.From[ 0 ].Alias.Type );
         }
 
         [Test]
@@ -131,9 +133,9 @@ namespace Laan.SQL.Parser.Test
             Assert.IsNotNull( statement );
             Assert.AreEqual( 2, statement.From.Count );
             Assert.AreEqual( "table1", statement.From[ 0 ].Name );
-            Assert.AreEqual( "t1", statement.From[ 0 ].Alias );
+            Assert.AreEqual( "t1", statement.From[ 0 ].Alias.Name );
             Assert.AreEqual( "table2", statement.From[ 1 ].Name );
-            Assert.AreEqual( "t2", statement.From[ 1 ].Alias );
+            Assert.AreEqual( "t2", statement.From[ 1 ].Alias.Name );
         }
 
         [Test]
@@ -146,9 +148,9 @@ namespace Laan.SQL.Parser.Test
             Assert.IsNotNull( statement );
             Assert.AreEqual( 2, statement.From.Count );
             Assert.AreEqual( "table1", statement.From[ 0 ].Name );
-            Assert.AreEqual( "t1", statement.From[ 0 ].Alias );
+            Assert.AreEqual( "t1", statement.From[ 0 ].Alias.Name );
             Assert.AreEqual( "table2", statement.From[ 1 ].Name );
-            Assert.AreEqual( "t2", statement.From[ 1 ].Alias );
+            Assert.AreEqual( "t2", statement.From[ 1 ].Alias.Name );
         }
 
         [Test]
@@ -162,16 +164,19 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( 4, statement.Fields.Count );
 
             Assert.AreEqual( "field", statement.Fields[ 0 ].Expression.Value );
-            Assert.IsNull( statement.Fields[ 0 ].Alias );
+            Assert.IsNull( statement.Fields[ 0 ].Alias.Name );
 
             Assert.AreEqual( "fielda", statement.Fields[ 1 ].Expression.Value );
-            Assert.AreEqual( "a", statement.Fields[ 1 ].Alias );
+            Assert.AreEqual( "a", statement.Fields[ 1 ].Alias.Name );
+            Assert.AreEqual( AliasType.Implicit, statement.Fields[ 1 ].Alias.Type );
 
             Assert.AreEqual( "field2", statement.Fields[ 2 ].Expression.Value );
-            Assert.AreEqual( "b", statement.Fields[ 2 ].Alias );
+            Assert.AreEqual( "b", statement.Fields[ 2 ].Alias.Name );
+            Assert.AreEqual( AliasType.As, statement.Fields[ 2 ].Alias.Type );
 
             Assert.AreEqual( "fie3ld", statement.Fields[ 3 ].Expression.Value );
-            Assert.AreEqual( "alias", statement.Fields[ 3 ].Alias );
+            Assert.AreEqual( "alias", statement.Fields[ 3 ].Alias.Name );
+            Assert.AreEqual( AliasType.Equals, statement.Fields[ 3 ].Alias.Type );
         }
 
         [Test]
@@ -206,7 +211,7 @@ namespace Laan.SQL.Parser.Test
 
                 from table1 t1 
 
-                join table2 t2 
+                join table2 as t2
                   on t1.field1 = t2.field2
                 "
             );
@@ -217,7 +222,8 @@ namespace Laan.SQL.Parser.Test
             // Test From
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "table1", statement.From[ 0 ].Name );
-            Assert.AreEqual( "t1", statement.From[ 0 ].Alias );
+            Assert.AreEqual( "t1", statement.From[ 0 ].Alias.Name );
+            Assert.AreEqual( AliasType.Implicit, statement.From[ 0 ].Alias.Type );
 
             // Test Join
             Assert.AreEqual( 1, statement.Joins.Count );
@@ -225,7 +231,8 @@ namespace Laan.SQL.Parser.Test
             Join join = statement.Joins[ 0 ];
 
             Assert.AreEqual( "table2", join.Name );
-            Assert.AreEqual( "t2", join.Alias );
+            Assert.AreEqual( "t2", join.Alias.Name );
+            Assert.AreEqual( AliasType.As, join.Alias.Type );
 
             Assert.AreEqual( JoinType.InnerJoin, join.Type );
 
@@ -259,7 +266,7 @@ namespace Laan.SQL.Parser.Test
 
                 from table1 t1 
 
-                join table2 t2 
+                join table2 as t2 
                   on (t1.field1 + 150) / 12 = ( t2.field2 + t1.fielda )
                 "
             );
@@ -270,7 +277,7 @@ namespace Laan.SQL.Parser.Test
             // Test From
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "table1", statement.From[ 0 ].Name );
-            Assert.AreEqual( "t1", statement.From[ 0 ].Alias );
+            Assert.AreEqual( "t1", statement.From[ 0 ].Alias.Name );
 
             // Test Join
             Assert.AreEqual( 1, statement.Joins.Count );
@@ -278,7 +285,7 @@ namespace Laan.SQL.Parser.Test
             Join join = statement.Joins[ 0 ];
 
             Assert.AreEqual( "table2", join.Name );
-            Assert.AreEqual( "t2", join.Alias );
+            Assert.AreEqual( "t2", join.Alias.Name );
 
             Assert.AreEqual( JoinType.InnerJoin, join.Type );
 
@@ -426,13 +433,13 @@ namespace Laan.SQL.Parser.Test
             // Verify outcome
             Assert.IsNotNull( statement );
             Assert.AreEqual( 1, statement.From.Count );
-            Assert.AreEqual( "t", statement.From[ 0 ].Alias );
+            Assert.AreEqual( "t", statement.From[ 0 ].Alias.Name );
             Assert.IsTrue( statement.From[ 0 ] is DerivedTable );
 
             DerivedTable derivedTable = (DerivedTable) statement.From[ 0 ];
             Assert.AreEqual( "field", derivedTable.SelectStatement.Fields[ 0 ].Expression.Value );
             Assert.AreEqual( "table", derivedTable.SelectStatement.From[ 0 ].Name );
-            Assert.AreEqual( "x", derivedTable.SelectStatement.From[ 0 ].Alias );
+            Assert.AreEqual( "x", derivedTable.SelectStatement.From[ 0 ].Alias.Name );
         }
 
         [Test]

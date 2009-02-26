@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1D0DE8C1-0D05-433B-93E7-AAB7A34A93BC}</ProjectGuid>
+    <ProjectGuid>{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laan.SQLParser.Test</RootNamespace>
-    <AssemblyName>Laan.SQLParser.Test</AssemblyName>
+    <RootNamespace>Laan.SQL.Formatter</RootNamespace>
+    <AssemblyName>Laan.SQL.Formatter</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,8 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gallio, Version=3.0.4.481, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
-    <Reference Include="MbUnit, Version=3.0.4.481, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -47,15 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestExpressionParser.cs" />
-    <Compile Include="TestCreateNonClusteredIndex.cs" />
-    <Compile Include="TestCreateView.cs" />
-    <Compile Include="TestAlterTable.cs" />
-    <Compile Include="TestCreateTable.cs" />
-    <Compile Include="TestGrantStatementParser.cs" />
-    <Compile Include="TestInsertStatementParser.cs" />
-    <Compile Include="TestTokenizer.cs" />
-    <Compile Include="TestSelectStatementParser.cs" />
+    <Compile Include="FormattingEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

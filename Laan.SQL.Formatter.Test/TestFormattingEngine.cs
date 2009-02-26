@@ -10,6 +10,15 @@ namespace Laan.SQL.Formatter.Test
     [TestFixture]
     public class TestFormattingEngine
     {
+
+        private static void Compare( string actual, string[] formatted )
+        {
+            Assert.AreElementsEqual( 
+                formatted, 
+                actual.Split( new string[] { "\r\n" }, StringSplitOptions.None ) 
+            );
+        }
+
         [Test]
         public void Can_Create_Formatting_Engine()
         {
@@ -29,18 +38,19 @@ namespace Laan.SQL.Formatter.Test
             var sut = new FormattingEngine();
 
             // Exercise
-            var sql = "SELECT * FROM dbo.Table T WHERE T.TableID = 10";
-            var actual = sut.Format( sql );
+            var actual = sut.Execute( "SELECT * FROM dbo.Table T WHERE T.TableID = 10" );
 
             // Verify outcome
-            const string formatted = 
-@"SELECT *
+            var expected = new[]
+            {
+                @"SELECT *",
+                "",
+                "FROM dbo.Table T",
+                "",
+                "WHERE T.TableID = 10"
+            };
 
-FROM dbo.Table T
-
-WHERE T.TableID = 10";
-            Assert.AreEqual( formatted, actual );
-
+            Compare( actual, expected );
         }
     }
 }

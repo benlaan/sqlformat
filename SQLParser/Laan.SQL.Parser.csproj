@@ -47,8 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\AliasedEntities.cs" />
     <Compile Include="Entities\AlterTableStatement.cs" />
     <Compile Include="Entities\CriteriaExpression.cs" />
+    <Compile Include="Entities\GrantStatement.cs" />
     <Compile Include="Entities\IndexedColumn.cs" />
     <Compile Include="Entities\IProjection.cs" />
     <Compile Include="Entities\IStatement.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="Entities\FieldDefinition.cs" />
     <Compile Include="Entities\Identity.cs" />
     <Compile Include="Entities\InsertStatement.cs" />
+    <Compile Include="Parsers\GrantParser.cs" />
     <Compile Include="Parsers\InsertStatementParser.cs" />
     <Compile Include="Parsers\ParserFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

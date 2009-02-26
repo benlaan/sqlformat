@@ -35,7 +35,7 @@ namespace Laan.SQL.Parser
         public override string ToString()
         {
             int currentTokenLength = _tokenizer != null ? _tokenizer.Current.Length : 0;
-            return String.Format( "Row: {1}, Col: {0}", Row, Column - currentTokenLength );
+            return String.Format( "Row: {0}, Col: {1}", Row, Column - currentTokenLength );
         }
 
         internal void NewRow()
