@@ -146,7 +146,8 @@ namespace Laan.SQL.Parser.Test
                     id2 varchar(10), 
                     id3 varchar not null, 
                     id4 decimal(10,2) not null,
-                    id5 [decimal](25, 3) null 
+                    id5 [decimal](25, 3) null,
+                    id6 varchar(max) null
                 )"
             );
 
@@ -159,8 +160,9 @@ namespace Laan.SQL.Parser.Test
                 new FieldDefinition() { Name = "id1", Type = new SqlType( "int" ), IsPrimaryKey = true, Nullability = Nullability.NotNullable },
                 new FieldDefinition() { Name = "id2", Type = new SqlType( "varchar", 10 ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
                 new FieldDefinition() { Name = "id3", Type = new SqlType( "varchar" ), IsPrimaryKey = false, Nullability = Nullability.NotNullable },
-                new FieldDefinition() { Name = "id4", Type = new SqlType( "decimal", 10, 2) , IsPrimaryKey = false, Nullability = Nullability.NotNullable },
-                new FieldDefinition() { Name = "id5", Type = new SqlType( "decimal", 25, 3) , IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { Name = "id4", Type = new SqlType( "decimal", 10, 2), IsPrimaryKey = false, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id5", Type = new SqlType( "decimal", 25, 3), IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { Name = "id6", Type = new SqlType( "varchar" ) { Max = true }, IsPrimaryKey = false, Nullability = Nullability.Nullable },
             };
 
             Assert.AreElementsEqual( expected, statement.Fields );

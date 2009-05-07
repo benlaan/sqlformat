@@ -98,7 +98,7 @@ namespace Laan.SQL.Parser.Test
         [Row(
             "'Hello World'", new[] { "'Hello World'" } )
         ]
-        public void Test_Can_Tokenize_Strings_As_Once_Token( string input, string[] tokens )
+        public void Test_Can_Tokenize_Strings_As_One_Token( string input, string[] tokens )
         {
             Verify( input, tokens );
         }
