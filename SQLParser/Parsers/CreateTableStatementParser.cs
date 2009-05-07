@@ -14,7 +14,8 @@ namespace Laan.SQL.Parser
 
         CreateTableStatement _statement;
 
-        internal CreateTableStatementParser( Tokenizer tokenizer ) : base( tokenizer )
+        internal CreateTableStatementParser( Tokenizer tokenizer )
+            : base( tokenizer )
         {
         }
 
@@ -48,12 +49,17 @@ namespace Laan.SQL.Parser
             {
                 string token = CurrentToken;
                 ReadNextToken();
-                result.Length = Int32.Parse( token );
+                result.Max = ( String.Compare( token, "MAX", true ) == 0 );
 
-                if ( Tokenizer.TokenEquals( Constants.Comma ) )
+                if ( !result.Max )
                 {
-                    result.Scale = Int32.Parse( CurrentToken );
-                    ReadNextToken();
+                    result.Length = Int32.Parse( token );
+
+                    if ( Tokenizer.TokenEquals( Constants.Comma ) )
+                    {
+                        result.Scale = Int32.Parse( CurrentToken );
+                        ReadNextToken();
+                    }
                 }
 
                 Tokenizer.ExpectToken( Constants.CloseBracket );
