@@ -32,6 +32,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Gallio, Version=3.0.6.721, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\AoM\trunk\References\Logging\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="MbUnit, Version=3.0.6.721, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -47,14 +51,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestAppender.cs" />
     <Compile Include="TestFormattingEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Laan.NHibernate.Appender\Laan.NHibernate.Appender.csproj">
+      <Project>{1532F037-944F-4969-81BA-5A7C34E1D299}</Project>
+      <Name>Laan.NHibernate.Appender</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Laan.SQL.Formatter\Laan.SQL.Formatter.csproj">
       <Project>{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}</Project>
       <Name>Laan.SQL.Formatter</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
