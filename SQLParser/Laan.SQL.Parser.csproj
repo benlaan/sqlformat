@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BracketStructure.cs" />
     <Compile Include="Entities\AliasedEntities.cs" />
     <Compile Include="Entities\AlterTableStatement.cs" />
     <Compile Include="Entities\CriteriaExpression.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="Entities\IProjection.cs" />
     <Compile Include="Entities\IStatement.cs" />
     <Compile Include="Entities\Join.cs" />
+    <Compile Include="Entities\SortedField.cs" />
     <Compile Include="Parsers\AlterTableStatementParser.cs" />
     <Compile Include="Entities\CreateIndex.cs" />
     <Compile Include="Parsers\CreateNonClusteredIndexParser.cs" />

@@ -39,28 +39,37 @@ namespace Laan.SQL.Parser
 
             if ( Tokenizer.TokenEquals( PRIMARY ) )
             {
-                Tokenizer.ExpectTokens( new[] { KEY, CLUSTERED, Constants.OpenBracket } );
-                _statement.PrimaryKeys = GetIdentifierList();
-                Tokenizer.ExpectToken( Constants.CloseBracket );
+                Tokenizer.ExpectTokens( new[] { KEY, CLUSTERED } );
+                using ( Tokenizer.ExpectBrackets() )
+                {
+                    _statement.PrimaryKeys = GetIdentifierList();
+                }
             }
             else if ( Tokenizer.TokenEquals( UNIQUE ) )
             {
-                Tokenizer.ExpectTokens( new[] { NONCLUSTERED, Constants.OpenBracket } );
-                _statement.PrimaryKeys = GetIdentifierList();
-                Tokenizer.ExpectToken( Constants.CloseBracket );
+                Tokenizer.ExpectTokens( new[] { NONCLUSTERED } );
+                using ( Tokenizer.ExpectBrackets() )
+                {
+                    _statement.PrimaryKeys = GetIdentifierList();
+                }
             }
             else if ( Tokenizer.TokenEquals( FOREIGN ) )
             {
                 // TODO: these fields are being consumed, but not stored into a constrain object
                 //       this is not required (for my current task) at this stage.
-                Tokenizer.ExpectTokens( new[] { KEY, Constants.OpenBracket } );
-                string keyID = GetIdentifier();
-                Tokenizer.ExpectTokens( new[] { Constants.CloseBracket, REFERENCES } );
+                Tokenizer.ExpectTokens( new[] { KEY } );
+                using ( Tokenizer.ExpectBrackets() )
+                {
+                    string keyID = GetIdentifier();
+                }
+
+                Tokenizer.ExpectTokens( new[] { REFERENCES } );
                 string refereringTable = GetTableName();
 
-                Tokenizer.ExpectToken( Constants.OpenBracket );
-                string result = GetIdentifier();
-                Tokenizer.ExpectToken( Constants.CloseBracket );
+                using ( Tokenizer.ExpectBrackets() )
+                {
+                    string result = GetIdentifier();
+                }
             }
 
             return _statement;

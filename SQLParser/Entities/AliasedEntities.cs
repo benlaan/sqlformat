@@ -5,7 +5,7 @@ namespace Laan.SQL.Parser
 {
     public class AliasedEntity : Expression
     {
-        public AliasedEntity()
+        public AliasedEntity() : base()
         {
             Alias = new Alias();
         }
@@ -33,11 +33,11 @@ namespace Laan.SQL.Parser
                 switch ( Type )
                 {
                     case AliasType.Implicit:
-                        format = Name.Length > 0 ? String.Format( " {0}", Name ) : "";
+                        format = !String.IsNullOrEmpty( Name ) ? String.Format( " {0}", Name ) : "";
                         break;
 
                     case AliasType.Equals:
-                        format = Name.Length > 0 ? String.Format( " AS {0}", Name ) : "";
+                        format = !String.IsNullOrEmpty( Name ) ? String.Format( " AS {0}", Name ) : "";
                         break;
 
                     case AliasType.As:

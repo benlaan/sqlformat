@@ -9,40 +9,44 @@ namespace Laan.SQL.Formatter
 {
     public class FormattingEngine
     {
-        public string Execute( string sql )
+        private Dictionary<Type, Type> _formatters;
+        private IStatement _statement;
+
+        /// <summary>
+        /// Initializes a new instance of the FormattingEngine class.
+        /// </summary>
+        public FormattingEngine()
         {
-            string padding = new string( ' ', 4 );
+            TabSize = 4;
+            UseTabChar = false;
 
-            // Exercise
-            var statement = ParserFactory.Execute<SelectStatement>( sql );
-
-            string result = "SELECT";
-
-            const string NEW_LINE = "\r\n";
-
-            if ( statement.Fields.Count == 1 )
-                result += " " + statement.Fields[ 0 ].Expression.Value;
-            else
-                foreach ( var field in statement.Fields )
-                    result += NEW_LINE + padding + field.Expression.Value;
-
-            if ( statement.From != null )
+            _formatters = new Dictionary<Type, Type>
             {
-                result += String.Format( 
-                    "{0}{0}FROM {1} {2}", 
-                    NEW_LINE, statement.From[ 0 ].Name, statement.From[ 0 ].Alias 
-                );
-            }
-
-            if ( statement.Where != null )
-            {
-                result += String.Format(
-                    "{0}{0}WHERE {1}",
-                    NEW_LINE,
-                    statement.Where.Value
-                );
-            }
-            return result;
+                { typeof( SelectStatement ), typeof( SelectStatementFormatter ) },
+//                { typeof( CreateTableStatement ), typeof( CreateTableStatementFormatter ) }
+//                { typeof( UpdateStatement ), typeof( UpdateStatementFormatter ) }
+            };
         }
+
+        public string Execute( string inSql )
+        {
+            string indent = UseTabChar ? "\t" : new string( ' ', TabSize );
+
+            StringBuilder outSql = new StringBuilder();
+            _statement = ParserFactory.Execute( inSql );
+
+            var formatterType = _formatters[ _statement.GetType() ];
+            
+            var formatter = Activator.CreateInstance( formatterType, indent, 0, outSql, _statement ) as IStatementFormatter;
+
+            if ( formatter == null )
+                throw new Exception( "Formatter not implemented" );
+
+            formatter.Execute();
+            return outSql.ToString();
+        }
+
+        public int TabSize { get; set; }
+        public bool UseTabChar { get; set; }
     }
 }

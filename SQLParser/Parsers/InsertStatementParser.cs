@@ -30,19 +30,22 @@ namespace Laan.SQL.Parser
 
             _statement.TableName = GetTableName();
 
-            if ( Tokenizer.TokenEquals( Constants.OpenBracket ) )
+            if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
             {
-                _statement.Columns = ( GetIdentifierList() );
-                ExpectToken( Constants.CloseBracket );
+                using ( Tokenizer.ExpectBrackets() )
+                {
+                    _statement.Columns = ( GetIdentifierList() );
+                }
             }
 
             if ( Tokenizer.TokenEquals( "VALUES" ) )
             {
                 do
                 {
-                    ExpectToken( Constants.OpenBracket );
-                    _statement.Values.Add( GetIdentifierList() );
-                    ExpectToken( Constants.CloseBracket );
+                    using ( Tokenizer.ExpectBrackets() )
+                    {
+                        _statement.Values.Add( GetIdentifierList() );
+                    }
                 }
                 while ( Tokenizer.TokenEquals( Constants.Comma ) );
             }

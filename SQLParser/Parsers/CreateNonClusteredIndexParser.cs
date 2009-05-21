@@ -30,9 +30,10 @@ namespace Laan.SQL.Parser
             Tokenizer.ExpectToken( Constants.On );
             statement.TableName = GetTableName();
             
-            Tokenizer.ExpectToken( Constants.OpenBracket );
-            statement.Columns = GetIndexedColumnList();
-            Tokenizer.ExpectToken( Constants.CloseBracket );
+            using ( Tokenizer.ExpectBrackets() )
+            {
+                statement.Columns = GetIndexedColumnList();
+            }
 
             return statement;
         }

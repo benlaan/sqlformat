@@ -12,11 +12,11 @@ namespace Laan.SQL.Parser
         /// <summary>
         /// Initializes a new instance of the Table class.
         /// </summary>
-        public Table()
+        public Table() : base()
         {
         }
 
-        public virtual string Value
+        public override string Value
         {
             get
             {

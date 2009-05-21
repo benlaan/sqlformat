@@ -42,7 +42,7 @@ namespace Laan.SQL.Parser
         {
             Expression expression = ReadExpression();
 
-            if ( Tokenizer.IsNextToken( "=", ">=", "<=", ">", "<", "IS", "IN", "ANY" ) )
+            if ( Tokenizer.IsNextToken( "=", "<>", "!=", ">=", "<=", ">", "<", "IS", "IN", "ANY" ) )
             {
                 CriteriaExpression result = new CriteriaExpression();
                 result.Left = expression;
@@ -58,7 +58,7 @@ namespace Laan.SQL.Parser
                 return expression;
         }
 
-        
+
         private Expression ReadExpression()
         {
             Expression term = ReadTerm();
@@ -102,10 +102,14 @@ namespace Laan.SQL.Parser
         private Expression ReadFactor()
         {
             // nested expressions first
-            if ( Tokenizer.TokenEquals( Constants.OpenBracket ) )
+            if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
             {
-                Expression result = ReadCriteriaList();
-                ExpectToken( Constants.CloseBracket );
+                Expression result;
+                using ( Tokenizer.ExpectBrackets() )
+                {
+                    result = ReadCriteriaList();
+                }
+
                 return new NestedExpression() { Expression = result };
             }
             else
@@ -124,7 +128,7 @@ namespace Laan.SQL.Parser
                     SelectExpression selectExpression = new SelectExpression();
 
                     var parser = new SelectStatementParser( Tokenizer );
-                    selectExpression.Statement = ( SelectStatement )parser.Execute();
+                    selectExpression.Statement = (SelectStatement) parser.Execute();
                     return selectExpression;
                 }
 
@@ -141,18 +145,20 @@ namespace Laan.SQL.Parser
                 token = GetDotNotationIdentifier();
 
                 // check for an open bracket, indicating that the previous identifier is actually a function
-                if ( Tokenizer.TokenEquals( Constants.OpenBracket ) )
+                if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
                 {
                     FunctionExpression result = new FunctionExpression();
-                    result.Name = token;
-                    if ( !Tokenizer.IsNextToken( Constants.CloseBracket ) )
-                        do
-                        {
-                            result.Arguments.Add( ReadExpression() );
-                        }
-                        while ( Tokenizer.TokenEquals( Constants.Comma ) );
+                    using ( Tokenizer.ExpectBrackets() )
+                    {
+                        result.Name = token;
+                        if ( !Tokenizer.IsNextToken( Constants.CloseBracket ) )
+                            do
+                            {
+                                result.Arguments.Add( ReadExpression() );
+                            }
+                            while ( Tokenizer.TokenEquals( Constants.Comma ) );
+                    }
 
-                    ExpectToken( Constants.CloseBracket );
                     return result;
                 }
                 else

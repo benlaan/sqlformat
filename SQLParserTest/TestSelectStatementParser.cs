@@ -62,6 +62,20 @@ namespace Laan.SQL.Parser.Test
             SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select top * from table" );
         }
 
+
+        [Test]
+        public void Select_Without_Alias_And_Where_Clause()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select fielda from table where a > 1" );
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 1, statement.Fields.Count );
+            Assert.AreEqual( "fielda", statement.Fields[ 0 ].Expression.Value );
+            Assert.AreEqual( "table", statement.From[ 0 ].Name );
+            Assert.AreEqual( "a > 1", statement.Where.Value );
+        }
+        
         [Test]
         public void Select_Distinct_Top_10_StarField()
         {
@@ -234,7 +248,7 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "t2", join.Alias.Name );
             Assert.AreEqual( AliasType.As, join.Alias.Type );
 
-            Assert.AreEqual( JoinType.InnerJoin, join.Type );
+            Assert.AreEqual( JoinType.Join, join.Type );
 
             CriteriaExpression expr = join.Condition as CriteriaExpression;
 
@@ -287,7 +301,7 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "table2", join.Name );
             Assert.AreEqual( "t2", join.Alias.Name );
 
-            Assert.AreEqual( JoinType.InnerJoin, join.Type );
+            Assert.AreEqual( JoinType.Join, join.Type );
 
             CriteriaExpression expr = join.Condition as CriteriaExpression;
             Assert.AreEqual( "=", expr.Operator );
@@ -447,7 +461,7 @@ namespace Laan.SQL.Parser.Test
         {
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
-                select * from table order by field1, field2
+                select * from table order by field1 desc, field2 asc
             " );
 
             // Verify outcome
@@ -455,6 +469,8 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
             Assert.AreEqual( 2, statement.OrderBy.Count );
+            Assert.AreEqual( SortOrder.Descending, ( statement.OrderBy[ 0 ] as SortedField ).SortOrder );
+            Assert.AreEqual( SortOrder.Ascending, ( statement.OrderBy[ 1 ] as SortedField ).SortOrder );
         }
 
         [Test]
@@ -500,6 +516,27 @@ namespace Laan.SQL.Parser.Test
             // the right branch is a simple IdentifierExpression
             Assert.IsTrue( operatorExpression.Right is IdentifierExpression );
             Assert.AreEqual( "0", operatorExpression.Right.Value );
+        }
+
+        [Test]
+        public void Select_With_Derived_Join()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
+                select * from table t join ( select field from other o ) as o1 on o.a = t.a
+            " );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 1, statement.From.Count );
+            Assert.AreEqual( "t", statement.From[ 0 ].Alias.Name );
+            Assert.IsTrue( statement.Joins[ 0 ] is DerivedJoin );
+
+            DerivedJoin derivedJoin = (DerivedJoin) statement.Joins[ 0 ];
+            Assert.AreEqual( "field", derivedJoin.SelectStatement.Fields[ 0 ].Expression.Value );
+            Assert.AreEqual( "other", derivedJoin.SelectStatement.From[ 0 ].Name );
+            Assert.AreEqual( "o", derivedJoin.SelectStatement.From[ 0 ].Alias.Name );
+            Assert.AreEqual( "o1", derivedJoin.Alias.Name );
         }
     }
 }

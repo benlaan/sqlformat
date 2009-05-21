@@ -3,7 +3,13 @@ using System.Collections.Generic;
 
 namespace Laan.SQL.Parser
 {
-    public class SelectStatement : IStatement
+
+    public interface IHasWhereClause
+    {
+        Expression Where { get; set; }
+    }
+
+    public class SelectStatement : IStatement, IHasWhereClause
     {
         public SelectStatement()
         {

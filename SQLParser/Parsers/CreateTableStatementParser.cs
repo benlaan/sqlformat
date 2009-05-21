@@ -25,18 +25,17 @@ namespace Laan.SQL.Parser
 
             _statement.TableName = GetTableName();
 
-            Tokenizer.ExpectToken( Constants.OpenBracket );
-            do
+            using ( Tokenizer.ExpectBrackets() )
             {
-                if ( Tokenizer.TokenEquals( CONSTRAINT ) )
-                    ProcessPrimaryKeyConstraint();
-                else
-                    ProcessFieldDefinition();
+                do
+                {
+                    if ( Tokenizer.TokenEquals( CONSTRAINT ) )
+                        ProcessPrimaryKeyConstraint();
+                    else
+                        ProcessFieldDefinition();
 
-            } while ( Tokenizer.TokenEquals( Constants.Comma ) );
-
-            Tokenizer.ExpectToken( Constants.CloseBracket );
-
+                } while ( Tokenizer.TokenEquals( Constants.Comma ) );
+            }
             return _statement;
         }
 
@@ -45,24 +44,25 @@ namespace Laan.SQL.Parser
             string identifier = GetIdentifier();
             SqlType result = new SqlType( identifier );
 
-            if ( Tokenizer.TokenEquals( Constants.OpenBracket ) )
+            if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
             {
-                string token = CurrentToken;
-                ReadNextToken();
-                result.Max = ( String.Compare( token, "MAX", true ) == 0 );
-
-                if ( !result.Max )
+                using ( Tokenizer.ExpectBrackets() )
                 {
-                    result.Length = Int32.Parse( token );
+                    string token = CurrentToken;
+                    ReadNextToken();
+                    result.Max = ( String.Compare( token, "MAX", true ) == 0 );
 
-                    if ( Tokenizer.TokenEquals( Constants.Comma ) )
+                    if ( !result.Max )
                     {
-                        result.Scale = Int32.Parse( CurrentToken );
-                        ReadNextToken();
+                        result.Length = Int32.Parse( token );
+
+                        if ( Tokenizer.TokenEquals( Constants.Comma ) )
+                        {
+                            result.Scale = Int32.Parse( CurrentToken );
+                            ReadNextToken();
+                        }
                     }
                 }
-
-                Tokenizer.ExpectToken( Constants.CloseBracket );
             }
             return result;
         }
@@ -73,19 +73,20 @@ namespace Laan.SQL.Parser
             string identifier = GetIdentifier();
             string orderBy = "";
 
-            Tokenizer.ExpectTokens( new[] { PRIMARY, KEY, CLUSTERED, Constants.OpenBracket } );
+            Tokenizer.ExpectTokens( new[] { PRIMARY, KEY, CLUSTERED } );
 
-            string keyFieldName = GetIdentifier();
+            using ( Tokenizer.ExpectBrackets() )
+            {
+                string keyFieldName = GetIdentifier();
 
-            FieldDefinition keyField = _statement.Fields.FindByName( keyFieldName );
-            if ( keyField != null )
-                keyField.IsPrimaryKey = true;
+                FieldDefinition keyField = _statement.Fields.FindByName( keyFieldName );
+                if ( keyField != null )
+                    keyField.IsPrimaryKey = true;
 
-            string token = CurrentToken;
-            if ( Tokenizer.TokenEquals( ASC ) || Tokenizer.TokenEquals( DESC ) )
-                orderBy = token;
-
-            Tokenizer.ExpectToken( Constants.CloseBracket );
+                string token = CurrentToken;
+                if ( Tokenizer.TokenEquals( ASC ) || Tokenizer.TokenEquals( DESC ) )
+                    orderBy = token;
+            }
         }
 
         private void ProcessFieldDefinition()
@@ -162,17 +163,16 @@ namespace Laan.SQL.Parser
         {
             Identity result = new Identity();
 
-            Tokenizer.ExpectToken( Constants.OpenBracket );
+            using ( Tokenizer.ExpectBrackets() )
+            {
+                result.Start = Int32.Parse( CurrentToken );
+                ReadNextToken();
 
-            result.Start = Int32.Parse( CurrentToken );
-            ReadNextToken();
+                Tokenizer.ExpectToken( Constants.Comma );
 
-            Tokenizer.ExpectToken( Constants.Comma );
-
-            result.Increment = Int32.Parse( CurrentToken );
-            ReadNextToken();
-
-            Tokenizer.ExpectToken( Constants.CloseBracket );
+                result.Increment = Int32.Parse( CurrentToken );
+                ReadNextToken();
+            }
 
             return result;
         }

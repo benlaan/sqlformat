@@ -208,7 +208,7 @@ namespace Laan.SQL.Parser.Test
         }
 
         [Test]
-        public void Select_With_Inner_Join_Condition()
+        public void Select_With_Join_Condition()
         {
             // Exercise
             CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( @"
@@ -241,7 +241,7 @@ namespace Laan.SQL.Parser.Test
 
             CriteriaExpression expr = join.Condition as CriteriaExpression;
 
-            Assert.AreEqual( JoinType.InnerJoin, join.Type );
+            Assert.AreEqual( JoinType.Join, join.Type );
             Assert.AreEqual( "=", expr.Operator );
             Assert.AreEqual( "T1.Field1", expr.Left.Value );
 

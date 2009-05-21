@@ -7,6 +7,12 @@ namespace Laan.SQL.Parser
 {
     public class SelectStatementParser : StatementParser
     {
+        internal enum FieldType
+        {
+            Select, OrderBy, GroupBy
+        }
+
+        private const string SELECT = "SELECT";
         private const string DISTINCT = "DISTINCT";
         private const string TOP = "TOP";
         private const string FROM = "FROM";
@@ -25,7 +31,7 @@ namespace Laan.SQL.Parser
         private const string HAVING = "HAVING";
 
         private string[] FieldTerminatorSet = { FROM, Constants.Comma, HAVING };
-        private string[] FromTerminatorSet = { INNER, JOIN, LEFT, RIGHT, FULL, Constants.Comma, Constants.CloseBracket, ORDER, GROUP };
+        private string[] FromTerminatorSet = { INNER, JOIN, LEFT, RIGHT, FULL, Constants.Comma, Constants.CloseBracket, ORDER, GROUP, WHERE };
 
         SelectStatement _statement;
 
@@ -44,27 +50,24 @@ namespace Laan.SQL.Parser
                 if ( !Int32.TryParse( CurrentToken, out top ) )
                     throw new SyntaxException( String.Format( "Expected integer but found: '{0}'", CurrentToken ) );
 
-                _statement.Top = ( int )top;
+                _statement.Top = (int) top;
                 ReadNextToken();
             }
         }
 
-        private void ProcessFields( List<Field> fieldList )
+        private void ProcessFields( FieldType fieldType, List<Field> fieldList )
         {
             do
             {
-                ProcessField( fieldList );
+                ProcessField( fieldType, fieldList );
 
             } while ( Tokenizer.TokenEquals( Constants.Comma ) );
         }
 
-        private void ProcessField( List<Field> fieldList )
+        private Field GetSelectField( Expression token )
         {
-            Expression token = ProcessExpression();
-            Alias alias = new Alias();
-
             Expression expression = null;
-
+            Alias alias = new Alias();
             if ( token is CriteriaExpression )
             {
                 // this handles the non-standard syntax of: Alias = Expression
@@ -90,7 +93,45 @@ namespace Laan.SQL.Parser
             else
                 expression = token;
 
-            fieldList.Add( new Field() { Expression = expression, Alias = alias } );
+            Field field = new Field() { Expression = expression, Alias = alias };
+            return field;
+        }
+
+        private SortedField GetOrderByField( Expression token )
+        {
+            SortOrder sortOrder = SortOrder.Implicit;
+
+            if ( Tokenizer.TokenEquals( "ASC" ) )
+                sortOrder = SortOrder.Ascending;
+
+            if ( Tokenizer.TokenEquals( "DESC" ) )
+                sortOrder = SortOrder.Descending;
+
+            SortedField field = new SortedField() { Expression = token, SortOrder = sortOrder };
+            return field;
+        }
+
+        private void ProcessField( FieldType fieldType, List<Field> fieldList )
+        {
+            Expression token = ProcessExpression();
+
+            Field field = null;
+            switch ( fieldType )
+            {
+                case FieldType.Select:
+                    field = GetSelectField( token );
+                    break;
+
+                case FieldType.OrderBy:
+                    field = GetOrderByField( token );
+                    break;
+
+                case FieldType.GroupBy:
+                    field = new Field() { Expression = token };
+                    break;
+            }
+            if ( field != null )
+                fieldList.Add( field );
         }
 
         private void ProcessFrom()
@@ -101,19 +142,19 @@ namespace Laan.SQL.Parser
             do
             {
                 Table table = null;
-                if (Tokenizer.TokenEquals( Constants.OpenBracket ))
+                if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
                 {
-                    DerivedTable derivedTable = new DerivedTable();
-
-                    if ( Tokenizer.IsNextToken( "SELECT" ) )
+                    using ( Tokenizer.ExpectBrackets() )
                     {
-                        ReadNextToken();
-                        var parser = new SelectStatementParser( Tokenizer );
-                        derivedTable.SelectStatement = ( SelectStatement )parser.Execute();
-                    }
-                    table = derivedTable;
+                        DerivedTable derivedTable = new DerivedTable();
 
-                    ExpectToken( Constants.CloseBracket );
+                        Tokenizer.ExpectToken( SELECT );
+
+                        var parser = new SelectStatementParser( Tokenizer );
+                        derivedTable.SelectStatement = (SelectStatement) parser.Execute();
+
+                        table = derivedTable;
+                    }
                 }
                 else
                     table = new Table() { Name = GetTableName() };
@@ -143,33 +184,31 @@ namespace Laan.SQL.Parser
         {
             JoinType? joinType = null;
 
-            if ( Tokenizer.TokenEquals( INNER ) || Tokenizer.IsNextToken( JOIN ) )
+            if ( Tokenizer.TokenEquals( INNER ) )
             {
                 joinType = JoinType.InnerJoin;
+            }
+            else if ( Tokenizer.IsNextToken( JOIN ) ) // don't consume - it is checked after here
+            {
+                joinType = JoinType.Join;
             }
             else if ( Tokenizer.TokenEquals( FULL ) )
             {
                 joinType = JoinType.FullJoin;
                 if ( Tokenizer.TokenEquals( OUTER ) )
-                {
-                    // just consume this 'legacy' token without using it..
-                }
+                    joinType = JoinType.FullOuterJoin;
             }
             else if ( Tokenizer.TokenEquals( LEFT ) )
             {
                 joinType = JoinType.LeftJoin;
                 if ( Tokenizer.TokenEquals( OUTER ) )
-                {
-                    // just consume this 'legacy' token without using it..
-                }
+                    joinType = JoinType.LeftOuterJoin;
             }
             else if ( Tokenizer.TokenEquals( RIGHT ) )
             {
                 joinType = JoinType.RightJoin;
                 if ( Tokenizer.TokenEquals( OUTER ) )
-                {
-                    // consume this redundant token..
-                }
+                    joinType = JoinType.RightOuterJoin;
             }
             return joinType;
         }
@@ -183,9 +222,26 @@ namespace Laan.SQL.Parser
                     return;
 
                 ExpectToken( JOIN );
-                Join join = new Join() { Type = ( JoinType )joinType };
 
-                join.Name = GetTableName();
+                Join join = null;
+                if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
+                {
+                    using ( Tokenizer.ExpectBrackets() )
+                    {
+                        join = new DerivedJoin() { Type = (JoinType) joinType };
+
+                        Tokenizer.ExpectToken( SELECT );
+                        var parser = new SelectStatementParser( Tokenizer );
+                        ((DerivedJoin)join).SelectStatement = (SelectStatement) parser.Execute();
+                    }
+                }
+                else
+                {
+                    join = new Join() { Type = (JoinType) joinType };
+                    join.Name = GetTableName();
+                }
+
+                Debug.Assert( join != null );
 
                 Alias alias = new Alias();
                 if ( Tokenizer.IsNextToken( AS ) )
@@ -224,7 +280,7 @@ namespace Laan.SQL.Parser
             if ( Tokenizer.TokenEquals( ORDER ) )
             {
                 ExpectToken( BY );
-                ProcessFields( _statement.OrderBy );
+                ProcessFields( FieldType.OrderBy, _statement.OrderBy );
             }
         }
 
@@ -233,7 +289,7 @@ namespace Laan.SQL.Parser
             if ( Tokenizer.TokenEquals( GROUP ) )
             {
                 ExpectToken( BY );
-                ProcessFields( _statement.GroupBy );
+                ProcessFields( FieldType.GroupBy, _statement.GroupBy );
 
                 if ( Tokenizer.TokenEquals( HAVING ) )
                     _statement.Having = ProcessExpression();
@@ -246,7 +302,7 @@ namespace Laan.SQL.Parser
 
             ProcessDistinct();
             ProcessTop();
-            ProcessFields( _statement.Fields );
+            ProcessFields( FieldType.Select, _statement.Fields );
             ProcessFrom();
             ProcessWhere();
             ProcessOrderBy();

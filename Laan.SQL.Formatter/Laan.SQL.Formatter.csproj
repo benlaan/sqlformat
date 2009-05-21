@@ -45,8 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExpressionFormatter.cs" />
     <Compile Include="FormattingEngine.cs" />
+    <Compile Include="IStatementFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectStatementFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SQLParser\Laan.SQL.Parser.csproj">

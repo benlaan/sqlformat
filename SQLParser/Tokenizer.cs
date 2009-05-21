@@ -83,7 +83,8 @@ namespace Laan.SQL.Parser
                 // within a quote, EVERYTHING is the same token
                 new TokenizerRule { StartOp = i => i == SINGLE_QUOTE,  ContinueOp = i => i != SINGLE_QUOTE, IncludeTerminalChar = true },
                 new TokenizerRule { StartOp = i => i == '@', ContinueOp = IsVariableName },
-                new TokenizerRule { StartOp = i => IsWithinSet( i, new char[] { '>', '<', '!' } ), ContinueOp =  i => i == '=' },
+                new TokenizerRule { StartOp = i => IsWithinSet( i, new char[] { '>', '!' } ), ContinueOp =  i => i == '=' },
+                new TokenizerRule { StartOp = i => i == '<' , ContinueOp = i => IsWithinSet( i, new char[] { '>', '=' } ) },
                 new TokenizerRule { StartOp = IsAlpha,   ContinueOp = IsAlphaNumeric },
                 new TokenizerRule { StartOp = IsNumeric, ContinueOp = IsNumeric }, 
                 new TokenizerRule { StartOp = IsSpecialChar, ContinueOp = _neverContinue }, 
@@ -269,5 +270,9 @@ namespace Laan.SQL.Parser
 
         public Position Position { get; private set; }
 
+        public BracketStructure ExpectBrackets()
+        {
+            return new BracketStructure( this );
+        }
     }
 }

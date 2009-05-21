@@ -82,8 +82,8 @@ namespace Laan.SQL.Parser.Test
             new[] { "Ben", "(", "Test1234", ")", ",", "Laan", "(", "9876", ")", "\"", "12", "\"", "[", "Hello", ",", "'World'", "]" } )
         ]
         [Row(
-            "A = 1, 2 <= 5; A != B; 33 >= 12", 
-            new[] { "A", "=", "1", ",", "2", "<=", "5", ";", "A", "!=", "B", ";", "33", ">=", "12" } )
+            "A = 1, 2 <= 5; A != B; 33 >= 12; A <> B", 
+            new[] { "A", "=", "1", ",", "2", "<=", "5", ";", "A", "!=", "B", ";", "33", ">=", "12", ";", "A", "<>", "B" } )
         ]
         [Row( "@Ben_Laan", new[] { "@Ben_Laan" } )]
         public void Tokenize_Alpha_Numeric_And_Special_Strings( string input, string[] tokens )
