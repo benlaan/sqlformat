@@ -5,11 +5,6 @@ using System.Text;
 using MbUnit.Framework;
 
 using NHibernate.Appender;
-using log4net.Core;
-using log4net;
-using log4net.Config;
-using log4net.Appender;
-using log4net.Repository.Hierarchy;
 
 namespace Laan.SQL.Formatter.Test
 {
@@ -44,7 +39,6 @@ namespace Laan.SQL.Formatter.Test
         {
             // Exercise
             var actual = _appender.GetFormattedSQL( "SELECT * FROM States" );
-            LogManager.Shutdown();
 
             // Verify outcome
             var expected = new[]
@@ -62,7 +56,6 @@ namespace Laan.SQL.Formatter.Test
         {
             // Exercise
             var actual = _appender.GetFormattedSQL( "SELECT * FROM States WHERE ID=@P1 AND Name<>@P2;@P1=20,@P2='SA'" );
-            LogManager.Shutdown();
 
             // Verify outcome
             var expected = new[]
