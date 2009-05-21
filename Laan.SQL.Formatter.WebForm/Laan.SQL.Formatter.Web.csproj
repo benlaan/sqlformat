@@ -85,12 +85,12 @@
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
-    <Compile Include="Formatter.aspx.cs">
-      <DependentUpon>Formatter.aspx</DependentUpon>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Formatter.aspx.designer.cs">
-      <DependentUpon>Formatter.aspx</DependentUpon>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -107,7 +107,7 @@
     <Content Include="Bio.aspx" />
     <Content Include="Content\styles.css" />
     <Content Include="Site.Master" />
-    <Content Include="Formatter.aspx" />
+    <Content Include="Default.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Formatter.aspx.cs" Inherits="Laan.SQL.Formatter.Web.Formatter" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="Laan.SQL.Formatter.Web.Formatter" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>Laan SQL Formatter (alpha)</title>
     <link href="/Content/prettify.css" type="text/css" rel="stylesheet" />

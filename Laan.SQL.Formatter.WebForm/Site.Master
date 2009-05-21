@@ -16,7 +16,7 @@
     		  
 		      <div id="haut">
 			    <ul class="menulist">
-				    <li><a href="Converter.aspx">Formatter</a></li>
+				    <li><a href="/">Formatter</a></li>
 				    <li><a href="Bio.aspx">by Ben Laan</a></li>
 			    </ul>
 		      </div>
