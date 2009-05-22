@@ -65,7 +65,7 @@ namespace Laan.SQL.Formatter
         private void FormatFields( List<Field> fields )
         {
             if ( fields.Count == 1 )
-                _sql.Append( " " + fields[ 0 ].Expression.Value );
+                _sql.Append( " " + fields[ 0 ].Expression.FormattedValue( 0, _indent, _indentStep ) );
             else
             {
                 int count = fields.Count;
@@ -75,7 +75,7 @@ namespace Laan.SQL.Formatter
                     IndentedAppendFormat(
                         "{0}{1}{2}",
                         new string( ' ', Padding ),
-                        field.Expression.Value + field.Value,
+                        field.Expression.FormattedValue( 0, _indent, _indentStep + 1 ) + field.Value,
                         ( --count > 0 ? "," : "" )
                     );
                 }
@@ -184,7 +184,7 @@ namespace Laan.SQL.Formatter
             }
         }
 
-        public string Execute()
+        public void Execute()
         {
             FormatSelect();
             FormatFrom();
@@ -192,7 +192,6 @@ namespace Laan.SQL.Formatter
             FormatWhere();
             FormatOrderBy();
             FormatGroupBy();
-            return _sql.ToString();
         }
     }
 }

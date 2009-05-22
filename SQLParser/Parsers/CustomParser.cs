@@ -44,7 +44,7 @@ namespace Laan.SQL.Parser
 
         private string GetOperator()
         {
-            if ( Tokenizer.IsNextToken( "=", ">=", "<=", "!=", "<>", "IN", "ANY" ) )
+            if ( Tokenizer.IsNextToken( "=", ">=", "<=", "!=", "<>", "IN", "ANY", "LIKE" ) )
             {
                 string token = Tokenizer.Current;
                 ReadNextToken();
@@ -52,7 +52,7 @@ namespace Laan.SQL.Parser
             }
             else
                 throw new ExpectedTokenNotFoundException( 
-                    "'=', '>=', '<=', '!=', '<>', 'IN', 'ANY'", 
+                    "'=', '>=', '<=', '!=', '<>', 'IN', 'ANY', 'LIKE'", 
                     CurrentToken, 
                     Tokenizer.Position 
                 );

@@ -326,5 +326,120 @@ namespace Laan.SQL.Formatter.Test
 
             Compare( actual, expected );
         }
+
+        [Test]
+        public void Can_Format_Select_With_Sub_Select()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"
+                SELECT * FROM dbo.Events E WHERE Date=(SELECT MAX(Date) FROM dbo.Events )"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT *",
+                "",
+                "FROM dbo.Events E",
+                "",
+                "WHERE Date = (",
+                "",
+                "    SELECT MAX(Date)",
+                "",
+                "    FROM dbo.Events",
+                "",
+                ")"
+            };
+
+            // 
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_With_Only_One_Field_As_Case()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"
+                SELECT CASE A.field WHEN 1 THEN 'Y' WHEN @A + 2 THEN 'N' WHEN @A / 4 THEN 'X' ELSE 'U' END"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+                @"SELECT CASE A.field",
+                "            WHEN 1 THEN 'Y'",
+                "            WHEN @A + 2 THEN 'N'",
+                "            WHEN @A / 4 THEN 'X'",
+                "        ELSE",
+                "            'U'",
+                "        END"
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_With_Simple_CaseSwitch()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"
+                SELECT A.Field1, CASE A.field WHEN 1 THEN 'Y' WHEN @A + 2 THEN 'N' WHEN @A / 4 THEN 'X' ELSE 'U' END"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+                @"SELECT",
+                "    A.Field1,",
+                "    CASE A.field",
+                "        WHEN 1 THEN 'Y'",
+                "        WHEN @A + 2 THEN 'N'",
+                "        WHEN @A / 4 THEN 'X'",
+                "    ELSE",
+                "        'U'",
+                "    END"
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_With_Simple_Case()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"
+                SELECT A.Field1, CASE WHEN A.Field1 = 1 THEN 'Y' WHEN A.Field2 = 2 THEN 'N' ELSE 'U'   END"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+                @"SELECT",
+                "    A.Field1,",
+                "    CASE",
+                "        WHEN A.Field1 = 1 THEN 'Y'",
+                "        WHEN A.Field2 = 2 THEN 'N'",
+                "    ELSE",
+                "        'U'",
+                "    END"
+            };
+
+            // SELECT * FROM dbo.Events WHERE Date = (SELECT MAX(Date) FROM dbo.Events )
+
+            Compare( actual, expected );
+        }
     }
 }

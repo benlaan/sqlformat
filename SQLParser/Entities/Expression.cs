@@ -120,7 +120,7 @@ namespace Laan.SQL.Parser
             StringBuilder cases = new StringBuilder();
             foreach ( var caseSwitch in Cases )
                 cases.AppendFormat(
-                        "WHEN {0} THEN {1} ",
+                        " WHEN {0} THEN {1}",
                         caseSwitch.When.Value, caseSwitch.Then.Value
                     );
 
@@ -144,7 +144,7 @@ namespace Laan.SQL.Parser
             get
             {
                 return String.Format(
-                    "CASE {0} {1}{2} END",
+                    "CASE {0}{1}{2} END",
                     Switch.Value, GetCasesToString(), GetElseToString() 
                 );
             }
@@ -160,7 +160,7 @@ namespace Laan.SQL.Parser
             get
             {
                 return String.Format(
-                    "CASE {0}{1} END", GetCasesToString(), GetElseToString()
+                    "CASE{0}{1} END", GetCasesToString(), GetElseToString()
                 );
             }
         }

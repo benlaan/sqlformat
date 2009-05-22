@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExpressionFormatter.cs" />
+    <Compile Include="ExpressionFormatterExtension.cs" />
     <Compile Include="FormattingEngine.cs" />
     <Compile Include="IStatementFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

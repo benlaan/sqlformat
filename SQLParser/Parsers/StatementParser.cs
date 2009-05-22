@@ -4,24 +4,26 @@ namespace Laan.SQL.Parser
 {
     public class Constants
     {
-        internal const string On = "ON";
-        internal const string Comma = ",";
-        internal const string OpenBracket = "(";
-        internal const string CloseBracket = ")";
-        internal const string OpenSquareBracket = "[";
-        internal const string CloseSquareBracket = "]";
-        internal const string Quote = "'";
-        internal const string Dot = ".";
-        internal const string Clustered = "CLUSTERED";
-        internal const string NonClustered = "NONCLUSTERED";
-        internal const string Unique = "UNIQUE";
-        internal const string Index = "INDEX";
-        internal const string Select = "SELECT";
-        internal const string Insert = "INSERT";
-        internal const string Update = "UPDATE";
-        internal const string Delete = "DELETE";
-        internal const string All = "ALL";
-        internal const string To = "TO";
+        public const string On = "ON";
+        public const string Comma = ",";
+        public const string OpenBracket = "(";
+        public const string CloseBracket = ")";
+        public const string OpenSquareBracket = "[";
+        public const string CloseSquareBracket = "]";
+        public const string Quote = "'";
+        public const string Dot = ".";
+        public const string Clustered = "CLUSTERED";
+        public const string NonClustered = "NONCLUSTERED";
+        public const string Unique = "UNIQUE";
+        public const string Index = "INDEX";
+        public const string Select = "SELECT";
+        public const string Insert = "INSERT";
+        public const string Update = "UPDATE";
+        public const string Delete = "DELETE";
+        public const string All = "ALL";
+        public const string To = "TO";
+        public const string And = "AND";
+        public const string Or = "OR";
     }
 
     /// <summary>
