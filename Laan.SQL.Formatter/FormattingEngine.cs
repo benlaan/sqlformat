@@ -28,13 +28,14 @@ namespace Laan.SQL.Formatter
             };
         }
 
-        public string Execute( string inSql )
+        public string Execute( string sql )
         {
             string indent = UseTabChar ? "\t" : new string( ' ', TabSize );
 
-            StringBuilder outSql = new StringBuilder();
-            _statement = ParserFactory.Execute( inSql );
+            var outSql = new StringBuilder();
+            _statement = ParserFactory.Execute( sql );
 
+            // this is a quick and dirty service locator that maps statements to formatters
             var formatterType = _formatters[ _statement.GetType() ];
             
             var formatter = Activator.CreateInstance( formatterType, indent, 0, outSql, _statement ) as IStatementFormatter;
