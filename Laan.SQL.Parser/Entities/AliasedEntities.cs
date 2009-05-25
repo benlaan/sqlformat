@@ -37,7 +37,7 @@ namespace Laan.SQL.Parser
                         break;
 
                     case AliasType.Equals:
-                        format = !String.IsNullOrEmpty( Name ) ? String.Format( " AS {0}", Name ) : "";
+                        format = !String.IsNullOrEmpty( Name ) ? String.Format( "{0} = ", Name ) : "";
                         break;
 
                     case AliasType.As:

@@ -24,6 +24,13 @@ namespace Laan.SQL.Parser
         public const string To = "TO";
         public const string And = "AND";
         public const string Or = "OR";
+        public const string Case = "CASE";
+        public const string When = "WHEN";
+        public const string Then = "THEN";
+        public const string Else = "ELSE";
+        public const string End = "END";
+        public const string Not = "NOT";
+        public const string Null = "NULL";
     }
 
     /// <summary>

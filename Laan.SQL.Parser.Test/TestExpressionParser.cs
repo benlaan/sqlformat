@@ -381,6 +381,46 @@ namespace Laan.SQLParser.Test
         }
 
         [Test]
+        public void Test_Can_Read_Case_Expression_With_Nested_Case_Expression()
+        {
+            // setup
+            Tokenizer tokenizer = new Tokenizer( @"
+                    CASE A.Field1 
+                        WHEN 1 THEN 
+                            CASE A.Field2 
+                                WHEN 1 THEN 'Y'
+                            ELSE 
+                                'U' 
+                            END 
+                        WHEN 2 THEN 'N' 
+                    ELSE 
+                        'U' 
+                    END" );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull( expression );
+            Assert.IsTrue( expression is CaseSwitchExpression );
+            CaseSwitchExpression caseSwitch = (CaseSwitchExpression) expression;
+
+            Assert.AreEqual( "A.Field1", caseSwitch.Switch.Value );
+            Assert.AreEqual( 2, caseSwitch.Cases.Count );
+
+            Assert.AreEqual( "1", caseSwitch.Cases[ 0 ].When.Value );
+            Assert.IsTrue( caseSwitch.Cases[ 0 ].Then is CaseExpression );
+
+            Assert.AreEqual( "2", caseSwitch.Cases[ 1 ].When.Value );
+            Assert.AreEqual( "'N'", caseSwitch.Cases[ 1 ].Then.Value );
+
+            Assert.AreEqual( "'U'", caseSwitch.Else.Value );
+        }
+
+        [Test]
         public void Test_Can_Read_Case_When_Expression()
         {
             // setup
@@ -415,6 +455,79 @@ namespace Laan.SQLParser.Test
             Assert.AreEqual( "15 / (A.Field4 * 2)", caseWhen.Cases[ 1 ].Then.Value );
 
             Assert.AreEqual( "'U'", caseWhen.Else.Value );
+        }
+
+        [Test]
+        public void Test_Can_Read_Negated_Expression()
+        {
+            Tokenizer tokenizer = new Tokenizer( "NOT ( A.Field = 1 OR A.Other IS NULL )" );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull( expression );
+            Assert.IsTrue( expression is NegationExpression );
+            
+            NegationExpression negationExpression = (NegationExpression) expression;
+            Expression criteria = negationExpression.Expression;
+            Assert.IsTrue( criteria is NestedExpression );
+
+            NestedExpression nestedExpression = (NestedExpression) criteria;
+            Assert.IsTrue( nestedExpression.Expression is CriteriaExpression );
+            
+            CriteriaExpression criteriaExpression = (CriteriaExpression) nestedExpression.Expression;
+            Assert.AreEqual( "A.Field = 1", criteriaExpression.Left.Value );
+            Assert.AreEqual( "OR", criteriaExpression.Operator );
+            Assert.AreEqual( "A.Other IS NULL", criteriaExpression.Right.Value );
+        }
+
+        [Test]
+        public void Test_Can_Read_Negated_Expression_Without_Brackets()
+        {
+            Tokenizer tokenizer = new Tokenizer( "NOT EXISTS(SELECT 1 FROM dbo.Table)" );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull( expression );
+            Assert.IsTrue( expression is NegationExpression );
+
+            NegationExpression negationExpression = (NegationExpression) expression;
+            Expression criteria = negationExpression.Expression;
+            Assert.IsTrue( criteria is FunctionExpression );
+            FunctionExpression functionExpression = (FunctionExpression) criteria;
+            Assert.AreEqual( 1, functionExpression.Arguments.Count );
+
+            Expression arg = functionExpression.Arguments.First();
+            Assert.IsTrue( arg is SelectExpression );
+        }
+
+        [Test]
+        public void Test_Can_Read_Not_Null_Expression()
+        {
+            Tokenizer tokenizer = new Tokenizer( "A.Field IS NOT NULL" );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull( expression );
+            Assert.IsTrue( expression is CriteriaExpression );
+            CriteriaExpression criteria = (CriteriaExpression) expression;
+            Assert.AreEqual( "A.Field", criteria.Left.Value );
+            Assert.AreEqual( "IS", criteria.Operator );
+            Assert.AreEqual( "NOT NULL", criteria.Right.Value );
         }
     }
 }

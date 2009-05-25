@@ -53,8 +53,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseFormattingTest.cs" />
+    <Compile Include="TestExpressionFormatting.cs" />
     <Compile Include="TestAppender.cs" />
-    <Compile Include="TestFormattingEngine.cs" />
+    <Compile Include="TestSelectStatementFormatting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

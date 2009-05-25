@@ -9,9 +9,9 @@ namespace Laan.SQL.Formatter
 {
     public static class ExpressionFormatterExtension
     {
-        public static string FormattedValue( this Expression expr, int offset, string indent, int indentStep )
+        public static string FormattedValue( this Expression expr, int offset, string indent, int indentLevel )
         {
-            var impl = new ExpressionFormatter( indent, indentStep );
+            var impl = new ExpressionFormatter( indent, indentLevel );
             if ( expr is CriteriaExpression )
             {
                 CriteriaExpression opExpr = (CriteriaExpression) expr;
@@ -20,9 +20,9 @@ namespace Laan.SQL.Formatter
                     return impl.GetBooleanExpression( opExpr, offset );
                 else
                     return
-                        opExpr.Left.FormattedValue( offset, indent, indentStep ) +
+                        opExpr.Left.FormattedValue( offset, indent, indentLevel ) +
                         " " + opExpr.Operator + " " + 
-                        opExpr.Right.FormattedValue( offset, indent, indentStep );
+                        opExpr.Right.FormattedValue( offset, indent, indentLevel );
             }
 
             if ( expr is CaseSwitchExpression )
@@ -40,7 +40,7 @@ namespace Laan.SQL.Formatter
             {
                 SelectExpression selectExpression = (SelectExpression) expr;
                 var sql = new StringBuilder();
-                var formatter = new SelectStatementFormatter( indent, indentStep + 1, sql, selectExpression.Statement );
+                var formatter = new SelectStatementFormatter( indent, indentLevel + 1, sql, selectExpression.Statement );
                 formatter.Execute();
                 return sql.ToString();
             }

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Laan.SQL.Parser
 {
-    [DebuggerDisplay("{Value}")]
+    [DebuggerDisplay( "{Value}" )]
     public class Expression
     {
         public virtual string Value { get; protected set; }
@@ -60,6 +60,17 @@ namespace Laan.SQL.Parser
         }
     }
 
+    public class NegationExpression : Expression
+    {
+        public Expression Expression { get; set; }
+
+        public override string Value
+        {
+            get { return String.Format( "{0} {1}", Constants.Not, Expression.Value ); }
+        }
+
+    }
+
     public class StringExpression : Expression
     {
         public StringExpression( string value )
@@ -67,7 +78,7 @@ namespace Laan.SQL.Parser
             Value = value;
         }
     }
-    
+
     public class IdentifierExpression : Expression
     {
         public IdentifierExpression( string value )
@@ -82,7 +93,7 @@ namespace Laan.SQL.Parser
             get { return String.Join( Constants.Dot, Parts.ToArray() ); }
         }
     }
-    
+
     public class NestedExpression : Expression
     {
         public Expression Expression { get; set; }
@@ -114,7 +125,7 @@ namespace Laan.SQL.Parser
         {
             return Else != null ? " ELSE " + Else.Value : "";
         }
-        
+
         protected string GetCasesToString()
         {
             StringBuilder cases = new StringBuilder();
@@ -145,7 +156,7 @@ namespace Laan.SQL.Parser
             {
                 return String.Format(
                     "CASE {0}{1}{2} END",
-                    Switch.Value, GetCasesToString(), GetElseToString() 
+                    Switch.Value, GetCasesToString(), GetElseToString()
                 );
             }
         }

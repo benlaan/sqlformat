@@ -14,7 +14,7 @@ namespace Laan.SQL.Parser
 
         /// <summary>
         /// This method is used if you know what type will be returned from the parser
-        /// - only use it if 100% confident, otherwise you will get an exception
+        /// - only use it if 100% confident, otherwise you will get a null reference
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sql"></param>

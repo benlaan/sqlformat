@@ -114,15 +114,15 @@ namespace Laan.SQL.Parser
             }
             else
             {
-                if ( Tokenizer.IsNextToken( "CASE" ) )
+                if ( Tokenizer.IsNextToken( Constants.Case ) )
                 {
                     ReadNextToken();
-                    if ( Tokenizer.IsNextToken( "WHEN" ) )
+                    if ( Tokenizer.IsNextToken( Constants.When ) )
                         return GetCaseWhenExpression();
                     else
                         return GetCaseSwitchExpression();
                 }
-                else if ( Tokenizer.IsNextToken( "SELECT" ) )
+                else if ( Tokenizer.IsNextToken( Constants.Select ) )
                 {
                     ReadNextToken();
                     SelectExpression selectExpression = new SelectExpression();
@@ -134,11 +134,18 @@ namespace Laan.SQL.Parser
 
                 string token;
 
-                if ( Tokenizer.Current.StartsWith( "'" ) && Tokenizer.Current.EndsWith( "'" ) )
+                if ( Tokenizer.Current.StartsWith( Constants.Quote ) && Tokenizer.Current.EndsWith( Constants.Quote ) )
                 {
                     token = Tokenizer.Current;
                     ReadNextToken();
                     return new StringExpression( token );
+                }
+
+                if ( Tokenizer.IsNextToken( Constants.Not ) )
+                {
+                    ReadNextToken();
+                    var result = ReadCriteriaList();
+                    return new NegationExpression() { Expression = result };
                 }
 
                 // get (possibly dot notated) identifier next
@@ -168,23 +175,25 @@ namespace Laan.SQL.Parser
 
         private void ParseCaseExpression( CaseExpression caseExpression )
         {
-            while ( Tokenizer.IsNextToken( "WHEN" ) )
+            while ( Tokenizer.IsNextToken( Constants.When ) )
             {
                 ReadNextToken();
                 CaseSwitch caseSwitch = new CaseSwitch();
                 caseSwitch.When = ReadCriteriaList();
 
-                Tokenizer.ExpectToken( "THEN" );
+                Tokenizer.ExpectToken( Constants.Then );
                 caseSwitch.Then = ReadExpression();
 
                 caseExpression.Cases.Add( caseSwitch );
             }
 
-            if ( Tokenizer.IsNextToken( "ELSE" ) )
+            if ( Tokenizer.IsNextToken( Constants.Else ) )
             {
                 ReadNextToken();
                 caseExpression.Else = ReadExpression();
             }
+
+            ExpectToken( Constants.End );
         }
 
         private Expression GetCaseWhenExpression()

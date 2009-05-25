@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +10,7 @@ namespace Laan.SQL.Parser
 
     // INSERT [INTO] table_name [(column_list)] { 
     //      {
-    //        VALUES ( { DEFAULT | NULL | expression }[,...n] )
+    //        VALUES ( { DEFAULT | NULL | expression }[,...n] )[,...n]
     //        | derived_table
     //        | execute_statement    
     //      }

@@ -64,7 +64,7 @@ namespace Laan.SQL.Formatter
 
         private void FormatFields( List<Field> fields )
         {
-            if ( fields.Count == 1 )
+            if ( fields.Count == 1 && fields[ 0 ].Expression.Value.Length < 20 )
                 _sql.Append( " " + fields[ 0 ].Expression.FormattedValue( 0, _indent, _indentStep ) );
             else
             {
@@ -73,9 +73,11 @@ namespace Laan.SQL.Formatter
                 {
                     NewLine();
                     IndentedAppendFormat(
-                        "{0}{1}{2}",
+                        "{0}{1}{2}{3}{4}",
                         new string( ' ', Padding ),
+                        field.Alias.Type == AliasType.Equals ? field.Alias.Value : "",
                         field.Expression.FormattedValue( 0, _indent, _indentStep + 1 ) + field.Value,
+                        field.Alias.Type == AliasType.As ? field.Alias.Value : "",
                         ( --count > 0 ? "," : "" )
                     );
                 }
