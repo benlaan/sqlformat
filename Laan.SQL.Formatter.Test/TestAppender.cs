@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using MbUnit.Framework;
 
-using NHibernate.Appender;
+using Laan.NHibernate.Appender;
 
 namespace Laan.SQL.Formatter.Test
 {

@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestUpdateStatementParser.cs" />
     <Compile Include="TestExpressionParser.cs" />
     <Compile Include="TestCreateNonClusteredIndex.cs" />
     <Compile Include="TestCreateView.cs" />
