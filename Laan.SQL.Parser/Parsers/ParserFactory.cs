@@ -6,6 +6,7 @@ namespace Laan.SQL.Parser
     {
         private const string SELECT = "SELECT";
         private const string INSERT = "INSERT";
+        private const string UPDATE = "UPDATE";
         private const string TABLE = "TABLE";
         private const string CREATE = "CREATE";
         private const string ALTER = "ALTER";
@@ -64,13 +65,14 @@ namespace Laan.SQL.Parser
                     if ( _tokenizer.TokenEquals( TABLE ) )
                         parser = new AlterTableStatementParser( _tokenizer );
                 }
-                else if ( _tokenizer.TokenEquals( INSERT ) )
+                else 
+                if ( _tokenizer.TokenEquals( INSERT ) )
                     parser = new InsertStatementParser( _tokenizer );
+                else 
+                if ( _tokenizer.TokenEquals( UPDATE ) )
+                    parser = new UpdateStatementParser( _tokenizer );
 
-                //if ( _tokenizer.TokenEquals( UPDATE ) )
-                //    parser = new UpdateStatementParser( _tokenizer );
-
-                //if ( _tokenizer.TokenEquals( DELETE ) )
+                //else if ( _tokenizer.TokenEquals( DELETE ) )
                 //    parser = new DeleteStatementParser( _tokenizer );
 
                 if ( parser == null && _tokenizer.Current != null )
