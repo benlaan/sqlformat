@@ -25,7 +25,7 @@
         <asp:TextBox class="code prettyprint lang-sql" ID="sqlInput" runat="server" style="width: 100%; height:180px" TextMode="MultiLine"></asp:TextBox>
     </div>
     <div style="text-align:right">
-        <asp:Button ID="Button1" runat="server" Text="Convert" onclick="btnConvert_Click" />
+        <asp:Button ID="btnConvert" runat="server" Text="Convert" onclick="btnConvert_Click" />
     </div>
     <div>
         Output SQL

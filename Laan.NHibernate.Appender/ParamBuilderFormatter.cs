@@ -1,22 +1,33 @@
 using System;
+using System.Collections.Generic;
 
 using Laan.SQL.Formatter;
+using Laan.SQL.Parser;
 
-namespace NHibernate.Appender
+namespace Laan.NHibernate.Appender
 {
     public class ParamBuilderFormatter
     {
         private string UpdateParamsWithValues( string sql, string paramList )
         {
-            string[] paramItems = paramList.Split( ',' );
-            foreach ( string item in paramItems )
+            var parameters = new Dictionary<string, string>();
+            Tokenizer tokenizer = new Tokenizer( paramList );
+            tokenizer.ReadNextToken();
+            do
             {
-                string[] variables = item.Split( '=' );
-                string name = variables[ 0 ].Trim();
-                string value = variables[ 1 ].Trim();
+                string parameter = tokenizer.Current;
 
-                sql = sql.Replace( name, value );
-            }
+                tokenizer.ReadNextToken();
+                tokenizer.ExpectToken( "=" );
+
+                parameters.Add( parameter, tokenizer.Current );
+                tokenizer.ReadNextToken();
+            } 
+            while ( tokenizer.TokenEquals( Constants.Comma ) );
+
+            foreach ( var item in parameters )
+                sql = sql.Replace( item.Key, item.Value );
+
             return sql;
         }
 
@@ -33,9 +44,9 @@ namespace NHibernate.Appender
             {
                 return engine.Execute( sql );
             }
-            catch ( Exception )
+            catch ( Exception ex )
             {
-                return sql;
+                return String.Format( "Error: {0}\n{1}", ex.Message, sql );
             }
         }
 

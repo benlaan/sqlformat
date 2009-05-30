@@ -6,7 +6,7 @@ using log4net.Core;
 
 using Laan.SQL.Formatter;
 
-namespace NHibernate.Appender
+namespace Laan.NHibernate.Appender
 {
     public class NHibernateAppender : AppenderSkeleton
     {
@@ -19,7 +19,12 @@ namespace NHibernate.Appender
 
         protected override void Append( LoggingEvent loggingEvent )
         {
-            string formattedSql = _impl.GetFormattedSQL( loggingEvent.RenderedMessage );
+            string formattedSql = String.Format( 
+                "{0}\n{1}\n{0}\n{2}\n", 
+                new string( '-', 80 ),
+                loggingEvent.TimeStamp,
+                _impl.GetFormattedSQL( loggingEvent.RenderedMessage ) 
+            );
 
             if ( !String.IsNullOrEmpty( FileName ) )
                 File.AppendAllText( FileName, formattedSql );

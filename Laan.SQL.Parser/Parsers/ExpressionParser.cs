@@ -42,7 +42,7 @@ namespace Laan.SQL.Parser
         {
             Expression expression = ReadExpression();
 
-            if ( Tokenizer.IsNextToken( "=", "<>", "!=", ">=", "<=", ">", "<", "IS", "IN", "ANY" ) )
+            if ( Tokenizer.IsNextToken( "=", "<>", "!=", ">=", "<=", ">", "<", "IS", "IN", "ANY", "LIKE" ) )
             {
                 CriteriaExpression result = new CriteriaExpression();
                 result.Left = expression;
