@@ -5,6 +5,8 @@ using System.Text;
 
 using MbUnit.Framework;
 
+using Laan.SQL.Parser.Expressions;
+
 namespace Laan.SQL.Parser.Test
 {
     [TestFixture]
@@ -75,7 +77,7 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
             Assert.AreEqual( "a > 1", statement.Where.Value );
         }
-        
+
         [Test]
         public void Select_Distinct_Top_10_StarField()
         {
@@ -325,11 +327,55 @@ namespace Laan.SQL.Parser.Test
 
             Assert.AreEqual( "12", rightIdentifierExpression.Value );
 
-            var rightExpression = ( NestedExpression )expr.Right;
-
+            //var rightExpression = ( NestedExpression )expr.Right;
             //Assert.AreEqual( "t2", rightExpression.Parts[ 0 ] );
             //Assert.AreEqual( "field2", rightExpression.Parts[ 1 ] );
             //Assert.AreEqual( "t2.field2", expr.Right.Value );
+        }
+
+        [Test]
+        public void Select_With_Inner_Join_Condition_Within_Brackets()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
+
+                select fielda 
+
+                from table1 t1 
+
+                join table2 as t2 
+                  on (t1.field1 = t2.fielda )
+                "
+            );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+
+            // Test From
+            Assert.AreEqual( 1, statement.From.Count );
+            Assert.AreEqual( "table1", statement.From[ 0 ].Name );
+            Assert.AreEqual( "t1", statement.From[ 0 ].Alias.Name );
+
+            // Test Join
+            Assert.AreEqual( 1, statement.Joins.Count );
+
+            Join join = statement.Joins[ 0 ];
+
+            Assert.AreEqual( "table2", join.Name );
+            Assert.AreEqual( "t2", join.Alias.Name );
+
+            Assert.AreEqual( JoinType.Join, join.Type );
+
+            Assert.IsTrue( join.Condition is NestedExpression );
+            NestedExpression expr = join.Condition as NestedExpression;
+
+            Assert.IsTrue( expr.Expression is CriteriaExpression );
+            CriteriaExpression nestedExpression = expr.Expression as CriteriaExpression;
+            Assert.AreEqual( "=", nestedExpression.Operator );
+            Assert.IsTrue( nestedExpression.Left is IdentifierExpression );
+            Assert.AreEqual( "t1.field1", nestedExpression.Left.Value );
+            Assert.IsTrue( nestedExpression.Right is IdentifierExpression );
+            Assert.AreEqual( "t2.fielda", nestedExpression.Right.Value );
         }
 
         [Test]
@@ -352,7 +398,7 @@ namespace Laan.SQL.Parser.Test
             Assert.IsTrue( expr.Left is IdentifierExpression );
 
             Assert.IsTrue( expr.Right is NestedExpression );
-            NestedExpression nestedExpression = (NestedExpression) expr.Right;
+            NestedExpression nestedExpression = ( NestedExpression )expr.Right;
             Assert.IsTrue( nestedExpression.Expression is SelectExpression );
         }
 
@@ -373,15 +419,15 @@ namespace Laan.SQL.Parser.Test
             Assert.IsNotNull( statement );
             Assert.IsTrue( statement.Where is CriteriaExpression );
 
-            CriteriaExpression criteriaExpression = (CriteriaExpression) statement.Where;
+            CriteriaExpression criteriaExpression = ( CriteriaExpression )statement.Where;
             Assert.AreEqual( "and", criteriaExpression.Operator );
             Assert.IsTrue( criteriaExpression.Left is CriteriaExpression );
 
-            CriteriaExpression leftCriteriaExpression = (CriteriaExpression) criteriaExpression.Left;
+            CriteriaExpression leftCriteriaExpression = ( CriteriaExpression )criteriaExpression.Left;
             Assert.AreEqual( "t1.fieldb", leftCriteriaExpression.Left.Value );
             Assert.AreEqual( "t1.fieldc", leftCriteriaExpression.Right.Value );
 
-            CriteriaExpression rightCriteriaExpression = (CriteriaExpression) criteriaExpression.Right;
+            CriteriaExpression rightCriteriaExpression = ( CriteriaExpression )criteriaExpression.Right;
             Assert.AreEqual( "t1.fieldd", rightCriteriaExpression.Left.Value );
             Assert.AreEqual( "0", rightCriteriaExpression.Right.Value );
         }
@@ -402,18 +448,18 @@ namespace Laan.SQL.Parser.Test
             Assert.IsNotNull( statement );
             Assert.IsTrue( statement.Where is NestedExpression );
 
-            NestedExpression nestedExpression = (NestedExpression) statement.Where;
+            NestedExpression nestedExpression = ( NestedExpression )statement.Where;
 
-            CriteriaExpression criteriaExpression = (CriteriaExpression) nestedExpression.Expression;
+            CriteriaExpression criteriaExpression = ( CriteriaExpression )nestedExpression.Expression;
             Assert.AreEqual( "or", criteriaExpression.Operator );
             Assert.IsTrue( criteriaExpression.Left is CriteriaExpression );
 
-            CriteriaExpression leftCriteriaExpression = (CriteriaExpression) criteriaExpression.Left;
+            CriteriaExpression leftCriteriaExpression = ( CriteriaExpression )criteriaExpression.Left;
             Assert.AreEqual( "t1.fieldd", leftCriteriaExpression.Left.Value );
             Assert.AreEqual( "=", leftCriteriaExpression.Operator );
             Assert.AreEqual( "0", leftCriteriaExpression.Right.Value );
 
-            CriteriaExpression rightCriteriaExpression = (CriteriaExpression) criteriaExpression.Right;
+            CriteriaExpression rightCriteriaExpression = ( CriteriaExpression )criteriaExpression.Right;
             Assert.AreEqual( "t1.fieldc", rightCriteriaExpression.Left.Value );
             Assert.AreEqual( "<", rightCriteriaExpression.Operator );
             Assert.AreEqual( "10", rightCriteriaExpression.Right.Value );
@@ -443,14 +489,14 @@ namespace Laan.SQL.Parser.Test
             SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
                 select * from (select field from table x) as t
             " );
-            
+
             // Verify outcome
             Assert.IsNotNull( statement );
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "t", statement.From[ 0 ].Alias.Name );
             Assert.IsTrue( statement.From[ 0 ] is DerivedTable );
 
-            DerivedTable derivedTable = (DerivedTable) statement.From[ 0 ];
+            DerivedTable derivedTable = ( DerivedTable )statement.From[ 0 ];
             Assert.AreEqual( "field", derivedTable.SelectStatement.Fields[ 0 ].Expression.Value );
             Assert.AreEqual( "table", derivedTable.SelectStatement.From[ 0 ].Name );
             Assert.AreEqual( "x", derivedTable.SelectStatement.From[ 0 ].Alias.Name );
@@ -503,12 +549,12 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( 2, statement.GroupBy.Count );
             Assert.IsTrue( statement.Having is CriteriaExpression );
 
-            CriteriaExpression operatorExpression = (CriteriaExpression) statement.Having;
+            CriteriaExpression operatorExpression = ( CriteriaExpression )statement.Having;
             Assert.AreEqual( ">", operatorExpression.Operator );
 
             // verify that the left part of the criteria expression is a function expression
             Assert.IsTrue( operatorExpression.Left is FunctionExpression );
-            FunctionExpression functionExpression = (FunctionExpression) operatorExpression.Left;
+            FunctionExpression functionExpression = ( FunctionExpression )operatorExpression.Left;
             Assert.AreEqual( "sum", functionExpression.Name );
             Assert.AreEqual( 1, functionExpression.Arguments.Count );
             Assert.AreEqual( "field2", functionExpression.Arguments[ 0 ].Value );
@@ -532,7 +578,7 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "t", statement.From[ 0 ].Alias.Name );
             Assert.IsTrue( statement.Joins[ 0 ] is DerivedJoin );
 
-            DerivedJoin derivedJoin = (DerivedJoin) statement.Joins[ 0 ];
+            DerivedJoin derivedJoin = ( DerivedJoin )statement.Joins[ 0 ];
             Assert.AreEqual( "field", derivedJoin.SelectStatement.Fields[ 0 ].Expression.Value );
             Assert.AreEqual( "other", derivedJoin.SelectStatement.From[ 0 ].Name );
             Assert.AreEqual( "o", derivedJoin.SelectStatement.From[ 0 ].Alias.Name );

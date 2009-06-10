@@ -1,5 +1,7 @@
 using System;
 
+using Laan.SQL.Parser.Expressions;
+
 namespace Laan.SQL.Parser
 {
     /*
@@ -15,22 +17,22 @@ namespace Laan.SQL.Parser
 
         public Expression Execute()
         {
-            return ReadCriteriaList();
+            return ReadCriteriaList( null );
         }
 
-        private Expression ReadCriteriaList()
+        private Expression ReadCriteriaList( Expression parent )
         {
-            Expression expression = ReadCriteria();
+            Expression expression = ReadCriteria( parent );
 
             if ( Tokenizer.IsNextToken( "AND", "OR" ) )
             {
-                CriteriaExpression result = new CriteriaExpression();
+                CriteriaExpression result = new CriteriaExpression( parent );
                 result.Left = expression;
 
                 result.Operator = CurrentToken;
                 ReadNextToken();
 
-                result.Right = ReadCriteriaList();
+                result.Right = ReadCriteriaList( result );
 
                 return result;
             }
@@ -38,19 +40,19 @@ namespace Laan.SQL.Parser
                 return expression;
         }
 
-        private Expression ReadCriteria()
+        private Expression ReadCriteria( Expression parent )
         {
-            Expression expression = ReadExpression();
+            Expression expression = ReadExpression( parent );
 
             if ( Tokenizer.IsNextToken( "=", "<>", "!=", ">=", "<=", ">", "<", "IS", "IN", "ANY", "LIKE" ) )
             {
-                CriteriaExpression result = new CriteriaExpression();
+                CriteriaExpression result = new CriteriaExpression( parent );
                 result.Left = expression;
 
                 result.Operator = CurrentToken;
                 ReadNextToken();
 
-                result.Right = ReadExpression();
+                result.Right = ReadExpression( parent );
 
                 return result;
             }
@@ -59,19 +61,19 @@ namespace Laan.SQL.Parser
         }
 
 
-        private Expression ReadExpression()
+        private Expression ReadExpression( Expression parent )
         {
-            Expression term = ReadTerm();
+            Expression term = ReadTerm( parent );
 
             if ( Tokenizer.IsNextToken( "+", "-" ) )
             {
-                OperatorExpression result = new OperatorExpression();
+                OperatorExpression result = new OperatorExpression( parent );
                 result.Left = term;
 
                 result.Operator = CurrentToken;
                 ReadNextToken();
 
-                result.Right = ReadExpression();
+                result.Right = ReadExpression( parent );
 
                 return result;
             }
@@ -79,19 +81,19 @@ namespace Laan.SQL.Parser
                 return term;
         }
 
-        private Expression ReadTerm()
+        private Expression ReadTerm( Expression parent )
         {
-            Expression factor = ReadFactor();
+            Expression factor = ReadFactor( parent );
 
             if ( Tokenizer.IsNextToken( "*", "/", "%", "^" ) )
             {
-                OperatorExpression result = new OperatorExpression();
+                OperatorExpression result = new OperatorExpression( parent );
                 result.Left = factor;
 
                 result.Operator = CurrentToken;
                 ReadNextToken();
 
-                result.Right = ReadExpression();
+                result.Right = ReadExpression( parent );
 
                 return result;
             }
@@ -99,7 +101,7 @@ namespace Laan.SQL.Parser
                 return factor;
         }
 
-        private Expression ReadFactor()
+        private Expression ReadFactor( Expression parent )
         {
             // nested expressions first
             if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
@@ -107,10 +109,12 @@ namespace Laan.SQL.Parser
                 Expression result;
                 using ( Tokenizer.ExpectBrackets() )
                 {
-                    result = ReadCriteriaList();
+                    result = ReadCriteriaList( parent );
                 }
 
-                return new NestedExpression() { Expression = result };
+                NestedExpression nestedExpression = new NestedExpression( parent ) { Expression = result };
+                result.Parent = nestedExpression;
+                return nestedExpression;
             }
             else
             {
@@ -118,9 +122,9 @@ namespace Laan.SQL.Parser
                 {
                     ReadNextToken();
                     if ( Tokenizer.IsNextToken( Constants.When ) )
-                        return GetCaseWhenExpression();
+                        return GetCaseWhenExpression( parent );
                     else
-                        return GetCaseSwitchExpression();
+                        return GetCaseSwitchExpression( parent );
                 }
                 else if ( Tokenizer.IsNextToken( Constants.Select ) )
                 {
@@ -128,7 +132,7 @@ namespace Laan.SQL.Parser
                     SelectExpression selectExpression = new SelectExpression();
 
                     var parser = new SelectStatementParser( Tokenizer );
-                    selectExpression.Statement = (SelectStatement) parser.Execute();
+                    selectExpression.Statement = ( SelectStatement )parser.Execute();
                     return selectExpression;
                 }
 
@@ -138,14 +142,16 @@ namespace Laan.SQL.Parser
                 {
                     token = Tokenizer.Current;
                     ReadNextToken();
-                    return new StringExpression( token );
+                    return new StringExpression( token, parent );
                 }
 
                 if ( Tokenizer.IsNextToken( Constants.Not ) )
                 {
                     ReadNextToken();
-                    var result = ReadCriteriaList();
-                    return new NegationExpression() { Expression = result };
+                    NegationExpression negationExpression = new NegationExpression( parent );
+                    var result = ReadCriteriaList( negationExpression );
+                    negationExpression.Expression = result;
+                    return negationExpression;
                 }
 
                 // get (possibly dot notated) identifier next
@@ -154,14 +160,14 @@ namespace Laan.SQL.Parser
                 // check for an open bracket, indicating that the previous identifier is actually a function
                 if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
                 {
-                    FunctionExpression result = new FunctionExpression();
+                    FunctionExpression result = new FunctionExpression( parent );
                     using ( Tokenizer.ExpectBrackets() )
                     {
                         result.Name = token;
                         if ( !Tokenizer.IsNextToken( Constants.CloseBracket ) )
                             do
                             {
-                                result.Arguments.Add( ReadExpression() );
+                                result.Arguments.Add( ReadExpression( parent ) );
                             }
                             while ( Tokenizer.TokenEquals( Constants.Comma ) );
                     }
@@ -169,7 +175,7 @@ namespace Laan.SQL.Parser
                     return result;
                 }
                 else
-                    return new IdentifierExpression( token );
+                    return new IdentifierExpression( token, parent );
             }
         }
 
@@ -178,11 +184,11 @@ namespace Laan.SQL.Parser
             while ( Tokenizer.IsNextToken( Constants.When ) )
             {
                 ReadNextToken();
-                CaseSwitch caseSwitch = new CaseSwitch();
-                caseSwitch.When = ReadCriteriaList();
+                CaseSwitch caseSwitch = new CaseSwitch( caseExpression );
+                caseSwitch.When = ReadCriteriaList( caseExpression );
 
                 Tokenizer.ExpectToken( Constants.Then );
-                caseSwitch.Then = ReadExpression();
+                caseSwitch.Then = ReadExpression( caseExpression );
 
                 caseExpression.Cases.Add( caseSwitch );
             }
@@ -190,23 +196,23 @@ namespace Laan.SQL.Parser
             if ( Tokenizer.IsNextToken( Constants.Else ) )
             {
                 ReadNextToken();
-                caseExpression.Else = ReadExpression();
+                caseExpression.Else = ReadExpression( caseExpression );
             }
 
             ExpectToken( Constants.End );
         }
 
-        private Expression GetCaseWhenExpression()
+        private Expression GetCaseWhenExpression( Expression parent )
         {
-            CaseWhenExpression result = new CaseWhenExpression();
+            CaseWhenExpression result = new CaseWhenExpression( parent );
             ParseCaseExpression( result );
             return result;
         }
 
-        private Expression GetCaseSwitchExpression()
+        private Expression GetCaseSwitchExpression( Expression parent )
         {
-            CaseSwitchExpression result = new CaseSwitchExpression();
-            result.Switch = ReadCriteriaList();
+            CaseSwitchExpression result = new CaseSwitchExpression( parent );
+            result.Switch = ReadCriteriaList( result );
             ParseCaseExpression( result );
             return result;
         }

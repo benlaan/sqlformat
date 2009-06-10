@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System;
 using System.ComponentModel;
 
+using Laan.SQL.Parser.Expressions;
+
 namespace Laan.SQL.Parser
 {
     public enum JoinType
@@ -38,7 +40,7 @@ namespace Laan.SQL.Parser
     {
         public Join()
         {
-            Condition = new CriteriaExpression();
+            Condition = new CriteriaExpression( null );
 
             _joinMap = new Dictionary<JoinType, string> 
             { 

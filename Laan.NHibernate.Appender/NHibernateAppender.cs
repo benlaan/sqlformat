@@ -14,7 +14,7 @@ namespace Laan.NHibernate.Appender
 
         public NHibernateAppender()
         {
-            _impl = new ParamBuilderFormatter();
+            _impl = new ParamBuilderFormatter( new FormattingEngine() );
         }
 
         protected override void Append( LoggingEvent loggingEvent )
@@ -23,7 +23,7 @@ namespace Laan.NHibernate.Appender
                 "{0}\n{1}\n{0}\n{2}\n", 
                 new string( '-', 80 ),
                 loggingEvent.TimeStamp,
-                _impl.GetFormattedSQL( loggingEvent.RenderedMessage ) 
+                _impl.Execute( loggingEvent.RenderedMessage ) 
             );
 
             if ( !String.IsNullOrEmpty( FileName ) )

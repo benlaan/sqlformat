@@ -1,13 +1,15 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+
+using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser
 {
     public class AliasedEntity : Expression
     {
-        public AliasedEntity() : base()
+        public AliasedEntity() : base ( null )
         {
-            Alias = new Alias();
+            Alias = new Alias( this );
         }
 
         public Alias Alias { get; set; }
@@ -17,7 +19,7 @@ namespace Laan.SQL.Parser
 
     public class Alias : Expression
     {
-        public Alias()
+        public Alias( Expression parent ) : base ( parent )
         {
             Type = AliasType.Implicit;
         }

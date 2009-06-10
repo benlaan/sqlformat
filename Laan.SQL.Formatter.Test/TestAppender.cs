@@ -24,7 +24,7 @@ namespace Laan.SQL.Formatter.Test
         public void Setup()
         {
             // Setup
-            _appender = new ParamBuilderFormatter();
+            _appender = new ParamBuilderFormatter( new FormattingEngine() );
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace Laan.SQL.Formatter.Test
         public void Can_Format_Without_Params()
         {
             // Exercise
-            var actual = _appender.GetFormattedSQL( "SELECT * FROM States" );
+            var actual = _appender.Execute( "SELECT * FROM States" );
 
             // Verify outcome
             var expected = new[]
@@ -55,7 +55,7 @@ namespace Laan.SQL.Formatter.Test
         public void Can_Format_With_Params()
         {
             // Exercise
-            var actual = _appender.GetFormattedSQL( "SELECT * FROM States WHERE ID=@P1 AND Name<>@P2;@P1=20,@P2='SA'" );
+            var actual = _appender.Execute( "SELECT * FROM States WHERE ID=@P1 AND Name<>@P2;@P1=20,@P2='SA'" );
 
             // Verify outcome
             var expected = new[]

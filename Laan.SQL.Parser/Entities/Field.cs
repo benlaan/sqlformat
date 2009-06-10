@@ -1,5 +1,7 @@
 using System.Diagnostics;
 
+using Laan.SQL.Parser.Expressions;
+
 namespace Laan.SQL.Parser
 {
     [DebuggerDisplay( "{Expression.Value} ({Alias})" )]

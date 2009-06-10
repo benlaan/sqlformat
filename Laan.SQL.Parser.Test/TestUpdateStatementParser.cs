@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MbUnit.Framework;
+
 using Laan.SQL.Parser;
+using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQLParser.Test
 {
@@ -47,7 +49,7 @@ namespace Laan.SQLParser.Test
         }
 
         [Test]
-        public void Test_Update_Statement_With_From_Clause()
+        public void Test_Update_Statement_With_From_And_Where_Clause()
         {
             // Exercise
             UpdateStatement statement = ParserFactory.Execute<UpdateStatement>( 
@@ -75,7 +77,7 @@ namespace Laan.SQLParser.Test
         }
 
         [Test]
-        public void Test_Update_Statement_With_From_And_Join_Clauses()
+        public void Test_Update_Statement_With_From_Join_And_Where_Clauses()
         {
             // Exercise
             UpdateStatement statement = ParserFactory.Execute<UpdateStatement>(
@@ -106,5 +108,6 @@ namespace Laan.SQLParser.Test
             Assert.AreEqual( "<>", criteriaExpression.Operator );
             Assert.AreEqual( "2", criteriaExpression.Right.Value );
         }
+
     }
 }

@@ -5,6 +5,8 @@ using System.Text;
 
 using MbUnit.Framework;
 
+using Laan.SQL.Parser.Expressions;
+
 namespace Laan.SQL.Parser.Test
 {
     [TestFixture]

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 
 using MbUnit.Framework;
+
 using Laan.SQL.Parser;
+using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQLParser.Test
 {

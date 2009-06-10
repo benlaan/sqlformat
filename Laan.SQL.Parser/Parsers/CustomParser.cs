@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Laan.SQL.Parser.Expressions;
+
 namespace Laan.SQL.Parser
 {
     public abstract class CustomParser
@@ -59,9 +61,9 @@ namespace Laan.SQL.Parser
 
         }
 
-        protected CriteriaExpression ProcessCriteriaExpression()
+        protected CriteriaExpression ProcessCriteriaExpression( Expression parent )
         {
-            CriteriaExpression expression = new CriteriaExpression();
+            CriteriaExpression expression = new CriteriaExpression( parent );
             expression.Left = ProcessExpression();
             expression.Operator = GetOperator();
             expression.Right = ProcessExpression();

@@ -7,7 +7,14 @@ using Laan.SQL.Parser;
 
 namespace Laan.SQL.Formatter
 {
-    public class FormattingEngine
+    public interface IFormattingEngine
+    {
+        string Execute( string sql );
+        int TabSize { get; set; }
+        bool UseTabChar { get; set; }
+    }
+
+    public class FormattingEngine : IFormattingEngine
     {
         private Dictionary<Type, Type> _formatters;
         private IStatement _statement;

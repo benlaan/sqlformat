@@ -8,6 +8,5 @@ namespace Laan.SQL.Parser
     public class UpdateStatement : BaseStatement
     {
         public string TableName { get; set; }
-
     }
 }

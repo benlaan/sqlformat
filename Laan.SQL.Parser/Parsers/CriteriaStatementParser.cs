@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections;
 
+using Laan.SQL.Parser.Expressions;
+
 namespace Laan.SQL.Parser
 {
     public abstract class CriteriaStatementParser<T> : StatementParser where T : BaseStatement
@@ -30,7 +32,7 @@ namespace Laan.SQL.Parser
 
         protected T _statement;
 
-        public CriteriaStatementParser( Tokenizer tokenizer ) : base( tokenizer ) {}
+        public CriteriaStatementParser( Tokenizer tokenizer ) : base( tokenizer ) { }
 
         protected enum FieldType
         {
@@ -53,7 +55,7 @@ namespace Laan.SQL.Parser
         private Field GetSelectField( Expression token )
         {
             Expression expression = null;
-            Alias alias = new Alias();
+            Alias alias = new Alias( token );
             if ( token is CriteriaExpression )
             {
                 // this handles the non-standard syntax of: Alias = Expression
@@ -80,12 +82,13 @@ namespace Laan.SQL.Parser
                     }
                     else
                         expression = token;
+
             return new Field { Expression = expression, Alias = alias };
         }
 
         private Field GetUpdateField( Expression token )
         {
-            Alias alias = new Alias();
+            Alias alias = new Alias( token );
             Expression expression = null;
 
             if ( token is CriteriaExpression )
@@ -137,30 +140,30 @@ namespace Laan.SQL.Parser
             if ( Tokenizer.TokenEquals( INNER ) )
                 joinType = JoinType.InnerJoin;
             else
-            if ( Tokenizer.IsNextToken( JOIN ) )
-                // don't consume - it is checked after here
-                joinType = JoinType.Join;
-            else
-            if ( Tokenizer.TokenEquals( FULL ) )
-            {
-                joinType = JoinType.FullJoin;
-                if ( Tokenizer.TokenEquals( OUTER ) )
-                joinType = JoinType.FullOuterJoin;
-            }
-            else
-            if ( Tokenizer.TokenEquals( LEFT ) )
-            {
-                joinType = JoinType.LeftJoin;
-                if ( Tokenizer.TokenEquals( OUTER ) )
-                joinType = JoinType.LeftOuterJoin;
-            }
-            else
-            if ( Tokenizer.TokenEquals( RIGHT ) )
-            {
-                joinType = JoinType.RightJoin;
-                if ( Tokenizer.TokenEquals( OUTER ) )
-                    joinType = JoinType.RightOuterJoin;
-            }
+                if ( Tokenizer.IsNextToken( JOIN ) )
+                    // don't consume - it is checked after here
+                    joinType = JoinType.Join;
+                else
+                    if ( Tokenizer.TokenEquals( FULL ) )
+                    {
+                        joinType = JoinType.FullJoin;
+                        if ( Tokenizer.TokenEquals( OUTER ) )
+                            joinType = JoinType.FullOuterJoin;
+                    }
+                    else
+                        if ( Tokenizer.TokenEquals( LEFT ) )
+                        {
+                            joinType = JoinType.LeftJoin;
+                            if ( Tokenizer.TokenEquals( OUTER ) )
+                                joinType = JoinType.LeftOuterJoin;
+                        }
+                        else
+                            if ( Tokenizer.TokenEquals( RIGHT ) )
+                            {
+                                joinType = JoinType.RightJoin;
+                                if ( Tokenizer.TokenEquals( OUTER ) )
+                                    joinType = JoinType.RightOuterJoin;
+                            }
 
             return joinType;
         }
@@ -184,7 +187,7 @@ namespace Laan.SQL.Parser
                 else
                     table = new Table { Name = GetTableName() };
                 _statement.From.Add( table );
-                Alias alias = new Alias();
+                Alias alias = new Alias( null );
                 if ( Tokenizer.IsNextToken( AS ) )
                 {
                     alias.Type = AliasType.As;
@@ -225,7 +228,7 @@ namespace Laan.SQL.Parser
                     join.Name = GetTableName();
                 }
                 Debug.Assert( join != null );
-                Alias alias = new Alias();
+                Alias alias = new Alias( null );
                 if ( Tokenizer.IsNextToken( AS ) )
                 {
                     alias.Type = AliasType.As;
@@ -237,10 +240,13 @@ namespace Laan.SQL.Parser
                     join.Alias = alias;
                 }
                 ExpectToken( Constants.On );
-                CriteriaExpression criteriaExpression = ProcessExpression() as CriteriaExpression;
-                if ( criteriaExpression == null )
+                Expression expr = ProcessExpression();
+
+                if ( !( expr is CriteriaExpression ) && !( expr is NestedExpression && ( expr as NestedExpression ).Expression is CriteriaExpression ) )
                     throw new SyntaxException( "Expected Criteria Expression" );
-                join.Condition = criteriaExpression;
+                
+                join.Condition = expr;
+
                 _statement.Joins.Add( join );
             }
             while ( Tokenizer.HasMoreTokens && !Tokenizer.IsNextToken( ORDER, GROUP ) );

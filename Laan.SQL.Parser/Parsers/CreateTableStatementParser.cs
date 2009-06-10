@@ -1,5 +1,7 @@
 using System;
 
+using Laan.SQL.Parser.Expressions;
+
 namespace Laan.SQL.Parser
 {
     public class CreateTableStatementParser : TableStatementParser

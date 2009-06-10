@@ -34,7 +34,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT TOP 20",
+               @"SELECT TOP 20",
                 "    Field1,",
                 "    Field2",
                 "",
@@ -56,7 +56,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT *",
+               @"SELECT *",
                 "",
                 "FROM dbo.Table T",
                 "",
@@ -78,7 +78,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT *",
+               @"SELECT *",
                 "",
                 "FROM dbo.Table T",
                 "",
@@ -104,7 +104,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT *",
+               @"SELECT *",
                 "",
                 "FROM dbo.Table T",
                 "",
@@ -133,7 +133,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT *",
+               @"SELECT *",
                 "",
                 "FROM dbo.Table T",
                 "",
@@ -155,7 +155,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT *",
+               @"SELECT *",
                 "",
                 "FROM dbo.Table T",
                 "",
@@ -180,7 +180,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT *",
+               @"SELECT *",
                 "",
                 "FROM dbo.Table T",
                 "",
@@ -205,7 +205,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT COUNT(*)",
+               @"SELECT COUNT(*)",
                 "",
                 "FROM dbo.Table T",
                 "",
@@ -232,7 +232,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT COUNT(*)",
+               @"SELECT COUNT(*)",
                 "",
                 "FROM dbo.Table T",
                 "",
@@ -257,7 +257,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-               @"SELECT",
+              @"SELECT",
                 "    A.ID,",
                 "    COUNT(*)",
                 "",
@@ -341,6 +341,69 @@ namespace Laan.SQL.Formatter.Test
                 "    SELECT MAX(Date)",
                 "",
                 "    FROM dbo.Events",
+                "",
+                ")"
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_With_Nested_Criteria()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"
+                SELECT * FROM dbo.Events E WHERE ( E.ID IS NULL OR E.Type = 'X')"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT *",
+                "",
+                "FROM dbo.Events E",
+                "",
+                "WHERE (",
+                "",
+                "    E.ID IS NULL",
+                "    OR",
+                "    E.Type = 'X'",
+                "",
+                ")"
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        [Ignore("Not Yet Implemented")]
+        public void Can_Format_Select_With_Two_Nested_Criteria()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"
+                SELECT * FROM dbo.Events E WHERE ( E.ID IS NULL OR E.Type = 'X' AND E.ID = 20 )"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT *",
+                "",
+                "FROM dbo.Events E",
+                "",
+                "WHERE (",
+                "",
+                "    E.ID IS NULL",
+                "    OR",
+                "    E.Type = 'X'",
+                "    AND",
+                "    E.ID = 20",
                 "",
                 ")"
             };

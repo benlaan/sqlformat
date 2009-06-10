@@ -11,27 +11,23 @@ namespace Laan.SQL.Formatter.Test
     public class TestExpressionFormatting : BaseFormattingTest
     {
         [Test]
-        [Ignore( "Not Yet Implemented" )]
-        public void Can_Format_Select_With_Only_One_Field_As_Case()
+        public void Can_Format_Select_With_Short_Case_Statement()
         {
-            // Setup
             var sut = new FormattingEngine();
 
             // Exercise
             var actual = sut.Execute( @"
-                SELECT CASE A.field WHEN 1 THEN 'Y' WHEN @A + 2 THEN 'N' WHEN @A / 4 THEN 'X' ELSE 'U' END"
+                SELECT CanInline = CASE A.field WHEN 1 THEN 'Y' ELSE 'N' END, OtherID FROM dbo.Table"
             );
 
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT CASE A.field",
-                "            WHEN 1 THEN 'Y'",
-                "            WHEN @A + 2 THEN 'N'",
-                "            WHEN @A / 4 THEN 'X'",
-                "        ELSE",
-                "            'U'",
-                "        END"
+                @"SELECT",
+                "    CanInline = CASE A.field WHEN 1 THEN 'Y' ELSE 'N' END,",
+                "    OtherID",
+                "",
+                "FROM dbo.Table"
             };
 
             Compare( actual, expected );
@@ -73,7 +69,7 @@ namespace Laan.SQL.Formatter.Test
 
             // Exercise
             var actual = sut.Execute( @"
-                SELECT A.Field1, CASE WHEN A.Field1 = 1 THEN 'Y' WHEN A.Field2 = 2 THEN 'N' ELSE 'U'   END"
+                SELECT A.Field1, CASE WHEN A.Field1 = 1 THEN 'Y' WHEN A.Field2 <> 2 THEN 'N' WHEN A.Field4 = 3 THEN 'M' ELSE 'U'   END"
             );
 
             // Verify outcome
@@ -83,7 +79,8 @@ namespace Laan.SQL.Formatter.Test
                 "    A.Field1,",
                 "    CASE",
                 "        WHEN A.Field1 = 1 THEN 'Y'",
-                "        WHEN A.Field2 = 2 THEN 'N'",
+                "        WHEN A.Field2 <> 2 THEN 'N'",
+                "        WHEN A.Field4 = 3 THEN 'M'",
                 "    ELSE",
                 "        'U'",
                 "    END"
@@ -144,11 +141,7 @@ namespace Laan.SQL.Formatter.Test
                 "SELECT",
                 "    CASE",
                 "        WHEN A.ThisField = 1 THEN 'One'",
-                "        WHEN A = 2 THEN ",
-                "            CASE A.Field",
-                "                WHEN 2 THEN 'Two'",
-                "                WHEN 3 THEN 'Three'",
-                "            END",
+                "        WHEN A = 2 THEN CASE A.Field WHEN 2 THEN 'Two' WHEN 3 THEN 'Three' END",
                 "        WHEN A > 3 THEN 'Many'",
                 "    END",
             };
@@ -174,11 +167,7 @@ namespace Laan.SQL.Formatter.Test
                 "SELECT",
                 "    CASE A.ThisField",
                 "        WHEN 1 THEN 'One'",
-                "        WHEN 2 THEN ",
-                "            CASE A.Field",
-                "                WHEN 2 THEN 'Two'",
-                "                WHEN 3 THEN 'Three'",
-                "            END",
+                "        WHEN 2 THEN CASE A.Field WHEN 2 THEN 'Two' WHEN 3 THEN 'Three' END",
                 "        WHEN A > 3 THEN 'Many'",
                 "    END",
             };

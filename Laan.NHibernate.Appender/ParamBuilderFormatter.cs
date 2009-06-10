@@ -8,6 +8,17 @@ namespace Laan.NHibernate.Appender
 {
     public class ParamBuilderFormatter
     {
+        private IFormattingEngine _engine;
+
+        /// <summary>
+        /// Initializes a new instance of the ParamBuilderFormatter class.
+        /// </summary>
+        /// <param name="engine"></param>
+        public ParamBuilderFormatter( IFormattingEngine engine )
+        {
+            _engine = engine;
+        }
+
         private string UpdateParamsWithValues( string sql, string paramList )
         {
             var parameters = new Dictionary<string, string>();
@@ -31,7 +42,7 @@ namespace Laan.NHibernate.Appender
             return sql;
         }
 
-        private string FormatSql( string sql )
+        public string Execute( string sql )
         {
             // designed to convet the following format
             // "SELECT * FROM Table WHERE ID=@P1 AND Name=P2;@P1=20,@P2='Users'"
@@ -39,20 +50,14 @@ namespace Laan.NHibernate.Appender
             if ( parts.Length > 1 )
                 sql = UpdateParamsWithValues( parts[ 0 ], parts[ 1 ] );
 
-            var engine = new FormattingEngine();
             try
             {
-                return engine.Execute( sql );
+                return _engine.Execute( sql );
             }
             catch ( Exception ex )
             {
                 return String.Format( "Error: {0}\n{1}", ex.Message, sql );
             }
-        }
-
-        public string GetFormattedSQL( string sql )
-        {
-            return FormatSql( sql );
         }
     }
 }
