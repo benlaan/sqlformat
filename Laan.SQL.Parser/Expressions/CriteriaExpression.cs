@@ -12,6 +12,8 @@ namespace Laan.SQL.Parser.Expressions
 
     public class CriteriaExpression : Expression, IInlineFormattable
     {
+        private string _operator;
+
         public CriteriaExpression( Expression parent ) : base( parent )
         {
             Left = new Expression( this );
@@ -21,7 +23,12 @@ namespace Laan.SQL.Parser.Expressions
 
         public Expression Left { get; set; }
         public Expression Right { get; set; }
-        public string Operator { get; set; }
+        
+        public string Operator
+        {
+            get { return _operator; }
+            set { _operator = value.ToUpper(); }
+        }
 
         public override string Value
         {

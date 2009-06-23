@@ -47,30 +47,61 @@ namespace Laan.SQL.Formatter
         {
             return
                 expr is IInlineFormattable &&
-                ( ( IInlineFormattable )expr ).CanInline && 
+                ( (IInlineFormattable) expr ).CanInline &&
                 expr.Value.Length < MaxColumnWidth - ( offset + ( _indentLevel * _indent.Length ) );
         }
 
         internal string GetBooleanExpression( CriteriaExpression expr, int offset )
         {
-            if (expr.Parent is NestedExpression)
+            // this code ensures the boolean expression is indented once
+            // ie.
+            // (
+            // 
+            //     A.ID IS NULL
+            //     OR
+            //     A.ID = 10
+            //
+            // )
+            if ( expr.Parent is NestedExpression )
+                return String.Format(
+                            "{0}{1}{2}{3}{2}{4}",
+                            GetIndent( _indent, _indentLevel + 1, false ),
+                            expr.Left.FormattedValue( offset, _indent, _indentLevel ),
+                            GetIndent( _indent, _indentLevel + 1, true ),
+                            expr.Operator,
+                            expr.Right.FormattedValue( offset, _indent, _indentLevel )
+                        );
+
+            // this code ensures that chained boolean expressions are continued at the current nest level
+            // ie.
+            // (
+            // 
+            //     A.ID IS NULL
+            //     OR
+            //     A.ID = 10
+            //     OR
+            //     A.ID = 20
+            //
+            // )
+            if ( expr.Parent is CriteriaExpression && expr.HasAncestorOfType( typeof( NestedExpression ) ) )
                 return String.Format(
                     "{0}{1}{2}{3}{2}{4}",
-                    GetIndent( _indent, _indentLevel + 1, false ),
-                    expr.Left.FormattedValue( offset, _indent, _indentLevel + 1 ),
-                    GetIndent( _indent, _indentLevel + 1, true ),
-                    expr.Operator,
-                    expr.Right.FormattedValue( offset, _indent, _indentLevel + 1 )
-                );
-            else
-                return String.Format(
-                    "{0}{1}{2}{3} {4}",
+                    GetIndent( _indent, _indentLevel, false ),
                     expr.Left.FormattedValue( offset, _indent, _indentLevel ),
-                    GetIndent( _indent, _indentLevel ),
-                    new string( ' ', Math.Max( 0, offset - expr.Operator.Length ) ),
+                    GetIndent( _indent, _indentLevel + 1, true ),
                     expr.Operator,
                     expr.Right.FormattedValue( offset, _indent, _indentLevel )
                 );
+
+            // this is the default format, and is used by JOIN, WHERE (non nested), and HAVING criteria
+            return String.Format(
+                "{0}{1}{2}{3} {4}",
+                expr.Left.FormattedValue( offset, _indent, _indentLevel ),
+                GetIndent( _indent, _indentLevel ),
+                new string( ' ', Math.Max( 0, offset - expr.Operator.Length ) ),
+                expr.Operator,
+                expr.Right.FormattedValue( offset, _indent, _indentLevel )
+            );
         }
 
         internal string FormatCaseSwitchExpression( Expression expr, int offset )
@@ -78,7 +109,7 @@ namespace Laan.SQL.Formatter
             if ( CanInlineExpression( expr, offset ) )
                 return expr.Value;
 
-            var caseSwitch = ( CaseSwitchExpression )expr;
+            var caseSwitch = (CaseSwitchExpression) expr;
             bool isNested = _indentLevel > 1;
             int nestLevel = isNested ? _indentLevel + 2 : _indentLevel + 1;
 
@@ -114,7 +145,7 @@ namespace Laan.SQL.Formatter
             if ( CanInlineExpression( expr, offset ) )
                 return expr.Value;
 
-            var caseSwitch = ( CaseWhenExpression )expr;
+            var caseSwitch = (CaseWhenExpression) expr;
             bool isNested = _indentLevel > 1;
             int nestLevel = isNested ? _indentLevel + 2 : _indentLevel + 1;
 
@@ -155,6 +186,11 @@ namespace Laan.SQL.Formatter
                 sql.Append( GetIndent( _indent, _indentLevel, false ) + ")" );
                 return sql.ToString();
             }
+        }
+
+        internal string FormatIdentifierListExpression( IdentifierListExpression expr, int offset )
+        {
+            return GetIndent( _indent, _indentLevel + 1, false ) + expr.Value;
         }
     }
 }

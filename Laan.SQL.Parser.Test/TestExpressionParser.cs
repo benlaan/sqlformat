@@ -531,5 +531,31 @@ namespace Laan.SQLParser.Test
             Assert.AreEqual( "IS", criteria.Operator );
             Assert.AreEqual( "NOT NULL", criteria.Right.Value );
         }
+
+        [Test]
+        public void Test_Can_Read_In_List_Of_Identifier_Expressions()
+        {
+            Tokenizer tokenizer = new Tokenizer( "A.Field IN (1, 2, 3)" );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull( expression );
+            Assert.IsTrue( expression is CriteriaExpression );
+            CriteriaExpression criteria = (CriteriaExpression) expression;
+            Assert.AreEqual( "A.Field", criteria.Left.Value );
+            Assert.AreEqual( "IN", criteria.Operator );
+
+            Assert.IsTrue( criteria.Right is NestedExpression );
+            NestedExpression nestedExpression = (NestedExpression) criteria.Right;
+            Assert.IsTrue( nestedExpression.Expression is IdentifierListExpression );
+            Assert.IsTrue( nestedExpression.Expression.Parent == nestedExpression );
+
+            Assert.AreEqual( "(1, 2, 3)", criteria.Right.Value );
+        }
     }
 }

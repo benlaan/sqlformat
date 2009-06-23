@@ -110,6 +110,24 @@ namespace Laan.SQL.Parser
                 using ( Tokenizer.ExpectBrackets() )
                 {
                     result = ReadCriteriaList( parent );
+
+                    if ( ( result is IdentifierExpression ) && Tokenizer.IsNextToken( Constants.Comma ) )
+                    {
+                        var list = new IdentifierListExpression();
+                        list.Identifiers.Add( result as IdentifierExpression );
+                        
+                        do
+                        {
+                            Tokenizer.ExpectToken( Constants.Comma );
+
+                            result = ReadCriteriaList( parent );
+                            list.Identifiers.Add( result as IdentifierExpression );
+
+                        } while ( Tokenizer.IsNextToken( Constants.Comma ) );
+
+                        result = list;
+                    }
+
                 }
 
                 NestedExpression nestedExpression = new NestedExpression( parent ) { Expression = result };

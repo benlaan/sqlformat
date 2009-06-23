@@ -379,7 +379,6 @@ namespace Laan.SQL.Formatter.Test
         }
 
         [Test]
-        [Ignore("Not Yet Implemented")]
         public void Can_Format_Select_With_Two_Nested_Criteria()
         {
             // Setup
@@ -404,6 +403,86 @@ namespace Laan.SQL.Formatter.Test
                 "    E.Type = 'X'",
                 "    AND",
                 "    E.ID = 20",
+                "",
+                ")"
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_With_Four_Nested_Criteria()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"
+                SELECT * FROM dbo.Events E WHERE ( E.ID IS NULL OR E.Type = 'X' 
+                AND E.ID = 20 AND E.Type != 'Y' 
+                AND E.OtherID = 40)"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT *",
+                "",
+                "FROM dbo.Events E",
+                "",
+                "WHERE (",
+                "",
+                "    E.ID IS NULL",
+                "    OR",
+                "    E.Type = 'X'",
+                "    AND",
+                "    E.ID = 20",
+                "    AND",
+                "    E.Type != 'Y'",
+                "    AND",
+                "    E.OtherID = 40",
+                "",
+                ")"
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_With_Nested_Criteria_Within_Nested_Criteria()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"
+                SELECT * FROM dbo.Events E WHERE ( E.ID IS NULL OR E.Type = 'X' 
+                AND (E.ID = 20 OR E.Type != 'Y' )
+                AND E.OtherID = 40)"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT *",
+                "",
+                "FROM dbo.Events E",
+                "",
+                "WHERE (",
+                "",
+                "    E.ID IS NULL",
+                "    OR",
+                "    E.Type = 'X'",
+                "    AND",
+                "    (",
+                "",
+                "        E.ID = 20",
+                "        OR",
+                "        E.Type != 'Y'",
+                "",
+                "    )",
+                "    AND",
+                "    E.OtherID = 40",
                 "",
                 ")"
             };

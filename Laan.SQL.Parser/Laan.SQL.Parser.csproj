@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E972B2B2-F549-418E-B830-FB5D97101168}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -59,6 +59,7 @@
     <Compile Include="Entities\IProjection.cs" />
     <Compile Include="Entities\IStatement.cs" />
     <Compile Include="Entities\Join.cs" />
+    <Compile Include="Expressions\IdentifierListExpression.cs" />
     <Compile Include="Expressions\NegationExpression.cs" />
     <Compile Include="Expressions\NestedExpression.cs" />
     <Compile Include="Expressions\OperatorExpression.cs" />

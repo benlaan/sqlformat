@@ -54,7 +54,7 @@ namespace Laan.SQL.Formatter
         {
             IndentedAppend( "SELECT" );
             if ( _statement.Distinct )
-                _sql.Append( " DISTINCT " );
+                _sql.Append( " DISTINCT" );
 
             if ( _statement.Top.HasValue )
                 _sql.Append( " TOP " + _statement.Top.Value.ToString() );

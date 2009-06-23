@@ -10,19 +10,25 @@ namespace Laan.SQL.Formatter.Test
     {
         private static string DisplayLists( string[] expected, string[] actual )
         {
+            const int offset = 5;
             const int width = 60;
+
             string LineFormat = String.Format( "{{0,-{0}}} | {{1,-{0}}}\n", width );
 
-            StringBuilder result = new StringBuilder();
+            StringBuilder result = new StringBuilder( "\n\n  ");
             result.AppendFormat( LineFormat, "Expected", "Actual" );
-            result.AppendFormat( "{0}\n", new string( '-', width * 2 + 3 ) );
+            result.AppendFormat( "{0}\n", new string( '-', width * 2 + offset ) );
 
             for ( int index = 0; index < Math.Max( expected.Length, actual.Length ); index++ )
             {
-                result.AppendFormat( 
-                    LineFormat, 
-                    GetLine( index, expected ), 
-                    GetLine( index, actual ) 
+                string expectedLine = GetLine( index, expected );
+                string actualLine = GetLine( index, actual );
+                string flag = expectedLine == actualLine ? " " : new string( Convert.ToChar( 187 ), 1 );
+                result.Append( flag + " " );
+                result.AppendFormat(
+                    LineFormat,
+                    expectedLine,
+                    actualLine
                 );
             }
 

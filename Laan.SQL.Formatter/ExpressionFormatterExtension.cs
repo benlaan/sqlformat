@@ -43,7 +43,23 @@ namespace Laan.SQL.Formatter
                 formatter.Execute();
                 return sql.ToString();
             }
+
+            if ( expr is IdentifierListExpression )
+                return impl.FormatIdentifierListExpression( expr as IdentifierListExpression, offset );
+
             return expr.Value;
         }
+
+        public static bool HasAncestorOfType( this Expression expr, Type type )
+        {
+            while ( expr.Parent != null )
+            {
+                expr = expr.Parent;
+                if ( type.IsAssignableFrom( expr.GetType() ) )
+                    return true;
+            }
+            return false;
+        }
+
     }
 }
