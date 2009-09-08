@@ -35,6 +35,9 @@ namespace Laan.SQL.Formatter
             if ( expr is NestedExpression )
                 return impl.FormatNestedExpression( expr as NestedExpression, offset );
 
+            if ( expr is FunctionExpression )
+                return impl.FormatFunctionExpression( expr as FunctionExpression, offset );
+
             if ( expr is SelectExpression )
             {
                 SelectExpression selectExpression = ( SelectExpression )expr;

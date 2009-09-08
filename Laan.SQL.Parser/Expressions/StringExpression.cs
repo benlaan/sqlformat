@@ -12,5 +12,10 @@ namespace Laan.SQL.Parser.Expressions
         {
             Value = value;
         }
+
+        public override bool CanInline
+        {
+            get { return true; }
+        }
     }
 }

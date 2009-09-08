@@ -201,5 +201,88 @@ namespace Laan.SQL.Formatter.Test
 
             Compare( actual, expected );
         }
+
+        [Test]
+        public void Can_Format_Select_With_Function()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"SELECT dbo.SomeFunction(A.Value,A.Other) FROM dbo.Ark A"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+                "SELECT",
+                "    dbo.SomeFunction(A.Value, A.Other)",
+                "",
+                "FROM dbo.Ark A"
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_With_Function_With_Long_Param_Signature()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"
+                SELECT dbo.SomeFunction(A.AReallyLongField,A.AReallyLongFieldAgain, 
+                A.AReallyLongFieldOneMoreTime) FROM dbo.Ark A"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+                "SELECT",
+                "    dbo.SomeFunction(",
+                "        A.AReallyLongField,",
+                "        A.AReallyLongFieldAgain,",
+                "        A.AReallyLongFieldOneMoreTime",
+                "    )",
+                "",
+                "FROM dbo.Ark A"
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_With_Exists_Function()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( 
+                @"SELECT CASE WHEN EXISTS( SELECT 1 FROM dbo.Notes) THEN 1 ELSE 0 END FROM dbo.Ark A"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+                "SELECT",
+                "    CASE",
+                "        WHEN EXISTS(",
+                "",
+                "            SELECT 1",
+                "",
+                "            FROM dbo.Notes",
+                "",
+                "        ) THEN 1",
+                "    ELSE",
+                "        0",
+                "    END",
+                "",
+                "FROM dbo.Ark A"
+            };
+
+            Compare( actual, expected );
+        }
     }
 }

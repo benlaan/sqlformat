@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using Laan.SQL.Parser.Expressions;
+using Laan.SQL.Parser;
 
 namespace Laan.SQL.Formatter
 {
@@ -99,14 +100,14 @@ namespace Laan.SQL.Formatter
             }
 
             // this is the default format, and is used by JOIN, WHERE (non nested), and HAVING criteria
-                return String.Format(
-                    "{0}{1}{2}{3} {4}",
-                    expr.Left.FormattedValue( offset, _indent, _indentLevel ),
-                    GetIndent( _indent, _indentLevel ),
-                    new string( ' ', Math.Max( 0, offset - expr.Operator.Length ) ),
-                    expr.Operator,
-                    expr.Right.FormattedValue( offset, _indent, _indentLevel )
-                );
+            return String.Format(
+                "{0}{1}{2}{3} {4}",
+                expr.Left.FormattedValue( offset, _indent, _indentLevel ),
+                GetIndent( _indent, _indentLevel ),
+                new string( ' ', Math.Max( 0, offset - expr.Operator.Length ) ),
+                expr.Operator,
+                expr.Right.FormattedValue( offset, _indent, _indentLevel )
+            );
         }
 
         internal string FormatCaseSwitchExpression( Expression expr, int offset )
@@ -114,7 +115,7 @@ namespace Laan.SQL.Formatter
             if ( CanInlineExpression( expr, offset ) )
                 return expr.Value;
 
-            var caseSwitch = ( CaseSwitchExpression )expr;
+            var caseSwitch = (CaseSwitchExpression) expr;
             bool isNested = _indentLevel > 1;
             int nestLevel = isNested ? _indentLevel + 2 : _indentLevel + 1;
 
@@ -150,7 +151,7 @@ namespace Laan.SQL.Formatter
             if ( CanInlineExpression( expr, offset ) )
                 return expr.Value;
 
-            var caseSwitch = ( CaseWhenExpression )expr;
+            var caseSwitch = (CaseWhenExpression) expr;
             bool isNested = _indentLevel > 1;
             int nestLevel = isNested ? _indentLevel + 2 : _indentLevel + 1;
 
@@ -177,7 +178,7 @@ namespace Laan.SQL.Formatter
             return sql.ToString();
         }
 
-        public string FormatNestedExpression( NestedExpression expr, int offset )
+        internal string FormatNestedExpression( NestedExpression expr, int offset )
         {
             if ( CanInlineExpression( expr.Expression, offset ) )
                 return expr.Value;
@@ -196,6 +197,31 @@ namespace Laan.SQL.Formatter
         internal string FormatIdentifierListExpression( IdentifierListExpression expr, int offset )
         {
             return GetIndent( _indent, _indentLevel + 1, false ) + expr.Value;
+        }
+
+        internal string FormatFunctionExpression( FunctionExpression expr, int offset )
+        {
+            string[] args = expr.Arguments
+                .Select( arg => arg.FormattedValue( offset, _indent, _indentLevel ) )
+                .ToArray();
+
+            bool isExistsFunction = String.Compare( expr.Name, "EXISTS", true ) == 0;
+            bool CanInline = !isExistsFunction && expr.Value.Length <= 40;
+
+            string prefix = !CanInline ? GetIndent( _indent, _indentLevel + 1 ) : "";
+            string postFix = !CanInline ? GetIndent( _indent, _indentLevel ) : "";
+            string comma = Constants.Comma + (CanInline ? " " : "");
+            string separator = !CanInline ? comma + prefix : comma;
+            string spacer = isExistsFunction ? "\r\n" : "";
+
+            return String.Format(
+                "{0}({1}{2}{3}{1}{4})",
+                expr.Name,
+                spacer,
+                prefix,
+                String.Join( separator, args ),
+                postFix
+            );
         }
     }
 }

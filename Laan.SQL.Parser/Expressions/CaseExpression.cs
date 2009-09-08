@@ -53,9 +53,14 @@ namespace Laan.SQL.Parser.Expressions
 
         #region IInlineFormattable Members
 
-        public virtual bool CanInline
+        public override bool CanInline
         {
-            get { return Cases.Count < InlineCaseCount && ( Else == null || Else is IdentifierExpression || Else is StringExpression ); }
+            get { 
+                return 
+                    Cases.Count < InlineCaseCount &&
+                    Cases.All( e => e.When.CanInline && e.Then.CanInline ) && 
+                    ( Else == null || Else is IdentifierExpression || Else is StringExpression ); 
+            }
         }
 
         #endregion
