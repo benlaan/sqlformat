@@ -489,5 +489,38 @@ namespace Laan.SQL.Formatter.Test
 
             Compare( actual, expected );
         }
+
+        [Test]
+        public void Can_Format_Select_With_Nested_Criteria_Within_Nested_Criteria_On_Where_Clause()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"
+                SELECT * FROM dbo.States S JOIN dbo.Localities L 
+                ON L.StateID = S.StateID AND (L.ID = S.ID OR (L.Key <> S.Key))"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT *",
+                "",
+                "FROM dbo.States S",
+                "",
+                "JOIN dbo.Localities L",
+                "  ON L.StateID = S.StateID",
+                " AND (",
+                "",
+                "    L.ID = S.ID",
+                "    OR",
+                "    (L.Key <> S.Key)",
+                "",
+                ")"
+            };
+
+            Compare( actual, expected );
+        }
     }
 }

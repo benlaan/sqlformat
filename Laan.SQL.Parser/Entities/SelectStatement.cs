@@ -6,25 +6,7 @@ using Laan.SQL.Parser.Expressions;
 namespace Laan.SQL.Parser
 {
 
-    public class BaseStatement : IStatement
-    {
-        /// <summary>
-        /// Initializes a new instance of the BaseStatement class.
-        /// </summary>
-        public BaseStatement()
-        {
-            Fields = new List<Field>();
-            From = new List<Table>();
-            Joins = new List<Join>();
-        }
-
-        public List<Field> Fields { get; set; }
-        public List<Join> Joins { get; set; }
-        public List<Table> From { get; set; }
-        public Expression Where { get; set; }
-    }
-
-    public class SelectStatement : BaseStatement
+    public class SelectStatement : CustomStatement
     {
         public SelectStatement() : base()
         {

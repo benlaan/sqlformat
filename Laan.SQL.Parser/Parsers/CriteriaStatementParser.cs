@@ -7,7 +7,7 @@ using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser
 {
-    public abstract class CriteriaStatementParser<T> : StatementParser where T : BaseStatement
+    public abstract class CriteriaStatementParser<T> : StatementParser where T : CustomStatement
     {
         protected const string SELECT = "SELECT";
         protected const string DISTINCT = "DISTINCT";

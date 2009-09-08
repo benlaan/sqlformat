@@ -22,5 +22,9 @@ namespace Laan.SQL.Parser.Expressions
             get { return String.Format( "{0} {1}", Constants.Not, Expression.Value ); }
         }
 
+        public override bool CanInline
+        {
+            get { return Expression.CanInline; }
+        }
     }
 }

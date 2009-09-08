@@ -23,11 +23,38 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT",
+               @"SELECT",
                 "    CanInline = CASE A.field WHEN 1 THEN 'Y' ELSE 'N' END,",
                 "    OtherID",
                 "",
                 "FROM dbo.Table"
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_With_Only_One_Field_As_Case()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"
+                SELECT CASE A.field WHEN 1 THEN 'Y' WHEN @A + 2 THEN 'N' WHEN @A / 4 THEN 'X' ELSE 'U' END"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT",
+                "    CASE A.field",
+                "        WHEN 1 THEN 'Y'",
+                "        WHEN @A + 2 THEN 'N'",
+                "        WHEN @A / 4 THEN 'X'",
+                "    ELSE",
+                "        'U'",
+                "    END"
             };
 
             Compare( actual, expected );
@@ -47,7 +74,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT",
+               @"SELECT",
                 "    A.Field1,",
                 "    CASE A.field",
                 "        WHEN 1 THEN 'Y'",
@@ -75,7 +102,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT",
+               @"SELECT",
                 "    A.Field1,",
                 "    CASE",
                 "        WHEN A.Field1 = 1 THEN 'Y'",

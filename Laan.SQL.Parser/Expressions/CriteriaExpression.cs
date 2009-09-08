@@ -10,7 +10,7 @@ namespace Laan.SQL.Parser.Expressions
         bool CanInline { get; }
     }
 
-    public class CriteriaExpression : Expression, IInlineFormattable
+    public class CriteriaExpression : Expression
     {
         private string _operator;
 
@@ -37,9 +37,9 @@ namespace Laan.SQL.Parser.Expressions
 
         #region IInlineFormattable Members
 
-        public bool CanInline
+        public override bool CanInline
         {
-            get { return false; }
+            get { return Operator != Constants.Or; }
         }
 
         #endregion

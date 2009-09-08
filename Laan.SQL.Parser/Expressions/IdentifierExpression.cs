@@ -19,5 +19,10 @@ namespace Laan.SQL.Parser.Expressions
         {
             get { return String.Join( Constants.Dot, Parts.ToArray() ); }
         }
+
+        public override bool CanInline
+        {
+            get { return true; }
+        }
     }
 }

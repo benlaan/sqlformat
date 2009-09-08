@@ -26,9 +26,9 @@ namespace Laan.SQL.Parser.Expressions
 
         #region IInlineFormattable Members
 
-        public bool CanInline
+        public override bool CanInline
         {
-            get { return true; }
+            get { return Left.CanInline && Right.CanInline; }
         }
 
         #endregion

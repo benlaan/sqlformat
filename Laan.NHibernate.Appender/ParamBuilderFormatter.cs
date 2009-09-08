@@ -44,7 +44,7 @@ namespace Laan.NHibernate.Appender
 
         public string Execute( string sql )
         {
-            // designed to convet the following format
+            // designed to convert the following format
             // "SELECT * FROM Table WHERE ID=@P1 AND Name=P2;@P1=20,@P2='Users'"
             string[] parts = sql.Split( ';' );
             if ( parts.Length > 1 )

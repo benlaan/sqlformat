@@ -10,9 +10,25 @@ namespace Laan.SQL.Parser
         {
             _statement = new UpdateStatement();
 
+            if ( Tokenizer.IsNextToken( Constants.Top ) )
+            {
+                Tokenizer.ReadNextToken();
+                using ( Tokenizer.ExpectBrackets() )
+                {
+                    int top;
+                    if ( Int32.TryParse( Tokenizer.Current, out top ) )
+                    {
+                        _statement.Top = top;
+                        Tokenizer.ReadNextToken();
+                    }
+                    else
+                        throw new SyntaxException( "TOP clause requires an integer" );
+                }
+            }
+
             _statement.TableName = GetTableName();
 
-            Tokenizer.ExpectToken( "SET" );
+            Tokenizer.ExpectToken( Constants.Set );
 
             ProcessFields( FieldType.Update, _statement.Fields );
             ProcessFrom();

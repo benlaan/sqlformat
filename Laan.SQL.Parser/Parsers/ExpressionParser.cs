@@ -110,7 +110,6 @@ namespace Laan.SQL.Parser
                 using ( Tokenizer.ExpectBrackets() )
                 {
                     result = ReadCriteriaList( parent );
-
                     if ( ( result is IdentifierExpression ) && Tokenizer.IsNextToken( Constants.Comma ) )
                     {
                         var list = new IdentifierListExpression();
@@ -127,7 +126,6 @@ namespace Laan.SQL.Parser
 
                         result = list;
                     }
-
                 }
 
                 NestedExpression nestedExpression = new NestedExpression( parent ) { Expression = result };

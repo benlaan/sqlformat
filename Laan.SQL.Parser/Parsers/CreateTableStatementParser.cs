@@ -44,24 +44,32 @@ namespace Laan.SQL.Parser
         private SqlType ProcessType()
         {
             string identifier = GetIdentifier();
-            SqlType result = new SqlType( identifier );
-
-            if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
+            SqlType result;
+            if (identifier == Constants.As )
             {
-                using ( Tokenizer.ExpectBrackets() )
+                result = null;
+            }
+            else
+            {
+                result = new SqlType( identifier );
+
+                if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
                 {
-                    string token = CurrentToken;
-                    ReadNextToken();
-                    result.Max = ( String.Compare( token, "MAX", true ) == 0 );
-
-                    if ( !result.Max )
+                    using ( Tokenizer.ExpectBrackets() )
                     {
-                        result.Length = Int32.Parse( token );
+                        string token = CurrentToken;
+                        ReadNextToken();
+                        result.Max = ( String.Compare( token, "MAX", true ) == 0 );
 
-                        if ( Tokenizer.TokenEquals( Constants.Comma ) )
+                        if ( !result.Max )
                         {
-                            result.Scale = Int32.Parse( CurrentToken );
-                            ReadNextToken();
+                            result.Length = Int32.Parse( token );
+
+                            if ( Tokenizer.TokenEquals( Constants.Comma ) )
+                            {
+                                result.Scale = Int32.Parse( CurrentToken );
+                                ReadNextToken();
+                            }
                         }
                     }
                 }
@@ -99,6 +107,14 @@ namespace Laan.SQL.Parser
 
             string fieldName = GetIdentifier();
             SqlType type = ProcessType();
+            if ( type == null )
+            {
+                FieldDefinition calcExpression = new FieldDefinition() { Name = fieldName, Nullability = Nullability.Nullable, Type = null };
+                ExpressionParser parser = new ExpressionParser( Tokenizer );
+                calcExpression.CalculatedValue = parser.Execute();
+                _statement.Fields.Add( calcExpression );
+                return;
+            }
 
             if ( Tokenizer.TokenEquals( IDENTITY ) )
             {
@@ -139,8 +155,11 @@ namespace Laan.SQL.Parser
                 // TODO: process column constraint
                 string name = GetIdentifier();
                 Tokenizer.ExpectToken( DEFAULT );
+                using ( Tokenizer.ExpectBrackets() )
+                {
                 Expression expression = ProcessExpression();
                 string defaultValue = expression.Value;
+                }
             }
 
             if ( Tokenizer.TokenEquals( DEFAULT ) )

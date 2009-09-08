@@ -7,7 +7,7 @@ using System.Text;
 namespace Laan.SQL.Parser.Expressions
 {
     [DebuggerDisplay( "{Value}" )]
-    public class Expression
+    public class Expression : IInlineFormattable
     {
         /// <summary>
         /// Initializes a new instance of the Expression class.
@@ -19,5 +19,14 @@ namespace Laan.SQL.Parser.Expressions
 
         public virtual string Value { get; protected set; }
         public Expression Parent { get; set; }
+
+        #region IInlineFormattable Members
+
+        public virtual bool CanInline
+        {
+            get { return false; }
+        }
+
+        #endregion
     }
 }

@@ -21,5 +21,10 @@ namespace Laan.SQL.Parser.Expressions
         {
             get { return Constants.OpenBracket + Expression.Value + Constants.CloseBracket; }
         }
+
+        public override bool CanInline
+        {
+            get { return Expression.CanInline; }
+        }
     }
 }

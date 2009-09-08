@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser
 {
@@ -29,6 +30,8 @@ namespace Laan.SQL.Parser
         public string Name { get; set; }
         public bool IsPrimaryKey { get; set; }
         public Identity Identity { get; set; }
+        public Expression CalculatedValue { get; set; }
+        public bool IsCalculated { get { return CalculatedValue != null; } }
 
         private string Description
         {

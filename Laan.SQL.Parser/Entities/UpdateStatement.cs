@@ -5,8 +5,9 @@ using System.Text;
 
 namespace Laan.SQL.Parser
 {
-    public class UpdateStatement : BaseStatement
+    public class UpdateStatement : CustomStatement
     {
+        public int? Top { get; set; }
         public string TableName { get; set; }
     }
 }

@@ -109,5 +109,36 @@ namespace Laan.SQLParser.Test
             Assert.AreEqual( "2", criteriaExpression.Right.Value );
         }
 
+        [Test]
+        public void Test_Update_Statement_With_Top_N_Clause()
+        {
+            // Exercise
+            UpdateStatement statement = ParserFactory.Execute<UpdateStatement>(
+                @"update top (10) t set field = 1 from dbo.table as t"
+            );
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( "t", statement.TableName );
+            Assert.AreEqual( true, statement.Top.HasValue );
+            Assert.AreEqual( 10, statement.Top.Value );
+            Assert.AreEqual( 1, statement.Fields.Count );
+            Assert.AreEqual( "1", statement.Fields[ 0 ].Expression.Value );
+
+            Assert.AreEqual( 1, statement.From.Count );
+            Assert.AreEqual( "dbo.table", statement.From[ 0 ].Name );
+            Assert.AreEqual( "t", statement.From[ 0 ].Alias.Name );
+            Assert.AreEqual( AliasType.As, statement.From[ 0 ].Alias.Type );
+        }
+
+        [Test]
+        [ExpectedException( typeof( SyntaxException ), "TOP clause requires an integer" ) ]
+        public void Test_Update_Statement_With_Top_N_Clause_With_Missing_Value()
+        {
+            // Exercise
+            UpdateStatement statement = ParserFactory.Execute<UpdateStatement>(
+                @"update top () t set field = 1 from dbo.table as t join dbo.other o on o.id = a.id where field <> 2"
+            );
+        }
     }
 }

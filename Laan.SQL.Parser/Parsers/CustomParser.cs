@@ -53,12 +53,11 @@ namespace Laan.SQL.Parser
                 return token;
             }
             else
-                throw new ExpectedTokenNotFoundException( 
-                    "'=', '>=', '<=', '!=', '<>', 'IN', 'ANY', 'LIKE'", 
-                    CurrentToken, 
-                    Tokenizer.Position 
+                throw new ExpectedTokenNotFoundException(
+                    "'=', '>=', '<=', '!=', '<>', 'IN', 'ANY', 'LIKE'",
+                    CurrentToken,
+                    Tokenizer.Position
                 );
-
         }
 
         protected CriteriaExpression ProcessCriteriaExpression( Expression parent )
@@ -97,7 +96,7 @@ namespace Laan.SQL.Parser
             string identifier = "";
             if ( Tokenizer.TokenEquals( Constants.OpenSquareBracket ) )
             {
-                identifier += Constants.OpenSquareBracket + GetIdentifierUntilTerminated(Constants.CloseSquareBracket) + Constants.CloseSquareBracket;
+                identifier += Constants.OpenSquareBracket + GetIdentifierUntilTerminated( Constants.CloseSquareBracket ) + Constants.CloseSquareBracket;
                 Tokenizer.ExpectToken( Constants.CloseSquareBracket );
             }
             else
@@ -120,7 +119,7 @@ namespace Laan.SQL.Parser
 
             return identifiers;
         }
-        
+
         protected string GetDotNotationIdentifier()
         {
             string token;

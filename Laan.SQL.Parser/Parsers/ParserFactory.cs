@@ -53,7 +53,7 @@ namespace Laan.SQL.Parser
                     if ( _tokenizer.TokenEquals( VIEW ) )
                         parser = new CreateViewStatementParser( _tokenizer );
 
-                    if ( _tokenizer.IsNextToken( Constants.Unique, Constants.Clustered, Constants.NonClustered ) )
+                    if ( _tokenizer.IsNextToken( Constants.Unique, Constants.Clustered, Constants.NonClustered, Constants.Index ) )
                         parser = new CreateIndexParser( _tokenizer );
                 }
                 else if ( _tokenizer.TokenEquals( GRANT ) )

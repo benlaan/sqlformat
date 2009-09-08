@@ -31,6 +31,9 @@ namespace Laan.SQL.Parser
         public const string End = "END";
         public const string Not = "NOT";
         public const string Null = "NULL";
+        public const string Top = "TOP";
+        public const string As = "AS";
+        public const string Set = "SET";
     }
 
     /// <summary>

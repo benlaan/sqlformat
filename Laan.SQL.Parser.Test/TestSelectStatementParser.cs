@@ -420,7 +420,7 @@ namespace Laan.SQL.Parser.Test
             Assert.IsTrue( statement.Where is CriteriaExpression );
 
             CriteriaExpression criteriaExpression = ( CriteriaExpression )statement.Where;
-            Assert.AreEqual( "AND", criteriaExpression.Operator );
+            Assert.AreEqual( "and", criteriaExpression.Operator, StringComparison.CurrentCultureIgnoreCase );
             Assert.IsTrue( criteriaExpression.Left is CriteriaExpression );
 
             CriteriaExpression leftCriteriaExpression = ( CriteriaExpression )criteriaExpression.Left;
@@ -451,7 +451,7 @@ namespace Laan.SQL.Parser.Test
             NestedExpression nestedExpression = ( NestedExpression )statement.Where;
 
             CriteriaExpression criteriaExpression = ( CriteriaExpression )nestedExpression.Expression;
-            Assert.AreEqual( "OR", criteriaExpression.Operator );
+            Assert.AreEqual( "or", criteriaExpression.Operator, StringComparison.CurrentCultureIgnoreCase );
             Assert.IsTrue( criteriaExpression.Left is CriteriaExpression );
 
             CriteriaExpression leftCriteriaExpression = ( CriteriaExpression )criteriaExpression.Left;
