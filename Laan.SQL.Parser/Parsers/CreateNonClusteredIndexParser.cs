@@ -5,7 +5,7 @@ namespace Laan.SQL.Parser
 {
     public class CreateIndexParser : StatementParser
     {
-        public CreateIndexParser( Tokenizer tokenizer ) : base( tokenizer ) { }
+        public CreateIndexParser( CustomTokenizer tokenizer ) : base( tokenizer ) { }
 
         public override IStatement Execute()
         {

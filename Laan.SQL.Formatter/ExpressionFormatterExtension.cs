@@ -47,8 +47,8 @@ namespace Laan.SQL.Formatter
                 return sql.ToString();
             }
 
-            if ( expr is IdentifierListExpression )
-                return impl.FormatIdentifierListExpression( expr as IdentifierListExpression, offset );
+            if ( expr is ExpressionList )
+                return impl.FormatIdentifierListExpression( expr as ExpressionList, offset );
 
             return expr.Value;
         }

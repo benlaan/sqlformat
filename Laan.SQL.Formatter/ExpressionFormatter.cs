@@ -194,9 +194,11 @@ namespace Laan.SQL.Formatter
             }
         }
 
-        internal string FormatIdentifierListExpression( IdentifierListExpression expr, int offset )
+        internal string FormatIdentifierListExpression( ExpressionList expr, int offset )
         {
-            return GetIndent( _indent, _indentLevel + 1, false ) + expr.Value;
+            return GetIndent( _indent, _indentLevel + 1, false ) + 
+                String.Join( ", ", expr.Identifiers.Select( id => id.FormattedValue( offset, _indent, _indentLevel ) ).ToArray() 
+            );
         }
 
         internal string FormatFunctionExpression( FunctionExpression expr, int offset )

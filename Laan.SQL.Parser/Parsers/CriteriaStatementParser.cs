@@ -32,7 +32,7 @@ namespace Laan.SQL.Parser
 
         protected T _statement;
 
-        public CriteriaStatementParser( Tokenizer tokenizer ) : base( tokenizer ) { }
+        public CriteriaStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
 
         protected enum FieldType
         {

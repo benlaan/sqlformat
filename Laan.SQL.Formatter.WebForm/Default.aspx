@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="Laan.SQL.Formatter.Web.Formatter" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="Laan.SQL.Formatter.Web.Formatter" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>Laan SQL Formatter (alpha)</title>
     <link href="/Content/prettify.css" type="text/css" rel="stylesheet" />
@@ -10,7 +10,7 @@
     } 
 
     </style>
-    <script type="text/javascript" src="/Scripts/jquery-1.3.2.min-vsdoc.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery-1.3.2.min.js"></script>
     <script type="text/javascript" src="/Scripts/prettify.js"></script>
 
     <script type="text/javascript">
@@ -20,6 +20,11 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <div style="margin-top:10px; margin-bottom:10px; background-color:White; border-width: 1px">
+        <span>Want the code? <a href="http://code.google.com/p/sqlformat/source/browse">have a look</a></span>
+        <br/>
+        <span>Found a bug? <a href="http://code.google.com/p/sqlformat/issues/list">log it</a></span>
+    </div>
     <div>
         Input SQL
         <asp:TextBox class="code prettyprint lang-sql" ID="sqlInput" runat="server" style="width: 100%; height:180px" TextMode="MultiLine"></asp:TextBox>
@@ -34,5 +39,4 @@
 </ItemTemplate></asp:Repeater>     
         </pre>
     </div>
-
 </asp:Content>

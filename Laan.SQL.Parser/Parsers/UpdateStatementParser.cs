@@ -4,7 +4,7 @@ namespace Laan.SQL.Parser
 {
     public class UpdateStatementParser : CriteriaStatementParser<UpdateStatement>
     {
-        public UpdateStatementParser( Tokenizer tokenizer ) : base( tokenizer ) { }
+        public UpdateStatementParser( CustomTokenizer tokenizer ) : base( tokenizer ) { }
 
         public override IStatement Execute()
         {

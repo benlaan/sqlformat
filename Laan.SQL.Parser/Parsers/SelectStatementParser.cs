@@ -8,7 +8,7 @@ namespace Laan.SQL.Parser
     public class SelectStatementParser : CriteriaStatementParser<SelectStatement>
     {
 
-        public SelectStatementParser( Tokenizer tokenizer ) : base( tokenizer ) { }
+        public SelectStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
 
         private void ProcessDistinct()
         {

@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BracketStructure.cs" />
+    <Compile Include="CustomTokenizer.cs" />
     <Compile Include="Entities\AliasedEntities.cs" />
     <Compile Include="Entities\AlterTableStatement.cs" />
     <Compile Include="Entities\CustomStatement.cs" />
@@ -52,7 +53,7 @@
     <Compile Include="Interfaces\IProjection.cs" />
     <Compile Include="Interfaces\IStatement.cs" />
     <Compile Include="Entities\Join.cs" />
-    <Compile Include="Expressions\IdentifierListExpression.cs" />
+    <Compile Include="Expressions\ExpressionList.cs" />
     <Compile Include="Expressions\NegationExpression.cs" />
     <Compile Include="Expressions\NestedExpression.cs" />
     <Compile Include="Expressions\OperatorExpression.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Entities\SortedField.cs" />
     <Compile Include="Expressions\StringExpression.cs" />
     <Compile Include="Entities\UpdateStatement.cs" />
+    <Compile Include="ITokenizer.cs" />
     <Compile Include="Parsers\AlterTableStatementParser.cs" />
     <Compile Include="Entities\CreateIndex.cs" />
     <Compile Include="Parsers\CreateNonClusteredIndexParser.cs" />
@@ -88,6 +90,8 @@
     <Compile Include="Parsers\StatementParser.cs" />
     <Compile Include="Entities\Table.cs" />
     <Compile Include="Parsers\TableStatementParser.cs" />
+    <Compile Include="RegexTokenizer.cs" />
+    <Compile Include="SqlTokenizer.cs" />
     <Compile Include="Tokenizer.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@ namespace Laan.SQL.Parser
 {
     public class GrantParser : StatementParser
     {
-        public GrantParser( Tokenizer tokenizer ) : base( tokenizer )
+        public GrantParser( CustomTokenizer tokenizer ) : base( tokenizer )
         {
         }
 

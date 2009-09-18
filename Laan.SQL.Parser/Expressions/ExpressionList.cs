@@ -6,14 +6,14 @@ using System.Text;
 
 namespace Laan.SQL.Parser.Expressions
 {
-    public class IdentifierListExpression : Expression, IInlineFormattable
+    public class ExpressionList : Expression, IInlineFormattable
     {
-        public IdentifierListExpression() : base( null )
+        public ExpressionList() : base( null )
         {
-            Identifiers = new List<IdentifierExpression>();
+            Identifiers = new List<Expression>();
         }
 
-        public List<IdentifierExpression> Identifiers { get; set; }
+        public List<Expression> Identifiers { get; set; }
 
         public override string Value
         {
@@ -22,9 +22,9 @@ namespace Laan.SQL.Parser.Expressions
 
         #region IInlineFormattable Members
 
-        public bool CanInline
+        public override bool CanInline
         {
-            get { return true; }
+            get { return Value.Length < 80 && Identifiers.All( id => id.CanInline ); }
         }
 
         #endregion

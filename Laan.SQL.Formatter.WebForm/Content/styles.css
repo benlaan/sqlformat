@@ -6,7 +6,7 @@ color:#000;
 padding:1.5em;
 }
 
-#conteneur {
+#container {
 background-color:#fafafa;
 margin:1em 10%;
 min-width:60em;
@@ -14,7 +14,7 @@ position:absolute;
 width:80%;
 }
 
-#haut {
+#top {
 background-color:#202020;
 height:2.4em;
 max-height:2.4em;
@@ -30,7 +30,7 @@ padding-left:2em;
 padding-top:1em;
 }
 
-#pied {
+#footer {
 border:1px solid #202020;
 border-top:0;
 padding:0.5em;

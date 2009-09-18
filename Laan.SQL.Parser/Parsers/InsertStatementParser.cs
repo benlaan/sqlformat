@@ -16,7 +16,7 @@ namespace Laan.SQL.Parser
     //        | execute_statement    
     //      }
 
-        public InsertStatementParser( Tokenizer tokenizer ) : base( tokenizer ) { }
+        public InsertStatementParser( CustomTokenizer tokenizer ) : base( tokenizer ) { }
 
         private InsertStatement _statement;
 

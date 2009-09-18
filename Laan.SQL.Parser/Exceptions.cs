@@ -12,4 +12,12 @@ namespace Laan.SQL.Parser
     {
         public SyntaxException( string message ) : base( message ) { }
     }
+
+    public class UnknownTokenException : Exception
+    {
+        public UnknownTokenException( string message ) : base( "'" + message + "'" )
+        {
+
+        }
+    }
 }

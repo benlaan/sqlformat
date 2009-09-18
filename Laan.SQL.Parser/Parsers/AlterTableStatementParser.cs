@@ -13,7 +13,7 @@ namespace Laan.SQL.Parser
         private const string NONCLUSTERED = "NONCLUSTERED";
         private AlterTableStatement _statement;
 
-        internal AlterTableStatementParser( Tokenizer tokenizer ) : base( tokenizer ) { }
+        internal AlterTableStatementParser( CustomTokenizer tokenizer ) : base( tokenizer ) { }
 
         public override IStatement Execute()
         {

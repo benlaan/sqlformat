@@ -8,7 +8,7 @@ namespace Laan.SQL.Parser
 {
     public class CustomTokenizer : ITokenizer
     {
-        public bool IsNextToken( params string[] tokenSet )
+        public virtual bool IsNextToken( params string[] tokenSet )
         {
             foreach ( var token in tokenSet )
                 if ( token.ToLower() == Current.ToLower() )

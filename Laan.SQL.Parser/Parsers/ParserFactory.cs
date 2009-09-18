@@ -25,6 +25,11 @@ namespace Laan.SQL.Parser
             return Execute( sql ) as T;
         }
 
+        private static CustomTokenizer GetTokenizer( string sql )
+        {
+            return new SqlTokenizer( sql );
+        }
+
         /// <summary>
         /// This will parse any statement, and return only the interface (IStatement)
         /// </summary>
@@ -32,7 +37,7 @@ namespace Laan.SQL.Parser
         /// <returns></returns>
         public static IStatement Execute( string sql )
         {
-            Tokenizer _tokenizer = new Tokenizer( sql );
+            CustomTokenizer _tokenizer = GetTokenizer( sql );
             IStatement _statement = null;
 
             if ( ( String.IsNullOrEmpty( _tokenizer.Current ) ) )

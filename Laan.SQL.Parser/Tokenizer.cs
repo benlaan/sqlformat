@@ -23,9 +23,9 @@ namespace Laan.SQL.Parser
         public int Column { get; set; }
         public int Row { get; set; }
 
-        Tokenizer _tokenizer;
+        CustomTokenizer _tokenizer;
 
-        public Position( Tokenizer tokenizer )
+        public Position( CustomTokenizer tokenizer )
         {
             _tokenizer = tokenizer;
             Row = 1;
@@ -45,7 +45,7 @@ namespace Laan.SQL.Parser
         }
     }
 
-    public class Tokenizer
+    public class Tokenizer : CustomTokenizer
     {
         private const char SINGLE_QUOTE = '\'';
         private TokenizerRule _acceptSpacesRule;
@@ -78,7 +78,7 @@ namespace Laan.SQL.Parser
             // when no longer required, it should be removed to ensure that spaces aren't considered normal tokens
             _acceptSpacesRule = new TokenizerRule { StartOp = i => i == ' ', ContinueOp = _neverContinue };
 
-            _tokenizingRules = new TokenizerRule[] 
+            _tokenizingRules = new[] 
             { 
                 // within a quote, EVERYTHING is the same token
                 new TokenizerRule { StartOp = i => i == SINGLE_QUOTE,  ContinueOp = i => i != SINGLE_QUOTE, IncludeTerminalChar = true },
@@ -177,39 +177,15 @@ namespace Laan.SQL.Parser
             return read;
         }
 
-        public bool HasMoreTokens
+        public override bool HasMoreTokens
         {
             get { return _reader.Peek() != -1; }
-        }
-
-        public bool IsNextToken( params string[] tokenSet )
-        {
-            foreach ( var token in tokenSet )
-                if ( token.ToLower() == Current.ToLower() )
-                    return true;
-
-            return false;
-        }
-
-        /// <summary>
-        /// Utility (psuedo-function) to check that the current token equals the input parameter
-        /// if so, the current token is advanced
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public bool TokenEquals( string value )
-        {
-            bool areEqual = Current.ToLower() == value.ToLower();
-            if ( areEqual )
-                ReadNextToken();
-
-            return areEqual;
         }
 
         /// <summary>
         /// Consumes the input stream until the next token is found
         /// </summary>
-        public void ReadNextToken()
+        public override void ReadNextToken()
         {
             int readChar;
             string token = "";
@@ -233,7 +209,7 @@ namespace Laan.SQL.Parser
             _currentToken = token;
         }
 
-        public string Current
+        public override string Current
         {
             get { return _currentToken; }
         }
@@ -252,27 +228,6 @@ namespace Laan.SQL.Parser
                 else
                     _tokenizingRules.Remove( _acceptSpacesRule );
             }
-        }
-
-        public void ExpectToken( string token )
-        {
-            if ( Current.ToLower() != token.ToLower() )
-                throw new ExpectedTokenNotFoundException( token, Current, Position );
-            else
-                ReadNextToken();
-        }
-
-        public void ExpectTokens( string[] tokens )
-        {
-            foreach ( string token in tokens )
-                ExpectToken( token );
-        }
-
-        public Position Position { get; private set; }
-
-        public BracketStructure ExpectBrackets()
-        {
-            return new BracketStructure( this );
         }
     }
 }

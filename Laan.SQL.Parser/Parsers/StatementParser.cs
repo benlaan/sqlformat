@@ -42,7 +42,7 @@ namespace Laan.SQL.Parser
     public abstract class StatementParser : CustomParser
     {
 
-        public StatementParser( Tokenizer tokenizer ) : base ( tokenizer ) { }
+        public StatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
 
         protected string GetTableName()
         {

@@ -13,7 +13,7 @@ namespace Laan.SQL.Parser
 
     public class ExpressionParser : CustomParser
     {
-        public ExpressionParser( Tokenizer tokenizer ) : base( tokenizer ) { }
+        public ExpressionParser( ITokenizer tokenizer ) : base( tokenizer ) { }
 
         public Expression Execute()
         {
@@ -110,17 +110,17 @@ namespace Laan.SQL.Parser
                 using ( Tokenizer.ExpectBrackets() )
                 {
                     result = ReadCriteriaList( parent );
-                    if ( ( result is IdentifierExpression ) && Tokenizer.IsNextToken( Constants.Comma ) )
+                    if ( Tokenizer.IsNextToken( Constants.Comma ) )
                     {
-                        var list = new IdentifierListExpression();
-                        list.Identifiers.Add( result as IdentifierExpression );
+                        var list = new ExpressionList();
+                        list.Identifiers.Add( result );
                         
                         do
                         {
                             Tokenizer.ExpectToken( Constants.Comma );
 
                             result = ReadCriteriaList( parent );
-                            list.Identifiers.Add( result as IdentifierExpression );
+                            list.Identifiers.Add( result );
 
                         } while ( Tokenizer.IsNextToken( Constants.Comma ) );
 

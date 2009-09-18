@@ -7,7 +7,7 @@ namespace Laan.SQL.Parser
 {
     public abstract class CustomParser
     {
-        public CustomParser( Tokenizer tokenizer )
+        public CustomParser( ITokenizer tokenizer )
         {
             Tokenizer = tokenizer;
         }
@@ -36,7 +36,7 @@ namespace Laan.SQL.Parser
             get { return Tokenizer.Current; }
         }
 
-        protected Tokenizer Tokenizer { get; private set; }
+        protected ITokenizer Tokenizer { get; private set; }
 
         protected Expression ProcessExpression()
         {
@@ -72,7 +72,7 @@ namespace Laan.SQL.Parser
 
         protected string GetIdentifierUntilTerminated( string terminator )
         {
-            Tokenizer.AcceptSpaces = true;
+//            Tokenizer.AcceptSpaces = true;
             string token = "";
             try
             {
@@ -86,7 +86,7 @@ namespace Laan.SQL.Parser
             }
             finally
             {
-                Tokenizer.AcceptSpaces = false;
+//                Tokenizer.AcceptSpaces = false;
             }
             return token;
         }
