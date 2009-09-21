@@ -70,47 +70,16 @@ namespace Laan.SQL.Parser
             return expression;
         }
 
-        protected string GetIdentifierUntilTerminated( string terminator )
-        {
-//            Tokenizer.AcceptSpaces = true;
-            string token = "";
-            try
-            {
-                do
-                {
-                    token += CurrentToken;
-                    ReadNextToken();
-                }
-                while ( !Tokenizer.IsNextToken( terminator ) );
-
-            }
-            finally
-            {
-//                Tokenizer.AcceptSpaces = false;
-            }
-            return token;
-        }
-
         protected string GetIdentifier()
         {
-            string identifier = "";
-            if ( Tokenizer.TokenEquals( Constants.OpenSquareBracket ) )
-            {
-                identifier += Constants.OpenSquareBracket + GetIdentifierUntilTerminated( Constants.CloseSquareBracket ) + Constants.CloseSquareBracket;
-                Tokenizer.ExpectToken( Constants.CloseSquareBracket );
-            }
-            else
-            {
-                identifier = CurrentToken;
-                ReadNextToken();
-            }
+            string identifier = CurrentToken;
+            ReadNextToken();
             return identifier;
         }
 
         protected List<string> GetIdentifierList()
         {
             List<string> identifiers = new List<string>();
-
             do
             {
                 identifiers.Add( GetIdentifier() );

@@ -29,7 +29,7 @@ namespace Laan.NHibernate.Appender
                 string parameter = tokenizer.Current;
 
                 tokenizer.ReadNextToken();
-                tokenizer.ExpectToken( "=" );
+                tokenizer.ExpectToken( Constants.Assignment );
 
                 parameters.Add( parameter, tokenizer.Current );
                 tokenizer.ReadNextToken();

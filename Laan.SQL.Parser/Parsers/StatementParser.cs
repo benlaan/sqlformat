@@ -6,6 +6,7 @@ namespace Laan.SQL.Parser
     {
         public const string On = "ON";
         public const string Comma = ",";
+        public const string Assignment = "=";
         public const string OpenBracket = "(";
         public const string CloseBracket = ")";
         public const string OpenSquareBracket = "[";
