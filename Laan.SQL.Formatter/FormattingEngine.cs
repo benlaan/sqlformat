@@ -24,6 +24,7 @@ namespace Laan.SQL.Formatter
         /// </summary>
         public FormattingEngine()
         {
+            IndentStep = 0;
             TabSize = 4;
             UseTabChar = false;
 
@@ -44,8 +45,8 @@ namespace Laan.SQL.Formatter
 
             // this is a quick and dirty service locator that maps statements to formatters
             var formatterType = _formatters[ _statement.GetType() ];
-            
-            var formatter = Activator.CreateInstance( formatterType, indent, 0, outSql, _statement ) as IStatementFormatter;
+
+            var formatter = Activator.CreateInstance( formatterType, indent, IndentStep, outSql, _statement ) as IStatementFormatter;
 
             if ( formatter == null )
                 throw new Exception( "Formatter not implemented" );
@@ -54,6 +55,7 @@ namespace Laan.SQL.Formatter
             return outSql.ToString();
         }
 
+        public int IndentStep { get; set; }
         public int TabSize { get; set; }
         public bool UseTabChar { get; set; }
     }
