@@ -58,8 +58,8 @@ namespace Laan.SQL.Parser
             ProcessFields( FieldType.Select, _statement.Fields );
             ProcessFrom();
             ProcessWhere();
-            ProcessOrderBy();
             ProcessGroupBy();
+            ProcessOrderBy();
 
             return _statement;
         }

@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Laan.SQL.Parser;
 
 namespace Laan.SQL.Formatter
 {
@@ -10,7 +7,6 @@ namespace Laan.SQL.Formatter
     {
         public CustomFormatter()
         {
-            
         }
 
         protected string _indent;
