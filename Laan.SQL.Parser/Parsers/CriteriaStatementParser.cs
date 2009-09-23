@@ -73,15 +73,20 @@ namespace Laan.SQL.Parser
                     ReadNextToken();
                 }
                 else
+                {
                     if ( !Tokenizer.IsNextToken( FieldTerminatorSet ) )
                     {
-                        alias.Name = CurrentToken;
-                        alias.Type = AliasType.Implicit;
-                        expression = token;
-                        ReadNextToken();
+                        if ( Tokenizer.HasMoreTokens )
+                        {
+                            alias.Name = CurrentToken;
+                            alias.Type = AliasType.Implicit;
+                            ReadNextToken();
+                        }
+                        else
+                            alias.Type = AliasType.None;
                     }
-                    else
-                        expression = token;
+                    expression = token;
+                }
 
             return new Field { Expression = expression, Alias = alias };
         }
@@ -186,7 +191,13 @@ namespace Laan.SQL.Parser
                     }
                 else
                     table = new Table { Name = GetTableName() };
+
                 _statement.From.Add( table );
+
+                // if a new statement is initiated here, do not process the alias
+                if ( Tokenizer.IsNextToken( ";", "GO", "SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "ALTER", "UNION" ) )
+                    return;
+
                 Alias alias = new Alias( null );
                 if ( Tokenizer.IsNextToken( AS ) )
                 {
@@ -195,9 +206,18 @@ namespace Laan.SQL.Parser
                 }
                 if ( alias.Type != AliasType.Implicit || !Tokenizer.IsNextToken( FromTerminatorSet ) )
                 {
-                    alias.Name = CurrentToken;
-                    table.Alias = alias;
-                    ReadNextToken();
+                    if ( Tokenizer.HasMoreTokens)
+                     {
+                        if( !Tokenizer.Current.IsTypeIn( 
+                                TokenType.Alpha, TokenType.AlphaNumeric, TokenType.BlockedText, TokenType.QuotedText 
+                            ) 
+                        )
+                            throw new SyntaxException( String.Format( "Incorrect syntax near '{0}'", CurrentToken ) );
+                       
+                        alias.Name = CurrentToken;
+                        table.Alias = alias;
+                        ReadNextToken();
+                     }
                 }
             }
             while ( Tokenizer.TokenEquals( Constants.Comma ) );

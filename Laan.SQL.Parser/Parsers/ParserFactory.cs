@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Laan.SQL.Parser
 {
@@ -20,12 +22,13 @@ namespace Laan.SQL.Parser
         /// <typeparam name="T"></typeparam>
         /// <param name="sql"></param>
         /// <returns></returns>
-        public static T Execute<T>( string sql ) where T : class, IStatement
+        public static List<T> Execute<T>( string sql ) where T : class, IStatement
         {
-            return Execute( sql ) as T;
+            List<IStatement> list = Execute( sql );
+            return list.Cast<T>().ToList<T>();
         }
 
-        private static CustomTokenizer GetTokenizer( string sql )
+        private static ITokenizer GetTokenizer( string sql )
         {
             return new SqlTokenizer( sql );
         }
@@ -35,12 +38,12 @@ namespace Laan.SQL.Parser
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        public static IStatement Execute( string sql )
+        public static List<IStatement> Execute( string sql )
         {
-            CustomTokenizer _tokenizer = GetTokenizer( sql );
-            IStatement _statement = null;
-
-            if ( ( String.IsNullOrEmpty( _tokenizer.Current ) ) )
+            var result = new List<IStatement>();
+            ITokenizer _tokenizer = GetTokenizer( sql );
+    
+            if ( _tokenizer.Current == (Token)null )
                 _tokenizer.ReadNextToken();
 
             while ( _tokenizer.HasMoreTokens )
@@ -80,18 +83,15 @@ namespace Laan.SQL.Parser
                 //else if ( _tokenizer.TokenEquals( DELETE ) )
                 //    parser = new DeleteStatementParser( _tokenizer );
 
-                if ( parser == null && _tokenizer.Current != null )
+                if ( parser == null && _tokenizer.Current != (Token) null )
                     throw new NotImplementedException(
-                        "No parser exists for statement type: " + _tokenizer.Current
+                        "No parser exists for statement type: " + _tokenizer.Current.Value
                     );
 
-                if ( _tokenizer.Current != null )
-                    _statement = parser.Execute();
-
-                _tokenizer.ReadNextToken();
+                result.Add( parser.Execute() );
             }
 
-            return _statement;
+            return result;
         }
     }
 }

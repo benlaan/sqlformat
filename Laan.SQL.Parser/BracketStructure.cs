@@ -4,9 +4,9 @@ namespace Laan.SQL.Parser
 {
     public class BracketStructure : IDisposable
     {
-        private CustomTokenizer _tokenizer;
+        private ITokenizer _tokenizer;
 
-        public BracketStructure( CustomTokenizer tokenizer )
+        public BracketStructure( ITokenizer tokenizer )
         {
             _tokenizer = tokenizer;
             _tokenizer.ExpectToken( Constants.OpenBracket );

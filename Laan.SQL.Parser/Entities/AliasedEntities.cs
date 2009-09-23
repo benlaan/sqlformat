@@ -15,7 +15,7 @@ namespace Laan.SQL.Parser
         public Alias Alias { get; set; }
     }
 
-    public enum AliasType { Implicit, As, Equals }
+    public enum AliasType { None, Implicit, As, Equals }
 
     public class Alias : Expression
     {

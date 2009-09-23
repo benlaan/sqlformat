@@ -9,6 +9,6 @@ namespace Laan.SQL.Parser
         protected const string KEY = "KEY";
         protected const string CLUSTERED = "CLUSTERED";
 
-        internal TableStatementParser( CustomTokenizer tokenizer ) : base( tokenizer ) { }
+        internal TableStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
     }
 }

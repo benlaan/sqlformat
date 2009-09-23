@@ -8,7 +8,7 @@ namespace Laan.SQL.Parser
         private const string SELECT = "SELECT";
         CreateViewStatement _statement;
 
-        internal CreateViewStatementParser( CustomTokenizer tokenizer ) : base( tokenizer )
+        internal CreateViewStatementParser( ITokenizer tokenizer ) : base( tokenizer )
         {
         }
 

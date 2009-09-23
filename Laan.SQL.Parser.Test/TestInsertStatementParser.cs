@@ -14,7 +14,7 @@ namespace Laan.SQLParser.Test
         public void Test_Basic_Insert_Statement()
         {
             // Exercise
-            InsertStatement statement = ParserFactory.Execute<InsertStatement>( "insert into table values (1, 'A')" );
+            InsertStatement statement = ParserFactory.Execute<InsertStatement>( "insert into table values (1, 'A')" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -33,8 +33,8 @@ namespace Laan.SQLParser.Test
             // Exercise
             InsertStatement statement = ParserFactory.Execute<InsertStatement>( @"
 
-                insert into table ( field1, field2 ) values (1, 'A')" 
-            );
+                insert into table ( field1, field2 ) values (1, 'A')"
+            ).First(); ;
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -55,7 +55,7 @@ namespace Laan.SQLParser.Test
         public void Test_Insert_Statement_With_Select_Statement()
         {
             // Exercise
-            InsertStatement statement = ParserFactory.Execute<InsertStatement>( "insert into table select a from source" );
+            InsertStatement statement = ParserFactory.Execute<InsertStatement>( "insert into table select a from source" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -74,7 +74,7 @@ namespace Laan.SQLParser.Test
             InsertStatement statement = ParserFactory.Execute<InsertStatement>( @"
 
                 insert into table values (1, 'A'), (2, 'B'), (3, 'C')"
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );

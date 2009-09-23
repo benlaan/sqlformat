@@ -20,7 +20,7 @@ namespace Laan.SQL.Parser.Test
 
                 CREATE NONCLUSTERED INDEX [_TransactionID] ON [dbo].[Transactions] (ID1, ID2, ID3)
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -42,7 +42,7 @@ namespace Laan.SQL.Parser.Test
 
                 CREATE NONCLUSTERED INDEX [_TransactionID] ON [dbo].[Transactions] (ID1 DESC, ID2, ID3 DESC)
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -70,7 +70,7 @@ namespace Laan.SQL.Parser.Test
                 CREATE NONCLUSTERED INDEX [IX_Weights_ByTransaction] 
                                        ON [dbo].[Weights] ([Type],[TransactionID],[IsCancelled])
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -95,7 +95,7 @@ namespace Laan.SQL.Parser.Test
 
                 CREATE CLUSTERED INDEX IX_TransactionID ON dbo.Transactions ([ID1])
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -115,7 +115,7 @@ namespace Laan.SQL.Parser.Test
 
                 CREATE UNIQUE CLUSTERED INDEX IX_TransactionID ON dbo.Transactions ([ID1])
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );

@@ -4,7 +4,7 @@ namespace Laan.SQL.Parser
 {
     public class GrantParser : StatementParser
     {
-        public GrantParser( CustomTokenizer tokenizer ) : base( tokenizer )
+        public GrantParser( ITokenizer tokenizer ) : base( tokenizer )
         {
         }
 
@@ -14,7 +14,7 @@ namespace Laan.SQL.Parser
 
             if ( Tokenizer.IsNextToken( Constants.Select, Constants.Insert, Constants.Update, Constants.Delete, Constants.All ) )
             {
-                string token = Tokenizer.Current;
+                string token = Tokenizer.Current.Value;
                 ReadNextToken();
                 statement.Operation = token;
             }

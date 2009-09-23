@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+using System.Diagnostics;
 
 namespace Laan.SQL.Parser
 {
@@ -11,7 +8,7 @@ namespace Laan.SQL.Parser
         public virtual bool IsNextToken( params string[] tokenSet )
         {
             foreach ( var token in tokenSet )
-                if ( token.ToLower() == Current.ToLower() )
+                if ( Current == token  )
                     return true;
 
             return false;
@@ -25,7 +22,7 @@ namespace Laan.SQL.Parser
         /// <returns></returns>
         public bool TokenEquals( string value )
         {
-            bool areEqual = Current.ToLower() == value.ToLower();
+            bool areEqual = Current == value;
             if ( areEqual )
                 ReadNextToken();
 
@@ -37,15 +34,15 @@ namespace Laan.SQL.Parser
             // do nothing
         }
 
-        public virtual string Current
+        public virtual Token Current
         {
-            get { return ""; }
+            get { return new Token(); }
         }
 
         public void ExpectToken( string token )
         {
-            if ( Current.ToLower() != token.ToLower() )
-                throw new ExpectedTokenNotFoundException( token, Current, Position );
+            if ( Current != token )
+                throw new ExpectedTokenNotFoundException( token, Current.Value, Position );
             else
                 ReadNextToken();
         }

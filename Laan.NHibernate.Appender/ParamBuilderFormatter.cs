@@ -22,16 +22,16 @@ namespace Laan.NHibernate.Appender
         private string UpdateParamsWithValues( string sql, string paramList )
         {
             var parameters = new Dictionary<string, string>();
-            Tokenizer tokenizer = new Tokenizer( paramList );
+            ITokenizer tokenizer = new SqlTokenizer( paramList );
             tokenizer.ReadNextToken();
             do
             {
-                string parameter = tokenizer.Current;
+                string parameter = tokenizer.Current.Value;
 
                 tokenizer.ReadNextToken();
                 tokenizer.ExpectToken( Constants.Assignment );
 
-                parameters.Add( parameter, tokenizer.Current );
+                parameters.Add( parameter, tokenizer.Current.Value );
                 tokenizer.ReadNextToken();
             } 
             while ( tokenizer.TokenEquals( Constants.Comma ) );

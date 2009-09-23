@@ -19,7 +19,7 @@ namespace Laan.SQL.Parser.Test
                 alter table [dbo].[Test] 
                         add constraint [PK_Test] primary key clustered ( [id] )
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -35,7 +35,7 @@ namespace Laan.SQL.Parser.Test
                 alter table [dbo].[Test] with nocheck
                         add constraint [PK_Test] primary key clustered ( [id] )
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -52,7 +52,7 @@ namespace Laan.SQL.Parser.Test
                         add constraint [PK_Test] 
                         primary key clustered ( [id1],id2, id3, [Hello World] )
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -73,7 +73,7 @@ namespace Laan.SQL.Parser.Test
                 alter table [dbo].[Test] 
                 add constraint [fk_test] foreign key ([otherID]) references [dbo].[OtherTable] ([id])
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -89,7 +89,7 @@ namespace Laan.SQL.Parser.Test
                 ALTER TABLE [dbo].[Computers] 
                         ADD CONSTRAINT [IX_Computers] UNIQUE NONCLUSTERED ([MachineName])
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );

@@ -25,8 +25,9 @@ namespace Laan.SQL.Parser.Test
                 Assert.IsTrue( tokenizer.HasMoreTokens );
                 tokenizer.ReadNextToken();
 
-                Assert.AreEqual( token, tokenizer.Current );
+                Assert.AreEqual( token, tokenizer.Current.Value );
             }
+            tokenizer.ReadNextToken();
             Assert.IsFalse( tokenizer.HasMoreTokens );
         }
 
@@ -118,8 +119,9 @@ namespace Laan.SQL.Parser.Test
                 Assert.IsTrue( tokenizer.HasMoreTokens );
                 tokenizer.ReadNextToken();
 
-                Assert.AreEqual( token, tokenizer.Current );
+                Assert.AreEqual( token, tokenizer.Current.Value );
             }
+            tokenizer.ReadNextToken();
             Assert.IsFalse( tokenizer.HasMoreTokens );
         }
     }

@@ -4,7 +4,7 @@ namespace Laan.SQL.Parser
 {
     public class UpdateStatementParser : CriteriaStatementParser<UpdateStatement>
     {
-        public UpdateStatementParser( CustomTokenizer tokenizer ) : base( tokenizer ) { }
+        public UpdateStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
 
         public override IStatement Execute()
         {
@@ -16,7 +16,7 @@ namespace Laan.SQL.Parser
                 using ( Tokenizer.ExpectBrackets() )
                 {
                     int top;
-                    if ( Int32.TryParse( Tokenizer.Current, out top ) )
+                    if ( Int32.TryParse( Tokenizer.Current.Value, out top ) )
                     {
                         _statement.Top = top;
                         Tokenizer.ReadNextToken();

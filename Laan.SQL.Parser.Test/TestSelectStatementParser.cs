@@ -17,14 +17,14 @@ namespace Laan.SQL.Parser.Test
         public void TestNoParserException()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "merge from table" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "merge from table" ).First();
         }
 
         [Test]
         public void Select_StarField_Only()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from dbo.table" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from dbo.table" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -35,18 +35,26 @@ namespace Laan.SQL.Parser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( ExpectedTokenNotFoundException ), Message = "Expected: BY, found: field" )]
+        [ExpectedException( typeof( ExpectedTokenNotFoundException ), Message = "Expected: 'BY' but found: 'field'" )]
         public void TestExpectedError()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table order field" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table order field" ).First();
+        }
+
+        [Test]
+        [ExpectedException( typeof( SyntaxException ), Message = "Identifier expected" )]
+        public void Should_Fail_With_ExpectedSyntaxError_When_Using_Reserved_Word_As_Alias()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table select" ).First();
         }
 
         [Test]
         public void Select_Top_10_StarField()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select top 10 * from table" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select top 10 * from table" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -61,7 +69,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_Top_Missing_Top_Param_StarField()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select top * from table" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select top * from table" ).First();
         }
 
 
@@ -69,7 +77,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_Without_Alias_And_Where_Clause()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select fielda from table where a > 1" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select fielda from table where a > 1" ).First();
             // Verify outcome
             Assert.IsNotNull( statement );
             Assert.AreEqual( 1, statement.Fields.Count );
@@ -82,7 +90,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_Distinct_Top_10_StarField()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select distinct top 10 * from table" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select distinct top 10 * from table" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -97,7 +105,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_Multiple_Fields()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select fielda, field2, fie3ld from table" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select fielda, field2, fie3ld from table" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -115,7 +123,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Aliased_Table_With_As()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table as t" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table as t" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -129,7 +137,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Aliased_Table_Without_As()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table t" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table t" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -143,7 +151,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Two_Aliased_Table_With_As()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table1 as t1, table2 as t2" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table1 as t1, table2 as t2" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -158,7 +166,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Two_Aliased_Table_Without_As()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table1 t1, table2 t2 " );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select * from table1 t1, table2 t2 " ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -173,7 +181,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_Multiple_Fields_With_Aliases()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select field, fielda a, field2 as b, alias = fie3ld from table" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select field, fielda a, field2 as b, alias = fie3ld from table" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -199,7 +207,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_Multiple_Fields_With_Table_Alias_Prefix()
         {
             // Exercise
-            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select t1.fielda, t1.field2, SomeDb.dbo.fie3ld from table as t1" );
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select t1.fielda, t1.field2, SomeDb.dbo.fie3ld from table as t1" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -230,7 +238,7 @@ namespace Laan.SQL.Parser.Test
                 join table2 as t2
                   on t1.field1 = t2.field2
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -285,7 +293,7 @@ namespace Laan.SQL.Parser.Test
                 join table2 as t2 
                   on (t1.field1 + 150) / 12 = ( t2.field2 + t1.fielda )
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -346,7 +354,7 @@ namespace Laan.SQL.Parser.Test
                 join table2 as t2 
                   on (t1.field1 = t2.fielda )
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -388,7 +396,7 @@ namespace Laan.SQL.Parser.Test
                 from table1 t1
                 where t1.fieldb = (select top 1 Name from table)
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -413,7 +421,7 @@ namespace Laan.SQL.Parser.Test
                 where t1.fieldb = t1.fieldc
                   and t1.fieldd = 0
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -442,7 +450,7 @@ namespace Laan.SQL.Parser.Test
                 from table1 t1
                 where ( t1.fieldd = 0 or t1.fieldc < 10 )
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -476,7 +484,7 @@ namespace Laan.SQL.Parser.Test
                 where ( t1.fieldd = 0 or t1.fieldc < 10 )
                   and ( ( select top 1 field from table1 ) = ( select top 1 fieldb from table2 ) )
                 "
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -488,7 +496,7 @@ namespace Laan.SQL.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
                 select * from (select field from table x) as t
-            " );
+            " ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -508,7 +516,7 @@ namespace Laan.SQL.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
                 select * from table order by field1 desc, field2 asc
-            " );
+            " ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -525,7 +533,7 @@ namespace Laan.SQL.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
                 select * from table group by field1, field2
-            " );
+            " ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -540,7 +548,7 @@ namespace Laan.SQL.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
                 select * from table group by field1, field2 having sum( field2 ) > 0
-            " );
+            " ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -570,7 +578,7 @@ namespace Laan.SQL.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>( @"
                 select * from table t join ( select field from other o ) as o1 on o.a = t.a
-            " );
+            " ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );

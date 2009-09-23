@@ -16,7 +16,7 @@ namespace Laan.SQLParser.Test
         public void Test_Basic_Update_Statement()
         {
             // Exercise
-            UpdateStatement statement = ParserFactory.Execute<UpdateStatement>( "update dbo.table set field = 1" );
+            UpdateStatement statement = ParserFactory.Execute<UpdateStatement>( "update dbo.table set field = 1" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -30,7 +30,7 @@ namespace Laan.SQLParser.Test
         public void Test_Update_Statement_With_Where_Clause()
         {
             // Exercise
-            UpdateStatement statement = ParserFactory.Execute<UpdateStatement>( "update dbo.table set field = 1 where field <> 2" );
+            UpdateStatement statement = ParserFactory.Execute<UpdateStatement>( "update dbo.table set field = 1 where field <> 2" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -53,8 +53,8 @@ namespace Laan.SQLParser.Test
         {
             // Exercise
             UpdateStatement statement = ParserFactory.Execute<UpdateStatement>( 
-                @"update t set field = 1 from dbo.table as t where field <> 2" 
-            );
+                @"update t set field = 1 from dbo.table as t where field <> 2"
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -82,7 +82,7 @@ namespace Laan.SQLParser.Test
             // Exercise
             UpdateStatement statement = ParserFactory.Execute<UpdateStatement>(
                 @"update t set field = 1 from dbo.table as t join dbo.other o on o.id = a.id where field <> 2"
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -115,7 +115,7 @@ namespace Laan.SQLParser.Test
             // Exercise
             UpdateStatement statement = ParserFactory.Execute<UpdateStatement>(
                 @"update top (10) t set field = 1 from dbo.table as t"
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -138,7 +138,7 @@ namespace Laan.SQLParser.Test
             // Exercise
             UpdateStatement statement = ParserFactory.Execute<UpdateStatement>(
                 @"update top () t set field = 1 from dbo.table as t join dbo.other o on o.id = a.id where field <> 2"
-            );
+            ).First();
         }
     }
 }

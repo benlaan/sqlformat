@@ -17,7 +17,6 @@ namespace Laan.SQL.Formatter
     public class FormattingEngine : IFormattingEngine
     {
         private Dictionary<Type, Type> _formatters;
-        private IStatement _statement;
 
         /// <summary>
         /// Initializes a new instance of the FormattingEngine class.
@@ -41,17 +40,24 @@ namespace Laan.SQL.Formatter
             string indent = UseTabChar ? "\t" : new string( ' ', TabSize );
 
             var outSql = new StringBuilder();
-            _statement = ParserFactory.Execute( sql );
 
-            // this is a quick and dirty service locator that maps statements to formatters
-            var formatterType = _formatters[ _statement.GetType() ];
+            List<IStatement> statements = ParserFactory.Execute( sql );
+            foreach ( IStatement statement in statements )
+            {
 
-            var formatter = Activator.CreateInstance( formatterType, indent, IndentStep, outSql, _statement ) as IStatementFormatter;
+                // this is a quick and dirty service locator that maps statements to formatters
+                var formatterType = _formatters[ statement.GetType() ];
 
-            if ( formatter == null )
-                throw new Exception( "Formatter not implemented" );
+                var formatter = Activator.CreateInstance( formatterType, indent, IndentStep, outSql, statement ) as IStatementFormatter;
 
-            formatter.Execute();
+                if ( formatter == null )
+                    throw new Exception( "Formatter not implemented" );
+
+                formatter.Execute();
+
+                if ( statement != statements.Last() )
+                    outSql.AppendLine( "\n" );
+            }
             return outSql.ToString();
         }
 

@@ -33,7 +33,7 @@ namespace Laan.SQL.Parser
 
         protected string CurrentToken
         {
-            get { return Tokenizer.Current; }
+            get { return Tokenizer.Current.Value; }
         }
 
         protected ITokenizer Tokenizer { get; private set; }
@@ -48,7 +48,7 @@ namespace Laan.SQL.Parser
         {
             if ( Tokenizer.IsNextToken( "=", ">=", "<=", "!=", "<>", "IN", "ANY", "LIKE" ) )
             {
-                string token = Tokenizer.Current;
+                string token = Tokenizer.Current.Value;
                 ReadNextToken();
                 return token;
             }
@@ -72,6 +72,9 @@ namespace Laan.SQL.Parser
 
         protected string GetIdentifier()
         {
+            if ( !Tokenizer.HasMoreTokens )
+                throw new SyntaxException( "Identifier expected" );
+
             string identifier = CurrentToken;
             ReadNextToken();
             return identifier;
@@ -93,6 +96,7 @@ namespace Laan.SQL.Parser
         {
             string token;
             token = "";
+            
             do
             {
                 token += ( token != "" ? Constants.Dot : "" ) + GetIdentifier();

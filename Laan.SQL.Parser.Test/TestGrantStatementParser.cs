@@ -19,7 +19,7 @@ namespace Laan.SQLParser.Test
             // Exercise
             var statement = ParserFactory.Execute<GrantStatement>(
                 String.Format( "GRANT {0} ON [dbo].[SomeTable] TO [SomeUser]", operation )
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );

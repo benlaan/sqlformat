@@ -16,7 +16,7 @@ namespace Laan.SQL.Parser
 
         CreateTableStatement _statement;
 
-        internal CreateTableStatementParser( CustomTokenizer tokenizer )
+        internal CreateTableStatementParser( ITokenizer tokenizer )
             : base( tokenizer )
         {
         }

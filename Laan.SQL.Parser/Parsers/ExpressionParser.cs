@@ -154,9 +154,9 @@ namespace Laan.SQL.Parser
 
                 string token;
 
-                if ( Tokenizer.Current.StartsWith( Constants.Quote ) && Tokenizer.Current.EndsWith( Constants.Quote ) )
+                if ( Tokenizer.HasMoreTokens && Tokenizer.Current.Type == TokenType.QuotedText ) // StartsWith( Constants.Quote ) && Tokenizer.Current.EndsWith( Constants.Quote ) )
                 {
-                    token = Tokenizer.Current;
+                    token = Tokenizer.Current.Value;
                     ReadNextToken();
                     return new StringExpression( token, parent );
                 }

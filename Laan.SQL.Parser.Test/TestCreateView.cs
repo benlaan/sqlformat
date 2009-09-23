@@ -13,19 +13,19 @@ namespace Laan.SQL.Parser.Test
     public class TestCreateView
     {
         [Test]
-        [ExpectedException( typeof( NotImplementedException ), Message = "No parser exists for that statement type: merge" )]
+        [ExpectedException( typeof( NotImplementedException ), Message = "No parser exists for statement type: merge" )]
         public void TestNoParserException()
         {
             //TODO: needs to be moved into a ParserFactory specific unit test
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "merge from table" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "merge from table" ).First(); ;
         }
 
         [Test]
         public void Select_StarField_Only()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table" ).First(); ;
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
@@ -41,7 +41,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_Top_10_StarField()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select top 10 * from table" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select top 10 * from table" ).First(); ;
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
@@ -58,14 +58,14 @@ namespace Laan.SQL.Parser.Test
         public void Select_Top_Missing_Top_Param_StarField()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select top * from table" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select top * from table" ).First();
         }
 
         [Test]
         public void Select_Distinct_Top_10_StarField()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select distinct top 10 * from table" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select distinct top 10 * from table" ).First();
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
@@ -82,7 +82,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_Multiple_Fields()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select fielda, field2, fie3ld from table" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select fielda, field2, fie3ld from table" ).First();
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
@@ -102,7 +102,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Aliased_Table_With_As()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table as t" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table as t" ).First();
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
@@ -117,7 +117,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Aliased_Table_Without_As()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table t" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table t" ).First();
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
@@ -132,7 +132,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Two_Aliased_Table_With_As()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table1 as t1, table2 as t2" );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table1 as t1, table2 as t2" ).First();
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
@@ -149,7 +149,7 @@ namespace Laan.SQL.Parser.Test
         public void Select_With_Two_Aliased_Table_Without_As()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table1 t1, table2 t2 " );
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select * from table1 t1, table2 t2 " ).First();
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
@@ -168,8 +168,9 @@ namespace Laan.SQL.Parser.Test
         {
             // Exercise
             CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( 
-                "create view v1 as select field, fielda a, field2 as b, alias = fie3ld from table" 
-            );
+                "create view v1 as select field, fielda a, field2 as b, alias = fie3ld from table"
+            ).First();
+
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome
@@ -221,7 +222,7 @@ namespace Laan.SQL.Parser.Test
                     FROM Table1 T1 
                     JOIN Table2 T2 
                       ON T1.Field1 = T2.Field2"
-            );
+            ).First();
             SelectStatement statement = sut.SelectBlock;
 
             // Verify outcome

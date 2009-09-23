@@ -31,11 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gallio, Version=3.0.6.721, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+    <Reference Include="Gallio, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\Gallio.dll</HintPath>
     </Reference>
-    <Reference Include="MbUnit, Version=3.0.6.721, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+    <Reference Include="MbUnit, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\MbUnit.dll</HintPath>
     </Reference>
@@ -45,6 +45,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestBatchStatements.cs" />
+    <Compile Include="TestTokens.cs" />
     <Compile Include="TestUpdateStatementParser.cs" />
     <Compile Include="TestExpressionParser.cs" />
     <Compile Include="TestCreateNonClusteredIndex.cs" />

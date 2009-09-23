@@ -13,7 +13,7 @@ namespace Laan.SQL.Parser
 
         bool TokenEquals( string value );
         void ReadNextToken();
-        string Current { get; }
+        Token Current { get; }
         void ExpectToken( string token );
         void ExpectTokens( string[] tokens );
         Position Position { get; }

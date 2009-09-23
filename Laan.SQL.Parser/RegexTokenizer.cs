@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace Laan.SQL.Parser
 {
@@ -41,10 +42,11 @@ namespace Laan.SQL.Parser
         }
     }
 
+    [DebuggerDisplay( "Current: {Current} Position: {Position} [{HasMoreTokens ? \"Y\" : \"N\"}]" )]
     public abstract class RegexTokenizer : CustomTokenizer, IDisposable
     {
         private TextReader _reader;
-        private string _currentContents;
+        private Token _current;
 
         public RegexTokenizer( string input )
         {
@@ -72,12 +74,10 @@ namespace Laan.SQL.Parser
         /// <returns></returns>
         private int MatchCount( string token, out TokenDefinition definition )
         {
-            var matches = TokenDefinitions
-                .Where( 
-                    t => t.Regex.Matches( token )
-                        .Cast<Match>()
-                        .Any( m => m.Value == token ) 
-                        );
+            var matches = TokenDefinitions.Where(
+                tokenDefinition => 
+                    tokenDefinition.Regex.Matches( token ).Cast<Match>().Any( match => match.Value == token )
+            );
 
             definition = matches.FirstOrDefault();
             return matches.Count();
@@ -85,7 +85,7 @@ namespace Laan.SQL.Parser
 
         public override void ReadNextToken()
         {
-            _currentContents = "";
+            _current = null;
             var current = new StringBuilder();
             TokenDefinition definition;
             TokenDefinition last;
@@ -117,23 +117,23 @@ namespace Laan.SQL.Parser
                     return;
                 }
 
-                // if we get here, we either havea  good token, or the token is not recognised
+                // if we get here, we either have a good token, or the token is not recognised
                 if ( MatchCount( current.ToString(), out definition ) == 0 )
                     throw new UnknownTokenException( current.ToString() );
 
-                _currentContents = current.ToString();
+                _current = new Token( current.ToString(), last.Type );
                 return;
             }
         }
 
-        public override string Current
+        public override Token Current
         {
-            get { return _currentContents; }
+            get { return _current; }
         }
 
         public override bool HasMoreTokens
         {
-            get { return _reader.Peek() != -1; }
+            get { return _reader.Peek() != -1 || Current != (Token)null; }
         }
 
         public List<TokenDefinition> TokenDefinitions { get; set; }

@@ -14,7 +14,7 @@ namespace Laan.SQL.Parser.Test
         public void Test_One_Int_Column()
         {
             // Exercise
-            var statement = ParserFactory.Execute<CreateTableStatement>( "create table Test ( id int )" );
+            var statement = ParserFactory.Execute<CreateTableStatement>( "create table Test ( id int )" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -28,7 +28,7 @@ namespace Laan.SQL.Parser.Test
         public void Test_One_Column_With_Owned_Table_Name()
         {
             // Exercise
-            var statement = ParserFactory.Execute<CreateTableStatement>( "create table dbo.Test ( id int )" );
+            var statement = ParserFactory.Execute<CreateTableStatement>( "create table dbo.Test ( id int )" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -42,7 +42,7 @@ namespace Laan.SQL.Parser.Test
         public void Test_One_Column_With_Multi_Scope_Table_Name()
         {
             // Exercise
-            var statement = ParserFactory.Execute<CreateTableStatement>( "create table SomeDatabase.dbo.Schema.Test ( id int )" );
+            var statement = ParserFactory.Execute<CreateTableStatement>( "create table SomeDatabase.dbo.Schema.Test ( id int )" ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -64,7 +64,7 @@ namespace Laan.SQL.Parser.Test
                     id2 int, 
                     id3 int 
                 )"
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -90,7 +90,7 @@ namespace Laan.SQL.Parser.Test
                     id2 int, 
                     [id3] int 
                 )"
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -118,8 +118,8 @@ namespace Laan.SQL.Parser.Test
                     id1 int primary key, 
                     id2 int null, 
                     id3 int not null 
-                )" 
-            );
+                )"
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -149,7 +149,7 @@ namespace Laan.SQL.Parser.Test
                     id5 [decimal](25, 3) null,
                     id6 varchar(max) null
                 )"
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -183,7 +183,7 @@ namespace Laan.SQL.Parser.Test
             
                     constraint [PK_Name] primary key clustered ( [id1] ASC )
                 )"
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -211,7 +211,7 @@ namespace Laan.SQL.Parser.Test
                     id1 [int] IDENTITY(100, 1) NOT NULL,
                     id2 varchar(10)
                 )"
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -247,7 +247,7 @@ namespace Laan.SQL.Parser.Test
                     id1 [int] NOT NULL IDENTITY(100, 1),
                     id2 varchar(10)
                 )"
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -283,7 +283,7 @@ namespace Laan.SQL.Parser.Test
                     id1 int,
                     id2 varchar(10) collate Latin1_General_CI_AS null
                 )"
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -316,7 +316,7 @@ namespace Laan.SQL.Parser.Test
                     id2 bit,
                     id3 varchar(10) not null constraint [Name] default ((1))
                 )"
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -359,7 +359,7 @@ namespace Laan.SQL.Parser.Test
                     id5 varchar(10) not null default (newid())
 
                 )"
-            );
+            ).First();
 
             // Verify outcome
             Assert.IsNotNull( statement );
@@ -431,7 +431,7 @@ namespace Laan.SQL.Parser.Test
                 [ReceiverLongName] [nchar] (255) COLLATE Latin1_General_CI_AS NULL
                 )
                 "
-            );
+            ).First();
 
             // Exercise
 
