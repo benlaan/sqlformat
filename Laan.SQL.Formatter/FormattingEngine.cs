@@ -30,8 +30,10 @@ namespace Laan.SQL.Formatter
             _formatters = new Dictionary<Type, Type>
             {
                 { typeof( SelectStatement ), typeof( SelectStatementFormatter ) },
+                { typeof( UpdateStatement ), typeof( UpdateStatementFormatter ) },
+                { typeof( DeleteStatement ), typeof( DeleteStatementFormatter ) },
+                { typeof( GoTerminator ), typeof( GoTerminatorFormatter ) },
 //                { typeof( CreateTableStatement ), typeof( CreateTableStatementFormatter ) }
-//                { typeof( UpdateStatement ), typeof( UpdateStatementFormatter ) }
             };
         }
 
@@ -46,13 +48,14 @@ namespace Laan.SQL.Formatter
             {
 
                 // this is a quick and dirty service locator that maps statements to formatters
-                var formatterType = _formatters[ statement.GetType() ];
+                Type formatterType;
+                if ( !_formatters.TryGetValue( statement.GetType(), out formatterType ) ) 
+                    throw new Exception( "Formatter not implemented for statement: " + statement.GetType().Name );
 
                 var formatter = Activator.CreateInstance( formatterType, indent, IndentStep, outSql, statement ) as IStatementFormatter;
 
                 if ( formatter == null )
-                    throw new Exception( "Formatter not implemented" );
-
+                    throw new Exception( "Formatter not instantiated: " + formatterType.Name );
                 formatter.Execute();
 
                 if ( statement != statements.Last() )

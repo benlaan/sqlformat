@@ -2,13 +2,13 @@ using System;
 
 namespace Laan.SQL.Parser
 {
-    public class UpdateStatementParser : CriteriaStatementParser<UpdateStatement>
+    public class DeleteStatementParser : CriteriaStatementParser<DeleteStatement>
     {
-        public UpdateStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
+        public DeleteStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
 
-        public override UpdateStatement Execute()
+        public override DeleteStatement Execute()
         {
-            _statement = new UpdateStatement();
+            _statement = new DeleteStatement();
 
             if ( Tokenizer.IsNextToken( Constants.Top ) )
             {
@@ -26,11 +26,9 @@ namespace Laan.SQL.Parser
                 }
             }
 
-            _statement.TableName = GetTableName();
+            if ( !Tokenizer.IsNextToken( Constants.From ) )
+                _statement.TableName = GetTableName();
 
-            Tokenizer.ExpectToken( Constants.Set );
-
-            ProcessFields( FieldType.Update, _statement.Fields );
             ProcessFrom();
             ProcessWhere();
             ProcessTerminator();

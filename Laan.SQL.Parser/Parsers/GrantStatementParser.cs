@@ -2,13 +2,13 @@ using System;
 
 namespace Laan.SQL.Parser
 {
-    public class GrantParser : StatementParser
+    public class GrantStatementParser : StatementParser<GrantStatement>
     {
-        public GrantParser( ITokenizer tokenizer ) : base( tokenizer )
+        public GrantStatementParser( ITokenizer tokenizer ) : base( tokenizer )
         {
         }
 
-        public override IStatement Execute()
+        public override GrantStatement Execute()
         {
             GrantStatement statement = new GrantStatement();
 

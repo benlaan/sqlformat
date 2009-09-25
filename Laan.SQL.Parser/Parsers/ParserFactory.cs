@@ -4,16 +4,38 @@ using System.Linq;
 
 namespace Laan.SQL.Parser
 {
+    public class GoTerminatorParser : StatementParser<GoTerminator>
+    {
+        public GoTerminatorParser( ITokenizer tokenizer )
+            : base( tokenizer )
+        {
+        }
+
+        public override GoTerminator Execute()
+        {
+            return new GoTerminator();
+        }
+    }
+
     public class ParserFactory
     {
-        private const string SELECT = "SELECT";
-        private const string INSERT = "INSERT";
-        private const string UPDATE = "UPDATE";
-        private const string TABLE = "TABLE";
-        private const string CREATE = "CREATE";
-        private const string ALTER = "ALTER";
-        private const string VIEW = "VIEW";
-        private const string GRANT = "GRANT";
+        private static Dictionary<string, Type> _parsers;
+
+        /// <summary>
+        /// Initializes a new instance of the ParserFactory class.
+        /// </summary>
+        static ParserFactory()
+        {
+            _parsers = new Dictionary<string, Type>
+            {
+                { Constants.Select,    typeof( SelectStatementParser ) },
+                { Constants.Insert,    typeof( InsertStatementParser ) },
+                { Constants.Update,    typeof( UpdateStatementParser ) },
+                { Constants.Delete,    typeof( DeleteStatementParser ) },
+                { Constants.Grant,     typeof( GrantStatementParser ) },
+                { Constants.Go,        typeof( GoTerminatorParser ) },
+            };
+        }
 
         /// <summary>
         /// This method is used if you know what type will be returned from the parser
@@ -42,46 +64,37 @@ namespace Laan.SQL.Parser
         {
             var result = new List<IStatement>();
             ITokenizer _tokenizer = GetTokenizer( sql );
-    
-            if ( _tokenizer.Current == (Token)null )
+
+            if ( _tokenizer.Current == (Token) null )
                 _tokenizer.ReadNextToken();
 
             while ( _tokenizer.HasMoreTokens )
             {
-                StatementParser parser = null;
+                IParser parser = GetParser( _tokenizer );
 
-                if ( _tokenizer.TokenEquals( SELECT ) )
-                    parser = new SelectStatementParser( _tokenizer );
-
-                else if ( _tokenizer.TokenEquals( CREATE ) )
+                // process 'other' parsers, that don't map one-for-one with a statement
+                if ( parser == null )
                 {
-                    if ( _tokenizer.TokenEquals( TABLE ) )
-                        parser = new CreateTableStatementParser( _tokenizer );
+                    if ( _tokenizer.TokenEquals( Constants.Create ) )
+                    {
+                        if ( _tokenizer.TokenEquals( Constants.Table ) )
+                            parser = new CreateTableStatementParser( _tokenizer );
 
-                    if ( _tokenizer.TokenEquals( VIEW ) )
-                        parser = new CreateViewStatementParser( _tokenizer );
+                        if ( _tokenizer.TokenEquals( Constants.View ) )
+                            parser = new CreateViewStatementParser( _tokenizer );
 
-                    if ( _tokenizer.IsNextToken( Constants.Unique, Constants.Clustered, Constants.NonClustered, Constants.Index ) )
-                        parser = new CreateIndexParser( _tokenizer );
-                }
-                else if ( _tokenizer.TokenEquals( GRANT ) )
-                {
-                    parser = new GrantParser( _tokenizer );
-                }
-                else if ( _tokenizer.TokenEquals( ALTER ) )
-                {
-                    if ( _tokenizer.TokenEquals( TABLE ) )
-                        parser = new AlterTableStatementParser( _tokenizer );
-                }
-                else 
-                if ( _tokenizer.TokenEquals( INSERT ) )
-                    parser = new InsertStatementParser( _tokenizer );
-                else 
-                if ( _tokenizer.TokenEquals( UPDATE ) )
-                    parser = new UpdateStatementParser( _tokenizer );
+                        if ( _tokenizer.TokenEquals( Constants.Procedure ) )
+                            parser = new CreateViewStatementParser( _tokenizer );
 
-                //else if ( _tokenizer.TokenEquals( DELETE ) )
-                //    parser = new DeleteStatementParser( _tokenizer );
+                        if ( _tokenizer.IsNextToken( Constants.Unique, Constants.Clustered, Constants.NonClustered, Constants.Index ) )
+                            parser = new CreateIndexParser( _tokenizer );
+                    }
+                    else if ( _tokenizer.TokenEquals( Constants.Alter ) )
+                    {
+                        if ( _tokenizer.TokenEquals( Constants.Table ) )
+                            parser = new AlterTableStatementParser( _tokenizer );
+                    }
+                }
 
                 if ( parser == null && _tokenizer.Current != (Token) null )
                     throw new NotImplementedException(
@@ -92,6 +105,20 @@ namespace Laan.SQL.Parser
             }
 
             return result;
+        }
+
+        private static IParser GetParser( ITokenizer _tokenizer )
+        {
+            // this is a quick and dirty service locator that maps tokens to parsers
+            Type parserType;
+            if ( _parsers.TryGetValue( _tokenizer.Current.Value.ToUpper(), out parserType ) )
+            {
+                _tokenizer.ReadNextToken();
+
+                object instance = Activator.CreateInstance( parserType, _tokenizer );
+                return (IParser) instance;
+            }
+            return null;
         }
     }
 }

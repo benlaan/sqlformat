@@ -8,16 +8,8 @@ using Laan.NHibernate.Appender;
 
 namespace Laan.SQL.Formatter.Test
 {
-    public class TestAppender
+    public class TestAppender : BaseFormattingTest
     {
-        private static void Compare( string actual, string[] formatted )
-        {
-            Assert.AreElementsEqual(
-                formatted,
-                actual.Split( new string[] { "\r\n" }, StringSplitOptions.None )
-            );
-        }
-        
         private ParamBuilderFormatter _appender;
 
         [SetUp]
@@ -66,6 +58,26 @@ namespace Laan.SQL.Formatter.Test
                 "",
                 "WHERE ID = 20",
                 "  AND Name <> 'SA'",
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_With_Guid_Param()
+        {
+            // Exercise
+            var actual = _appender.Execute( @"
+                SELECT * FROM States WHERE ID=@p0;@p0=5a3d68a3-f53b-40ce-8bdd-2f40a5d35ded" );
+
+            // Verify outcome
+            var expected = new[]
+            {
+                @"SELECT *",
+                "",
+                "FROM States",
+                "",
+                "WHERE ID = '5A3D68A3-F53B-40CE-8BDD-2F40A5D35DED'",
             };
 
             Compare( actual, expected );

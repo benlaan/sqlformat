@@ -45,18 +45,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Statements\TestBatchTerminators.cs" />
+    <Compile Include="Statements\TestDeleteStatementParser.cs" />
     <Compile Include="TestBatchStatements.cs" />
     <Compile Include="TestTokens.cs" />
-    <Compile Include="TestUpdateStatementParser.cs" />
+    <Compile Include="Statements\TestUpdateStatementParser.cs" />
     <Compile Include="TestExpressionParser.cs" />
-    <Compile Include="TestCreateNonClusteredIndex.cs" />
-    <Compile Include="TestCreateView.cs" />
-    <Compile Include="TestAlterTable.cs" />
-    <Compile Include="TestCreateTable.cs" />
-    <Compile Include="TestGrantStatementParser.cs" />
-    <Compile Include="TestInsertStatementParser.cs" />
+    <Compile Include="Statements\TestCreateNonClusteredIndex.cs" />
+    <Compile Include="Statements\TestCreateView.cs" />
+    <Compile Include="Statements\TestAlterTable.cs" />
+    <Compile Include="Statements\TestCreateTable.cs" />
+    <Compile Include="Statements\TestGrantStatementParser.cs" />
+    <Compile Include="Statements\TestInsertStatementParser.cs" />
     <Compile Include="TestTokenizer.cs" />
-    <Compile Include="TestSelectStatementParser.cs" />
+    <Compile Include="Statements\TestSelectStatementParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

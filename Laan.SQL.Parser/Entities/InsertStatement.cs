@@ -11,6 +11,7 @@ namespace Laan.SQL.Parser
         public List<string> Columns { get; set; }
         public List<List<string>> Values { get; set; }
         public SelectStatement SourceStatement { get; set; }
+        public bool Terminated { get; set; }
 
         internal InsertStatement()
         {

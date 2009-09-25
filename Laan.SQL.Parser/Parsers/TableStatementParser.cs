@@ -2,13 +2,8 @@ using System;
 
 namespace Laan.SQL.Parser
 {
-    public abstract class TableStatementParser : StatementParser
+    public abstract class TableStatementParser<T> : StatementParser<T> where T : class, IStatement
     {
-        protected const string CONSTRAINT = "CONSTRAINT";
-        protected const string PRIMARY = "PRIMARY";
-        protected const string KEY = "KEY";
-        protected const string CLUSTERED = "CLUSTERED";
-
         internal TableStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
     }
 }

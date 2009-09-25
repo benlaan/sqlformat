@@ -45,6 +45,28 @@ namespace Laan.SQL.Formatter.Test
         }
 
         [Test]
+        public void Can_Format_Simple_Select_Statement_With_Terminator()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( "SELECT TOP 20 Field1, Field2 FROM dbo.Table T;" );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT TOP 20",
+                "    Field1,",
+                "    Field2",
+                "",
+                "FROM dbo.Table T;",
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
         public void Can_Format_Select_Statement_With_Where_Clause()
         {
             // Setup

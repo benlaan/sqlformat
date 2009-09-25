@@ -12,14 +12,14 @@ namespace Laan.SQL.Parser
         /// </summary>
         public CustomStatement()
         {
-            Fields = new List<Field>();
             From = new List<Table>();
             Joins = new List<Join>();
+            Terminated = false;
         }
 
-        public List<Field> Fields { get; set; }
         public List<Join> Joins { get; set; }
         public List<Table> From { get; set; }
         public Expression Where { get; set; }
+        public bool Terminated { get; set; }
     }
 }

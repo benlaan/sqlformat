@@ -12,12 +12,12 @@ namespace Laan.SQL.Parser
 
         private void ProcessDistinct()
         {
-            _statement.Distinct = Tokenizer.TokenEquals( DISTINCT );
+            _statement.Distinct = Tokenizer.TokenEquals( Constants.Distinct );
         }
 
         private void ProcessTop()
         {
-            if ( Tokenizer.TokenEquals( TOP ) )
+            if ( Tokenizer.TokenEquals( Constants.Top ) )
             {
                 int top;
                 if ( !Int32.TryParse( CurrentToken, out top ) )
@@ -30,26 +30,26 @@ namespace Laan.SQL.Parser
 
         private void ProcessOrderBy()
         {
-            if ( Tokenizer.TokenEquals( ORDER ) )
+            if ( Tokenizer.TokenEquals( Constants.Order ) )
             {
-                ExpectToken( BY );
+                ExpectToken( Constants.By );
                 ProcessFields( FieldType.OrderBy, _statement.OrderBy );
             }
         }
 
         private void ProcessGroupBy()
         {
-            if ( Tokenizer.TokenEquals( GROUP ) )
+            if ( Tokenizer.TokenEquals( Constants.Group ) )
             {
-                ExpectToken( BY );
+                ExpectToken( Constants.By );
                 ProcessFields( FieldType.GroupBy, _statement.GroupBy );
 
-                if ( Tokenizer.TokenEquals( HAVING ) )
+                if ( Tokenizer.TokenEquals( Constants.Having ) )
                     _statement.Having = ProcessExpression();
             }
         }
 
-        public override IStatement Execute()
+        public override SelectStatement Execute()
         {
             _statement = new SelectStatement();
 
@@ -60,6 +60,7 @@ namespace Laan.SQL.Parser
             ProcessWhere();
             ProcessGroupBy();
             ProcessOrderBy();
+            ProcessTerminator();
 
             return _statement;
         }

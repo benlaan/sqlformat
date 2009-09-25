@@ -7,14 +7,11 @@ using Laan.SQL.Parser;
 
 namespace Laan.SQL.Formatter
 {
-    public class SelectStatementFormatter : CustomFormatter, IStatementFormatter
+    public class SelectStatementFormatter : CustomFormatter<SelectStatement>, IStatementFormatter
     {
         private bool _indentSelect;
-        private const int WhereLength = 5;
         private const int HavingLength = 6;
         private const int Padding = 4;
-
-        private SelectStatement _statement;
 
         public SelectStatementFormatter( string indent, int indentStep, StringBuilder sql, SelectStatement statement )
             : this( indent, indentStep, sql, statement, false )
@@ -22,12 +19,9 @@ namespace Laan.SQL.Formatter
         }
 
         public SelectStatementFormatter( string indent, int indentStep, StringBuilder sql, SelectStatement statement, bool indentSelect )
+            : base( indent, indentStep, sql, statement )
         {
             _indentSelect = indentSelect;
-            _indentStep = indentStep;
-            _indent = indent;
-            _statement = statement;
-            _sql = sql;
         }
 
         private void FormatSelect()
@@ -68,82 +62,6 @@ namespace Laan.SQL.Formatter
             }
         }
 
-        private void FormatFrom()
-        {
-            if ( _statement.From != null && _statement.From.Any() )
-            {
-                NewLine();
-                foreach ( var from in _statement.From )
-                {
-                    if ( from is DerivedTable )
-                    {
-                        DerivedTable derivedTable = (DerivedTable) from;
-                        var formatter = new SelectStatementFormatter( _indent, _indentStep + 1, _sql, derivedTable.SelectStatement, true );
-                        NewLine();
-                        IndentedAppend( "FROM (" );
-                        NewLine( 2 );
-                        formatter.Execute();
-                        NewLine( 2 );
-                        IndentedAppend( String.Format( "){0}", from.Alias.Value ) );
-                    }
-                    else
-                    {
-                        NewLine();
-                        IndentedAppendFormat(
-                            "FROM {0}{1}",
-                            from.Name, from.Alias.Value
-                        );
-                    }
-                }
-            }
-        }
-
-        private void FormatJoins()
-        {
-            if ( _statement.Joins != null && _statement.Joins.Any() )
-            {
-                foreach ( var join in _statement.Joins )
-                {
-                    if ( join is DerivedJoin )
-                    {
-                        DerivedJoin derivedJoin = (DerivedJoin) join;
-                        var formatter = new SelectStatementFormatter( _indent, _indentStep + 1, _sql, derivedJoin.SelectStatement, true );
-                        NewLine( 2 );
-                        IndentedAppend( join.Value );
-                        NewLine( 2 );
-                        formatter.Execute();
-                        NewLine( 2 );
-                        IndentedAppend( String.Format( "){0}", join.Alias.Value ) );
-                        NewLine();
-                        IndentedAppendFormat(
-                            "  ON {0}",
-                            join.Condition.FormattedValue( 4, _indent, _indentStep )
-                        );
-                    }
-                    else
-                    {
-                        NewLine( 2 );
-                        IndentedAppend( join.Value );
-                        NewLine();
-                        IndentedAppendFormat(
-                            "{0}ON {1}",
-                            new string( ' ', join.Length - "ON".Length ),
-                            join.Condition.FormattedValue( join.Length, _indent, _indentStep )
-                        );
-                    }
-                }
-            }
-        }
-
-        private void FormatWhere()
-        {
-            if ( _statement.Where != null )
-            {
-                NewLine( 2 );
-                IndentedAppendFormat( "WHERE {0}", _statement.Where.FormattedValue( WhereLength, _indent, _indentStep ) );
-            }
-        }
-
         private void FormatOrderBy()
         {
             if ( _statement.OrderBy.Count > 0 )
@@ -165,7 +83,10 @@ namespace Laan.SQL.Formatter
                 if ( _statement.Having != null )
                 {
                     NewLine( 2 );
-                    IndentedAppendFormat( "HAVING {0}", _statement.Having.FormattedValue( HavingLength, _indent, _indentStep ) );
+                    IndentedAppendFormat(
+                        "HAVING {0}",
+                        _statement.Having.FormattedValue( HavingLength, _indent, _indentStep )
+                    );
                 }
             }
         }
@@ -178,6 +99,8 @@ namespace Laan.SQL.Formatter
             FormatWhere();
             FormatOrderBy();
             FormatGroupBy();
+            FormatTerminator();
         }
+
     }
 }

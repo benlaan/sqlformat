@@ -2,22 +2,18 @@ using System;
 
 namespace Laan.SQL.Parser
 {
-    public class CreateViewStatementParser : StatementParser
+    public class CreateViewStatementParser : StatementParser<CreateViewStatement>
     {
-        private const string AS = "AS";
-        private const string SELECT = "SELECT";
-        CreateViewStatement _statement;
-
         internal CreateViewStatementParser( ITokenizer tokenizer ) : base( tokenizer )
         {
         }
 
-        public override IStatement Execute()
+        public override CreateViewStatement Execute()
         {
             _statement = new CreateViewStatement();
             _statement.Name = GetIdentifier();
 
-            ExpectTokens( AS, SELECT );
+            ExpectTokens( Constants.As, Constants.Select );
 
             SelectStatementParser parser = new SelectStatementParser( Tokenizer );
             _statement.SelectBlock = parser.Execute() as SelectStatement;

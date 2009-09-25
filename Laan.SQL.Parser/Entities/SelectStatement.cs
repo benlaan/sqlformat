@@ -5,8 +5,7 @@ using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser
 {
-
-    public class SelectStatement : CustomStatement
+    public class SelectStatement : ProjectionStatement
     {
         public SelectStatement() : base()
         {

@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Laan.SQL.Parser
 {
-    public class CreateIndex : IStatement
+    public class CreateIndexStatement : IStatement
     {
-        public CreateIndex()
+        public CreateIndexStatement()
         {
             Unique = false;
             Clustered = false;

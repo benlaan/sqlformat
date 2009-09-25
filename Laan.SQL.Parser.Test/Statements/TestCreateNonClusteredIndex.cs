@@ -16,7 +16,7 @@ namespace Laan.SQL.Parser.Test
         public void Test_Can_Read_Non_Clustered_Index()
         {
             // Exercise
-            var statement = ParserFactory.Execute<CreateIndex>( @"
+            var statement = ParserFactory.Execute<CreateIndexStatement>( @"
 
                 CREATE NONCLUSTERED INDEX [_TransactionID] ON [dbo].[Transactions] (ID1, ID2, ID3)
                 "
@@ -38,7 +38,7 @@ namespace Laan.SQL.Parser.Test
         public void Test_Can_Read_Non_Clustered_Index_In_Descending_Order()
         {
             // Exercise
-            var statement = ParserFactory.Execute<CreateIndex>( @"
+            var statement = ParserFactory.Execute<CreateIndexStatement>( @"
 
                 CREATE NONCLUSTERED INDEX [_TransactionID] ON [dbo].[Transactions] (ID1 DESC, ID2, ID3 DESC)
                 "
@@ -65,7 +65,7 @@ namespace Laan.SQL.Parser.Test
         public void Test_Can_Read_Non_Clustered_Index_Again()
         {
             // Exercise
-            var statement = ParserFactory.Execute<CreateIndex>( @"
+            var statement = ParserFactory.Execute<CreateIndexStatement>( @"
 
                 CREATE NONCLUSTERED INDEX [IX_Weights_ByTransaction] 
                                        ON [dbo].[Weights] ([Type],[TransactionID],[IsCancelled])
@@ -91,7 +91,7 @@ namespace Laan.SQL.Parser.Test
         public void Test_Can_Read_Clustered_Index()
         {
             // Exercise
-            var statement = ParserFactory.Execute<CreateIndex>( @"
+            var statement = ParserFactory.Execute<CreateIndexStatement>( @"
 
                 CREATE CLUSTERED INDEX IX_TransactionID ON dbo.Transactions ([ID1])
                 "
@@ -111,7 +111,7 @@ namespace Laan.SQL.Parser.Test
         public void Test_Can_Read_Unique_Clustered_Index()
         {
             // Exercise
-            var statement = ParserFactory.Execute<CreateIndex>( @"
+            var statement = ParserFactory.Execute<CreateIndexStatement>( @"
 
                 CREATE UNIQUE CLUSTERED INDEX IX_TransactionID ON dbo.Transactions ([ID1])
                 "

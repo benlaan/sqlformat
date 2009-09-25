@@ -4,16 +4,8 @@ using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser
 {
-    public class CreateTableStatementParser : TableStatementParser
+    public class CreateTableStatementParser : TableStatementParser<CreateTableStatement>
     {
-        private const string NOT = "NOT";
-        private const string NULL = "NULL";
-        private const string ASC = "ASC";
-        private const string DESC = "DESC";
-        private const string IDENTITY = "IDENTITY";
-        private const string COLLATE = "COLLATE";
-        private const string DEFAULT = "DEFAULT";
-
         CreateTableStatement _statement;
 
         internal CreateTableStatementParser( ITokenizer tokenizer )
@@ -21,7 +13,7 @@ namespace Laan.SQL.Parser
         {
         }
 
-        public override IStatement Execute()
+        public override CreateTableStatement Execute()
         {
             _statement = new CreateTableStatement();
 
@@ -31,7 +23,7 @@ namespace Laan.SQL.Parser
             {
                 do
                 {
-                    if ( Tokenizer.TokenEquals( CONSTRAINT ) )
+                    if ( Tokenizer.TokenEquals( Constants.Constraint ) )
                         ProcessPrimaryKeyConstraint();
                     else
                         ProcessFieldDefinition();
@@ -83,7 +75,7 @@ namespace Laan.SQL.Parser
             string identifier = GetIdentifier();
             string orderBy = "";
 
-            Tokenizer.ExpectTokens( new[] { PRIMARY, KEY, CLUSTERED } );
+            Tokenizer.ExpectTokens( new[] { Constants.Primary, Constants.Key, Constants.Clustered } );
 
             using ( Tokenizer.ExpectBrackets() )
             {
@@ -94,7 +86,7 @@ namespace Laan.SQL.Parser
                     keyField.IsPrimaryKey = true;
 
                 string token = CurrentToken;
-                if ( Tokenizer.TokenEquals( ASC ) || Tokenizer.TokenEquals( DESC ) )
+                if ( Tokenizer.TokenEquals( Constants.Ascending ) || Tokenizer.TokenEquals( Constants.Descending ) )
                     orderBy = token;
             }
         }
@@ -116,45 +108,45 @@ namespace Laan.SQL.Parser
                 return;
             }
 
-            if ( Tokenizer.TokenEquals( IDENTITY ) )
+            if ( Tokenizer.TokenEquals( Constants.Identity ) )
             {
                 identity = ProcessIdentity();
             }
 
-            if ( Tokenizer.TokenEquals( COLLATE ) )
+            if ( Tokenizer.TokenEquals( Constants.Collate ) )
             {
                 type.Collation = CurrentToken;
                 ReadNextToken();
             }
 
-            if ( Tokenizer.TokenEquals( NULL ) )
+            if ( Tokenizer.TokenEquals( Constants.Null ) )
             {
                 nullability = Nullability.Nullable;
             }
 
-            if ( Tokenizer.TokenEquals( NOT ) )
+            if ( Tokenizer.TokenEquals( Constants.Not ) )
             {
-                Tokenizer.ExpectToken( NULL );
+                Tokenizer.ExpectToken( Constants.Null );
                 nullability = Nullability.NotNullable;
             }
 
-            if ( Tokenizer.TokenEquals( IDENTITY ) )
+            if ( Tokenizer.TokenEquals( Constants.Identity ) )
             {
                 identity = ProcessIdentity();
             }
 
-            if ( Tokenizer.TokenEquals( PRIMARY ) )
+            if ( Tokenizer.TokenEquals( Constants.Primary ) )
             {
-                Tokenizer.ExpectToken( KEY );
+                Tokenizer.ExpectToken( Constants.Key );
                 nullability = Nullability.NotNullable;
                 isPrimaryKey = true;
             }
 
-            if ( Tokenizer.TokenEquals( CONSTRAINT ) )
+            if ( Tokenizer.TokenEquals( Constants.Constraint ) )
             {
                 // TODO: process column constraint
                 string name = GetIdentifier();
-                Tokenizer.ExpectToken( DEFAULT );
+                Tokenizer.ExpectToken( Constants.Default );
                 using ( Tokenizer.ExpectBrackets() )
                 {
                 Expression expression = ProcessExpression();
@@ -162,7 +154,7 @@ namespace Laan.SQL.Parser
                 }
             }
 
-            if ( Tokenizer.TokenEquals( DEFAULT ) )
+            if ( Tokenizer.TokenEquals( Constants.Default ) )
             {
                 // TODO: process column constraint
                 Expression expression = ProcessExpression();

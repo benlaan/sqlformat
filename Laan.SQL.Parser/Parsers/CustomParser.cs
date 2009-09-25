@@ -96,13 +96,21 @@ namespace Laan.SQL.Parser
         {
             string token;
             token = "";
-            
+
             do
             {
                 token += ( token != "" ? Constants.Dot : "" ) + GetIdentifier();
             }
             while ( Tokenizer.TokenEquals( Constants.Dot ) );
             return token;
+        }
+
+        protected bool HasTerminator()
+        {
+            bool result = Tokenizer.IsNextToken( Constants.SemiColon );
+            if ( result )
+                Tokenizer.ReadNextToken();
+            return result;
         }
     }
 }

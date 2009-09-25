@@ -5,11 +5,6 @@ using System.Diagnostics;
 
 namespace Laan.SQL.Parser.Expressions
 {
-    public interface IInlineFormattable
-    {
-        bool CanInline { get; }
-    }
-
     public class CriteriaExpression : Expression
     {
         private string _operator;

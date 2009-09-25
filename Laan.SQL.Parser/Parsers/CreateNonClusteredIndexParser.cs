@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace Laan.SQL.Parser
 {
-    public class CreateIndexParser : StatementParser
+    public class CreateIndexParser : StatementParser<CreateIndexStatement>
     {
         public CreateIndexParser( ITokenizer tokenizer ) : base( tokenizer ) { }
 
-        public override IStatement Execute()
+        public override CreateIndexStatement Execute()
         {
             // CREATE [UNIQUE] [CLUSTERED | NONCLUSTERED] INDEX index_name ON table (column [,...n])
 
-            CreateIndex statement = new CreateIndex();
+            CreateIndexStatement statement = new CreateIndexStatement();
 
             // optional
             if ( Tokenizer.TokenEquals( Constants.Unique ) )

@@ -2,20 +2,13 @@ using System;
 
 namespace Laan.SQL.Parser
 {
-    public class AlterTableStatementParser : TableStatementParser
+    public class AlterTableStatementParser : TableStatementParser<AlterTableStatement>
     {
-        private const string ADD = "ADD";
-        private const string FOREIGN = "FOREIGN";
-        private const string REFERENCES = "REFERENCES";
-        private const string WITH = "WITH";
-        private const string NOCHECK = "NOCHECK";
-        private const string UNIQUE = "UNIQUE";
-        private const string NONCLUSTERED = "NONCLUSTERED";
         private AlterTableStatement _statement;
 
         internal AlterTableStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
 
-        public override IStatement Execute()
+        public override AlterTableStatement Execute()
         {
             // TODO: This is not currently a general purpose ALTER TABLE parser.  
             //       It only allows ADD CONSTRAINT X PRIMARY KEY CLUSTERED and FOREIGN KEY (partial).  
@@ -24,9 +17,9 @@ namespace Laan.SQL.Parser
             _statement = new AlterTableStatement();
             _statement.TableName = GetTableName();
 
-            if ( Tokenizer.TokenEquals( WITH ) )
+            if ( Tokenizer.TokenEquals( Constants.With ) )
             {
-                if ( Tokenizer.TokenEquals( NOCHECK ) )
+                if ( Tokenizer.TokenEquals( Constants.NoCheck ) )
                 {
                     string nocheck = CurrentToken;
                 }
@@ -34,36 +27,36 @@ namespace Laan.SQL.Parser
                 
             // TODO: future changes will include a ADD/DELETE operation field, and an entity COLUMN/CONSTRAINT/etc
             //       to affect, and various options to cater for the constraint syntax
-            Tokenizer.ExpectTokens( new[] { ADD, CONSTRAINT } );
+            Tokenizer.ExpectTokens( new[] { Constants.Add, Constants.Constraint } );
             _statement.ConstraintName = GetIdentifier();
 
-            if ( Tokenizer.TokenEquals( PRIMARY ) )
+            if ( Tokenizer.TokenEquals( Constants.Primary ) )
             {
-                Tokenizer.ExpectTokens( new[] { KEY, CLUSTERED } );
+                Tokenizer.ExpectTokens( new[] { Constants.Key, Constants.Clustered } );
                 using ( Tokenizer.ExpectBrackets() )
                 {
                     _statement.PrimaryKeys = GetIdentifierList();
                 }
             }
-            else if ( Tokenizer.TokenEquals( UNIQUE ) )
+            else if ( Tokenizer.TokenEquals( Constants.Unique ) )
             {
-                Tokenizer.ExpectTokens( new[] { NONCLUSTERED } );
+                Tokenizer.ExpectTokens( new[] { Constants.NonClustered } );
                 using ( Tokenizer.ExpectBrackets() )
                 {
                     _statement.PrimaryKeys = GetIdentifierList();
                 }
             }
-            else if ( Tokenizer.TokenEquals( FOREIGN ) )
+            else if ( Tokenizer.TokenEquals( Constants.Foreign ) )
             {
                 // TODO: these fields are being consumed, but not stored into a constrain object
                 //       this is not required (for my current task) at this stage.
-                Tokenizer.ExpectTokens( new[] { KEY } );
+                Tokenizer.ExpectTokens( new[] { Constants.Key } );
                 using ( Tokenizer.ExpectBrackets() )
                 {
                     string keyID = GetIdentifier();
                 }
 
-                Tokenizer.ExpectTokens( new[] { REFERENCES } );
+                Tokenizer.ExpectTokens( new[] { Constants.References } );
                 string refereringTable = GetTableName();
 
                 using ( Tokenizer.ExpectBrackets() )

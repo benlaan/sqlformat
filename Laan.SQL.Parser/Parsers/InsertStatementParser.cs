@@ -6,7 +6,7 @@ using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser
 {
-    class InsertStatementParser : StatementParser
+    class InsertStatementParser : StatementParser<InsertStatement>
     {
 
     // INSERT [INTO] table_name [(column_list)] { 
@@ -20,17 +20,8 @@ namespace Laan.SQL.Parser
 
         private InsertStatement _statement;
 
-        public override IStatement Execute()
+        private void ProcessColumnList()
         {
-            _statement = new InsertStatement();
-
-            if ( Tokenizer.TokenEquals( "INTO" ) )
-            {
-                // consume the current token
-            }
-
-            _statement.TableName = GetTableName();
-
             if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
             {
                 using ( Tokenizer.ExpectBrackets() )
@@ -38,27 +29,63 @@ namespace Laan.SQL.Parser
                     _statement.Columns = ( GetIdentifierList() );
                 }
             }
+        }
 
-            if ( Tokenizer.TokenEquals( "VALUES" ) )
+        private void ProcessTerminator()
+        {
+            _statement.Terminated = HasTerminator();
+        }
+
+        private void ProcessValues()
+        {
+            do
             {
-                do
+                using ( Tokenizer.ExpectBrackets() )
                 {
-                    using ( Tokenizer.ExpectBrackets() )
-                    {
-                        _statement.Values.Add( GetIdentifierList() );
-                    }
+                    _statement.Values.Add( GetIdentifierList() );
                 }
-                while ( Tokenizer.TokenEquals( Constants.Comma ) );
             }
-            else
-                if ( Tokenizer.IsNextToken( "SELECT" ) )
-                {
-                    ReadNextToken();
-                    SelectExpression selectExpression = new SelectExpression();
+            while ( Tokenizer.TokenEquals( Constants.Comma ) );
+        }
 
-                    var parser = new SelectStatementParser( Tokenizer );
-                    _statement.SourceStatement = (SelectStatement) parser.Execute();
-                }
+        private void ProcessSelect()
+        {
+            ReadNextToken();
+            SelectExpression selectExpression = new SelectExpression();
+
+            var parser = new SelectStatementParser( Tokenizer );
+            _statement.SourceStatement = parser.Execute();
+        }
+
+        private void ProcessExec()
+        {
+            throw new NotImplementedException();
+            //var parser = new ExecuteProcedureStatementParser( Tokenizer );
+            //_statement.Procedure = parser.Execute<ExecuteProcuedreStatement>();
+        }
+
+        public override InsertStatement Execute()
+        {
+            _statement = new InsertStatement();
+
+            if ( Tokenizer.TokenEquals( "INTO" ) )
+            {
+                // consume the current token
+            }
+            _statement.TableName = GetTableName();
+
+            ProcessColumnList();
+
+            if ( Tokenizer.TokenEquals( Constants.Values ) )
+                ProcessValues();
+            else if ( Tokenizer.IsNextToken( Constants.Select ) )
+                ProcessSelect();
+            else if ( Tokenizer.IsNextToken( Constants.Exec ) )
+                ProcessExec();
+            else
+                throw new SyntaxException( String.Format("syntax error after 'INSERT INTO {0} '", _statement.TableName ) );
+
+            ProcessTerminator();
 
             return _statement;
         }

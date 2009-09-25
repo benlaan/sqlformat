@@ -7,30 +7,10 @@ using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser
 {
-    public abstract class CriteriaStatementParser<T> : StatementParser where T : CustomStatement
+    public abstract class CriteriaStatementParser<T> : StatementParser<T> where T : CustomStatement
     {
-        protected const string SELECT = "SELECT";
-        protected const string DISTINCT = "DISTINCT";
-        protected const string TOP = "TOP";
-        protected const string FROM = "FROM";
-        protected const string AS = "AS";
-        protected const string INNER = "INNER";
-        protected const string JOIN = "JOIN";
-        protected const string LEFT = "LEFT";
-        protected const string RIGHT = "RIGHT";
-        protected const string OUTER = "OUTER";
-        protected const string FULL = "FULL";
-        protected const string EQUALS = "=";
-        protected const string WHERE = "WHERE";
-        protected const string BY = "BY";
-        protected const string ORDER = "ORDER";
-        protected const string GROUP = "GROUP";
-        protected const string HAVING = "HAVING";
-
-        protected string[] FieldTerminatorSet = { FROM, Constants.Comma, HAVING };
-        protected string[] FromTerminatorSet = { INNER, JOIN, LEFT, RIGHT, FULL, Constants.Comma, Constants.CloseBracket, ORDER, GROUP, WHERE };
-
-        protected T _statement;
+        protected string[] FieldTerminatorSet = { Constants.From, Constants.Comma, Constants.Having, Constants.Go, Constants.SemiColon };
+        protected string[] FromTerminatorSet = { Constants.Inner, Constants.Join, Constants.Left, Constants.Right, Constants.Full, Constants.Comma, Constants.CloseBracket, Constants.Order, Constants.Group, Constants.Where };
 
         public CriteriaStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
 
@@ -59,13 +39,13 @@ namespace Laan.SQL.Parser
             if ( token is CriteriaExpression )
             {
                 // this handles the non-standard syntax of: Alias = Expression
-                CriteriaExpression criteriaExpression = ( CriteriaExpression )token;
+                CriteriaExpression criteriaExpression = (CriteriaExpression) token;
                 alias.Name = criteriaExpression.Left.Value;
                 alias.Type = AliasType.Equals;
                 expression = criteriaExpression.Right;
             }
             else
-                if ( Tokenizer.TokenEquals( AS ) )
+                if ( Tokenizer.TokenEquals( Constants.As ) )
                 {
                     alias.Name = CurrentToken;
                     alias.Type = AliasType.As;
@@ -98,7 +78,7 @@ namespace Laan.SQL.Parser
 
             if ( token is CriteriaExpression )
             {
-                CriteriaExpression criteriaExpression = ( CriteriaExpression )token;
+                CriteriaExpression criteriaExpression = (CriteriaExpression) token;
                 alias.Name = criteriaExpression.Left.Value;
                 alias.Type = AliasType.Equals;
                 expression = criteriaExpression.Right;
@@ -142,31 +122,31 @@ namespace Laan.SQL.Parser
         private JoinType? GetJoinType()
         {
             JoinType? joinType = null;
-            if ( Tokenizer.TokenEquals( INNER ) )
+            if ( Tokenizer.TokenEquals( Constants.Inner ) )
                 joinType = JoinType.InnerJoin;
             else
-                if ( Tokenizer.IsNextToken( JOIN ) )
+                if ( Tokenizer.IsNextToken( Constants.Join ) )
                     // don't consume - it is checked after here
                     joinType = JoinType.Join;
                 else
-                    if ( Tokenizer.TokenEquals( FULL ) )
+                    if ( Tokenizer.TokenEquals( Constants.Full ) )
                     {
                         joinType = JoinType.FullJoin;
-                        if ( Tokenizer.TokenEquals( OUTER ) )
+                        if ( Tokenizer.TokenEquals( Constants.Outer ) )
                             joinType = JoinType.FullOuterJoin;
                     }
                     else
-                        if ( Tokenizer.TokenEquals( LEFT ) )
+                        if ( Tokenizer.TokenEquals( Constants.Left ) )
                         {
                             joinType = JoinType.LeftJoin;
-                            if ( Tokenizer.TokenEquals( OUTER ) )
+                            if ( Tokenizer.TokenEquals( Constants.Outer ) )
                                 joinType = JoinType.LeftOuterJoin;
                         }
                         else
-                            if ( Tokenizer.TokenEquals( RIGHT ) )
+                            if ( Tokenizer.TokenEquals( Constants.Right ) )
                             {
                                 joinType = JoinType.RightJoin;
-                                if ( Tokenizer.TokenEquals( OUTER ) )
+                                if ( Tokenizer.TokenEquals( Constants.Outer ) )
                                     joinType = JoinType.RightOuterJoin;
                             }
 
@@ -175,7 +155,7 @@ namespace Laan.SQL.Parser
 
         protected void ProcessFrom()
         {
-            if ( !Tokenizer.TokenEquals( FROM ) )
+            if ( !Tokenizer.TokenEquals( Constants.From ) )
                 return;
             do
             {
@@ -184,9 +164,9 @@ namespace Laan.SQL.Parser
                     using ( Tokenizer.ExpectBrackets() )
                     {
                         DerivedTable derivedTable = new DerivedTable();
-                        Tokenizer.ExpectToken( SELECT );
+                        Tokenizer.ExpectToken( Constants.Select );
                         var parser = new SelectStatementParser( Tokenizer );
-                        derivedTable.SelectStatement = ( SelectStatement )parser.Execute();
+                        derivedTable.SelectStatement = (SelectStatement) parser.Execute();
                         table = derivedTable;
                     }
                 else
@@ -195,29 +175,29 @@ namespace Laan.SQL.Parser
                 _statement.From.Add( table );
 
                 // if a new statement is initiated here, do not process the alias
-                if ( Tokenizer.IsNextToken( ";", "GO", "SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "ALTER", "UNION" ) )
+                if ( Tokenizer.IsNextToken( Constants.SemiColon, Constants.Go, Constants.Select, Constants.Insert, Constants.Update, Constants.Delete, Constants.Create, Constants.Alter, Constants.Union ) )
                     return;
 
                 Alias alias = new Alias( null );
-                if ( Tokenizer.IsNextToken( AS ) )
+                if ( Tokenizer.IsNextToken( Constants.As ) )
                 {
                     alias.Type = AliasType.As;
                     Tokenizer.ReadNextToken();
                 }
                 if ( alias.Type != AliasType.Implicit || !Tokenizer.IsNextToken( FromTerminatorSet ) )
                 {
-                    if ( Tokenizer.HasMoreTokens)
-                     {
-                        if( !Tokenizer.Current.IsTypeIn( 
-                                TokenType.Alpha, TokenType.AlphaNumeric, TokenType.BlockedText, TokenType.QuotedText 
-                            ) 
+                    if ( Tokenizer.HasMoreTokens )
+                    {
+                        if ( !Tokenizer.Current.IsTypeIn(
+                                TokenType.Alpha, TokenType.AlphaNumeric, TokenType.BlockedText, TokenType.QuotedText
+                            )
                         )
                             throw new SyntaxException( String.Format( "Incorrect syntax near '{0}'", CurrentToken ) );
-                       
+
                         alias.Name = CurrentToken;
                         table.Alias = alias;
                         ReadNextToken();
-                     }
+                    }
                 }
             }
             while ( Tokenizer.TokenEquals( Constants.Comma ) );
@@ -232,24 +212,28 @@ namespace Laan.SQL.Parser
                 JoinType? joinType = GetJoinType();
                 if ( joinType == null )
                     return;
-                ExpectToken( JOIN );
+
+                ExpectToken( Constants.Join );
+
                 Join join = null;
                 if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
                     using ( Tokenizer.ExpectBrackets() )
                     {
-                        join = new DerivedJoin { Type = ( JoinType )joinType };
-                        Tokenizer.ExpectToken( SELECT );
+                        join = new DerivedJoin { Type = (JoinType) joinType };
+                        Tokenizer.ExpectToken( Constants.Select );
                         var parser = new SelectStatementParser( Tokenizer );
-                        ( ( DerivedJoin )join ).SelectStatement = ( SelectStatement )parser.Execute();
+                        ( (DerivedJoin) join ).SelectStatement = (SelectStatement) parser.Execute();
                     }
                 else
                 {
-                    join = new Join { Type = ( JoinType )joinType };
+                    join = new Join { Type = (JoinType) joinType };
                     join.Name = GetTableName();
                 }
+
                 Debug.Assert( join != null );
+
                 Alias alias = new Alias( null );
-                if ( Tokenizer.IsNextToken( AS ) )
+                if ( Tokenizer.IsNextToken( Constants.As ) )
                 {
                     alias.Type = AliasType.As;
                     Tokenizer.ReadNextToken();
@@ -264,18 +248,23 @@ namespace Laan.SQL.Parser
 
                 if ( !( expr is CriteriaExpression ) && !( expr is NestedExpression && ( expr as NestedExpression ).Expression is CriteriaExpression ) )
                     throw new SyntaxException( "Expected Criteria Expression" );
-                
+
                 join.Condition = expr;
 
                 _statement.Joins.Add( join );
             }
-            while ( Tokenizer.HasMoreTokens && !Tokenizer.IsNextToken( ORDER, GROUP ) );
+            while ( Tokenizer.HasMoreTokens && !Tokenizer.IsNextToken( Constants.Order, Constants.Group ) );
         }
 
         protected void ProcessWhere()
         {
-            if ( Tokenizer.TokenEquals( WHERE ) )
+            if ( Tokenizer.TokenEquals( Constants.Where ) )
                 _statement.Where = ProcessExpression();
+        }
+
+        protected void ProcessTerminator()
+        {
+            _statement.Terminated = HasTerminator();
         }
     }
 }

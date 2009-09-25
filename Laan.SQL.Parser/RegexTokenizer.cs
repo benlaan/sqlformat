@@ -25,7 +25,7 @@ namespace Laan.SQL.Parser
         Operator,
         Symbol,
         InLineComment,
-        MultiLineComment,
+        MultiLineComment
     }
 
     public class TokenDefinition
@@ -111,7 +111,7 @@ namespace Laan.SQL.Parser
                     matchCount = MatchCount( current.ToString() + (char) next, out definition );
                 }
 
-                if ( last.Skip )
+                if ( last != null && last.Skip )
                 {
                     ReadNextToken();
                     return;
@@ -121,7 +121,7 @@ namespace Laan.SQL.Parser
                 if ( MatchCount( current.ToString(), out definition ) == 0 )
                     throw new UnknownTokenException( current.ToString() );
 
-                _current = new Token( current.ToString(), last.Type );
+                _current = new Token( current.ToString(), last != null ? last.Type : TokenType.None );
                 return;
             }
         }
