@@ -11,20 +11,7 @@ namespace Laan.SQL.Parser
             _statement = new DeleteStatement();
 
             if ( Tokenizer.IsNextToken( Constants.Top ) )
-            {
-                Tokenizer.ReadNextToken();
-                using ( Tokenizer.ExpectBrackets() )
-                {
-                    int top;
-                    if ( Int32.TryParse( Tokenizer.Current.Value, out top ) )
-                    {
-                        _statement.Top = top;
-                        Tokenizer.ReadNextToken();
-                    }
-                    else
-                        throw new SyntaxException( "TOP clause requires an integer" );
-                }
-            }
+                _statement.Top = GetTop();
 
             if ( !Tokenizer.IsNextToken( Constants.From ) )
                 _statement.TableName = GetTableName();

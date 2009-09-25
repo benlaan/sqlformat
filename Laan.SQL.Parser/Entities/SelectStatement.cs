@@ -16,7 +16,7 @@ namespace Laan.SQL.Parser
         }
 
         public bool Distinct { get; set; }
-        public int? Top { get; set; }
+        public Top Top { get; set; }
         public List<Field> OrderBy { get; set; }
         public List<Field> GroupBy { get; set; }
         public Expression Having { get; set; }

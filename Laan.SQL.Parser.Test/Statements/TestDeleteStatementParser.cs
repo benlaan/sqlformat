@@ -111,8 +111,8 @@ namespace Laan.SQLParser.Test
             // Verify outcome
             Assert.IsNotNull( statement );
             Assert.AreEqual( "t", statement.TableName );
-            Assert.AreEqual( true, statement.Top.HasValue );
-            Assert.AreEqual( 10, statement.Top.Value );
+            Assert.IsNotNull( statement.Top );
+            Assert.AreEqual( "10", statement.Top.Expression.Value );
 
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "dbo.table", statement.From[ 0 ].Name );
@@ -121,7 +121,7 @@ namespace Laan.SQLParser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( SyntaxException ), "TOP clause requires an integer" ) ]
+        [ExpectedException( typeof( SyntaxException ), "expected alpha, numeric, or variable, found )" )]
         public void Test_Delete_Statement_With_Top_N_Clause_With_Missing_Value()
         {
             // Exercise

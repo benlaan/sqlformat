@@ -26,13 +26,9 @@ namespace Laan.SQL.Formatter
 
         private void FormatDelete()
         {
-            _sql.Append(
-            String.Format(
-                "DELETE{0}{1}",
-                ( _statement.Top.HasValue ? String.Format( " TOP ({0})", _statement.Top ) : "" ),
-                ( _statement.TableName != null ? " " + _statement.TableName : "" )
-            )
-        );
+            _sql.Append( Constants.Delete );
+            FormatTop( _statement.Top );
+            _sql.Append( _statement.TableName != null ? " " + _statement.TableName : "" );
         }
 
         #endregion

@@ -18,6 +18,7 @@ namespace Laan.SQL.Formatter
         public void Execute()
         {
             FormatUpdate();
+            FormatFieldAssignment(); 
             FormatFrom();
             FormatJoins();
             FormatWhere();
@@ -26,11 +27,13 @@ namespace Laan.SQL.Formatter
 
         #endregion
 
-        private void FormatUpdate()
+        private void FormatFieldAssignment()
         {
-            _sql.Append( "UPDATE " + ( _statement.Top.HasValue ? String.Format( "TOP ({0}) ", _statement.Top ) : "" ) + _statement.TableName );
-            NewLine();
-            string format = String.Format( "   {{0}} {{1,{0}}} = {{2}}{{3}}", -1 * _statement.Fields.Max( f => f.Alias.Name.Length ) );
+            string format = String.Format(
+                "   {{0}} {{1,{0}}} = {{2}}{{3}}",
+                -1 * _statement.Fields.Max( f => f.Alias.Name.Length ) 
+            );
+
             foreach ( Field field in _statement.Fields )
             {
                 string separator = field != _statement.Fields.Last() ? Constants.Comma + Environment.NewLine : "";
@@ -46,5 +49,11 @@ namespace Laan.SQL.Formatter
             }
         }
 
+        private void FormatUpdate()
+        {
+            _sql.Append( Constants.Update );
+            FormatTop( _statement.Top );
+            _sql.AppendLine( " " + _statement.TableName );
+        }
     }
 }

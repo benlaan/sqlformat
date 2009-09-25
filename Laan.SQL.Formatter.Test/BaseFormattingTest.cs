@@ -8,6 +8,15 @@ namespace Laan.SQL.Formatter.Test
 {
     public class BaseFormattingTest
     {
+        private static string DisplayText( string text )
+        {
+            var dot = '·';
+            var cr = '¶';
+            var lf = '§';
+
+            return text.Replace( ' ', dot ).Replace( '\n', cr ).Replace( '\r', lf );
+        }
+
         private static string DisplayLists( string[] expected, string[] actual )
         {
             const int offset = 5;
@@ -25,11 +34,7 @@ namespace Laan.SQL.Formatter.Test
                 string actualLine = GetLine( index, actual );
                 string flag = expectedLine == actualLine ? " " : new string( Convert.ToChar( 187 ), 1 );
                 result.Append( flag + " " );
-                result.AppendFormat(
-                    LineFormat,
-                    expectedLine,
-                    actualLine
-                );
+                result.AppendFormat( LineFormat, DisplayText( expectedLine ), DisplayText( actualLine ) );
             }
 
             return result.ToString();

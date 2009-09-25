@@ -13,7 +13,7 @@ namespace Laan.SQL.Parser.Test
     public class TestCreateView
     {
         [Test]
-        [ExpectedException( typeof( NotImplementedException ), Message = "No parser exists for statement type: merge" )]
+        [ExpectedException( typeof( ParserNotImplementedException ), Message = "No parser exists for statement type: merge" )]
         public void TestNoParserException()
         {
             //TODO: needs to be moved into a ParserFactory specific unit test
@@ -49,7 +49,7 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "v1", sut.Name );
             Assert.AreEqual( 1, statement.Fields.Count );
             Assert.AreEqual( "*", statement.Fields[ 0 ].Expression.Value );
-            Assert.AreEqual( 10, statement.Top );
+            Assert.AreEqual( "10", statement.Top.Expression.Value );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
         }
 
@@ -73,7 +73,7 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "v1", sut.Name );
             Assert.AreEqual( 1, statement.Fields.Count );
             Assert.AreEqual( "*", statement.Fields[ 0 ].Expression.Value );
-            Assert.AreEqual( 10, statement.Top );
+            Assert.AreEqual( "10", statement.Top.Expression.Value );
             Assert.IsTrue( statement.Distinct );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
         }

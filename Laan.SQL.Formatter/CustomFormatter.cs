@@ -46,6 +46,22 @@ namespace Laan.SQL.Formatter
             IndentedAppend( String.Format( text, args ) );
         }
 
+        protected void FormatTop( Top top )
+        {
+            if ( top == null )
+                return;
+
+            string format = top.Brackets ? " TOP ({0}){1}" : " TOP {0}{1}";
+
+            _sql.Append(
+                String.Format(
+                    format,
+                    top.Expression.FormattedValue( 0, _indent, _indentStep ),
+                    top.Percent ? " PERCENT" : ""
+                )
+            );
+        }
+        
         protected void FormatFrom()
         {
             if ( _statement.From != null && _statement.From.Any() )
@@ -85,7 +101,15 @@ namespace Laan.SQL.Formatter
                     if ( join is DerivedJoin )
                     {
                         DerivedJoin derivedJoin = (DerivedJoin) join;
-                        var formatter = new SelectStatementFormatter( _indent, _indentStep + 1, _sql, derivedJoin.SelectStatement, true );
+                        
+                        var formatter = new SelectStatementFormatter(
+                            _indent, 
+                            _indentStep + 1, 
+                            _sql, 
+                            derivedJoin.SelectStatement,
+                            true 
+                        );
+
                         NewLine( 2 );
                         IndentedAppend( join.Value );
                         NewLine( 2 );
@@ -118,7 +142,10 @@ namespace Laan.SQL.Formatter
             if ( _statement.Where != null )
             {
                 NewLine( 2 );
-                IndentedAppendFormat( "WHERE {0}", _statement.Where.FormattedValue( WhereLength, _indent, _indentStep ) );
+                IndentedAppendFormat( 
+                    "{0} {1}", 
+                    Constants.Where, _statement.Where.FormattedValue( WhereLength, _indent, _indentStep ) 
+                );
             }
         }
 

@@ -170,6 +170,12 @@ namespace Laan.SQL.Parser
                     return negationExpression;
                 }
 
+                if ( Tokenizer.Current != (Token)null && !Tokenizer.Current.IsTypeIn( 
+                    TokenType.QuotedText, TokenType.Variable, TokenType.Alpha, TokenType.AlphaNumeric, 
+                    TokenType.Numeric, TokenType.Operator ) 
+                )
+                    throw new SyntaxException( "expected alpha, numeric, or variable, found " + Tokenizer.Current.Value );
+
                 // get (possibly dot notated) identifier next
                 token = GetDotNotationIdentifier();
 

@@ -126,5 +126,27 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( 1, statement.Columns.Count );
             Assert.AreEqual( "[ID1]", statement.Columns[ 0 ].Name );
         }
+
+        [Test]
+        public void Test()
+        {
+            // Exercise
+            var statement = ParserFactory.Execute<CreateIndexStatement>( @"
+
+                CREATE UNIQUE INDEX dbo.IX_Stuff_Is_Unique ON dbo.Stuff
+                (
+	                A, B, C, D, E, F
+                )
+                "
+            ).First();
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.IsFalse( statement.Clustered );
+            Assert.IsTrue( statement.Unique );
+            Assert.AreEqual( "dbo.Stuff", statement.TableName );
+            Assert.AreEqual( "dbo.IX_Stuff_Is_Unique", statement.IndexName );
+            Assert.AreEqual( 6, statement.Columns.Count );
+        }
     }
 }

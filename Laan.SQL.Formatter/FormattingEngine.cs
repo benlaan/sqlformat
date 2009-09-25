@@ -7,13 +7,6 @@ using Laan.SQL.Parser;
 
 namespace Laan.SQL.Formatter
 {
-    public interface IFormattingEngine
-    {
-        string Execute( string sql );
-        int TabSize { get; set; }
-        bool UseTabChar { get; set; }
-    }
-
     public class FormattingEngine : IFormattingEngine
     {
         private Dictionary<Type, Type> _formatters;
@@ -37,25 +30,38 @@ namespace Laan.SQL.Formatter
             };
         }
 
+        private IStatementFormatter GetFormatter( string indent, StringBuilder outSql, IStatement statement )
+        {
+            Type formatterType;
+            if ( !_formatters.TryGetValue( statement.GetType(), out formatterType ) )
+                throw new FormatterNotImplementedException(
+                    "Formatter not implemented for statement: " + statement.GetType().Name 
+                );
+
+            var formatter = Activator.CreateInstance(
+                formatterType,
+                indent,
+                IndentStep,
+                outSql,
+                statement
+            ) as IStatementFormatter;
+
+            if ( formatter == null )
+                throw new ArgumentNullException( "Formatter not instantiated: " + formatterType.Name );
+            
+            return formatter;
+        }
+
         public string Execute( string sql )
         {
             string indent = UseTabChar ? "\t" : new string( ' ', TabSize );
 
             var outSql = new StringBuilder();
+            var statements = ParserFactory.Execute( sql );
 
-            List<IStatement> statements = ParserFactory.Execute( sql );
-            foreach ( IStatement statement in statements )
+            foreach ( var statement in statements )
             {
-
-                // this is a quick and dirty service locator that maps statements to formatters
-                Type formatterType;
-                if ( !_formatters.TryGetValue( statement.GetType(), out formatterType ) ) 
-                    throw new Exception( "Formatter not implemented for statement: " + statement.GetType().Name );
-
-                var formatter = Activator.CreateInstance( formatterType, indent, IndentStep, outSql, statement ) as IStatementFormatter;
-
-                if ( formatter == null )
-                    throw new Exception( "Formatter not instantiated: " + formatterType.Name );
+                var formatter = GetFormatter( indent, outSql, statement );
                 formatter.Execute();
 
                 if ( statement != statements.Last() )

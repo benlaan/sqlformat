@@ -117,6 +117,9 @@ namespace Laan.SQL.Parser
             do
                 ProcessField( fieldType, fieldList );
             while ( Tokenizer.TokenEquals( Constants.Comma ) );
+
+            if ( fieldList.Count == 0 )
+                throw new SyntaxException( "field list can not be empty" );
         }
 
         private JoinType? GetJoinType()

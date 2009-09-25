@@ -4,19 +4,6 @@ using System.Linq;
 
 namespace Laan.SQL.Parser
 {
-    public class GoTerminatorParser : StatementParser<GoTerminator>
-    {
-        public GoTerminatorParser( ITokenizer tokenizer )
-            : base( tokenizer )
-        {
-        }
-
-        public override GoTerminator Execute()
-        {
-            return new GoTerminator();
-        }
-    }
-
     public class ParserFactory
     {
         private static Dictionary<string, Type> _parsers;
@@ -28,12 +15,14 @@ namespace Laan.SQL.Parser
         {
             _parsers = new Dictionary<string, Type>
             {
-                { Constants.Select,    typeof( SelectStatementParser ) },
-                { Constants.Insert,    typeof( InsertStatementParser ) },
-                { Constants.Update,    typeof( UpdateStatementParser ) },
-                { Constants.Delete,    typeof( DeleteStatementParser ) },
-                { Constants.Grant,     typeof( GrantStatementParser ) },
-                { Constants.Go,        typeof( GoTerminatorParser ) },
+                { Constants.Select, typeof( SelectStatementParser ) },
+                { Constants.Insert, typeof( InsertStatementParser ) },
+                { Constants.Update, typeof( UpdateStatementParser ) },
+                { Constants.Delete, typeof( DeleteStatementParser ) },
+                { Constants.Grant,  typeof( GrantStatementParser  ) },
+                { Constants.Go,     typeof( GoTerminatorParser    ) },
+                { Constants.Create, typeof( CreateStatementParser ) },
+                { Constants.Alter,  typeof( AlterStatementParser  ) },
             };
         }
 
@@ -72,32 +61,8 @@ namespace Laan.SQL.Parser
             {
                 IParser parser = GetParser( _tokenizer );
 
-                // process 'other' parsers, that don't map one-for-one with a statement
                 if ( parser == null )
-                {
-                    if ( _tokenizer.TokenEquals( Constants.Create ) )
-                    {
-                        if ( _tokenizer.TokenEquals( Constants.Table ) )
-                            parser = new CreateTableStatementParser( _tokenizer );
-
-                        if ( _tokenizer.TokenEquals( Constants.View ) )
-                            parser = new CreateViewStatementParser( _tokenizer );
-
-                        if ( _tokenizer.TokenEquals( Constants.Procedure ) )
-                            parser = new CreateViewStatementParser( _tokenizer );
-
-                        if ( _tokenizer.IsNextToken( Constants.Unique, Constants.Clustered, Constants.NonClustered, Constants.Index ) )
-                            parser = new CreateIndexParser( _tokenizer );
-                    }
-                    else if ( _tokenizer.TokenEquals( Constants.Alter ) )
-                    {
-                        if ( _tokenizer.TokenEquals( Constants.Table ) )
-                            parser = new AlterTableStatementParser( _tokenizer );
-                    }
-                }
-
-                if ( parser == null && _tokenizer.Current != (Token) null )
-                    throw new NotImplementedException(
+                    throw new ParserNotImplementedException(
                         "No parser exists for statement type: " + _tokenizer.Current.Value
                     );
 

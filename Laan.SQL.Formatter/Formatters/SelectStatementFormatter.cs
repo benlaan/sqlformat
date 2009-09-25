@@ -34,12 +34,11 @@ namespace Laan.SQL.Formatter
             if ( _statement.Distinct )
                 _sql.Append( " DISTINCT " );
 
-            if ( _statement.Top.HasValue )
-                _sql.Append( " TOP " + _statement.Top.Value.ToString() );
-
+            FormatTop( _statement.Top );
             FormatFields( _statement.Fields );
         }
 
+        
         private void FormatFields( List<Field> fields )
         {
             if ( fields.Count == 1 && fields[ 0 ].Expression.Value.Length < 20 )

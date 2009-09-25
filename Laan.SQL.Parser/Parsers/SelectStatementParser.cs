@@ -2,12 +2,12 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections;
+using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser
 {
     public class SelectStatementParser : CriteriaStatementParser<SelectStatement>
     {
-
         public SelectStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
 
         private void ProcessDistinct()
@@ -17,15 +17,8 @@ namespace Laan.SQL.Parser
 
         private void ProcessTop()
         {
-            if ( Tokenizer.TokenEquals( Constants.Top ) )
-            {
-                int top;
-                if ( !Int32.TryParse( CurrentToken, out top ) )
-                    throw new SyntaxException( String.Format( "Expected integer but found: '{0}'", CurrentToken ) );
-
-                _statement.Top = ( int )top;
-                ReadNextToken();
-            }
+            if ( Tokenizer.IsNextToken( Constants.Top ) )
+                _statement.Top = GetTop();
         }
 
         private void ProcessOrderBy()

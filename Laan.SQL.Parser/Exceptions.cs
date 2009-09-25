@@ -20,4 +20,17 @@ namespace Laan.SQL.Parser
 
         }
     }
+
+    public class ParserNotImplementedException : Exception
+    {
+        public ParserNotImplementedException( string message ) : base( message ){
+        }
+    }
+
+    public class FormatterNotImplementedException : Exception
+    {
+        public FormatterNotImplementedException( string message ) : base( message )
+        {
+        }
+    }
 }

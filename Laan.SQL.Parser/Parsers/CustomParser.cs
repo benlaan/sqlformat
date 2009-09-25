@@ -112,5 +112,41 @@ namespace Laan.SQL.Parser
                 Tokenizer.ReadNextToken();
             return result;
         }
+
+        protected Top GetTop()
+        {
+            // consume 'TOP' token first
+            Tokenizer.ExpectToken( Constants.Top );
+
+            Top top;
+            if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
+            {
+                using ( Tokenizer.ExpectBrackets() )
+                {
+                    var parser = new ExpressionParser( Tokenizer );
+                    var expression = parser.Execute();
+                    if ( expression != null )
+                    {
+                        top = new Top( expression, true );
+                        return top;
+                    }
+                    else
+                        throw new SyntaxException( "TOP clause requires an expression" );
+                }
+            }
+            else
+            {
+                if ( Tokenizer.Current.Type != TokenType.Numeric || Tokenizer.Current.Value.Contains( "." ) )
+                    throw new SyntaxException( String.Format( "Expected integer but found: '{0}'", Tokenizer.Current.Value ) );
+
+                top = new Top( new StringExpression( Tokenizer.Current.Value, null ), false );
+                ReadNextToken();
+            }
+
+            if ( Tokenizer.TokenEquals( Constants.Percent ) )
+                top.Percent = true;
+
+            return top;
+        }
     }
 }

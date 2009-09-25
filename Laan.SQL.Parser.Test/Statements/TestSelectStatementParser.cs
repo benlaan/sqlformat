@@ -13,7 +13,7 @@ namespace Laan.SQL.Parser.Test
     public class TestSelectStatementParser
     {
         [Test]
-        [ExpectedException( typeof( NotImplementedException ), Message = "No parser exists for statement type: merge" )]
+        [ExpectedException( typeof( ParserNotImplementedException ), Message = "No parser exists for statement type: merge" )]
         public void TestNoParserException()
         {
             // Exercise
@@ -60,7 +60,22 @@ namespace Laan.SQL.Parser.Test
             Assert.IsNotNull( statement );
             Assert.AreEqual( 1, statement.Fields.Count );
             Assert.AreEqual( "*", statement.Fields[ 0 ].Expression.Value );
-            Assert.AreEqual( 10, statement.Top );
+            Assert.AreEqual( "10", statement.Top.Expression.Value );
+            Assert.AreEqual( "table", statement.From[ 0 ].Name );
+        }
+
+        [Test]
+        public void Select_Top_50_Percent()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( "select top 50 percent * from table" ).First();
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 1, statement.Fields.Count );
+            Assert.AreEqual( "*", statement.Fields[ 0 ].Expression.Value );
+            Assert.AreEqual( "50", statement.Top.Expression.Value );
+            Assert.IsTrue( statement.Top.Percent );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
         }
 
@@ -96,7 +111,8 @@ namespace Laan.SQL.Parser.Test
             Assert.IsNotNull( statement );
             Assert.AreEqual( 1, statement.Fields.Count );
             Assert.AreEqual( "*", statement.Fields[ 0 ].Expression.Value );
-            Assert.AreEqual( 10, statement.Top );
+            Assert.IsNotNull( statement.Top );
+            Assert.AreEqual( "10", statement.Top.Expression.Value );
             Assert.IsTrue( statement.Distinct );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
         }

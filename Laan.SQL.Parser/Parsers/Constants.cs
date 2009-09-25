@@ -51,6 +51,7 @@ namespace Laan.SQL.Parser
         public const string Or = "OR";
         public const string Order = "ORDER";
         public const string Outer = "OUTER";
+        public const string Percent = "PERCENT";
         public const string Primary = "PRIMARY";
         public const string Procedure = "PROCEDURE";
         public const string References = "REFERENCES";

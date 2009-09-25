@@ -11,31 +11,31 @@ namespace Laan.SQL.Parser
         {
             // CREATE [UNIQUE] [CLUSTERED | NONCLUSTERED] INDEX index_name ON table (column [,...n])
 
-            CreateIndexStatement statement = new CreateIndexStatement();
+            _statement = new CreateIndexStatement();
 
             // optional
             if ( Tokenizer.TokenEquals( Constants.Unique ) )
-                statement.Unique = true;
+                _statement.Unique = true;
 
             // optional
             if ( Tokenizer.TokenEquals( Constants.NonClustered ) )
-                statement.Clustered = false;
+                _statement.Clustered = false;
 
             // optional
             if ( Tokenizer.TokenEquals( Constants.Clustered ) )
-                statement.Clustered = true;
+                _statement.Clustered = true;
             
             Tokenizer.ExpectToken( Constants.Index );
-            statement.IndexName = GetIdentifier();
+            _statement.IndexName = GetDotNotationIdentifier();
             Tokenizer.ExpectToken( Constants.On );
-            statement.TableName = GetTableName();
+            _statement.TableName = GetTableName();
             
             using ( Tokenizer.ExpectBrackets() )
             {
-                statement.Columns = GetIndexedColumnList();
+                _statement.Columns = GetIndexedColumnList();
             }
 
-            return statement;
+            return _statement;
         }
 
         private List<IndexedColumn> GetIndexedColumnList()
@@ -46,10 +46,9 @@ namespace Laan.SQL.Parser
                 string name = GetIdentifier();
 
                 Order order = Order.Ascending;
-                if ( Tokenizer.TokenEquals( "DESC" ) )
+                if ( Tokenizer.TokenEquals( Constants.Descending ) )
                     order = Order.Descending;
-
-                if ( Tokenizer.TokenEquals( "ASC" ) )
+                else if ( Tokenizer.TokenEquals( Constants.Ascending ) )
                     order = Order.Ascending;
 
                 columns.Add( new IndexedColumn() { Name = name, Order = order } );
