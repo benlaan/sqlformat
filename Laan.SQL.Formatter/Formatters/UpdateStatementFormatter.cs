@@ -55,5 +55,10 @@ namespace Laan.SQL.Formatter
             FormatTop( _statement.Top );
             _sql.AppendLine( " " + _statement.TableName );
         }
+
+        protected override bool CanCompactFormat()
+        {
+            return false;
+        }
     }
 }

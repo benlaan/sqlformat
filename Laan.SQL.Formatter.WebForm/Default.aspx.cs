@@ -21,7 +21,17 @@ namespace Laan.SQL.Formatter.Web
             var engine = new FormattingEngine();
             try
             {
-                output = engine.Execute( sqlInput.Text );
+                var timer = new System.Diagnostics.Stopwatch();
+                timer.Start();
+                try
+                {
+                    output = engine.Execute( sqlInput.Text );
+                }
+                finally
+                {
+                    timer.Stop();
+                }
+                timeTaken.Text = timer.ElapsedMilliseconds.ToString( "0:00:0000" );
             }
             catch ( Exception ex )
             {

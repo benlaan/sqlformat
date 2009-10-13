@@ -1,6 +1,9 @@
 using System;
-using MbUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
+
+using MbUnit.Framework;
+using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser.Test
 {
@@ -8,7 +11,7 @@ namespace Laan.SQL.Parser.Test
     public class TestBatchStatements
     {
         [Test]
-        public void Test()
+        public void Test_Implicit_Termination_Of_Statement()
         {
             // Setup
             var sql = "SELECT * FROM Table SELECT * FROM OtherTable";

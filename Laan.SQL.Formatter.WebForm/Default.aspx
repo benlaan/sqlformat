@@ -33,6 +33,12 @@
         <asp:Button ID="btnConvert" runat="server" Text="Convert" onclick="btnConvert_Click" />
     </div>
     <div>
+    <% if ( IsPostBack ) { %>
+        <div style="padding-bottom: 15px">
+            Time Taken:
+            <asp:Label runat="server" ID="timeTaken"></asp:Label>
+        </div>
+        <% } %>
         Output SQL
         <pre class="code prettyprint" style="width: 100%">
 <asp:Repeater ID="sqlOutput" runat="server"><ItemTemplate><%# Container.DataItem %>

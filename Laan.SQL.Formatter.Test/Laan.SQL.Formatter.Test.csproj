@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseFormattingTest.cs" />
+    <Compile Include="TestInsertStatementFormatting.cs" />
     <Compile Include="TestGoTerminatorStatementFormatting.cs" />
     <Compile Include="TestDeleteStatementFormatting.cs" />
     <Compile Include="TestUpdateStatementFormatting.cs" />

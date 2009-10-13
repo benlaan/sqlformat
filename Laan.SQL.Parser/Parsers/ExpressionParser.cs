@@ -172,7 +172,7 @@ namespace Laan.SQL.Parser
 
                 if ( Tokenizer.Current != (Token)null && !Tokenizer.Current.IsTypeIn( 
                     TokenType.QuotedText, TokenType.Variable, TokenType.Alpha, TokenType.AlphaNumeric, 
-                    TokenType.Numeric, TokenType.Operator ) 
+                    TokenType.Numeric, TokenType.Operator, TokenType.BlockedText ) 
                 )
                     throw new SyntaxException( "expected alpha, numeric, or variable, found " + Tokenizer.Current.Value );
 

@@ -40,8 +40,12 @@
     <Compile Include="CustomFormatter.cs" />
     <Compile Include="ExpressionFormatter.cs" />
     <Compile Include="ExpressionFormatterExtension.cs" />
+    <Compile Include="Formatters\InsertStatementFormatter.cs" />
+    <Compile Include="Formatters\DeclareStatementFormatter.cs" />
     <Compile Include="Formatters\DeleteStatementFormatter.cs" />
     <Compile Include="FormattingEngine.cs" />
+    <Compile Include="Interfaces\IIndentable.cs" />
+    <Compile Include="IndentScope.cs" />
     <Compile Include="Interfaces\IFormattingEngine.cs" />
     <Compile Include="Interfaces\IStatementFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

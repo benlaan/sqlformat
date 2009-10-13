@@ -68,10 +68,9 @@ namespace Laan.SQL.Parser
         {
             _statement = new InsertStatement();
 
-            if ( Tokenizer.TokenEquals( "INTO" ) )
-            {
-                // consume the current token
-            }
+            if ( Tokenizer.TokenEquals( Constants.Into ) )
+                _statement.HasInto = true;
+
             _statement.TableName = GetTableName();
 
             ProcessColumnList();

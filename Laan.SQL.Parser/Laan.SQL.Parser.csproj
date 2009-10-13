@@ -44,9 +44,13 @@
     <Compile Include="Entities\AliasedEntities.cs" />
     <Compile Include="Entities\AlterTableStatement.cs" />
     <Compile Include="Entities\CustomStatement.cs" />
+    <Compile Include="Entities\DeclareStatement.cs" />
     <Compile Include="Entities\DeleteStatement.cs" />
+    <Compile Include="Entities\IfStatement.cs" />
     <Compile Include="Entities\ProjectionStatement.cs" />
+    <Compile Include="Entities\Statement.cs" />
     <Compile Include="Entities\Top.cs" />
+    <Compile Include="Entities\VariableDefinition.cs" />
     <Compile Include="Expressions\CaseExpression.cs" />
     <Compile Include="Expressions\CriteriaExpression.cs" />
     <Compile Include="Expressions\FunctionExpression.cs" />
@@ -72,6 +76,7 @@
     <Compile Include="Entities\CreateIndexStatement.cs" />
     <Compile Include="Parsers\Constants.cs" />
     <Compile Include="Parsers\CreateStatementParser.cs" />
+    <Compile Include="Parsers\DeclareStatementParser.cs" />
     <Compile Include="Parsers\DeleteStatementParser.cs" />
     <Compile Include="Parsers\CreateNonClusteredIndexParser.cs" />
     <Compile Include="Entities\CreateTableStatement.cs" />
@@ -90,8 +95,9 @@
     <Compile Include="Entities\InsertStatement.cs" />
     <Compile Include="Parsers\GoTerminatorParser.cs" />
     <Compile Include="Parsers\GrantStatementParser.cs" />
+    <Compile Include="Parsers\IfStatementParser.cs" />
     <Compile Include="Parsers\InsertStatementParser.cs" />
-    <Compile Include="Parsers\ParserFactory.cs" />
+    <Compile Include="ParserFactory.cs" />
     <Compile Include="Parsers\UpdateStatementParser.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

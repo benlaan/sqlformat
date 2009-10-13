@@ -15,14 +15,16 @@ namespace Laan.SQL.Parser
         {
             _parsers = new Dictionary<string, Type>
             {
-                { Constants.Select, typeof( SelectStatementParser ) },
-                { Constants.Insert, typeof( InsertStatementParser ) },
-                { Constants.Update, typeof( UpdateStatementParser ) },
-                { Constants.Delete, typeof( DeleteStatementParser ) },
-                { Constants.Grant,  typeof( GrantStatementParser  ) },
-                { Constants.Go,     typeof( GoTerminatorParser    ) },
-                { Constants.Create, typeof( CreateStatementParser ) },
-                { Constants.Alter,  typeof( AlterStatementParser  ) },
+                { Constants.Select,     typeof( SelectStatementParser  ) },
+                { Constants.Insert,     typeof( InsertStatementParser  ) },
+                { Constants.Update,     typeof( UpdateStatementParser  ) },
+                { Constants.Delete,     typeof( DeleteStatementParser  ) },
+                { Constants.Grant,      typeof( GrantStatementParser   ) },
+                { Constants.Go,         typeof( GoTerminatorParser     ) },
+                { Constants.Create,     typeof( CreateStatementParser  ) },
+                { Constants.Alter,      typeof( AlterStatementParser   ) },
+                { Constants.Declare,    typeof( DeclareStatementParser ) },
+                { Constants.If,         typeof( IfStatementParser      ) },
             };
         }
 
@@ -72,7 +74,7 @@ namespace Laan.SQL.Parser
             return result;
         }
 
-        private static IParser GetParser( ITokenizer _tokenizer )
+        internal static IParser GetParser( ITokenizer _tokenizer )
         {
             // this is a quick and dirty service locator that maps tokens to parsers
             Type parserType;

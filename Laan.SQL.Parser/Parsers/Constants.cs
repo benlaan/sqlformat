@@ -21,6 +21,7 @@ namespace Laan.SQL.Parser
         public const string Comma = ",";
         public const string Constraint = "CONSTRAINT";
         public const string Create = "CREATE";
+        public const string Declare = "DECLARE";
         public const string Default = "DEFAULT";
         public const string Delete = "DELETE";
         public const string Descending = "DESC";
@@ -37,9 +38,11 @@ namespace Laan.SQL.Parser
         public const string Group = "GROUP";
         public const string Having = "HAVING";
         public const string Identity = "IDENTITY";
+        public const string If = "IF";
         public const string Index = "INDEX";
         public const string Inner = "INNER";
         public const string Insert = "INSERT";
+        public const string Into = "INTO";
         public const string Join = "JOIN";
         public const string Key = "KEY";
         public const string Left = "LEFT";

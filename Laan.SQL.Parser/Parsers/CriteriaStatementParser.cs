@@ -178,7 +178,7 @@ namespace Laan.SQL.Parser
                 _statement.From.Add( table );
 
                 // if a new statement is initiated here, do not process the alias
-                if ( Tokenizer.IsNextToken( Constants.SemiColon, Constants.Go, Constants.Select, Constants.Insert, Constants.Update, Constants.Delete, Constants.Create, Constants.Alter, Constants.Union ) )
+                if ( Tokenizer.IsNextToken( Constants.SemiColon, Constants.Go, Constants.Select, Constants.Insert, Constants.Update, Constants.Delete, Constants.Create, Constants.Alter, Constants.Union, Constants.Else ) )
                     return;
 
                 Alias alias = new Alias( null );

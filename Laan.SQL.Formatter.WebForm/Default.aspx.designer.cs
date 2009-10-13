@@ -32,6 +32,15 @@ namespace Laan.SQL.Formatter.Web {
         protected global::System.Web.UI.WebControls.Button btnConvert;
         
         /// <summary>
+        /// timeTaken control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label timeTaken;
+        
+        /// <summary>
         /// sqlOutput control.
         /// </summary>
         /// <remarks>

@@ -35,7 +35,6 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"DELETE",
-                "",
                 "FROM dbo.Table"
             };
 
@@ -55,7 +54,6 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"DELETE TOP (10)",
-                "",
                 "FROM dbo.Table"
             };
 
@@ -75,7 +73,6 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"DELETE TOP (10) T",
-                "",
                 "FROM dbo.Table T"
             };
 
@@ -95,9 +92,7 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"DELETE T",
-                "",
                 "FROM dbo.Table T",
-                "",
                 "WHERE T.TableID = 10"
             };
 
@@ -143,7 +138,6 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"DELETE T",
-                "",
                 "FROM dbo.Table T",
                 "",
                 "JOIN dbo.OtherJoin AS O",

@@ -5,7 +5,7 @@ using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser
 {
-    public class CustomStatement : IStatement
+    public class CustomStatement : Statement
     {
         /// <summary>
         /// Initializes a new instance of the BaseStatement class.
@@ -14,12 +14,10 @@ namespace Laan.SQL.Parser
         {
             From = new List<Table>();
             Joins = new List<Join>();
-            Terminated = false;
         }
 
         public List<Join> Joins { get; set; }
         public List<Table> From { get; set; }
         public Expression Where { get; set; }
-        public bool Terminated { get; set; }
     }
 }

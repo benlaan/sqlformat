@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using MbUnit.Framework;
+using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser.Test
 {
@@ -401,42 +402,33 @@ namespace Laan.SQL.Parser.Test
         }
 
         [Test]
-        public void Test()
+        public void Test_VarChar_Column_With_Calculated_Value()
         {
             // Setup
             var statement = ParserFactory.Execute<CreateTableStatement>( @"
-                CREATE TABLE Stage.[Parcels_Updates]
-                (
-                [ParcelID] [int] NOT NULL,
-                [ParcelNumber] [varchar] (32) COLLATE Latin1_General_CI_AS NULL,
-                [TransactionType] [int] NULL,
-                [OwnerOrderNumber] [varchar] (16) COLLATE Latin1_General_CI_AS NULL,
-                [IsWarehouser] [bit] NULL,
-                [StartDateTime] [datetime] NULL,
-                [ExpiryDate] [datetime] NULL,
-                [TransportMode] [int] NULL,
-                [IsFulfilled] [bit] NULL,
-                [Responsibility] [nvarchar] (32) COLLATE Latin1_General_CI_AS NULL,
-                [SpecialInstructions] [nvarchar] (64) COLLATE Latin1_General_CI_AS NULL,
-                [CustomerID] [int] NULL,
-                [SeasonID] [int] NULL,
-                [CommodityID] [int] NULL,
-                [BinGradeID] [int] NULL,
-                [ToSiteID] [int] NULL,
-                [FromSiteID] [int] NULL,
-                [TotalWeightKilograms] [int] NULL,
-                [VariancePercentage] [float] NULL,
-                [VarianceAbsoluteKilograms] [int] NULL,
-                [ReceiverShortName] [nvarchar] (32) COLLATE Latin1_General_CI_AS NULL,
-                [ReceiverLongName] [nchar] (255) COLLATE Latin1_General_CI_AS NULL
-                )
-                "
+
+                create table Test 
+                ( 
+                    id1 int,
+                    id2 bit,
+                    calcField AS
+                        CASE WHEN [IsValid] = 1
+                              AND ISNULL([EffectiveFrom], GETDATE()) <= GETDATE()
+                              AND ( [EffectiveTo] IS NULL OR [EffectiveTo] >= GETDATE() ) THEN 1
+                        ELSE 0
+                        END
+                )"
             ).First();
 
-            // Exercise
-
             // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( "Test", statement.TableName );
+            Assert.AreEqual( 3, statement.Fields.Count );
 
+            FieldDefinition calcField = statement.Fields.Last();
+            Assert.AreEqual( "calcField", calcField.Name );
+            Assert.IsNull( calcField.Type );
+            Assert.AreEqual( typeof( CaseWhenExpression ), calcField.CalculatedValue.GetType() );
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Laan.SQL.Formatter.Test
         private static string DisplayLists( string[] expected, string[] actual )
         {
             const int offset = 5;
-            const int width = 60;
+            const int width = 85;
 
             string LineFormat = String.Format( "{{0,-{0}}} | {{1,-{0}}}\n", width );
 

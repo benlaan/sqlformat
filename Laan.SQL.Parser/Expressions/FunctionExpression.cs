@@ -24,5 +24,13 @@ namespace Laan.SQL.Parser.Expressions
                 return String.Format( "{0}({1})", Name, String.Join( Constants.Comma, args ) );
             }
         }
+
+        public override bool CanInline
+        {
+            get
+            {
+                return Arguments.All( arg => arg.CanInline ) && Value.Length < 40;
+            }
+        }
     }
 }

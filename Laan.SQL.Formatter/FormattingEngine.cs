@@ -9,7 +9,21 @@ namespace Laan.SQL.Formatter
 {
     public class FormattingEngine : IFormattingEngine
     {
-        private Dictionary<Type, Type> _formatters;
+        private static Dictionary<Type, Type> _formatters;
+
+        static FormattingEngine()
+        {
+            _formatters = new Dictionary<Type, Type>
+            {
+                { typeof( SelectStatement ), typeof( SelectStatementFormatter ) },
+                { typeof( UpdateStatement ), typeof( UpdateStatementFormatter ) },
+                { typeof( DeleteStatement ), typeof( DeleteStatementFormatter ) },
+                { typeof( InsertStatement ), typeof( InsertStatementFormatter ) },
+                { typeof( DeclareStatement ), typeof( DeclareStatementFormatter ) },
+                { typeof( GoTerminator ), typeof( GoTerminatorFormatter ) },
+//                { typeof( CreateTableStatement ), typeof( CreateTableStatementFormatter ) }
+            };
+        }
 
         /// <summary>
         /// Initializes a new instance of the FormattingEngine class.
@@ -19,15 +33,6 @@ namespace Laan.SQL.Formatter
             IndentStep = 0;
             TabSize = 4;
             UseTabChar = false;
-
-            _formatters = new Dictionary<Type, Type>
-            {
-                { typeof( SelectStatement ), typeof( SelectStatementFormatter ) },
-                { typeof( UpdateStatement ), typeof( UpdateStatementFormatter ) },
-                { typeof( DeleteStatement ), typeof( DeleteStatementFormatter ) },
-                { typeof( GoTerminator ), typeof( GoTerminatorFormatter ) },
-//                { typeof( CreateTableStatement ), typeof( CreateTableStatementFormatter ) }
-            };
         }
 
         private IStatementFormatter GetFormatter( string indent, StringBuilder outSql, IStatement statement )

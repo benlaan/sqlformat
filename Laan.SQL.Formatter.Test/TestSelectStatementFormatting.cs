@@ -101,9 +101,7 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"SELECT *",
-                "",
                 "FROM dbo.Table T",
-                "",
                 "WHERE T.TableID = 10"
             };
 
@@ -178,9 +176,7 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"SELECT *",
-                "",
                 "FROM dbo.Table T",
-                "",
                 "ORDER BY A.FieldID"
             };
 
@@ -200,7 +196,6 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"SELECT *",
-                "",
                 "FROM dbo.Table T",
                 "",
                 "ORDER BY",
@@ -225,7 +220,6 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"SELECT *",
-                "",
                 "FROM dbo.Table T",
                 "",
                 "GROUP BY",
@@ -250,7 +244,6 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"SELECT COUNT(*)",
-                "",
                 "FROM dbo.Table T",
                 "",
                 "GROUP BY",
@@ -277,9 +270,7 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"SELECT COUNT(*)",
-                "",
                 "FROM dbo.Table T",
-                "",
                 "GROUP BY A.FieldID",
                 "",
                 "HAVING COUNT(*) > 1",
@@ -377,13 +368,10 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"SELECT *",
-                "",
                 "FROM dbo.Events E",
-                "",
                 "WHERE Date = (",
                 "",
                 "    SELECT MAX(Date)",
-                "",
                 "    FROM dbo.Events",
                 "",
                 ")"
@@ -407,9 +395,7 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"SELECT *",
-                "",
                 "FROM dbo.Events E",
-                "",
                 "WHERE (",
                 "",
                 "    E.ID IS NULL",
@@ -437,9 +423,7 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"SELECT *",
-                "",
                 "FROM dbo.Events E",
-                "",
                 "WHERE (",
                 "",
                 "    E.ID IS NULL",
@@ -471,9 +455,7 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"SELECT *",
-                "",
                 "FROM dbo.Events E",
-                "",
                 "WHERE (",
                 "",
                 "    E.ID IS NULL",
@@ -509,9 +491,7 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                @"SELECT *",
-                "",
                 "FROM dbo.Events E",
-                "",
                 "WHERE (",
                 "",
                 "    E.ID IS NULL",

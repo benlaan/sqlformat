@@ -36,7 +36,6 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                 @"SELECT *",
-                "",
                 "FROM States",
             };
 
@@ -52,7 +51,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                @"SELECT *",
+                "SELECT *",
                 "",
                 "FROM States",
                 "",
@@ -74,9 +73,7 @@ namespace Laan.SQL.Formatter.Test
             var expected = new[]
             {
                 @"SELECT *",
-                "",
                 "FROM States",
-                "",
                 "WHERE ID = '5A3D68A3-F53B-40CE-8BDD-2F40A5D35DED'",
             };
 

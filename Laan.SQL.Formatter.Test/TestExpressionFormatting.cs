@@ -215,9 +215,7 @@ namespace Laan.SQL.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-                "SELECT",
-                "    dbo.SomeFunction(A.Value, A.Other)",
-                "",
+                "SELECT dbo.SomeFunction(A.Value, A.Other)",
                 "FROM dbo.Ark A"
             };
 
@@ -245,7 +243,6 @@ namespace Laan.SQL.Formatter.Test
                 "        A.AReallyLongFieldAgain,",
                 "        A.AReallyLongFieldOneMoreTime",
                 "    )",
-                "",
                 "FROM dbo.Ark A"
             };
 
@@ -260,7 +257,7 @@ namespace Laan.SQL.Formatter.Test
 
             // Exercise
             var actual = sut.Execute( 
-                @"SELECT CASE WHEN EXISTS( SELECT 1 FROM dbo.Notes) THEN 1 ELSE 0 END FROM dbo.Ark A"
+                @"SELECT CASE WHEN EXISTS( SELECT 1 FROM dbo.Notes WHERE A=1) THEN 1 ELSE 0 END FROM dbo.Ark A"
             );
 
             // Verify outcome
@@ -271,14 +268,13 @@ namespace Laan.SQL.Formatter.Test
                 "        WHEN EXISTS(",
                 "",
                 "            SELECT 1",
-                "",
                 "            FROM dbo.Notes",
+                "            WHERE A = 1",
                 "",
                 "        ) THEN 1",
                 "    ELSE",
                 "        0",
                 "    END",
-                "",
                 "FROM dbo.Ark A"
             };
 

@@ -8,7 +8,7 @@ using Laan.SQL.Parser;
 
 namespace Laan.SQL.Formatter
 {
-    internal class ExpressionFormatter
+    internal class ExpressionFormatter : IIndentable
     {
         private const int MaxColumnWidth = 80;
         private int _indentLevel;
@@ -20,6 +20,11 @@ namespace Laan.SQL.Formatter
             _indent = indent;
         }
 
+        private int GetCurrentColumn( StringBuilder sql )
+        {
+            return sql.ToString().Split( '\n' ).Last().Length;
+        }
+        
         internal string GetIndent( string indent, int indentLevel, bool includeNewLine )
         {
             string newLine = includeNewLine ? "\r\n" : "";
@@ -38,19 +43,19 @@ namespace Laan.SQL.Formatter
         {
             return String.Format(
                 "{0}ELSE{1}{2}",
-                GetIndent( _indent, indentLevel - 1 ),
                 GetIndent( _indent, indentLevel ),
+                GetIndent( _indent, indentLevel + 1 ),
                 caseSwitch.Else.FormattedValue( offset, _indent, _indentLevel )
             );
         }
 
         private bool CanInlineExpression( Expression expr, int offset )
         {
-            int startingColumn = offset + _indentLevel * _indent.Length;
+            //int startingColumn = offset +_indentLevel * _indent.Length;
             return
                 expr is IInlineFormattable &&
                 ( (IInlineFormattable) expr ).CanInline &&
-                expr.Value.Length < MaxColumnWidth - startingColumn;
+                expr.Value.Length < MaxColumnWidth - offset;
         }
 
         internal string GetBooleanExpression( CriteriaExpression expr, int offset )
@@ -117,13 +122,12 @@ namespace Laan.SQL.Formatter
 
             var caseSwitch = (CaseSwitchExpression) expr;
             bool isNested = _indentLevel > 1;
-            int nestLevel = isNested ? _indentLevel + 2 : _indentLevel + 1;
 
             var sql = new StringBuilder(
                 String.Format(
                     "{0}CASE {1}",
-                    isNested ? GetIndent( _indent, nestLevel - 1 ) : "",
-                    caseSwitch.Switch.FormattedValue( offset, _indent, nestLevel )
+                    isNested ? GetIndent( _indent, _indentLevel - 1 ) : "",
+                    caseSwitch.Switch.FormattedValue( offset, _indent, _indentLevel )
                 )
             );
 
@@ -132,16 +136,16 @@ namespace Laan.SQL.Formatter
                 sql.Append(
                     String.Format(
                         "{0}WHEN {1} THEN {2}",
-                        GetIndent( _indent, nestLevel ),
-                        caseItem.When.FormattedValue( offset, _indent, nestLevel ),
-                        caseItem.Then.FormattedValue( offset, _indent, nestLevel )
+                        GetIndent( _indent, _indentLevel + 1 ),
+                        caseItem.When.FormattedValue( offset, _indent, _indentLevel ),
+                        caseItem.Then.FormattedValue( offset, _indent, _indentLevel )
                     )
                 );
             }
             if ( caseSwitch.Else != null )
-                sql.Append( FormatCaseElseExpression( offset, caseSwitch, nestLevel ) );
+                sql.Append( FormatCaseElseExpression( offset, caseSwitch, _indentLevel ) );
 
-            sql.Append( GetIndent( _indent, nestLevel - 1 ) + "END" );
+            sql.Append( GetIndent( _indent, _indentLevel ) + "END" );
 
             return sql.ToString();
         }
@@ -152,30 +156,27 @@ namespace Laan.SQL.Formatter
                 return expr.Value;
 
             var caseSwitch = (CaseWhenExpression) expr;
-            bool isNested = _indentLevel > 1;
-            int nestLevel = isNested ? _indentLevel + 2 : _indentLevel + 1;
 
             var sql = new StringBuilder(
-                String.Format( "{0}CASE", isNested ? GetIndent( _indent, nestLevel - 1 ) : "" )
+                String.Format( "{0}CASE", _indentLevel > 1 ? GetIndent( _indent, _indentLevel ) : "" )
             );
-
-            foreach ( var caseItem in caseSwitch.Cases )
+            using ( new IndentScope( this ) )
             {
-                sql.Append(
-                    String.Format(
-                        "{0}WHEN {1} THEN {2}",
-                        GetIndent( _indent, nestLevel ),
-                        caseItem.When.FormattedValue( offset, _indent, nestLevel ),
-                        caseItem.Then.FormattedValue( offset, _indent, nestLevel )
-                    )
-                );
+                foreach ( var caseItem in caseSwitch.Cases )
+                {
+                    sql.AppendFormat( "{0}WHEN ", GetIndent( _indent, _indentLevel ) );
+                    sql.AppendFormat( "{0} THEN ", caseItem.When.FormattedValue( offset, _indent, _indentLevel ) );
+
+                    int off = GetCurrentColumn( sql );
+                    sql.Append( caseItem.Then.FormattedValue( offset + off, _indent, _indentLevel + 1 ) );
+                }
+                if ( caseSwitch.Else != null )
+                    sql.Append( FormatCaseElseExpression( offset, caseSwitch, _indentLevel - 1 ) );
+
+                sql.Append( GetIndent( _indent, _indentLevel - 1 ) + "END" );
+
+                return sql.ToString();
             }
-            if ( caseSwitch.Else != null )
-                sql.Append( FormatCaseElseExpression( offset, caseSwitch, nestLevel ) );
-
-            sql.Append( GetIndent( _indent, nestLevel - 1 ) + "END" );
-
-            return sql.ToString();
         }
 
         internal string FormatNestedExpression( NestedExpression expr, int offset )
@@ -196,34 +197,52 @@ namespace Laan.SQL.Formatter
 
         internal string FormatIdentifierListExpression( ExpressionList expr, int offset )
         {
-            return GetIndent( _indent, _indentLevel + 1, false ) + 
-                String.Join( ", ", expr.Identifiers.Select( id => id.FormattedValue( offset, _indent, _indentLevel ) ).ToArray() 
+            return GetIndent( _indent, _indentLevel + 1, false ) +
+                String.Join( ", ", expr.Identifiers.Select( id => id.FormattedValue( offset, _indent, _indentLevel ) ).ToArray()
             );
         }
 
         internal string FormatFunctionExpression( FunctionExpression expr, int offset )
         {
+            bool isExistsFunction = String.Compare( expr.Name, "EXISTS", true ) == 0;
+
             string[] args = expr.Arguments
                 .Select( arg => arg.FormattedValue( offset, _indent, _indentLevel ) )
                 .ToArray();
 
-            bool isExistsFunction = String.Compare( expr.Name, "EXISTS", true ) == 0;
             bool CanInline = !isExistsFunction && expr.Value.Length <= 40;
 
-            string prefix = !CanInline ? GetIndent( _indent, _indentLevel + 1 ) : "";
-            string postFix = !CanInline ? GetIndent( _indent, _indentLevel ) : "";
-            string comma = Constants.Comma + (CanInline ? " " : "");
-            string separator = !CanInline ? comma + prefix : comma;
-            string spacer = isExistsFunction ? "\r\n" : "";
+            using ( new IndentScope( this ) )
+            {
+                string prefix = CanInline ? "" : GetIndent( _indent, _indentLevel );
+                string postFix = CanInline ? "" : GetIndent( _indent, _indentLevel - 1 );
+                string comma = Constants.Comma + (CanInline ? " " : "");
+                string separator = !CanInline ? comma + prefix : comma;
+                string spacer = isExistsFunction ? "\r\n" : "";
 
-            return String.Format(
-                "{0}({1}{2}{3}{1}{4})",
-                expr.Name,
-                spacer,
-                prefix,
-                String.Join( separator, args ),
-                postFix
-            );
+                return String.Format(
+                    "{0}({1}{2}{3}{1}{4})",
+                    expr.Name,
+                    spacer,
+                    prefix,
+                    String.Join( separator, args ),
+                    postFix
+                );
+            }
         }
+
+        #region IIndentable Members
+
+        public void Indent()
+        {
+            _indentLevel++;
+        }
+
+        public void Unindent()
+        {
+            _indentLevel--;
+        }
+
+        #endregion
     }
 }
