@@ -15,7 +15,9 @@ namespace Laan.AddIns.Ssms.Actions
 
         static SqlTemplating()
         {
-            // temp template listing - this will change to being user-config, loaded from a file..
+            var line = new string( '-', 80 );
+
+            // temporary template listing - this will change to being user-config, loaded from a file..
             _templates = new Dictionary<string, string>() 
             { 
                 // Blocks, Transaction control
@@ -31,11 +33,15 @@ namespace Laan.AddIns.Ssms.Actions
                 // Statements
                 { "sfw",    "SELECT \nFROM |\nWHERE " },
                 { "ufw",    "UPDATE \n   SET \nFROM |\nWHERE " },
-                
+                { "ss",    "SELECT *\n\t|" },
+                { "wi",    "WHERE |ID = " },
+
                 // Joins
                 { "j",      "JOIN |\n  ON " },
                 { "lj",     "LEFT JOIN |\n       ON " },
                 { "rj",     "RIGHT JOIN |\n        ON " },
+                { "fj",     "FULL JOIN |\n       ON " },
+                { "cj",     "CROSS JOIN |" },
 
                 // Helpers
                 { "ob",    "ORDER BY |" },
@@ -46,6 +52,7 @@ namespace Laan.AddIns.Ssms.Actions
                 { "ex",    "EXISTS(|)" },
                 { "nex",    "NOT EXISTS(|)" },
                 { "pr",    "PRINT '|'" },
+                { "--",    String.Format("{0}\n-- |\n{0}", line) },
 
                 // Declarations
                 { "di",     "DECLARE @| INT" },
