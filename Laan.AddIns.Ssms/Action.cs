@@ -45,5 +45,11 @@ namespace Laan.AddIns.Core
 
         public abstract void Execute();
         public abstract bool CanExecute();
+
+        public string FullName
+        {
+            get { return String.Format( "Laan.AddIns.Core.Addin.{0}", KeyName ); }
+        }
+
     }
 }

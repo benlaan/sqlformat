@@ -56,17 +56,17 @@ namespace Laan.AddIns.Core
             _commands = (Commands2) _application.Commands;
         }
 
-        private bool CommandIsInstalled( string name )
+        private bool CommandIsInstalled( Action action )
         {
             bool found = true;
             try
             {
-                var findCommand = _commands.Item( name, 0 );
+                var findCommand = _commands.Item( action.FullName, 1 );
             }
             catch ( Exception ex )
             {
                 found = false;
-                Error( ex );
+                Error( action.DisplayName + " not found: ", ex );
             }
             return found;
         }
@@ -123,7 +123,7 @@ namespace Laan.AddIns.Core
 
             foreach ( var action in _actions )
             {
-                if ( CommandIsInstalled( action.KeyName ) )
+                if ( CommandIsInstalled( action ) )
                     continue;
 
                 try
@@ -151,6 +151,22 @@ namespace Laan.AddIns.Core
                 catch ( System.ArgumentException ex )
                 {
                     Error( ex );
+                }
+            }
+        }
+
+        private void RemoveCommandFromToolsMenu()
+        {
+            foreach ( var action in _actions )
+            {
+                try
+                {
+                    var command = _commands.Item( action.FullName, 1 );
+                    command.Delete();
+                }
+                catch ( Exception ex )
+                {
+                    Error( action.DisplayName + " not found: ", ex );
                 }
             }
         }
@@ -204,6 +220,11 @@ namespace Laan.AddIns.Core
             Trace.WriteLine( ex );
         }
 
+        internal void Error( string message, Exception ex )
+        {
+            Trace.WriteLine( message + "\n\t" + ex );
+        }
+
         internal void OpenUndoContext( string name, bool strict )
         {
             _application.UndoContext.Open( name, strict );
@@ -214,46 +235,18 @@ namespace Laan.AddIns.Core
             _application.UndoContext.Close();
         }
 
-        internal TextDocument TextDocument
-        {
-            get { return (TextDocument) _application.ActiveDocument.Object( "TextDocument" ); }
-        }
-
-        internal string AllText
-        {
-            get
-            {
-                //using ( SelectionRestoreScope( TextDocument ) )
-                {
-                    TextDocument.Selection.SelectAll();
-                    return TextDocument.Selection.Text;
-                }
-            }
-        }
-
-        private void InternalSelectCurrentWord()
-        {
-            var selection = TextDocument.Selection;
-            var point = selection.ActivePoint.CreateEditPoint();
-            selection.WordLeft( true, 1 );
-
-            var line = selection.TextRanges.Item( 1 ).StartPoint.Line;
-            var leftPos = selection.TextRanges.Item( 1 ).StartPoint.LineCharOffset;
-
-            point.MoveToLineAndOffset( line, leftPos );
-            selection.MoveToPoint( point, false );
-            selection.WordRight( true, 1 );
-        }
-
         internal void CancelSelection()
         {
             TextDocument.Selection.Cancel();
         }
 
-        internal string SelectCurrentWord()
+        internal void SelectCurrentWord()
         {
-            InternalSelectCurrentWord();
-            return TextDocument.Selection.Text;
+            var cursor = TextDocument.Selection.ActivePoint;
+            var point = cursor.CreateEditPoint();
+            point.WordLeft( 1 );
+            TextDocument.Selection.MoveToPoint( point, false );
+            TextDocument.Selection.WordRight( true, 1 );
         }
 
         internal void ClearSelection()
@@ -273,6 +266,49 @@ namespace Laan.AddIns.Core
             TextDocument.Selection.Insert( message, (int) vsInsertFlags.vsInsertFlagsContainNewText );
         }
 
+        internal string CurrentLine
+        {
+            get
+            {
+                var cursor = TextDocument.Selection.ActivePoint;
+                var point = cursor.CreateEditPoint();
+                point.StartOfLine();
+                return point.GetText( cursor );
+            }
+        }
+
+        internal string CurrentWord
+        {
+            get
+            {
+                var cursor = TextDocument.Selection.ActivePoint;
+                var point = cursor.CreateEditPoint();
+                point.WordLeft( 1 );
+                return point.GetText( cursor ).Trim();
+            }
+        }
+
+        internal string CurrentSelection
+        {
+            get { return TextDocument.Selection.Text; }
+        }
+
+        internal TextDocument TextDocument
+        {
+            get { return (TextDocument) _application.ActiveDocument.Object( "TextDocument" ); }
+        }
+
+        internal string AllText
+        {
+            get
+            {
+                var cursor = TextDocument.StartPoint;
+                var point = cursor.CreateEditPoint();
+                point.StartOfDocument();
+                return point.GetText( TextDocument.EndPoint );
+            }
+        }
+
         internal Cursor Cursor
         {
             get
@@ -289,36 +325,15 @@ namespace Laan.AddIns.Core
             }
         }
 
-        internal string CurrentLine
+        private void DumpCommands()
         {
-            get
+            foreach ( Command c in _commands )
             {
-                TextSelection selection = TextDocument.Selection;
-                var point = selection.ActivePoint.CreateEditPoint();
-                selection.WordLeft( true, 1 );
-
-                var line = selection.TextRanges.Item( 1 ).StartPoint.Line;
-                var leftPos = selection.TextRanges.Item( 1 ).StartPoint.LineCharOffset;
-
-                point.StartOfLine();
-                selection.MoveToPoint( point, false );
-                selection.WordRight( true, 1 );
-                string currentLine = selection.Text;
-
-                CancelSelection();
-                return currentLine;
-            }
-        }
-
-        internal string CurrentWord
-        {
-            get
-            {
-                InternalSelectCurrentWord();
-                string currentWord = TextDocument.Selection.Text;
-                CancelSelection();
-
-                return currentWord;
+                Trace.WriteLine(
+                    String.Format(
+                        "{0} {1}: {2}",
+                        c.ID, c.Name, ( (object[]) c.Bindings ).FirstOrDefault() )
+                );
             }
         }
 
@@ -334,6 +349,7 @@ namespace Laan.AddIns.Core
 
         public void OnDisconnection( ext_DisconnectMode disconnectMode, ref Array custom )
         {
+            RemoveCommandFromToolsMenu();
         }
 
         public void OnAddInsUpdate( ref Array custom )

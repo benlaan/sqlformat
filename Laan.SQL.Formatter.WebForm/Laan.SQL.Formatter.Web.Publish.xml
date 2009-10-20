@@ -1,33 +1,60 @@
 <publishData>
+  <publishTarget publishUrl="C:\Dev\GoogleCode\SqlFormatter\Laan.SQL.Formatter.WebForm\Deploy\">
+    <file relUrl="Scripts/lang-lua.js" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="bin/Laan.SQL.Formatter.pdb" publishTime="10/14/2009 09:06:51" />
+    <file relUrl="Web.config" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="Scripts/lang-proto.js" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="Scripts/prettify.js" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="Scripts/jquery.timer.js" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="bin/Laan.SQL.Parser.pdb" publishTime="10/14/2009 09:06:50" />
+    <file relUrl="Scripts/lang-ml.js" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="Scripts/lang-css.js" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="bin/Laan.SQL.Formatter.Web.pdb" publishTime="10/14/2009 09:06:53" />
+    <file relUrl="Scripts/lang-lisp.js" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="Content/styles.css" publishTime="09/18/2009 11:13:25" />
+    <file relUrl="bin/Laan.SQL.Formatter.Web.dll" publishTime="10/14/2009 09:06:53" />
+    <file relUrl="Scripts/lang-vb.js" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="bin/Laan.SQL.Formatter.dll" publishTime="10/14/2009 09:06:51" />
+    <file relUrl="bin/Laan.SQL.Parser.dll" publishTime="10/14/2009 09:06:50" />
+    <file relUrl="Site.Master" publishTime="09/18/2009 11:13:25" />
+    <file relUrl="Scripts/jquery-1.3.2.min.js" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="Content/prettify.css" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="Scripts/jquery-1.3.2.min-vsdoc.js" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="Default.aspx" publishTime="10/14/2009 08:47:45" />
+    <file relUrl="Scripts/lang-hs.js" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="Scripts/lang-wiki.js" publishTime="05/21/2009 13:44:38" />
+    <file relUrl="Scripts/lang-sql.js" publishTime="05/21/2009 13:44:38" />
+  </publishTarget>
   <publishTarget publishUrl="C:\Dev\GoogleCode\Laan.SqlFormatter\Laan.SQL.Formatter.WebForm\Deploy\">
+    <file relUrl="Site.Master" publishTime="09/18/2009 09:49:39" />
     <file relUrl="Scripts/lang-lua.js" publishTime="05/23/2009 09:19:26" />
-    <file relUrl="bin/Laan.SQL.Formatter.pdb" publishTime="09/18/2009 10:24:32" />
+    <file relUrl="Scripts/lang-sql.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="Web.config" publishTime="05/23/2009 09:19:34" />
-    <file relUrl="Scripts/lang-proto.js" publishTime="05/23/2009 09:19:26" />
+    <file relUrl="Scripts/jquery-1.3.2.min-vsdoc.js" publishTime="05/23/2009 09:19:26" />
+    <file relUrl="bin/Laan.SQL.Formatter.pdb" publishTime="09/18/2009 10:24:32" />
     <file relUrl="Scripts/prettify.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="Scripts/jquery.timer.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="bin/bin.zip" publishTime="09/18/2009 09:32:04" />
-    <file relUrl="bin/Laan.SQL.Parser.pdb" publishTime="09/18/2009 10:22:02" />
     <file relUrl="Scripts/lang-ml.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="Scripts/lang-css.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="bin/Laan.SQL.Formatter.Web.pdb" publishTime="09/18/2009 10:24:40" />
     <file relUrl="Scripts/lang-lisp.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="Content/styles.css" publishTime="09/16/2009 14:21:08" />
-    <file relUrl="bin/Laan.SQL.Formatter.Web.dll" publishTime="09/18/2009 10:24:40" />
     <file relUrl="Scripts/lang-vb.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="bin/Laan.SQL.Formatter.dll" publishTime="09/18/2009 10:24:32" />
+    <file relUrl="bin/Laan.SQL.Parser.pdb" publishTime="09/18/2009 10:22:02" />
     <file relUrl="bin/Laan.SQL.Parser.dll" publishTime="09/18/2009 10:22:02" />
-    <file relUrl="Site.Master" publishTime="09/18/2009 09:49:39" />
     <file relUrl="Scripts/jquery-1.3.2.min.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="Content/prettify.css" publishTime="05/23/2009 09:19:34" />
-    <file relUrl="Scripts/jquery-1.3.2.min-vsdoc.js" publishTime="05/23/2009 09:19:26" />
+    <file relUrl="bin/Laan.SQL.Formatter.Web.dll" publishTime="09/18/2009 10:24:40" />
     <file relUrl="Default.aspx" publishTime="09/18/2009 09:50:31" />
     <file relUrl="Scripts/lang-hs.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="Scripts/lang-wiki.js" publishTime="05/23/2009 09:19:26" />
-    <file relUrl="Scripts/lang-sql.js" publishTime="05/23/2009 09:19:26" />
+    <file relUrl="Scripts/lang-proto.js" publishTime="05/23/2009 09:19:26" />
   </publishTarget>
   <publishTarget publishUrl="C:\Dev\GoogleCode\SqlFormat\Laan.SQL.Formatter.WebForm\Deploy\">
     <file relUrl="bin/Laan.SQL.Formatter.Web.dll" publishTime="09/18/2009 09:31:58" />
+    <file relUrl="Scripts/lang-sql.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="Web.config" publishTime="05/23/2009 09:19:34" />
     <file relUrl="bin/Laan.SQL.Formatter.pdb" publishTime="09/18/2009 09:31:58" />
     <file relUrl="Scripts/prettify.js" publishTime="05/23/2009 09:19:26" />
@@ -45,66 +72,65 @@
     <file relUrl="Scripts/jquery-1.3.2.min.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="Content/prettify.css" publishTime="05/23/2009 09:19:34" />
     <file relUrl="bin/Laan.SQL.Parser.dll" publishTime="09/18/2009 09:31:58" />
-    <file relUrl="Scripts/lang-proto.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="Scripts/jquery-1.3.2.min-vsdoc.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="Scripts/lang-lua.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="Default.aspx" publishTime="09/18/2009 09:50:31" />
     <file relUrl="Scripts/lang-hs.js" publishTime="05/23/2009 09:19:26" />
     <file relUrl="Scripts/lang-wiki.js" publishTime="05/23/2009 09:19:26" />
-    <file relUrl="Scripts/lang-sql.js" publishTime="05/23/2009 09:19:26" />
+    <file relUrl="Scripts/lang-proto.js" publishTime="05/23/2009 09:19:26" />
   </publishTarget>
   <publishTarget publishUrl="ftp://202.125.39.117/code.laanfamily.com/public_html/">
     <file relUrl="Bio.aspx" publishTime="05/23/2009 09:19:32" />
-    <file relUrl="Site.Master" publishTime="05/23/2009 09:19:32" />
     <file relUrl="Scripts/lang-lua.js" publishTime="05/23/2009 09:19:25" />
-    <file relUrl="Scripts/lang-sql.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Web.config" publishTime="05/23/2009 09:19:32" />
-    <file relUrl="Scripts/jquery-1.3.2.min-vsdoc.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="bin/Laan.SQL.Formatter.pdb" publishTime="05/23/2009 10:12:45" />
     <file relUrl="Scripts/prettify.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Scripts/jquery.timer.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Scripts/lang-ml.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Scripts/lang-css.js" publishTime="05/23/2009 09:19:25" />
+    <file relUrl="Scripts/jquery-1.3.2.min.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="bin/Laan.SQL.Formatter.Web.pdb" publishTime="05/23/2009 10:12:45" />
     <file relUrl="Scripts/lang-lisp.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Content/styles.css" publishTime="05/23/2009 09:19:32" />
+    <file relUrl="bin/Laan.SQL.Formatter.Web.dll" publishTime="05/23/2009 10:12:45" />
     <file relUrl="Scripts/lang-vb.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="bin/Laan.SQL.Formatter.dll" publishTime="05/23/2009 10:12:45" />
     <file relUrl="bin/Laan.SQL.Parser.pdb" publishTime="05/23/2009 09:50:32" />
+    <file relUrl="Site.Master" publishTime="05/23/2009 09:19:32" />
     <file relUrl="bin/Laan.SQL.Parser.dll" publishTime="05/23/2009 09:50:32" />
-    <file relUrl="Scripts/jquery-1.3.2.min.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Content/prettify.css" publishTime="05/23/2009 09:19:32" />
-    <file relUrl="bin/Laan.SQL.Formatter.Web.dll" publishTime="05/23/2009 10:12:45" />
+    <file relUrl="Scripts/lang-proto.js" publishTime="05/23/2009 09:19:25" />
+    <file relUrl="Scripts/jquery-1.3.2.min-vsdoc.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Default.aspx" publishTime="05/23/2009 09:19:32" />
     <file relUrl="Scripts/lang-hs.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Scripts/lang-wiki.js" publishTime="05/23/2009 09:19:25" />
-    <file relUrl="Scripts/lang-proto.js" publishTime="05/23/2009 09:19:25" />
+    <file relUrl="Scripts/lang-sql.js" publishTime="05/23/2009 09:19:25" />
   </publishTarget>
   <publishTarget publishUrl="ftp://202.125.39.117/laanfami/code.laanfamily.com/public_html/">
     <file relUrl="Bio.aspx" publishTime="05/23/2009 09:19:32" />
-    <file relUrl="Site.Master" publishTime="05/23/2009 09:19:32" />
     <file relUrl="Scripts/lang-lua.js" publishTime="05/23/2009 09:19:25" />
-    <file relUrl="Scripts/lang-sql.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Web.config" publishTime="05/23/2009 09:19:32" />
-    <file relUrl="Scripts/jquery-1.3.2.min-vsdoc.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="bin/Laan.SQL.Formatter.pdb" publishTime="05/23/2009 10:12:45" />
     <file relUrl="Scripts/prettify.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Scripts/jquery.timer.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Scripts/lang-ml.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Scripts/lang-css.js" publishTime="05/23/2009 09:19:25" />
+    <file relUrl="Scripts/jquery-1.3.2.min.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="bin/Laan.SQL.Formatter.Web.pdb" publishTime="05/23/2009 10:12:45" />
     <file relUrl="Scripts/lang-lisp.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Content/styles.css" publishTime="05/23/2009 09:19:32" />
+    <file relUrl="bin/Laan.SQL.Formatter.Web.dll" publishTime="05/23/2009 10:12:45" />
     <file relUrl="Scripts/lang-vb.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="bin/Laan.SQL.Formatter.dll" publishTime="05/23/2009 10:12:45" />
     <file relUrl="bin/Laan.SQL.Parser.pdb" publishTime="05/23/2009 09:50:32" />
+    <file relUrl="Site.Master" publishTime="05/23/2009 09:19:32" />
     <file relUrl="bin/Laan.SQL.Parser.dll" publishTime="05/23/2009 09:50:32" />
-    <file relUrl="Scripts/jquery-1.3.2.min.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Content/prettify.css" publishTime="05/23/2009 09:19:32" />
-    <file relUrl="bin/Laan.SQL.Formatter.Web.dll" publishTime="05/23/2009 10:12:45" />
+    <file relUrl="Scripts/lang-proto.js" publishTime="05/23/2009 09:19:25" />
+    <file relUrl="Scripts/jquery-1.3.2.min-vsdoc.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Default.aspx" publishTime="05/23/2009 09:19:32" />
     <file relUrl="Scripts/lang-hs.js" publishTime="05/23/2009 09:19:25" />
     <file relUrl="Scripts/lang-wiki.js" publishTime="05/23/2009 09:19:25" />
-    <file relUrl="Scripts/lang-proto.js" publishTime="05/23/2009 09:19:25" />
+    <file relUrl="Scripts/lang-sql.js" publishTime="05/23/2009 09:19:25" />
   </publishTarget>
 </publishData>

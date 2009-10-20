@@ -1,9 +1,34 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Laan.SQL.Parser
 {
     public class SqlTokenizer : RegexTokenizer
     {
+
+        public bool SkipComments
+        {
+            set
+            {
+                TokenDefinitions
+                    .Where( tdef => tdef.Type == TokenType.InLineComment || tdef.Type == TokenType.MultiLineComment )
+                    .ToList()
+                    .ForEach( tdef => tdef.Skip = value );
+            }
+        }
+
+        public bool SkipWhiteSpace
+        {
+            set
+            {
+                TokenDefinitions
+                    .Where( tdef => tdef.Type == TokenType.WhiteSpace )
+                    .ToList()
+                    .ForEach( tdef => tdef.Skip = value );
+            }
+        }
+        
         public SqlTokenizer( string input ) : base( input )
         {
             TokenDefinitions.AddRange(

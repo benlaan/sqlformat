@@ -31,9 +31,11 @@ namespace Laan.AddIns.Ssms.Actions
                 { "ct",     "COMMIT" },
 
                 // Statements
-                { "sfw",    "SELECT \nFROM |\nWHERE " },
+                { "sfw",    "SELECT *\nFROM |\nWHERE " },
                 { "ufw",    "UPDATE \n   SET \nFROM |\nWHERE " },
                 { "ss",    "SELECT *\n\t|" },
+                { "ft",    "FROM |" },
+                { "wh",    "WHERE | = " },
                 { "wi",    "WHERE |ID = " },
 
                 // Joins
@@ -71,7 +73,7 @@ namespace Laan.AddIns.Ssms.Actions
                 { "ddte",   "DECLARE @| DATETIME = " },
                 { "dte",    "DECLARE @| TIME = " },
                 { "dde",    "DECLARE @| DATE = " },
-                
+
                 // Case
                 { "ca",     "CASE | WHEN END" },
                 { "cw",     "CASE WHEN | THEN  END" },
@@ -81,6 +83,18 @@ namespace Laan.AddIns.Ssms.Actions
                 { "ib",     "IF |\nBEGIN\n\n\t\n\nEND" },
                 { "ibe",    "IF |\nBEGIN\n\n\t\n\nEND\nELSE\nBEGIN\n\n\t\n\nEND" }
             };
+        }
+
+        public SqlTemplating( AddIn addIn ) : base( addIn )
+        {
+            KeyName = "LaanSqlTemplating";
+            DisplayName = "Insert Template";
+            DescriptivePhrase = "Inserting Template";
+
+            ButtonText = "Insert &Template";
+            ToolTip = "Inserts a template at the cursor";
+            ImageIndex = 59;
+            KeyboardBinding = "Text Editor::`";
         }
 
         private Cursor DetermineCursorFromBar( IList<string> lines )
@@ -105,28 +119,23 @@ namespace Laan.AddIns.Ssms.Actions
             return new Cursor( column, row );
         }
 
-        public SqlTemplating( AddIn addIn ) : base( addIn )
-        {
-            KeyName = "LaanSqlTemplating";
-            DisplayName = "Insert Template";
-            DescriptivePhrase = "Inserting Template";
-
-            ButtonText = "Insert &Template";
-            ToolTip = "Inserts a template at the cursor";
-            ImageIndex = 59;
-            KeyboardBinding = "Text Editor::Ctrl+Shift+`";
-        }
-
         public override bool CanExecute()
         {
-            return ( _addIn.IsCurrentDocumentExtension( "sql" ) );
+            return (
+                _addIn.IsCurrentDocumentExtension( "sql" )
+                && 
+                _addIn.CurrentSelection == ""
+                &&
+                _addIn.CurrentWord != ""
+            );
         }
 
         public override void Execute()
         {
             try
             {
-                var word = _addIn.SelectCurrentWord();
+                var word = _addIn.CurrentWord;
+                _addIn.SelectCurrentWord();
                 string padding = new string( ' ', 4 );
                 var raw = _templates[ word ]
                     .Split( '\n' )
@@ -134,13 +143,15 @@ namespace Laan.AddIns.Ssms.Actions
                     .ToList();
 
                 string offset = new string( ' ', _addIn.Cursor.Column - 1 );
-                var lines = new List<String>(
-                    raw.Select( line => ( line == raw.First() ? "" : offset ) + line
-                    )
-                );
+
+                // add lines, indenting as required, except the first
+                var lines = new List<String>();
+                lines.Add( raw.FirstOrDefault() );
+                for ( int index = 1; index < raw.Count; index++ )
+                    lines.Add( ( raw[ index] == "" ? "" : offset ) + raw[ index] );
 
                 Cursor cursor = DetermineCursorFromBar( raw );
-                if ( lines.Count > cursor.Row )
+                if ( cursor.Row < lines.Count )
                     lines[ cursor.Row ] = lines[ cursor.Row ].Replace( "|", "" );
 
                 _addIn.InsertText( String.Join( "\n", lines.ToArray() ) );

@@ -111,9 +111,7 @@ namespace Laan.SQL.Parser.Test
             //       Eventually, when comments are processed correctly, this can be removed!
             var tokenizer = GetTokenizer( input );
             SqlTokenizer sqlTokenizer = tokenizer as SqlTokenizer;
-            sqlTokenizer.TokenDefinitions.Single( tdef => tdef.Type == TokenType.InLineComment ).Skip = false;
-            sqlTokenizer.TokenDefinitions.Single( tdef => tdef.Type == TokenType.MultiLineComment ).Skip = false;
-
+            sqlTokenizer.SkipComments = false;
             foreach ( string token in tokens )
             {
                 Assert.IsTrue( tokenizer.HasMoreTokens );
