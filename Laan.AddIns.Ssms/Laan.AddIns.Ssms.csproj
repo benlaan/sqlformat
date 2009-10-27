@@ -101,6 +101,7 @@
     <Content Include="..\..\..\..\Documents and Settings\blaan\My Documents\Visual Studio 2008\Addins\SqlFormatter - For Testing.AddIn">
       <Link>SqlFormatter - For Testing.AddIn</Link>
     </Content>
+    <Content Include="Actions\Refactoring Ideas.txt" />
     <Content Include="Laan.AddIns.Core.AddIn" />
   </ItemGroup>
   <ItemGroup>

@@ -55,7 +55,7 @@ namespace Laan.SQL.Parser
 
         public override string ToString()
         {
-            return Description;
+            return String.Format( "{0} {1} {2}", Name, Type, Description );
         }
 
         public override int GetHashCode()

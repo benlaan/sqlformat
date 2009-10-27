@@ -21,6 +21,11 @@ namespace Laan.SQL.Parser
             return GetDotNotationIdentifier();
         }
 
+        protected void ProcessTerminator()
+        {
+            _statement.Terminated = HasTerminator();
+        }
+
         /// <summary>
         /// Returns an IStatement reference for the given statement type
         /// </summary>

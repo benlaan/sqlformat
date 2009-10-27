@@ -20,7 +20,7 @@ namespace Laan.SQL.Formatter.Test
         private static string DisplayLists( string[] expected, string[] actual )
         {
             const int offset = 5;
-            const int width = 85;
+            const int width = 50;
 
             string LineFormat = String.Format( "{{0,-{0}}} | {{1,-{0}}}\n", width );
 
@@ -47,7 +47,7 @@ namespace Laan.SQL.Formatter.Test
 
         protected static void Compare( string actual, string[] expected )
         {
-            var actualAsList = actual.Split( new string[] { "\r\n" }, StringSplitOptions.None );
+            var actualAsList = actual.Replace("\r", "" ).Split( new string[] { "\n" }, StringSplitOptions.None );
             Assert.AreElementsEqual( expected, actualAsList, DisplayLists( expected, actualAsList ) );
         }
     }

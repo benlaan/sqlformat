@@ -11,14 +11,14 @@ namespace Laan.SQL.Formatter
         public IndentScope( IIndentable formatter )
         {
             _formatter = formatter;
-            _formatter.Indent();
+            _formatter.IncreaseIndent();
         }
 
         #region IDisposable Members
 
         public void Dispose()
         {
-            _formatter.Unindent();
+            _formatter.DecreaseIndent();
         }
 
         #endregion

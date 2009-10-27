@@ -534,5 +534,81 @@ namespace Laan.SQLParser.Test
             Assert.AreEqual( "IS", criteria.Operator );
             Assert.AreEqual( "NOT NULL", criteria.Right.Value );
         }
+
+        [Test]
+        public void Test_Can_Read_Between_Expression_With_Identifiers()
+        {
+            var tokenizer = NewTokenizer( "A.Field BETWEEN 10 AND 20" );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull( expression );
+            Assert.IsTrue( expression is BetweenExpression );
+
+            BetweenExpression betweenExpression = (BetweenExpression) expression;
+            Expression expr = betweenExpression.Expression;
+            Assert.IsTrue( expr is IdentifierExpression );
+            Assert.AreEqual( "A.Field", expr.Value );
+
+            Expression from = betweenExpression.From;
+            Assert.IsTrue( from is IdentifierExpression );
+            Assert.AreEqual( "10", from.Value );
+
+            Expression to = betweenExpression.To;
+            Assert.IsTrue( to is IdentifierExpression );
+            Assert.AreEqual( "20", to.Value );
+        }
+
+        [Test]
+        public void test_Can_Read_Natural_Negated_In_Expression()
+        {
+            var tokenizer = NewTokenizer( "A.Field NOT IN (1, 2, 3)" );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+            Assert.IsTrue( expression is CriteriaExpression );
+            CriteriaExpression criteria = (CriteriaExpression) expression;
+
+            Assert.AreEqual( "A.Field", criteria.Left.Value );
+            Assert.AreEqual( "NOT IN", criteria.Operator );
+            Assert.AreEqual( "(1, 2, 3)", criteria.Right.Value );
+        }
+
+        [Test]
+        public void test_Can_Read_Natural_Negated_Between_Expression()
+        {
+            var tokenizer = NewTokenizer( "A.Field NOT BETWEEN 10 AND 20" );
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser( tokenizer );
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull( expression );
+            Assert.IsTrue( expression is BetweenExpression );
+
+            BetweenExpression betweenExpression = (BetweenExpression) expression;
+            Expression expr = betweenExpression.Expression;
+            Assert.IsTrue( expr is IdentifierExpression );
+            Assert.AreEqual( "A.Field", expr.Value );
+
+            Expression from = betweenExpression.From;
+            Assert.IsTrue( from is IdentifierExpression );
+            Assert.AreEqual( "10", from.Value );
+
+            Expression to = betweenExpression.To;
+            Assert.IsTrue( to is IdentifierExpression );
+            Assert.AreEqual( "20", to.Value );
+        }
     }
 }

@@ -280,5 +280,33 @@ namespace Laan.SQL.Formatter.Test
 
             Compare( actual, expected );
         }
+
+        [Test]
+        public void Can_Format_Select_With_Between_Expression()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute(
+                @"SELECT * FROM dbo.Table A WHERE A.Field BETWEEN 10 AND (SELECT TOP 1 ID FROM Keys )"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+                "SELECT *",
+                "FROM dbo.Table A",
+                "WHERE A.Field BETWEEN 10",
+                "                  AND (",
+                "",
+                "    SELECT TOP 1 ID",
+                "    FROM Keys",
+                "",
+                ")",
+            };
+
+            Compare( actual, expected );
+        }
     }
 }

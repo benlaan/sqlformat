@@ -1,17 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 using Laan.SQL.Parser;
 
 namespace Laan.SQL.Formatter
 {
-    public class InsertStatementFormatter : CustomFormatter<InsertStatement>, IStatementFormatter
+    public class InsertStatementFormatter : CustomStatementFormatter<InsertStatement>, IStatementFormatter
     {
         private const int MaxOneLineColumnCount = 4;
 
-        public InsertStatementFormatter( string indent, int indentStep, StringBuilder sql, InsertStatement statement )
-            : base( indent, indentStep, sql, statement )
+        public InsertStatementFormatter( IIndentable indentable, StringBuilder sql, InsertStatement statement )
+            : base( indentable, sql, statement )
         {
         }
 
@@ -29,8 +29,7 @@ namespace Laan.SQL.Formatter
 
         private void FormatInsert()
         {
-            _sql.Append(
-                String.Format( "{0} {1} {2}", Constants.Insert, Constants.Into, _statement.TableName ) );
+            AppendFormat( "{0} {1} {2}", Constants.Insert, Constants.Into, _statement.TableName );
         }
 
         private void FormatColumns()
@@ -40,7 +39,7 @@ namespace Laan.SQL.Formatter
                 string text = String.Join( ", ", _statement.Columns.ToArray() );
 
                 if ( _statement.Columns.Count <= MaxOneLineColumnCount && FitsOnRow( text ) )
-                    AppendFormat( " {0}", FormatBrackets( text ) );
+                    _sql.AppendFormat( " {0}", FormatBrackets( text ) );
                 else
                 {
                     _sql.Append( " (" );
@@ -48,9 +47,8 @@ namespace Laan.SQL.Formatter
 
                     using ( new IndentScope( this ) )
                     {
-                        Append( text );
-                        NewLine();
-                        Append( ")" );
+                        AppendLine( text );
+                        AppendLine( ")" );
                     }
                 }
             }
@@ -61,7 +59,6 @@ namespace Laan.SQL.Formatter
             if ( _statement.Values.Any() )
             {
                 NewLine();
-
                 using ( new IndentScope( this ) )
                 {
                     foreach ( var values in _statement.Values )
@@ -79,8 +76,11 @@ namespace Laan.SQL.Formatter
             else if ( _statement.SourceStatement != null )
             {
                 NewLine();
-                var formatter = new SelectStatementFormatter( _indent, _indentStep + 1, _sql, _statement.SourceStatement, true );
-                formatter.Execute();
+                using ( new IndentScope( this ) )
+                {
+                    var formatter = new SelectStatementFormatter( this, _sql, _statement.SourceStatement );
+                    formatter.Execute();
+                }
             }
         }
     }

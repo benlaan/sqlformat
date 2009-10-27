@@ -6,10 +6,10 @@ using Laan.SQL.Parser;
 
 namespace Laan.SQL.Formatter
 {
-    public class UpdateStatementFormatter : CustomFormatter<UpdateStatement>, IStatementFormatter
+    public class UpdateStatementFormatter : CustomStatementFormatter<UpdateStatement>, IStatementFormatter
     {
-        public UpdateStatementFormatter( string indent, int indentStep, StringBuilder sql, UpdateStatement statement )
-            : base( indent, indentStep, sql, statement )
+        public UpdateStatementFormatter( IIndentable indentable, StringBuilder sql, UpdateStatement statement )
+            : base( indentable, sql, statement )
         {
         }
 
@@ -39,11 +39,11 @@ namespace Laan.SQL.Formatter
                 string separator = field != _statement.Fields.Last() ? Constants.Comma + Environment.NewLine : "";
                 string set = field == _statement.Fields.First() ? "SET" : "   ";
 
-                _sql.AppendFormat(
+                AppendFormat(
                     format,
                     set,
                     field.Alias.Name,
-                    field.Expression.FormattedValue( 0, _indent, _indentStep ),
+                    field.Expression.FormattedValue( 0, this ),
                     separator
                 );
             }
@@ -51,9 +51,9 @@ namespace Laan.SQL.Formatter
 
         private void FormatUpdate()
         {
-            _sql.Append( Constants.Update );
+            Append( Constants.Update );
             FormatTop( _statement.Top );
-            _sql.AppendLine( " " + _statement.TableName );
+            _sql.AppendFormat( " {0}\n", _statement.TableName );
         }
 
         protected override bool CanCompactFormat()

@@ -6,10 +6,10 @@ using Laan.SQL.Parser;
 
 namespace Laan.SQL.Formatter
 {
-    public class DeleteStatementFormatter : CustomFormatter<DeleteStatement>, IStatementFormatter
+    public class DeleteStatementFormatter : CustomStatementFormatter<DeleteStatement>, IStatementFormatter
     {
-        public DeleteStatementFormatter( string indent, int indentStep, StringBuilder sql, DeleteStatement statement )
-            : base( indent, indentStep, sql, statement )
+        public DeleteStatementFormatter( IIndentable indentable, StringBuilder sql, DeleteStatement statement )
+            : base( indentable, sql, statement )
         {
         }
 

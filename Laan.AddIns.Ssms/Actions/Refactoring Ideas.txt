@@ -1,0 +1,38 @@
+﻿combine DECLARE statements
+split DECLARE statements
+
+convert ROLLBACK to COMMIT
+convert COMMIT to ROLLBACK 
+
+rename Alias
+introduce Alias
+remove Alias
+
+convert JOIN to LEFT JOIN
+convert JOIN to RIGHT JOIN
+convert LEFT JOIN to JOIN
+convert RIGHT JOIN to JOIN
+
+move JOIN up
+move JOIN down
+
+convert SET to SELECT
+convert SELECT to SET
+
+declare new variable
+remove unused variable
+
+surround block in transaction
+surround block in try/catch
+
+convert temp table to table variable
+convert table variable to temp table 
+
+----------------------------
+-- connection based
+----------------------------
+expand view
+convert to view (?)
+convert procedure call to sql
+extract embedded sql (in execute_sql)
+auto-generate join signature

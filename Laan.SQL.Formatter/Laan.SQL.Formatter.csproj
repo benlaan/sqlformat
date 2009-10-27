@@ -37,21 +37,39 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomFormatter.cs" />
-    <Compile Include="ExpressionFormatter.cs" />
-    <Compile Include="ExpressionFormatterExtension.cs" />
-    <Compile Include="Formatters\InsertStatementFormatter.cs" />
-    <Compile Include="Formatters\DeclareStatementFormatter.cs" />
-    <Compile Include="Formatters\DeleteStatementFormatter.cs" />
+    <Compile Include="ExpressionFormatters\BetweenExpressionFormatter.cs" />
+    <Compile Include="ExpressionFormatters\CaseSwitchExpressionFormatter.cs" />
+    <Compile Include="ExpressionFormatters\CaseWhenExpressionFormatter.cs" />
+    <Compile Include="ExpressionFormatters\CriteriaExpressionFormatter.cs" />
+    <Compile Include="ExpressionFormatters\DefaultExpressionFormatter.cs" />
+    <Compile Include="Factories\StatementFormatterFactory.cs" />
+    <Compile Include="Interfaces\Indentation.cs" />
+    <Compile Include="StatementFormatters\BeginTransactionStatementFormatter.cs" />
+    <Compile Include="StatementFormatters\CommitTransactionStatementFormatter.cs" />
+    <Compile Include="StatementFormatters\CustomStatementFormatter.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Factories\ExpressionFormatterFactory.cs" />
+    <Compile Include="ExpressionFormatters\CustomExpressionFormatter.cs" />
+    <Compile Include="ExpressionFormatters\ExpressionListFormatter.cs" />
+    <Compile Include="ExpressionFormatters\FunctionExpressionFormatter.cs" />
+    <Compile Include="ExpressionFormatters\NestedExpressionFormatter.cs" />
+    <Compile Include="ExpressionFormatters\SelectExpressionFormatter.cs" />
+    <Compile Include="StatementFormatters\IfStatementFormatter.cs" />
+    <Compile Include="StatementFormatters\InsertStatementFormatter.cs" />
+    <Compile Include="StatementFormatters\DeclareStatementFormatter.cs" />
+    <Compile Include="StatementFormatters\DeleteStatementFormatter.cs" />
     <Compile Include="FormattingEngine.cs" />
+    <Compile Include="Interfaces\IExpressionFormatter.cs" />
     <Compile Include="Interfaces\IIndentable.cs" />
     <Compile Include="IndentScope.cs" />
     <Compile Include="Interfaces\IFormattingEngine.cs" />
     <Compile Include="Interfaces\IStatementFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Formatters\SelectStatementFormatter.cs" />
-    <Compile Include="Formatters\UpdateStatementFormatter.cs" />
-    <Compile Include="Formatters\GoTerminatorFormatter.cs" />
+    <Compile Include="StatementFormatters\RollbackTransactionStatementFormatter.cs" />
+    <Compile Include="StatementFormatters\SelectStatementFormatter.cs" />
+    <Compile Include="StatementFormatters\TransactionStatementFormatter.cs" />
+    <Compile Include="StatementFormatters\UpdateStatementFormatter.cs" />
+    <Compile Include="StatementFormatters\GoTerminatorFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Laan.SQL.Parser\Laan.SQL.Parser.csproj">

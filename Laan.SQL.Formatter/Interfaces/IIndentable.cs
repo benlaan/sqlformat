@@ -9,7 +9,9 @@ namespace Laan.SQL.Formatter
 {
     public interface IIndentable
     {
-        void Indent();
-        void Unindent();
+        void IncreaseIndent();
+        void DecreaseIndent();
+        string Indent { get; set; }
+        int IndentLevel { get; set; }
     }
 }

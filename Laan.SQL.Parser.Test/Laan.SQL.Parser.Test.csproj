@@ -45,9 +45,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Statements\TestBeginBlockStatementParser.cs" />
     <Compile Include="Statements\TestIfStatements.cs" />
     <Compile Include="Statements\TestBatchTerminators.cs" />
     <Compile Include="Statements\TestDeleteStatementParser.cs" />
+    <Compile Include="Statements\TestTransactionParsers.cs" />
     <Compile Include="TestBatchStatements.cs" />
     <Compile Include="Statements\TestDeclareStatements.cs" />
     <Compile Include="TestTokens.cs" />

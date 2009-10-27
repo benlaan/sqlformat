@@ -40,26 +40,66 @@ namespace Laan.SQL.Parser
                 return expression;
         }
 
+        private BetweenExpression ProcessBetween( Expression parent, Expression expression )
+        {
+            BetweenExpression betweenExpression = new BetweenExpression( parent );
+            betweenExpression.Expression = expression;
+            betweenExpression.From = ReadCriteria( betweenExpression );
+
+            ExpectToken( Constants.And );
+            betweenExpression.To = ReadCriteria( betweenExpression );
+
+            return betweenExpression;
+        }
+
+        private CriteriaExpression ProcessCriteria( Expression parent, Expression expression )
+        {
+            CriteriaExpression result = new CriteriaExpression( parent );
+            result.Left = expression;
+
+            result.Operator = CurrentToken;
+            ReadNextToken();
+
+            result.Right = ReadExpression( parent );
+
+            return result;
+        }
+
         private Expression ReadCriteria( Expression parent )
         {
             Expression expression = ReadExpression( parent );
 
-            if ( Tokenizer.IsNextToken( "=", "<>", "!=", ">=", "<=", ">", "<", "IS", "IN", "ANY", "LIKE" ) )
+            // this handles the (non-standard) case of NOT being placed after the 'left' operand, instead
+            // of the more accurate grammar of being before the operand
+            // e.g. WHERE NOT A.ID IN (10, 20) ~ WHERE A.ID NOT IN (10, 20)
+            // Although probably inaccurate, it is easiest to simply make the NOT part of the operator
+            if ( Tokenizer.TokenEquals( Constants.Not ) )
             {
-                CriteriaExpression result = new CriteriaExpression( parent );
-                result.Left = expression;
+                if ( Tokenizer.TokenEquals( Constants.Between ) )
+                {
+                    var between = ProcessBetween( parent, expression );
+                    between.Negated = true;
+                    return between;
+                }
 
-                result.Operator = CurrentToken;
-                ReadNextToken();
+                if ( Tokenizer.IsNextToken( Constants.In, Constants.Like ) )
+                {
+                    CriteriaExpression criteria = ProcessCriteria( parent, expression );
+                    criteria.Operator = Constants.Not + " " + criteria.Operator;
+                    return criteria;
+                }
 
-                result.Right = ReadExpression( parent );
-
-                return result;
+                throw new ExpectedTokenNotFoundException( "IN or BETWEEN", CurrentToken, Tokenizer.Position );
             }
+            else 
+            if ( Tokenizer.TokenEquals( Constants.Between ) )
+                return ProcessBetween( parent, expression );
+            else 
+            if ( Tokenizer.IsNextToken( "=", "<>", "!=", ">=", "<=", ">", "<", "IS", "IN", "ANY", "LIKE" ) )
+                return ProcessCriteria( parent, expression );
             else
                 return expression;
         }
-
 
         private Expression ReadExpression( Expression parent )
         {
@@ -114,7 +154,7 @@ namespace Laan.SQL.Parser
                     {
                         var list = new ExpressionList();
                         list.Identifiers.Add( result );
-                        
+
                         do
                         {
                             Tokenizer.ExpectToken( Constants.Comma );
@@ -148,7 +188,7 @@ namespace Laan.SQL.Parser
                     SelectExpression selectExpression = new SelectExpression();
 
                     var parser = new SelectStatementParser( Tokenizer );
-                    selectExpression.Statement = ( SelectStatement )parser.Execute();
+                    selectExpression.Statement = (SelectStatement) parser.Execute();
                     return selectExpression;
                 }
 
@@ -170,9 +210,9 @@ namespace Laan.SQL.Parser
                     return negationExpression;
                 }
 
-                if ( Tokenizer.Current != (Token)null && !Tokenizer.Current.IsTypeIn( 
-                    TokenType.QuotedText, TokenType.Variable, TokenType.Alpha, TokenType.AlphaNumeric, 
-                    TokenType.Numeric, TokenType.Operator, TokenType.BlockedText ) 
+                if ( Tokenizer.Current != (Token) null && !Tokenizer.Current.IsTypeIn(
+                    TokenType.QuotedText, TokenType.Variable, TokenType.Alpha, TokenType.AlphaNumeric,
+                    TokenType.Numeric, TokenType.Operator, TokenType.BlockedText )
                 )
                     throw new SyntaxException( "expected alpha, numeric, or variable, found " + Tokenizer.Current.Value );
 

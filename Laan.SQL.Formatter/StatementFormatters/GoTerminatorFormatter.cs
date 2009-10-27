@@ -8,15 +8,15 @@ namespace Laan.SQL.Formatter
 {
     public class GoTerminatorFormatter : IStatementFormatter
     {
-        protected int _indentStep;
+        protected int IndentStep;
         protected StringBuilder _sql;
         protected GoTerminator _statement;
-        protected string _indent;
+        protected string Indent;
 
-        public GoTerminatorFormatter( string indent, int indentStep, StringBuilder sql, GoTerminator statement )
+        public GoTerminatorFormatter( IIndentable indentable, StringBuilder sql, GoTerminator statement )
         {
-            _indent = indent;
-            _indentStep = indentStep;
+            Indent = indentable.Indent;
+            IndentStep = indentable.IndentLevel;
             _sql = sql;
             _statement = statement;
         }
@@ -26,6 +26,11 @@ namespace Laan.SQL.Formatter
         public void Execute()
         {
             _sql.Append( Constants.Go );
+        }
+
+        public bool CanInline
+        {
+            get { return false; }
         }
 
         #endregion

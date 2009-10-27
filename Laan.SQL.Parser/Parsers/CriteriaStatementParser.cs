@@ -178,7 +178,12 @@ namespace Laan.SQL.Parser
                 _statement.From.Add( table );
 
                 // if a new statement is initiated here, do not process the alias
-                if ( Tokenizer.IsNextToken( Constants.SemiColon, Constants.Go, Constants.Select, Constants.Insert, Constants.Update, Constants.Delete, Constants.Create, Constants.Alter, Constants.Union, Constants.Else ) )
+                if ( Tokenizer.IsNextToken( 
+                        Constants.SemiColon, Constants.Go, Constants.Select, Constants.Insert, 
+                        Constants.Update, Constants.Delete, Constants.Create, Constants.Alter, 
+                        Constants.Union, Constants.Else, Constants.Commit, Constants.Rollback, Constants.End 
+                    ) 
+                )
                     return;
 
                 Alias alias = new Alias( null );
@@ -263,11 +268,6 @@ namespace Laan.SQL.Parser
         {
             if ( Tokenizer.TokenEquals( Constants.Where ) )
                 _statement.Where = ProcessExpression();
-        }
-
-        protected void ProcessTerminator()
-        {
-            _statement.Terminated = HasTerminator();
         }
     }
 }

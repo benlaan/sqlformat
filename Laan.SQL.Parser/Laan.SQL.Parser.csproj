@@ -43,6 +43,7 @@
     <Compile Include="CustomTokenizer.cs" />
     <Compile Include="Entities\AliasedEntities.cs" />
     <Compile Include="Entities\AlterTableStatement.cs" />
+    <Compile Include="Entities\BlockStatement.cs" />
     <Compile Include="Entities\CustomStatement.cs" />
     <Compile Include="Entities\DeclareStatement.cs" />
     <Compile Include="Entities\DeleteStatement.cs" />
@@ -50,7 +51,9 @@
     <Compile Include="Entities\ProjectionStatement.cs" />
     <Compile Include="Entities\Statement.cs" />
     <Compile Include="Entities\Top.cs" />
+    <Compile Include="Entities\TransactionStatement.cs" />
     <Compile Include="Entities\VariableDefinition.cs" />
+    <Compile Include="Expressions\BetweenExpression.cs" />
     <Compile Include="Expressions\CaseExpression.cs" />
     <Compile Include="Expressions\CriteriaExpression.cs" />
     <Compile Include="Expressions\FunctionExpression.cs" />
@@ -74,6 +77,8 @@
     <Compile Include="Parsers\AlterStatementParser.cs" />
     <Compile Include="Parsers\AlterTableStatementParser.cs" />
     <Compile Include="Entities\CreateIndexStatement.cs" />
+    <Compile Include="Parsers\BeginStatementParser.cs" />
+    <Compile Include="Parsers\TransactionStatementParser.cs" />
     <Compile Include="Parsers\Constants.cs" />
     <Compile Include="Parsers\CreateStatementParser.cs" />
     <Compile Include="Parsers\DeclareStatementParser.cs" />

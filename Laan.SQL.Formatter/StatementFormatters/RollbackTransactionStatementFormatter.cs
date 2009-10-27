@@ -1,0 +1,35 @@
+using System;
+using System.Text;
+
+using Laan.SQL.Parser;
+
+namespace Laan.SQL.Formatter
+{
+    public class RollbackTransactionStatementFormatter : TransactionStatementFormatter<RollbackTransactionStatement>, IStatementFormatter
+    {
+        public RollbackTransactionStatementFormatter( IIndentable indentable, StringBuilder sql, RollbackTransactionStatement statement )
+            : base( indentable, sql, statement )
+        {
+
+        }
+
+        #region IStatementFormatter Members
+
+        public void Execute()
+        {
+            DecreaseIndent();
+            AppendFormat(
+                "ROLLBACK{0}{1}",
+                GetDescription(),
+                ( !String.IsNullOrEmpty( _statement.Name ) ? " " + _statement.Name : "" )
+            );
+        }
+
+        public override bool CanInline
+        {
+            get { return false; }
+        }
+
+        #endregion
+    }
+}

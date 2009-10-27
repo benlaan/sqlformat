@@ -1,10 +1,7 @@
 using System;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 
-using Laan.SQL.Formatter;
 using Laan.AddIns.Core;
 
 namespace Laan.AddIns.Ssms.Actions
@@ -31,12 +28,18 @@ namespace Laan.AddIns.Ssms.Actions
                 { "ct",     "COMMIT" },
 
                 // Statements
+                { "ssf",    "SELECT * FROM |" },
+                { "s",      "SELECT |" },
                 { "sfw",    "SELECT *\nFROM |\nWHERE " },
+
                 { "ufw",    "UPDATE \n   SET \nFROM |\nWHERE " },
-                { "ss",    "SELECT *\n\t|" },
-                { "ft",    "FROM |" },
-                { "wh",    "WHERE | = " },
-                { "wi",    "WHERE |ID = " },
+                { "iv",     "INSERT INTO | ()\nVALUES ()" },
+                { "is",     "INSERT INTO | ()\n\tSELECT * FROM" },
+                { "isw",    "INSERT INTO | ()\n\tSELECT * FROM WHERE " },
+                
+                { "ft",     "FROM |" },
+                { "wh",     "WHERE | = " },
+                { "wi",     "WHERE |ID = " },
 
                 // Joins
                 { "j",      "JOIN |\n  ON " },
@@ -52,8 +55,9 @@ namespace Laan.AddIns.Ssms.Actions
                 { "isn",   "IS NULL" },
                 { "isnn",  "IS NOT NULL" },
                 { "ex",    "EXISTS(|)" },
-                { "nex",    "NOT EXISTS(|)" },
+                { "nex",   "NOT EXISTS(|)" },
                 { "pr",    "PRINT '|'" },
+                { "d",     "dbo.|" },
                 { "--",    String.Format("{0}\n-- |\n{0}", line) },
 
                 // Declarations
@@ -78,6 +82,7 @@ namespace Laan.AddIns.Ssms.Actions
                 { "ca",     "CASE | WHEN END" },
                 { "cw",     "CASE WHEN | THEN  END" },
                 { "cwe",    "CASE WHEN | THEN  ELSE  END" },
+                { "wt",     "WHEN | THEN " },
 
                 // If
                 { "ib",     "IF |\nBEGIN\n\n\t\n\nEND" },

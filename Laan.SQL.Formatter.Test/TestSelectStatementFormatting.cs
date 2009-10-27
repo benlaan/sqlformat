@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using MbUnit.Framework;
 
@@ -544,6 +541,42 @@ namespace Laan.SQL.Formatter.Test
                 ")"
             };
 
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_With_Implicit_Alias()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"SELECT A.ID SomeAlias FROM table ");
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT A.ID SomeAlias",
+                "FROM table",
+            };
+            Compare( actual, expected );
+       }
+
+        [Test]
+        public void Can_Format_Select_With_Alias_Using_As()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"SELECT A.ID AS SomeAlias FROM table " );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT A.ID AS SomeAlias",
+                "FROM table",
+            };
             Compare( actual, expected );
         }
     }

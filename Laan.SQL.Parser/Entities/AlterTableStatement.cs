@@ -5,6 +5,7 @@ namespace Laan.SQL.Parser
 {
     public class AlterTableStatement : IStatement
     {
+        public bool Terminated { get; set; }
         internal AlterTableStatement()
         {
         }
@@ -12,5 +13,22 @@ namespace Laan.SQL.Parser
         public List<string> PrimaryKeys { get; set; }
         public string ConstraintName { get; set; }
         public string TableName { get; set; }
+
+        #region IStatement Members
+
+        public string Value
+        {
+            get
+            {
+                return String.Format(
+                    "ALTER TABLE {0} ADD CONSTRAINT {1} PRIMARY KEY CLUSTERED ({2})",
+                    TableName,
+                    ConstraintName,
+                    String.Join( ", ", PrimaryKeys.ToArray() )
+                );
+            }
+        }
+
+        #endregion
     }
 }
