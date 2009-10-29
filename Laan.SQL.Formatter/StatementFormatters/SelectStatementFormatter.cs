@@ -22,7 +22,7 @@ namespace Laan.SQL.Formatter
 
         private void FormatSelect()
         {
-            Append( Constants.Select );
+            IndentAppend( Constants.Select );
             if ( _statement.Distinct )
                 _sql.Append( " DISTINCT " );
 
@@ -131,7 +131,7 @@ namespace Laan.SQL.Formatter
                     foreach ( var field in fields )
                     {
                         NewLine( canCompact && field.Expression.CanInline ? 0 : 1 );
-                        Append( FormatField( field ) + ( field != fields.Last() ? "," : "" ) );
+                        IndentAppend( FormatField( field ) + ( field != fields.Last() ? "," : "" ) );
                     }
                 }
         }
@@ -142,7 +142,7 @@ namespace Laan.SQL.Formatter
             {
                 bool canCompact = _statement.OrderBy.Count <= MaxInlineColumns;
                 NewLine( canCompact ? 1 : 2 );
-                Append( "ORDER BY" );
+                IndentAppend( "ORDER BY" );
                 FormatFields( _statement.OrderBy, canCompact );
             }
         }
@@ -153,13 +153,13 @@ namespace Laan.SQL.Formatter
             {
                 bool canCompact = _statement.GroupBy.Count <= MaxInlineColumns;
                 NewLine( canCompact ? 1 : 2 );
-                Append( "GROUP BY" );
+                IndentAppend( "GROUP BY" );
                 FormatFields( _statement.GroupBy, canCompact );
 
                 if ( _statement.Having != null )
                 {
                     NewLine( canCompact && IsExpressionOperatorAndOr( _statement.Having ) ? 1 : 2 );
-                    AppendFormat(
+                    IndentAppendFormat(
                         "HAVING {0}",
                         _statement.Having.FormattedValue( Constants.Having.Length, this )
                     );

@@ -18,7 +18,7 @@ namespace Laan.SQL.Formatter
         public void Execute()
         {
             DecreaseIndent();
-            AppendFormat(
+            IndentAppendFormat(
                 "ROLLBACK{0}{1}",
                 GetDescription(),
                 ( !String.IsNullOrEmpty( _statement.Name ) ? " " + _statement.Name : "" )

@@ -18,18 +18,13 @@ namespace Laan.SQL.Formatter
 
         public void Execute()
         {
-            AppendLineFormat( "{0} {1}", Constants.If, _statement.Condition.FormattedValue( 0, this ) );
-            using ( new IndentScope( this ) )
-            {
-                FormatStatement( _statement.If );
-            }
+            IndentAppendLineFormat( "{0} {1}", Constants.If, _statement.Condition.FormattedValue( 0, this ) );
+            FormatBlock( _statement.If );
             if ( _statement.Else != null )
             {
-                AppendLine( Constants.Else );
-                using ( new IndentScope( this ) )
-                {
-                    FormatStatement( _statement.Else );
-                }
+                NewLine();
+                IndentAppendLine( Constants.Else );
+                FormatBlock( _statement.Else );
             }
         }
 

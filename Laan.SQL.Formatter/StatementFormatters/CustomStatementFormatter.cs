@@ -44,16 +44,32 @@ namespace Laan.SQL.Formatter
 
         #region Rendering Utilities
 
-        protected void Append( string text )
+        protected void IndentAppend( string text )
         {
             for ( int count = 0; count < IndentLevel; count++ )
                 _sql.Append( Indent );
             _sql.Append( text );
         }
 
-        protected void AppendFormat( string text, params object[] args )
+        protected void IndentAppendFormat( string text, params object[] args )
         {
-            Append( String.Format( text, args ) );
+            IndentAppend( String.Format( text, args ) );
+        }
+
+        protected void IndentAppendLine( string text )
+        {
+            IndentAppend( text );
+            NewLine();
+        }
+
+        protected void IndentAppendLineFormat( string text, params object[] args )
+        {
+            IndentAppendLine( String.Format( text, args ) );
+        }
+
+        protected void Append( string text )
+        {
+            _sql.Append( text );
         }
 
         protected void NewLine( int times )
@@ -67,17 +83,6 @@ namespace Laan.SQL.Formatter
             NewLine( 1 );
         }
 
-        protected void AppendLine( string text )
-        {
-            Append( text );
-            NewLine();
-        }
-
-        protected void AppendLineFormat( string text, params object[] args )
-        {
-            AppendLine( String.Format( text, args ) );
-        }
-
         #endregion
         
         protected void FormatTop( Top top )
@@ -87,7 +92,7 @@ namespace Laan.SQL.Formatter
 
             string format = top.Brackets ? " TOP ({0}){1}" : " TOP {0}{1}";
 
-            _sql.Append(
+            Append(
                 String.Format(
                     format,
                     top.Expression.FormattedValue( 0, this ),
@@ -107,7 +112,7 @@ namespace Laan.SQL.Formatter
                     {
                         DerivedTable derivedTable = (DerivedTable) from;
                         NewLine();
-                        Append( "FROM (" );
+                        IndentAppend( "FROM (" );
                         NewLine( CanCompactFormat() ? 1 : 2 );
 
                         using ( new IndentScope( this ) )
@@ -116,12 +121,12 @@ namespace Laan.SQL.Formatter
                             formatter.Execute();
                         }
                         NewLine( CanCompactFormat() ? 1 : 2 );
-                        Append( String.Format( "){0}", from.Alias.Value ) );
+                        IndentAppend( String.Format( "){0}", from.Alias.Value ) );
                     }
                     else
                     {
                         NewLine();
-                        AppendFormat(
+                        IndentAppendFormat(
                             "FROM {0}{1}",
                             from.Name, from.Alias.Value
                         );
@@ -133,7 +138,7 @@ namespace Laan.SQL.Formatter
         private void FormatDerivedJoin( DerivedJoin derivedJoin )
         {
             NewLine( 2 );
-            Append( derivedJoin.Value );
+            IndentAppend( derivedJoin.Value );
             NewLine( 2 );
             using ( new IndentScope( this ) )
             {
@@ -141,9 +146,9 @@ namespace Laan.SQL.Formatter
                 formatter.Execute();
             } 
             NewLine( 2 );
-            Append( String.Format( "){0}", derivedJoin.Alias.Value ) );
+            IndentAppend( String.Format( "){0}", derivedJoin.Alias.Value ) );
             NewLine();
-            AppendFormat(
+            IndentAppendFormat(
                 "  ON {0}",
                 derivedJoin.Condition.FormattedValue( 4, this )
             );
@@ -160,9 +165,9 @@ namespace Laan.SQL.Formatter
                     else
                     {
                         NewLine( 2 );
-                        Append( join.Value );
+                        IndentAppend( join.Value );
                         NewLine();
-                        AppendFormat(
+                        IndentAppendFormat(
                             "{0}ON {1}",
                             new string( ' ', join.Length - Constants.On.Length ),
                             join.Condition.FormattedValue( join.Length, this )
@@ -177,7 +182,7 @@ namespace Laan.SQL.Formatter
             if ( _statement.Where != null )
             {
                 NewLine( CanCompactFormat() ? 1 : 2 );
-                AppendFormat(
+                IndentAppendFormat(
                     "{0} {1}",
                     Constants.Where,
                     _statement.Where.FormattedValue( WhereLength, this )
@@ -188,16 +193,29 @@ namespace Laan.SQL.Formatter
         protected void FormatTerminator()
         {
             if ( _statement.Terminated )
-                _sql.Append( Constants.SemiColon );
+                Append( Constants.SemiColon );
         }
 
         protected void FormatStatement( IStatement statement )
         {
-            using ( new IndentScope( this ) )
-            {
-                var formatter = StatementFormatterFactory.GetFormatter( this, _sql, statement );
-                formatter.Execute();
-            }
+            var formatter = StatementFormatterFactory.GetFormatter( this, _sql, statement );
+            formatter.Execute();
+        }
+
+        protected string FormatBrackets( string text )
+        {
+            return String.Format( _bracketFormats[ bracketSpaceOption ], text );
+        }
+
+        protected void FormatBlock( IStatement statement )
+        {
+            // do not increase indent when the child statement is a block.. 
+            // this results in IF <> BEGIN END working as expected
+            if ( statement is BlockStatement )
+                FormatStatement( statement );
+            else
+                using ( new IndentScope( this ) )
+                    FormatStatement( statement );
         }
 
         protected bool FitsOnRow( string text )
@@ -209,12 +227,7 @@ namespace Laan.SQL.Formatter
         {
             get { return _sql.ToString().Split( '\n' ).Last().Length; }
         }
-
-        protected string FormatBrackets( string text )
-        {
-            return String.Format( _bracketFormats[ bracketSpaceOption ], text );
-        }
-
+        
         protected bool IsExpressionOperatorAndOr( Expression expression )
         {
             CriteriaExpression where = expression as CriteriaExpression;
@@ -253,6 +266,5 @@ namespace Laan.SQL.Formatter
             get { return _indentable.IndentLevel; }
             set { _indentable.IndentLevel = value; }
         }
-
     }
 }

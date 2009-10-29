@@ -18,7 +18,7 @@ namespace Laan.SQL.Formatter
 
         public void Execute()
         {
-            Append( "DECLARE" );
+            IndentAppend( "DECLARE" );
 
             var maxNameLength = _statement.Definitions.Max( def => def.Name.Length ) * -1;
             var maxTypeLength = _statement.Definitions.Max( def => def.Type.Length ) * -1;
@@ -37,7 +37,7 @@ namespace Laan.SQL.Formatter
                         ( def.DefaultValue != null ? " = " + def.DefaultValue.FormattedValue( 0, this ) : "" )
                     ).TrimEnd() + ( --count > 0 ? "," : "" );
 
-                    Append( variableDecaration );
+                    IndentAppend( variableDecaration );
                 }
             }
         }

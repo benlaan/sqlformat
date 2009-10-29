@@ -29,7 +29,7 @@ namespace Laan.SQL.Formatter
 
         private void FormatInsert()
         {
-            AppendFormat( "{0} {1} {2}", Constants.Insert, Constants.Into, _statement.TableName );
+            IndentAppendFormat( "{0} {1} {2}", Constants.Insert, Constants.Into, _statement.TableName );
         }
 
         private void FormatColumns()
@@ -47,8 +47,8 @@ namespace Laan.SQL.Formatter
 
                     using ( new IndentScope( this ) )
                     {
-                        AppendLine( text );
-                        AppendLine( ")" );
+                        IndentAppendLine( text );
+                        IndentAppendLine( ")" );
                     }
                 }
             }
@@ -58,30 +58,35 @@ namespace Laan.SQL.Formatter
         {
             if ( _statement.Values.Any() )
             {
-                NewLine();
                 using ( new IndentScope( this ) )
                 {
                     foreach ( var values in _statement.Values )
                     {
-                        AppendFormat(
-                            " {0} {1}{2}",
+                        IndentAppendFormat(
+                            "{0} {1}{2}",
                             values == _statement.Values.First() ? Constants.Values : new string( ' ', Constants.Values.Length ),
                             FormatBrackets( String.Join( ", ", values.ToArray() ) ),
                             values == _statement.Values.Last() ? "" : ",\n"
                         );
                     }
                 }
-
             }
             else if ( _statement.SourceStatement != null )
             {
-                NewLine();
                 using ( new IndentScope( this ) )
                 {
                     var formatter = new SelectStatementFormatter( this, _sql, _statement.SourceStatement );
                     formatter.Execute();
                 }
             }
+            //else if ( _statement.ExecuteProcudure != null )
+            //{
+            //    using ( new IndentScope( this ) )
+            //    {
+            //        var formatter = new ExecuteProcedureFormatter( this, _sql, _statement.ExecuteProcudure );
+            //        formatter.Execute();
+            //    }
+            //}
         }
     }
 }

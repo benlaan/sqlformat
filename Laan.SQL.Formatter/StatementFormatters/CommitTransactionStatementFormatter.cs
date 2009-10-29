@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 using Laan.SQL.Parser;
 
@@ -19,7 +20,7 @@ namespace Laan.SQL.Formatter
         public void Execute()
         {
             DecreaseIndent();
-            AppendFormat(
+            IndentAppendFormat(
                 "COMMIT {1}",
                 GetDescription(),
                 ( !String.IsNullOrEmpty( _statement.Name ) ? " " + _statement.Name : "" )

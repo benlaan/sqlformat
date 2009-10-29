@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using System.Windows.Forms;
 
 using EnvDTE;
 using EnvDTE80;
@@ -315,6 +314,23 @@ namespace Laan.AddIns.Core
             {
                 var point = TextDocument.Selection.TopPoint;
                 return new Cursor( point.DisplayColumn, point.Line );
+            }
+            set
+            {
+                var point = TextDocument.Selection.TopPoint.CreateEditPoint();
+                point.LineDown( value.Row );
+                point.CharRight( value.Column );
+                TextDocument.Selection.MoveToPoint( point, false );
+            }
+        }
+
+        internal Cursor VirtualCursor
+        {
+            get
+            {
+                var start = TextDocument.Selection.TextPane.StartPoint;
+                var top = TextDocument.Selection.TopPoint;
+                return new Cursor( top.DisplayColumn - start.DisplayColumn + 1 , top.Line - start.Line + 1 );
             }
             set
             {

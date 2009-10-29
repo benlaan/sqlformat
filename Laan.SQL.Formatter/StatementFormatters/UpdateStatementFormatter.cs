@@ -39,7 +39,7 @@ namespace Laan.SQL.Formatter
                 string separator = field != _statement.Fields.Last() ? Constants.Comma + Environment.NewLine : "";
                 string set = field == _statement.Fields.First() ? "SET" : "   ";
 
-                AppendFormat(
+                IndentAppendFormat(
                     format,
                     set,
                     field.Alias.Name,
@@ -51,7 +51,7 @@ namespace Laan.SQL.Formatter
 
         private void FormatUpdate()
         {
-            Append( Constants.Update );
+            IndentAppend( Constants.Update );
             FormatTop( _statement.Top );
             _sql.AppendFormat( " {0}\n", _statement.TableName );
         }

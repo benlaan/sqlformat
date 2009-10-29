@@ -18,7 +18,7 @@ namespace Laan.SQL.Formatter
 
         public void Execute()
         {
-            AppendFormat(
+            IndentAppendFormat(
                 "BEGIN{0}{1}",
                 ( _statement.Distributed ? " DISTRIBUTED" : "" ),
                 GetDescription(),

@@ -5,7 +5,7 @@ using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser
 {
-    public class BlockStatement : Statement
+    public class BlockStatement : CustomStatement
     {
         /// <summary>
         /// Initializes a new instance of the BlockStatement class.

@@ -26,9 +26,9 @@ namespace Laan.SQL.Formatter
 
         private void FormatDelete()
         {
-            _sql.Append( Constants.Delete );
+            Append( Constants.Delete );
             FormatTop( _statement.Top );
-            _sql.Append( _statement.TableName != null ? " " + _statement.TableName : "" );
+            Append( _statement.TableName != null ? " " + _statement.TableName : "" );
         }
 
         #endregion

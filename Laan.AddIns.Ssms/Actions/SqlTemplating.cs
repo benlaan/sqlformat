@@ -6,7 +6,7 @@ using Laan.AddIns.Core;
 
 namespace Laan.AddIns.Ssms.Actions
 {
-    public class SqlTemplating : Laan.AddIns.Core.Action
+    public class SqlTemplating : DropDownList
     {
         private static Dictionary<string, string> _templates;
 
@@ -130,16 +130,13 @@ namespace Laan.AddIns.Ssms.Actions
                 _addIn.IsCurrentDocumentExtension( "sql" )
                 && 
                 _addIn.CurrentSelection == ""
-                &&
-                _addIn.CurrentWord != ""
             );
         }
 
-        public override void Execute()
+        public void Expand( string word )
         {
             try
             {
-                var word = _addIn.CurrentWord;
                 _addIn.SelectCurrentWord();
                 string padding = new string( ' ', 4 );
                 var raw = _templates[ word ]
@@ -165,6 +162,22 @@ namespace Laan.AddIns.Ssms.Actions
             finally
             {
                 _addIn.CancelSelection();
+            }
+        }
+
+        protected override void ExecuteItem( Item item )
+        {
+            Expand( item.Name );
+        }
+
+        protected override IEnumerable<Item> GetItems()
+        {
+            var word = _addIn.CurrentWord;
+
+            foreach ( var template in _templates.OrderBy( k => k.Key ) )
+            {
+                if ( template.Key.StartsWith( word ) )
+                    yield return new Item() { Name = template.Key, Description = template.Value };
             }
         }
     }

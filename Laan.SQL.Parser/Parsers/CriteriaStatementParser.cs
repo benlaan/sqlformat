@@ -9,7 +9,7 @@ namespace Laan.SQL.Parser
 {
     public abstract class CriteriaStatementParser<T> : StatementParser<T> where T : CustomStatement
     {
-        protected string[] FieldTerminatorSet = { Constants.From, Constants.Comma, Constants.Having, Constants.Go, Constants.SemiColon };
+        protected string[] FieldTerminatorSet = { Constants.From, Constants.Comma, Constants.Having, Constants.Go, Constants.SemiColon, Constants.End };
         protected string[] FromTerminatorSet = { Constants.Inner, Constants.Join, Constants.Left, Constants.Right, Constants.Full, Constants.Comma, Constants.CloseBracket, Constants.Order, Constants.Group, Constants.Where };
 
         public CriteriaStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
@@ -177,6 +177,7 @@ namespace Laan.SQL.Parser
 
                 _statement.From.Add( table );
 
+                // TODO: This needs to be changed to test Tokenizer.Token.Current.TokenType for TokenType.Keyword
                 // if a new statement is initiated here, do not process the alias
                 if ( Tokenizer.IsNextToken( 
                         Constants.SemiColon, Constants.Go, Constants.Select, Constants.Insert, 
