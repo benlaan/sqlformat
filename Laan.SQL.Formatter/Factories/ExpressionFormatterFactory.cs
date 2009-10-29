@@ -22,6 +22,7 @@ namespace Laan.SQL.Formatter
                 { typeof( SelectExpression ), typeof( SelectExpressionFormatter ) },
                 { typeof( ExpressionList ), typeof( ExpressionListFormatter ) },
                 { typeof( BetweenExpression ), typeof( BetweenExpressionFormatter ) },
+                { typeof( NegationExpression ), typeof( NegationExpressionFormatter ) },
             };
         }
 

@@ -53,7 +53,6 @@ namespace Laan.AddIns.Ssms.Actions
 
         private void Initialise()
         {
-            _showLineNumbers = ReadProperty<bool>( "TextEditor", "SQL", "ShowLineNumbers" );
             string fontFamily = ReadProperty<string>( "FontsAndColors", "TextEditor", "FontFamily" );
             float fontSize = ReadProperty<short>( "FontsAndColors", "TextEditor", "FontSize" );
 
@@ -61,16 +60,16 @@ namespace Laan.AddIns.Ssms.Actions
 
             _listBox = new Form.ListBox();
             _listBox.DrawMode = Form.DrawMode.OwnerDrawVariable;
-            _listBox.Width = 280;
+            _listBox.Width = 340;
             _listBox.Height = 200;
             _listBox.DrawItem += ListBoxDrawItem;
             _listBox.MeasureItem += ListBoxMeasureItem;
             _listBox.KeyDown += ListBoxKeyDown;
             _listBox.DoubleClick += ListBoxDoubleClick;
             _listBox.LostFocus += ListBoxLostFocus;
+            _listBox.Hide();
 
             _window = new Window( (IntPtr) _addIn.TextDocument.DTE.MainWindow.HWnd );
-            _window.SetParent( _listBox.Handle );
 
             _fontSize = TextRenderer.MeasureText( "W", _font );
             _fontSize.Width = TextRenderer.MeasureText( "WW", _font ).Width - _fontSize.Width;
@@ -78,6 +77,7 @@ namespace Laan.AddIns.Ssms.Actions
 
             //WriteProperty<bool>( "TextEditor", "SQL", "AutoListMembers", false );
             //WriteProperty<bool>( "TextEditor", "SQL", "AutoListParams", true );
+            _window.SetParent( _listBox.Handle );
         }
 
         private T ReadProperty<T>( string category, string page, string property )
@@ -204,9 +204,11 @@ namespace Laan.AddIns.Ssms.Actions
             if ( _window == null )
                 Initialise();
 
+            _showLineNumbers = ReadProperty<bool>( "TextEditor", "SQL", "ShowLineNumbers" );
+
             _listBox.Items.Clear();
             _listBox.Items.AddRange( GetItems().ToArray() );
-            _listBox.Height = Math.Min( 290, Math.Max( 100, _listBox.Items.Count * 20 ) );
+            _listBox.Height = Math.Min( 300, Math.Max( 150, _listBox.Items.Count * 20 ) );
 
             var editor = _window.FindByClassName( EditorWindowClassName );
             var point = editor.GetScreenPoint( _window );

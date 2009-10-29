@@ -282,6 +282,38 @@ namespace Laan.SQL.Formatter.Test
         }
 
         [Test]
+        public void Can_Format_Select_With_Not_Exists_Function()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute(
+                @"SELECT CASE WHEN NOT EXISTS( SELECT 1 FROM dbo.Notes WHERE A=1) THEN 1 ELSE 0 END FROM dbo.Ark A"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+                "SELECT",
+                "    CASE",
+                "        WHEN NOT EXISTS(",
+                "",
+                "            SELECT 1",
+                "            FROM dbo.Notes",
+                "            WHERE A = 1",
+                "",
+                "        ) THEN 1",
+                "    ELSE",
+                "        0",
+                "    END",
+                "FROM dbo.Ark A"
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
         public void Can_Format_Select_With_Between_Expression()
         {
             // Setup

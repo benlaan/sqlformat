@@ -6,10 +6,7 @@ namespace Laan.SQL.Parser
 {
     public class CreateTableStatementParser : TableStatementParser<CreateTableStatement>
     {
-        CreateTableStatement _statement;
-
-        internal CreateTableStatementParser( ITokenizer tokenizer )
-            : base( tokenizer )
+        internal CreateTableStatementParser( ITokenizer tokenizer ) : base( tokenizer )
         {
         }
 

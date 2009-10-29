@@ -30,11 +30,6 @@ namespace Laan.SQL.Formatter
                 sql.AppendLine();
                 sql.Append( GetIndent( false ) + ")" );
 
-                //sql.AppendLine();
-                //sql.AppendLine();
-                //sql.Append( GetIndent( Indent, IndentLevel + 1, false ) + _expression.Expression.FormattedValue( Offset, this ) );
-                //sql.AppendLine( GetIndent( Indent, IndentLevel - 1 ) );
-                //sql.Append( GetIndent( Indent, IndentLevel, false ) + ")" );
                 return sql.ToString();
             }
         }

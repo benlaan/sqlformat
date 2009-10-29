@@ -12,7 +12,7 @@ namespace Laan.SQL.Parser
         private void ProcessIfCondition()
         {
             var condition = new ExpressionParser( Tokenizer ).Execute();
-            if ( !( condition is CriteriaExpression || condition is FunctionExpression ) )
+            if ( !( condition is CriteriaExpression || condition is FunctionExpression || condition is NegationExpression ) )
                 throw new SyntaxException( "IF expects a boolean result expression" );
 
             _statement.Condition = condition;

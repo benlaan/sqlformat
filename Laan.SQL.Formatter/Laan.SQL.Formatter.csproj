@@ -40,6 +40,7 @@
     <Compile Include="ExpressionFormatters\BetweenExpressionFormatter.cs" />
     <Compile Include="ExpressionFormatters\CaseSwitchExpressionFormatter.cs" />
     <Compile Include="ExpressionFormatters\CaseWhenExpressionFormatter.cs" />
+    <Compile Include="ExpressionFormatters\NegationExpressionFormatter.cs" />
     <Compile Include="ExpressionFormatters\CriteriaExpressionFormatter.cs" />
     <Compile Include="ExpressionFormatters\DefaultExpressionFormatter.cs" />
     <Compile Include="Factories\StatementFormatterFactory.cs" />

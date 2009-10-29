@@ -9,8 +9,7 @@ namespace Laan.SQL.Formatter
 {
     public class FunctionExpressionFormatter : CustomExpressionFormatter<FunctionExpression>
     {
-        public FunctionExpressionFormatter( FunctionExpression expression )
-            : base( expression )
+        public FunctionExpressionFormatter( FunctionExpression expression ) : base( expression )
         {
         }
 

@@ -18,8 +18,6 @@ namespace Laan.SQL.Parser
 
         public InsertStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
 
-        private InsertStatement _statement;
-
         private void ProcessColumnList()
         {
             if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )

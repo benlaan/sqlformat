@@ -4,8 +4,6 @@ namespace Laan.SQL.Parser
 {
     public class AlterTableStatementParser : TableStatementParser<AlterTableStatement>
     {
-        private AlterTableStatement _statement;
-
         internal AlterTableStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
 
         public override AlterTableStatement Execute()
