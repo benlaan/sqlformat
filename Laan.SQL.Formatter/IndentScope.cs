@@ -1,8 +1,8 @@
 using System;
 
-using Laan.SQL.Parser;
+using Laan.Sql.Parser;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     internal class IndentScope : IDisposable
     {

@@ -1,6 +1,8 @@
 using System;
 
-namespace Laan.SQL.Parser
+using Laan.Sql.Parser.Entities;
+
+namespace Laan.Sql.Parser.Parsers
 {
     public class CreateViewStatementParser : StatementParser<CreateViewStatement>
     {

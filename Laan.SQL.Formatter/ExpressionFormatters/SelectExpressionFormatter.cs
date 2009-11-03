@@ -1,9 +1,9 @@
 using System;
 using System.Text;
 
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     public class SelectExpressionFormatter : CustomExpressionFormatter<SelectExpression>
     {

@@ -2,9 +2,9 @@ using System;
 using System.Linq;
 using System.Text;
 
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     public class CustomExpressionFormatter<T> : IExpressionFormatter, IIndentable where T : Expression
     {

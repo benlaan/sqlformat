@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser.Entities
 {
     public enum SortOrder
     {

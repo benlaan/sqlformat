@@ -3,10 +3,11 @@ using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 
-using Laan.SQL.Parser;
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser;
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Entities;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     public enum BracketFormatOption
     {

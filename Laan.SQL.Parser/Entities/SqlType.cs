@@ -1,6 +1,6 @@
 using System;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser.Entities
 {
     public class SqlType
     {

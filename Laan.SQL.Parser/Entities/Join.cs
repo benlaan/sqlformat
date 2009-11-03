@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System;
 using System.ComponentModel;
 
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser.Entities
 {
     public enum JoinType
     {

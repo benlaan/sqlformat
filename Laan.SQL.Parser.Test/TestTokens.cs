@@ -2,7 +2,7 @@ using System;
 
 using MbUnit.Framework;
 
-namespace Laan.SQL.Parser.Test
+namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
     public class TestTokens

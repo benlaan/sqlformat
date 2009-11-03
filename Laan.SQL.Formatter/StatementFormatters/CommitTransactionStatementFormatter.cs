@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-using Laan.SQL.Parser;
+using Laan.Sql.Parser;
+using Laan.Sql.Parser.Entities;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     public class CommitTransactionStatementFormatter : TransactionStatementFormatter<CommitTransactionStatement>, IStatementFormatter
     {

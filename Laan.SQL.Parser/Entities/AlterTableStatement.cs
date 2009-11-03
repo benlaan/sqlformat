@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser.Entities
 {
     public class AlterTableStatement : IStatement
     {

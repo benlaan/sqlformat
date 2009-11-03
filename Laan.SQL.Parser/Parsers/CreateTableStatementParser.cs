@@ -1,8 +1,9 @@
 using System;
 
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Entities;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser.Parsers
 {
     public class CreateTableStatementParser : TableStatementParser<CreateTableStatement>
     {

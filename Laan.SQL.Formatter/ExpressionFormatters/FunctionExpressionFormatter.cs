@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 
-using Laan.SQL.Parser.Expressions;
-using Laan.SQL.Parser;
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser;
 using System.Text;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     public class FunctionExpressionFormatter : CustomExpressionFormatter<FunctionExpression>
     {

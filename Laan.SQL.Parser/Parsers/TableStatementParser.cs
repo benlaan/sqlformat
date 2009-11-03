@@ -1,6 +1,6 @@
 using System;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser.Parsers
 {
     public abstract class TableStatementParser<T> : StatementParser<T> where T : class, IStatement
     {

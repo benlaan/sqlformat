@@ -15,6 +15,18 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_02CC618717045442EC30C423FEE098E7"
+        "OwnerKey" = "8:_C59B21D2BF6E174370E8D7776E9BFB29"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_02CC618717045442EC30C423FEE098E7"
+        "OwnerKey" = "8:_D8921EA3D3454EFAA39FE4A1CFA9DA51"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_163F8F62168AF261FC6610E374238286"
         "OwnerKey" = "8:_A837F94F5B823688B0320B3B1A6B2DB0"
         "MsmSig" = "8:_UNDEFINED"
@@ -51,25 +63,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8E047F945B1049F304ADB319F2528AFD"
-        "OwnerKey" = "8:_D8921EA3D3454EFAA39FE4A1CFA9DA51"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A837F94F5B823688B0320B3B1A6B2DB0"
         "OwnerKey" = "8:_D8921EA3D3454EFAA39FE4A1CFA9DA51"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_CE666A20098CB8CD5A6C93D59E3097E2"
-        "OwnerKey" = "8:_8E047F945B1049F304ADB319F2528AFD"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CE666A20098CB8CD5A6C93D59E3097E2"
+        "MsmKey" = "8:_C59B21D2BF6E174370E8D7776E9BFB29"
         "OwnerKey" = "8:_D8921EA3D3454EFAA39FE4A1CFA9DA51"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -106,13 +106,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CE666A20098CB8CD5A6C93D59E3097E2"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D8921EA3D3454EFAA39FE4A1CFA9DA51"
+        "OwnerKey" = "8:_F4D5EA379D80AA03E2FA731543983C3A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -136,13 +130,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F4D5EA379D80AA03E2FA731543983C3A"
+        "OwnerKey" = "8:_D8921EA3D3454EFAA39FE4A1CFA9DA51"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8E047F945B1049F304ADB319F2528AFD"
+        "OwnerKey" = "8:_C59B21D2BF6E174370E8D7776E9BFB29"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_02CC618717045442EC30C423FEE098E7"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -255,6 +255,37 @@
         }
         "File"
         {
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_02CC618717045442EC30C423FEE098E7"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Laan.SQL.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=38381f803377176d, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_02CC618717045442EC30C423FEE098E7"
+                    {
+                    "Name" = "8:Laan.SQL.Parser.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Laan.SQL.Parser.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_9055B7278425486C88E532033C1BAF74"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_163F8F62168AF261FC6610E374238286"
             {
             "SourcePath" = "8:vsmso.olb"
@@ -377,37 +408,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8E047F945B1049F304ADB319F2528AFD"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Laan.SQL.Formatter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_8E047F945B1049F304ADB319F2528AFD"
-                    {
-                    "Name" = "8:Laan.SQL.Formatter.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Laan.SQL.Formatter.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_9055B7278425486C88E532033C1BAF74"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A837F94F5B823688B0320B3B1A6B2DB0"
             {
             "AssemblyRegister" = "3:1"
@@ -439,20 +439,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CE666A20098CB8CD5A6C93D59E3097E2"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C59B21D2BF6E174370E8D7776E9BFB29"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Laan.SQL.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=38381f803377176d, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Laan.SQL.Formatter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_CE666A20098CB8CD5A6C93D59E3097E2"
+                    "_C59B21D2BF6E174370E8D7776E9BFB29"
                     {
-                    "Name" = "8:Laan.SQL.Parser.dll"
+                    "Name" = "8:Laan.SQL.Formatter.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Laan.SQL.Parser.dll"
+            "SourcePath" = "8:Laan.SQL.Formatter.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9055B7278425486C88E532033C1BAF74"
@@ -577,14 +577,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Laan Sql Add-Ins for Ssms 2008"
-        "ProductCode" = "8:{8C04E897-6A50-4F89-B271-45CDD414A85A}"
-        "PackageCode" = "8:{13B2CDD1-69CF-4170-956F-8126A5F420C1}"
+        "ProductCode" = "8:{67C613B1-A260-4FE7-8F1A-1792A7689279}"
+        "PackageCode" = "8:{BCEF6B6C-5790-4D24-8412-1539C7411F95}"
         "UpgradeCode" = "8:{20D691F1-81A2-4A35-83FC-23E7C7E9DF97}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:Laan Software"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

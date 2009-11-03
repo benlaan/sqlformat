@@ -2,7 +2,7 @@ using System;
 
 using MbUnit.Framework;
 
-namespace Laan.SQL.Formatter.Test
+namespace Laan.Sql.Formatter.Test
 {
     [TestFixture]
     [Ignore( "Not finished yet!" )]

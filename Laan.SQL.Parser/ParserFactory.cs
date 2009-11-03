@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Laan.SQL.Parser
+using Laan.Sql.Parser.Parsers;
+using Laan.Sql.Parser.Exceptions;
+
+namespace Laan.Sql.Parser
 {
     public class ParserFactory
     {

@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace Laan.SQL.Parser.Expressions
+using Laan.Sql.Parser.Entities;
+
+namespace Laan.Sql.Parser.Expressions
 {
     public class SelectExpression : Expression
     {

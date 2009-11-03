@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using MbUnit.Framework;
 
-namespace Laan.SQL.Formatter.Test
+namespace Laan.Sql.Formatter.Test
 {
     public class BaseFormattingTest
     {

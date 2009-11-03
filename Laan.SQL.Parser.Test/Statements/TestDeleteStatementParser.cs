@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using MbUnit.Framework;
 
-using Laan.SQL.Parser;
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser;
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser.Exceptions;
 
-namespace Laan.SQLParser.Test
+namespace Laan.SqlParser.Test
 {
     [TestFixture]
     public class TestDeleteStatementParser

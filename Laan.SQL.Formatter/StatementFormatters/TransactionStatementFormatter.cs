@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using Laan.SQL.Parser;
+using Laan.Sql.Parser;
+using Laan.Sql.Parser.Entities;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     public abstract class TransactionStatementFormatter<T> : CustomStatementFormatter<T> where T : TransactionStatement
     {

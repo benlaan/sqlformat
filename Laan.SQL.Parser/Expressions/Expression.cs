@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace Laan.SQL.Parser.Expressions
+namespace Laan.Sql.Parser.Expressions
 {
     [DebuggerDisplay( "{Value}" )]
     public class Expression : IInlineFormattable

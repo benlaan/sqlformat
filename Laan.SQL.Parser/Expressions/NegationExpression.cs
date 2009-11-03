@@ -1,6 +1,6 @@
 using System;
 
-namespace Laan.SQL.Parser.Expressions
+namespace Laan.Sql.Parser.Expressions
 {
     public class NegationExpression : Expression
     {

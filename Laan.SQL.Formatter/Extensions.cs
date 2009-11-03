@@ -1,8 +1,8 @@
 using System;
 
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     public static class Extensions
     {

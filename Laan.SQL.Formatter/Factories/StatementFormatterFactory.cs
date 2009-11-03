@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using Laan.SQL.Parser;
+using Laan.Sql.Parser;
+using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser.Exceptions;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     public class StatementFormatterFactory
     {

@@ -5,7 +5,7 @@ using System.Text;
 
 using MbUnit.Framework;
 
-namespace Laan.SQL.Formatter.Test
+namespace Laan.Sql.Formatter.Test
 {
     [TestFixture]
     public class TestExpressionFormatting : BaseFormattingTest

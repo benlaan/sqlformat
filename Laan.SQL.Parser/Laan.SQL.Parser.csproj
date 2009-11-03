@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BracketStructure.cs" />
-    <Compile Include="CustomTokenizer.cs" />
+    <Compile Include="Tokenizer\CustomTokenizer.cs" />
     <Compile Include="Entities\AliasedEntities.cs" />
     <Compile Include="Entities\AlterTableStatement.cs" />
     <Compile Include="Entities\BlockStatement.cs" />
@@ -73,13 +73,13 @@
     <Compile Include="Entities\SortedField.cs" />
     <Compile Include="Expressions\StringExpression.cs" />
     <Compile Include="Entities\UpdateStatement.cs" />
-    <Compile Include="ITokenizer.cs" />
+    <Compile Include="Interfaces\ITokenizer.cs" />
     <Compile Include="Parsers\AlterStatementParser.cs" />
     <Compile Include="Parsers\AlterTableStatementParser.cs" />
     <Compile Include="Entities\CreateIndexStatement.cs" />
     <Compile Include="Parsers\BeginStatementParser.cs" />
     <Compile Include="Parsers\TransactionStatementParser.cs" />
-    <Compile Include="Parsers\Constants.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Parsers\CreateStatementParser.cs" />
     <Compile Include="Parsers\DeclareStatementParser.cs" />
     <Compile Include="Parsers\DeleteStatementParser.cs" />
@@ -104,7 +104,7 @@
     <Compile Include="Parsers\InsertStatementParser.cs" />
     <Compile Include="ParserFactory.cs" />
     <Compile Include="Parsers\UpdateStatementParser.cs" />
-    <Compile Include="Position.cs" />
+    <Compile Include="Tokenizer\Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parsers\SelectStatementParser.cs" />
     <Compile Include="Entities\SqlType.cs" />
@@ -112,9 +112,9 @@
     <Compile Include="Parsers\StatementParser.cs" />
     <Compile Include="Entities\Table.cs" />
     <Compile Include="Parsers\TableStatementParser.cs" />
-    <Compile Include="RegexTokenizer.cs" />
-    <Compile Include="SqlTokenizer.cs" />
-    <Compile Include="Token.cs" />
+    <Compile Include="Tokenizer\RegexTokenizer.cs" />
+    <Compile Include="Tokenizer\SqlTokenizer.cs" />
+    <Compile Include="Tokenizer\Token.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="key.snk" />

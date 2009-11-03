@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser
 {
     public class SqlTokenizer : RegexTokenizer
     {
@@ -36,7 +36,7 @@ namespace Laan.SQL.Parser
                 {
                     new TokenDefinition( TokenType.WhiteSpace,       true,  @"^\s+$" ),
                     new TokenDefinition( TokenType.Alpha,            false, @"^[a-zA-Z_]+$" ),
-                    new TokenDefinition( TokenType.Variable,         false, @"^(:|@{1,2})[A-Za-z_]+[[A-Za-z_0-9]*$" ),
+                    new TokenDefinition( TokenType.Variable,         false, @"^(:|@{1,2}|#{1,2})[A-Za-z_]+[[A-Za-z_0-9]*$" ),
                     new TokenDefinition( TokenType.AlphaNumeric,     false, @"^[A-Za-z_]+\w+$" ),
                     new TokenDefinition( TokenType.Numeric,          false, @"^[-]?\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$" ),
                     new TokenDefinition( TokenType.OpenBracket,      false, @"^\($" ),

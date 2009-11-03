@@ -3,13 +3,15 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections;
 
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser.Exceptions;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser.Parsers
 {
     public abstract class CriteriaStatementParser<T> : StatementParser<T> where T : CustomStatement
     {
-        protected string[] FieldTerminatorSet = { Constants.From, Constants.Comma, Constants.Having, Constants.Go, Constants.SemiColon, Constants.End };
+        protected string[] FieldTerminatorSet = { Constants.From, Constants.Comma, Constants.Having, Constants.Go, Constants.SemiColon, Constants.End, Constants.Into };
         protected string[] FromTerminatorSet = { Constants.Inner, Constants.Join, Constants.Left, Constants.Right, Constants.Full, Constants.Comma, Constants.CloseBracket, Constants.Order, Constants.Group, Constants.Where };
 
         public CriteriaStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }

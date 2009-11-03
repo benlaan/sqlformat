@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MbUnit.Framework;
-using Laan.SQL.Parser;
 
-namespace Laan.SQLParser.Test
+using MbUnit.Framework;
+
+using Laan.Sql.Parser;
+using Laan.Sql.Parser.Entities;
+
+namespace Laan.SqlParser.Test
 {
     [TestFixture]
     public class TestInsertStatementParser

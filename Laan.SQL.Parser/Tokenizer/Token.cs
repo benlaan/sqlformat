@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser
 {
     public class Token
     {

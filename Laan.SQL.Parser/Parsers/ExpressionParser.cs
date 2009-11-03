@@ -1,8 +1,10 @@
 using System;
 
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser.Exceptions;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser.Parsers
 {
     /*
           <criteria>     ::= <expression> [=,<,>,<=,>=,IS] <expression> | <expression>

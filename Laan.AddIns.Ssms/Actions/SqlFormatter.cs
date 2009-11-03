@@ -1,7 +1,7 @@
 using System;
 
 using Laan.AddIns.Core;
-using Laan.SQL.Formatter;
+using Laan.Sql.Formatter;
 
 namespace Laan.AddIns.Ssms.Actions
 {

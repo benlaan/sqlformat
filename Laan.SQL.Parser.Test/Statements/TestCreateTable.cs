@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 
 using MbUnit.Framework;
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Entities;
 
-namespace Laan.SQL.Parser.Test
+namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
     public class TestCreateTable

@@ -11,7 +11,7 @@ namespace Laan.AddIns.Ssms.Actions
     public class Window
     {
 
-        #region DLL Imports 
+        #region DLL Imports
 
         [DllImport( "user32.dll" )]
         private static extern IntPtr SetParent( IntPtr child, IntPtr parent );
@@ -108,14 +108,14 @@ namespace Laan.AddIns.Ssms.Actions
 
         private void Output( Window window, int indent )
         {
-            int ix = 0;
+            int index = 0;
             foreach ( var win in FindAllChildWindows() )
             {
                 Trace.WriteLine(
                     String.Format(
                         "{0}[{1}] - {2}",
                         new string( ' ', indent * 4 ),
-                        ix++,
+                        index++,
                         win.ClassName
                     )
                 );
@@ -160,15 +160,15 @@ namespace Laan.AddIns.Ssms.Actions
 
         public Window FindByClassName( string className )
         {
-            var window = FindChildWindows(h => h.ClassName == className).FirstOrDefault();
+            var window = FindChildWindows( h => h.ClassName == className ).FirstOrDefault();
             if ( window == null )
-                throw new InvalidOperationException( 
-                    String.Format(" Can't find window with ClassName '{0}'", className ) 
+                throw new InvalidOperationException(
+                    String.Format( " Can't find window with ClassName '{0}'", className )
                 );
-            
+
             return window;
         }
-        
+
         public string ClassName { get { return GetClassName( Handle ); } }
         public IntPtr Handle { get; private set; }
     }

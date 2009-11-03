@@ -1,7 +1,8 @@
 using System;
 using System.Diagnostics;
+using Laan.Sql.Parser.Exceptions;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser
 {
     public class CustomTokenizer : ITokenizer
     {

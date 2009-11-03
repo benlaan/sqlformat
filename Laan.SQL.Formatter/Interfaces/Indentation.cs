@@ -1,7 +1,8 @@
 using System;
-using Laan.SQL.Parser;
 
-namespace Laan.SQL.Formatter
+using Laan.Sql.Parser;
+
+namespace Laan.Sql.Formatter
 {
     public class Indentation : IIndentable
     {

@@ -6,7 +6,9 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 
-namespace Laan.SQL.Parser
+using Laan.Sql.Parser.Exceptions;
+
+namespace Laan.Sql.Parser
 {
     public enum TokenType
     {

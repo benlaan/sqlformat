@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle( "Laan.SQL.Formatter" )]
+[assembly: AssemblyTitle( "Laan.Sql.Formatter" )]
 [assembly: AssemblyDescription( "" )]
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "ABB Grain Ltd" )]
-[assembly: AssemblyProduct( "Laan.SQL.Formatter" )]
+[assembly: AssemblyProduct( "Laan.Sql.Formatter" )]
 [assembly: AssemblyCopyright( "Copyright © ABB Grain Ltd 2008" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]

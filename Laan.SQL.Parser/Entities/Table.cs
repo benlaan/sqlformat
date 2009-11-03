@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System;
 using System.Diagnostics;
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser.Entities
 {
 
     public class Table : AliasedEntity

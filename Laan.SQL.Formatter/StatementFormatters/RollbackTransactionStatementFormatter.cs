@@ -1,9 +1,10 @@
 using System;
 using System.Text;
 
-using Laan.SQL.Parser;
+using Laan.Sql.Parser;
+using Laan.Sql.Parser.Entities;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     public class RollbackTransactionStatementFormatter : TransactionStatementFormatter<RollbackTransactionStatement>, IStatementFormatter
     {

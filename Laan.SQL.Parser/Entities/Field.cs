@@ -1,8 +1,8 @@
 using System.Diagnostics;
 
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser.Entities
 {
     [DebuggerDisplay( "{Expression.Value} ({Alias})" )]
     public class Field : AliasedEntity

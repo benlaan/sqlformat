@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 
-using Laan.SQL.Formatter;
-using Laan.SQL.Parser;
+using Laan.Sql.Formatter;
+using Laan.Sql.Parser;
 
 namespace Laan.NHibernate.Appender
 {

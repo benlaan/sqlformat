@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace Laan.SQL.Formatter.Web
+namespace Laan.Sql.Formatter.Web
 {
     public partial class Site : System.Web.UI.MasterPage
     {

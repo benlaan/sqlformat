@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace Laan.SQL.Parser
+using Laan.Sql.Parser.Entities;
+
+namespace Laan.Sql.Parser
 {
     public interface IProjection
     {

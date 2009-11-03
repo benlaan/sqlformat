@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Laan.SQL.Formatter.Web {
+namespace Laan.Sql.Formatter.Web {
     
     
     public partial class Site {

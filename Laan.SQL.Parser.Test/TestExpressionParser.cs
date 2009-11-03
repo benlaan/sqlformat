@@ -3,10 +3,11 @@ using System.Linq;
 
 using MbUnit.Framework;
 
-using Laan.SQL.Parser;
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser;
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Parsers;
 
-namespace Laan.SQLParser.Test
+namespace Laan.SqlParser.Test
 {
     [TestFixture]
     public class TestExpressionParser

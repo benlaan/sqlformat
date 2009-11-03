@@ -6,7 +6,7 @@ using MbUnit.Framework;
 
 using Laan.NHibernate.Appender;
 
-namespace Laan.SQL.Formatter.Test
+namespace Laan.Sql.Formatter.Test
 {
     public class TestAppender : BaseFormattingTest
     {

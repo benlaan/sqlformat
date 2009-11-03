@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser.Exceptions;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser.Parsers
 {
     public class SelectStatementParser : CriteriaStatementParser<SelectStatement>
     {
@@ -63,7 +65,20 @@ namespace Laan.SQL.Parser
                 return;
 
             _statement.SetOperation = new SetOperation() { Type = type };
-            _statement.SetOperation.Statement = ParserFactory.Execute( Tokenizer, true ).First();
+            Tokenizer.ExpectToken( Constants.Select );
+            _statement.SetOperation.Statement = new SelectStatementParser( Tokenizer).Execute();
+        }
+
+        private void ProcessInto()
+        {
+            if ( Tokenizer.TokenEquals( Constants.Into ) )
+            {
+                Expression expression = ProcessExpression();
+                if ( !( expression is IdentifierExpression ) )
+                    throw new SyntaxException( "INTO expects identifier expression" );
+
+                _statement.Into = expression.Value;
+            }
         }
 
         public override SelectStatement Execute()
@@ -73,6 +88,7 @@ namespace Laan.SQL.Parser
             ProcessDistinct();
             ProcessTop();
             ProcessFields( FieldType.Select, _statement.Fields );
+            ProcessInto();
             ProcessFrom();
             ProcessWhere();
             ProcessGroupBy();

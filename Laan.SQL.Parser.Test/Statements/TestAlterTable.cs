@@ -5,7 +5,9 @@ using System.Text;
 
 using MbUnit.Framework;
 
-namespace Laan.SQL.Parser.Test
+using Laan.Sql.Parser.Entities;
+
+namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
     public class TestAlterTable

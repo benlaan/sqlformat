@@ -6,7 +6,7 @@ using System.IO;
 
 using MbUnit.Framework;
 
-namespace Laan.SQL.Parser.Test
+namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
     public class TestTokenizer
@@ -86,7 +86,8 @@ namespace Laan.SQL.Parser.Test
         [Row( "2 <= 5", new[] { "2", "<=", "5" } )]
         [Row( "A != B", new[] { "A", "!=", "B" } )]
         [Row( "@Ben_Laan", new[] { "@Ben_Laan" } )]
-        [Row( "Database.[Some Owner].Table", new[] { "Database", ".", "[Some Owner]", ".", "Table" } ) ]
+        [Row( "Database.[Some Owner].Table", new[] { "Database", ".", "[Some Owner]", ".", "Table" } )]
+        [Row( "#table ##global", new[] { "#table", "##global" } )]
         public void Tokenize_Alpha_Numeric_And_Special_Strings( string input, string[] tokens )
         {
             Verify( input, tokens );

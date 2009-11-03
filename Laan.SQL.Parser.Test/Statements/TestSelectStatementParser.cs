@@ -5,9 +5,11 @@ using System.Text;
 
 using MbUnit.Framework;
 
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser.Exceptions;
 
-namespace Laan.SQL.Parser.Test
+namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
     public class TestSelectStatementParser
@@ -539,8 +541,8 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "table", statement.From[ 0 ].Name );
             Assert.AreEqual( 2, statement.OrderBy.Count );
-            Assert.AreEqual( SortOrder.Descending, ( statement.OrderBy[ 0 ] as SortedField ).SortOrder );
-            Assert.AreEqual( SortOrder.Ascending, ( statement.OrderBy[ 1 ] as SortedField ).SortOrder );
+            Assert.AreEqual( Laan.Sql.Parser.Entities.SortOrder.Descending, ( statement.OrderBy[ 0 ] as SortedField ).SortOrder );
+            Assert.AreEqual( Laan.Sql.Parser.Entities.SortOrder.Ascending, ( statement.OrderBy[ 1 ] as SortedField ).SortOrder );
         }
 
         [Test]
@@ -629,6 +631,20 @@ namespace Laan.SQL.Parser.Test
             Assert.IsTrue( statement.SetOperation.Statement is SelectStatement );
             var select = statement.SetOperation.Statement as SelectStatement;
             Assert.AreEqual( "id", select.OrderBy.First().Expression.Value );
+        }
+
+        [Test]
+        public void Select_With_Into_Clause()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( 
+                "select id, name into #T from table" 
+            ).First();
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 2, statement.Fields.Count );
+            Assert.AreEqual( "#T", statement.Into );
         }
     }
 }

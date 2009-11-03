@@ -1,6 +1,6 @@
 using System;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser
 {
     public class Constants
     {

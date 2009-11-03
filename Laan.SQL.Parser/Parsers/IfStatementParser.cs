@@ -1,7 +1,10 @@
 using System;
-using Laan.SQL.Parser.Expressions;
 
-namespace Laan.SQL.Parser
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser.Exceptions;
+
+namespace Laan.Sql.Parser.Parsers
 {
     public class IfStatementParser : StatementParser<IfStatement>
     {

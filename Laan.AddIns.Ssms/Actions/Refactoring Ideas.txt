@@ -28,6 +28,11 @@ surround block in try/catch
 convert temp table to table variable
 convert table variable to temp table 
 
+convert if (count(*) > 0) to exists
+convert cartesian joins to inner joins
+
+simplify expression
+
 ----------------------------
 -- connection based
 ----------------------------
@@ -36,3 +41,4 @@ convert to view (?)
 convert procedure call to sql
 extract embedded sql (in execute_sql)
 auto-generate join signature
+

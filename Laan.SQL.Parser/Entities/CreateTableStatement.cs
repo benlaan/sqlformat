@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser.Entities
 {
     [ DebuggerDisplay("{Value}") ]
     public class CreateTableStatement : IStatement

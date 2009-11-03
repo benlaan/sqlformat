@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 
-using Laan.SQL.Parser;
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser;
+using Laan.Sql.Parser.Expressions;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     public class ExpressionFormatterFactory
     {

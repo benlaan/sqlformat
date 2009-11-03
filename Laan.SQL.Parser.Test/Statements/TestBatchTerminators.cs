@@ -2,8 +2,9 @@
 using System.Linq;
 
 using MbUnit.Framework;
+using Laan.Sql.Parser.Entities;
 
-namespace Laan.SQL.Parser.Test
+namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
     public class TestBatchTerminators

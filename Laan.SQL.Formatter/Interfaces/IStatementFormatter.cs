@@ -1,6 +1,6 @@
 using System;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     public interface IStatementFormatter
     {

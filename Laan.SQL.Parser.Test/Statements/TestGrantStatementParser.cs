@@ -5,9 +5,11 @@ using System.Text;
 
 using Gallio.Framework;
 using MbUnit.Framework;
-using Laan.SQL.Parser;
 
-namespace Laan.SQLParser.Test
+using Laan.Sql.Parser;
+using Laan.Sql.Parser.Entities;
+
+namespace Laan.SqlParser.Test
 {
     [TestFixture]
     public class TestGrantStatementParser

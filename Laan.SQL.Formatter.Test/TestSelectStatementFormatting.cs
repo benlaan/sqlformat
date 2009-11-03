@@ -2,7 +2,7 @@
 
 using MbUnit.Framework;
 
-namespace Laan.SQL.Formatter.Test
+namespace Laan.Sql.Formatter.Test
 {
     [TestFixture]
     public class TestSelectStatementFormatting : BaseFormattingTest
@@ -600,6 +600,30 @@ namespace Laan.SQL.Formatter.Test
                 "SELECT A.ID",
                 "FROM table",
             };
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_with_Into_Statement()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( "SELECT ID, Name INTO #temp FROM dbo.Table T" );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT",
+                "    ID,",
+                "    Name",
+                "",
+                "INTO #temp",
+                "",
+                "FROM dbo.Table T",
+            };
+
             Compare( actual, expected );
         }
     }

@@ -1,6 +1,8 @@
 using System;
 
-namespace Laan.SQL.Parser
+using Laan.Sql.Parser.Entities;
+
+namespace Laan.Sql.Parser.Parsers
 {
     public class TransactionStatementParser<T> : StatementParser<T> where T : TransactionStatement, new()
     {
@@ -25,7 +27,7 @@ namespace Laan.SQL.Parser
             _statement = new T();
             ProcessDescriptor( _statement );
 
-            if ( Tokenizer.HasMoreTokens && !Tokenizer.IsNextToken( 
+            if ( _statement.Descriptor != TransactionDescriptor.None && Tokenizer.HasMoreTokens && !Tokenizer.IsNextToken( 
                     Constants.Select, Constants.Update, Constants.Declare, Constants.Insert, Constants.Create, 
                     Constants.Alter, Constants.Go, Constants.Print, Constants.Exec, Constants.Grant, Constants.Begin
                 ) 

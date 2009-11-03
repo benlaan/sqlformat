@@ -1,7 +1,7 @@
 using System;
 using MbUnit.Framework;
 
-namespace Laan.SQL.Formatter.Test
+namespace Laan.Sql.Formatter.Test
 {
     [TestFixture]
     public class TestBlockStatementFormatting : BaseFormattingTest
@@ -17,17 +17,17 @@ namespace Laan.SQL.Formatter.Test
 
             // Verify outcome
             var expected = new[]
-		            {
-		               @"BEGIN",
-		                "",
-		                "    SELECT TOP 20",
-		                "        Field1,",
-		                "        Field2",
-		                "",
-		                "    FROM dbo.Table T",
-		                "",
-		                "END"
-		            };
+            {
+               @"BEGIN",
+                "",
+                "    SELECT TOP 20",
+                "        Field1,",
+                "        Field2",
+                "",
+                "    FROM dbo.Table T",
+                "",
+                "END"
+            };
 
             Compare( actual, expected );
         }

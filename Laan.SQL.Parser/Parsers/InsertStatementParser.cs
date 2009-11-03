@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Laan.SQL.Parser.Expressions;
 
-namespace Laan.SQL.Parser
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser.Exceptions;
+
+namespace Laan.Sql.Parser.Parsers
 {
     class InsertStatementParser : StatementParser<InsertStatement>
     {

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MbUnit.Framework;
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Entities;
 
-namespace Laan.SQL.Parser.Test
+namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
     public class TestTransactionParsers
@@ -27,8 +28,8 @@ namespace Laan.SQL.Parser.Test
 
         [Test]
         [Row( "begin tran select id from t rollback" )]
-        [Row( "begin tran select id from t rollback tran" )]
-        [Row( "begin tran select id from t rollback transaction" )]
+        [Row( "begin tran a select id from t rollback tran a" )]
+        [Row( "begin tran a select id from t rollback transaction a" )]
         public void Test_Basic_Begin_Tran_With_RollBack( string sql )
         {
             // Exercise

@@ -1,9 +1,9 @@
 using System;
 
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
 using System.Text;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     public class NestedExpressionFormatter : CustomExpressionFormatter<NestedExpression>
     {

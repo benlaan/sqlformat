@@ -1,11 +1,12 @@
 using System;
 using System.Text;
 using System.Linq;
-using Laan.SQL.Parser;
 using System.Collections.Generic;
-using Laan.SQL.Parser.Expressions;
 
-namespace Laan.SQL.Formatter
+using Laan.Sql.Parser;
+using Laan.Sql.Parser.Expressions;
+
+namespace Laan.Sql.Formatter
 {
     public interface IIndentable
     {

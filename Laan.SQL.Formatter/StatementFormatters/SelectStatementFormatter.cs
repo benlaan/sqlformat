@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Laan.SQL.Parser;
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser;
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Entities;
 
-namespace Laan.SQL.Formatter
+namespace Laan.Sql.Formatter
 {
     public class SelectStatementFormatter : CustomStatementFormatter<SelectStatement>, IStatementFormatter
     {
-        private const int Padding = 4;
         private const int MaxInlineColumns = 1;
 
         public SelectStatementFormatter( IIndentable indentable, StringBuilder sql, SelectStatement statement )
@@ -121,8 +121,8 @@ namespace Laan.SQL.Formatter
 
         private void FormatFields( List<Field> fields, bool canCompact )
         {
-            if ( fields.Count <= MaxInlineColumns && fields[ 0 ].Expression.CanInline && FitsOnRow( fields[ 0 ].Expression.Value ) )
-                _sql.Append( " " + FormatField( fields.First() ) );
+            if ( fields.Count <= MaxInlineColumns && fields.Take( MaxInlineColumns ).All( f => f.Expression.CanInline && FitsOnRow( f.Expression.Value ) ) )
+                _sql.Append( " " + String.Join( ", ", fields.Take( MaxInlineColumns ).Select( f => FormatField( f ) ).ToArray() ) );
             else
                 using ( new IndentScope( this ) )
                 {
@@ -132,6 +132,15 @@ namespace Laan.SQL.Formatter
                         IndentAppend( FormatField( field ) + ( field != fields.Last() ? "," : "" ) );
                     }
                 }
+        }
+
+        private void FormatInto()
+        {
+            if (_statement.Into != null )
+            {
+                NewLine( 2 );
+                IndentAppend( "INTO " + _statement.Into );
+            }
         }
 
         private void FormatGroupBy()
@@ -168,14 +177,14 @@ namespace Laan.SQL.Formatter
         private void FormatSetOperation()
         {
             var map = new Dictionary<SetType, string> {
-                { SetType.Union, "UNION" },
-                { SetType.UnionAll, "UNION ALL" },
+                { SetType.Union,     "UNION" },
+                { SetType.UnionAll,  "UNION ALL" },
                 { SetType.Intersect, "INTERSECT" },
-                { SetType.Except, "EXCEPT" },
+                { SetType.Except,    "EXCEPT" },
             };
 
             NewLine( 2 );
-            Append( map[ _statement.SetOperation.Type ] );
+            IndentAppend( map[ _statement.SetOperation.Type ] );
             NewLine( 2 );
             FormatStatement( _statement.SetOperation.Statement );
         }
@@ -203,6 +212,7 @@ namespace Laan.SQL.Formatter
             //    return _statement.Value;
 
             FormatSelect();
+            FormatInto();
             FormatFrom();
             FormatJoins();
             FormatWhere();

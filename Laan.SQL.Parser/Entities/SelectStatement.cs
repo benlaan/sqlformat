@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-using Laan.SQL.Parser.Expressions;
+using Laan.Sql.Parser.Expressions;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser.Entities
 {
     public enum SetType
     {
@@ -16,9 +16,8 @@ namespace Laan.SQL.Parser
 
     public class SetOperation
     {
-        public IStatement Statement { get; set; }
+        public SelectStatement Statement { get; set; }
         public SetType Type { get; set; }
-        
     }
 
     public class SelectStatement : ProjectionStatement
@@ -33,6 +32,7 @@ namespace Laan.SQL.Parser
 
         public bool Distinct { get; set; }
         public Top Top { get; set; }
+        public string Into { get; set; }
         public List<Field> OrderBy { get; set; }
         public List<Field> GroupBy { get; set; }
         public Expression Having { get; set; }

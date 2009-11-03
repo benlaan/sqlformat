@@ -1,6 +1,9 @@
 using System;
 
-namespace Laan.SQL.Parser
+using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser.Exceptions;
+
+namespace Laan.Sql.Parser.Parsers
 {
     public class GrantStatementParser : StatementParser<GrantStatement>
     {
