@@ -33,6 +33,7 @@ namespace Laan.SQL.Parser
         public const string Dot = ".";
         public const string Else = "ELSE";
         public const string End = "END";
+        public const string Except = "EXCEPT";
         public const string Exec = "EXEC";
         public const string Exists = "EXISTS";
         public const string Foreign = "FOREIGN";
@@ -46,6 +47,7 @@ namespace Laan.SQL.Parser
         public const string If = "IF";
         public const string In = "IN";
         public const string Index = "INDEX";
+        public const string Intersect = "INTERSECT";
         public const string Inner = "INNER";
         public const string Insert = "INSERT";
         public const string Into = "INTO";

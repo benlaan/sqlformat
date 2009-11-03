@@ -5,7 +5,7 @@ using MbUnit.Framework;
 namespace Laan.SQL.Formatter.Test
 {
     [TestFixture]
-    //[Ignore( "Not implemented yet!" )]
+    [Ignore( "Not finished yet!" )]
     public class TestInsertStatementFormatting : BaseFormattingTest
     {
         [Test]
@@ -87,7 +87,7 @@ namespace Laan.SQL.Formatter.Test
                "INSERT INTO dbo.Table (",
                "    ID, Greeting, MaxiumumDaysBetweenEvents, Description, EffectiveFromDate, EffectiveToDate",
                "    )",
-               "    VALUES (1, 'Hello World', 500, 'A Long Text Description Goes Here', 250, '01/01/2000', '01/01/2009')"
+               "     VALUES (1, 'Hello World', 500, 'A Long Text Description Goes Here', 250, '01/01/2000', '01/01/2009')"
             };
 
             Compare( actual, expected );

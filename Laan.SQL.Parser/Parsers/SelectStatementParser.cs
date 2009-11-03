@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
+
 using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser
@@ -42,6 +44,28 @@ namespace Laan.SQL.Parser
             }
         }
 
+        private void ProcessSetOperation()
+        {
+            SetType type = SetType.None;
+            if ( Tokenizer.TokenEquals( Constants.Union ) )
+            {
+                type = SetType.Union;
+                if ( Tokenizer.TokenEquals( Constants.All ) )
+                    type = SetType.UnionAll;
+            }
+            if ( Tokenizer.TokenEquals( Constants.Except ) )
+                type = SetType.Except;
+
+            if ( Tokenizer.TokenEquals( Constants.Intersect ) )
+                type = SetType.Intersect;
+
+            if ( type == SetType.None )
+                return;
+
+            _statement.SetOperation = new SetOperation() { Type = type };
+            _statement.SetOperation.Statement = ParserFactory.Execute( Tokenizer, true ).First();
+        }
+
         public override SelectStatement Execute()
         {
             _statement = new SelectStatement();
@@ -52,8 +76,14 @@ namespace Laan.SQL.Parser
             ProcessFrom();
             ProcessWhere();
             ProcessGroupBy();
-            ProcessOrderBy();
-            ProcessTerminator();
+
+            if ( Tokenizer.IsNextToken( Constants.Union, Constants.Intersect, Constants.Except ) )
+                ProcessSetOperation();
+            else
+            {
+                ProcessOrderBy();
+                ProcessTerminator();
+            }
 
             return _statement;
         }

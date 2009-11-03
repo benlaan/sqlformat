@@ -58,13 +58,14 @@ namespace Laan.SQL.Formatter
         {
             if ( _statement.Values.Any() )
             {
+                NewLine();
                 using ( new IndentScope( this ) )
                 {
                     foreach ( var values in _statement.Values )
                     {
                         IndentAppendFormat(
                             "{0} {1}{2}",
-                            values == _statement.Values.First() ? Constants.Values : new string( ' ', Constants.Values.Length ),
+                            values == _statement.Values.First() ? " " + Constants.Values : new string( ' ', Constants.Values.Length + 1 ),
                             FormatBrackets( String.Join( ", ", values.ToArray() ) ),
                             values == _statement.Values.Last() ? "" : ",\n"
                         );

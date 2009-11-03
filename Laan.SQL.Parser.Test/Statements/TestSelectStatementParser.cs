@@ -608,5 +608,27 @@ namespace Laan.SQL.Parser.Test
             Assert.AreEqual( "o", derivedJoin.SelectStatement.From[ 0 ].Alias.Name );
             Assert.AreEqual( "o1", derivedJoin.Alias.Name );
         }
+
+        [Test]
+        [Row( "union", SetType.Union )]
+        [Row( "union all", SetType.UnionAll )]
+        [Row( "except", SetType.Except )]
+        [Row( "intersect", SetType.Intersect )]
+        public void Select_With_Union( string setOperator, SetType type )
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( String.Format( @"
+                select id, name from table1 {0} select id, name from table2 order by id", setOperator ) ).First();
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 1, statement.From.Count );
+            Assert.IsTrue( statement.SetOperation != null );
+            Assert.AreEqual( type, statement.SetOperation.Type );
+            Assert.IsTrue( statement.SetOperation.Statement != null );
+            Assert.IsTrue( statement.SetOperation.Statement is SelectStatement );
+            var select = statement.SetOperation.Statement as SelectStatement;
+            Assert.AreEqual( "id", select.OrderBy.First().Expression.Value );
+        }
     }
 }

@@ -29,11 +29,6 @@ namespace Laan.SQL.Parser
             }
         }
 
-        private void ProcessTerminator()
-        {
-            _statement.Terminated = HasTerminator();
-        }
-
         private void ProcessValues()
         {
             do

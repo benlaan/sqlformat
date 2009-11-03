@@ -182,7 +182,8 @@ namespace Laan.SQL.Parser
                 if ( Tokenizer.IsNextToken( 
                         Constants.SemiColon, Constants.Go, Constants.Select, Constants.Insert, 
                         Constants.Update, Constants.Delete, Constants.Create, Constants.Alter, 
-                        Constants.Union, Constants.Else, Constants.Commit, Constants.Rollback, Constants.End 
+                        Constants.Union, Constants.Else, Constants.Commit, Constants.Rollback, 
+                        Constants.End, Constants.Except, Constants.Intersect
                     ) 
                 )
                     return;

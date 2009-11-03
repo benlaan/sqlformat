@@ -13,8 +13,6 @@ namespace Laan.SQL.Formatter
         private const int Padding = 4;
         private const int MaxInlineColumns = 1;
 
-        private bool IndentSelect;
-
         public SelectStatementFormatter( IIndentable indentable, StringBuilder sql, SelectStatement statement )
             : base( indentable, sql, statement )
         {
@@ -136,17 +134,6 @@ namespace Laan.SQL.Formatter
                 }
         }
 
-        private void FormatOrderBy()
-        {
-            if ( _statement.OrderBy.Count > 0 )
-            {
-                bool canCompact = _statement.OrderBy.Count <= MaxInlineColumns;
-                NewLine( canCompact ? 1 : 2 );
-                IndentAppend( "ORDER BY" );
-                FormatFields( _statement.OrderBy, canCompact );
-            }
-        }
-
         private void FormatGroupBy()
         {
             if ( _statement.GroupBy.Count > 0 )
@@ -165,6 +152,32 @@ namespace Laan.SQL.Formatter
                     );
                 }
             }
+        }
+
+        private void FormatOrderBy()
+        {
+            if ( _statement.OrderBy.Count > 0 )
+            {
+                bool canCompact = _statement.OrderBy.Count <= MaxInlineColumns;
+                NewLine( canCompact ? 1 : 2 );
+                IndentAppend( "ORDER BY" );
+                FormatFields( _statement.OrderBy, canCompact );
+            }
+        }
+
+        private void FormatSetOperation()
+        {
+            var map = new Dictionary<SetType, string> {
+                { SetType.Union, "UNION" },
+                { SetType.UnionAll, "UNION ALL" },
+                { SetType.Intersect, "INTERSECT" },
+                { SetType.Except, "EXCEPT" },
+            };
+
+            NewLine( 2 );
+            Append( map[ _statement.SetOperation.Type ] );
+            NewLine( 2 );
+            FormatStatement( _statement.SetOperation.Statement );
         }
 
         protected override bool CanCompactFormat()
@@ -193,9 +206,15 @@ namespace Laan.SQL.Formatter
             FormatFrom();
             FormatJoins();
             FormatWhere();
-            FormatOrderBy();
             FormatGroupBy();
-            FormatTerminator();
+
+            if ( _statement.SetOperation != null )
+                FormatSetOperation();
+            else
+            {
+                FormatOrderBy();
+                FormatTerminator();
+            }
         }
     }
 }

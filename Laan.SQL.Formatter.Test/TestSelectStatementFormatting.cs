@@ -579,5 +579,28 @@ namespace Laan.SQL.Formatter.Test
             };
             Compare( actual, expected );
         }
+
+        [Test]
+        public void Can_Format_Select_With_Union()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"SELECT A.ID FROM table UNION SELECT A.ID FROM table" );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT A.ID",
+                "FROM table",
+                "",
+                "UNION",
+                "",
+                "SELECT A.ID",
+                "FROM table",
+            };
+            Compare( actual, expected );
+        }
     }
 }

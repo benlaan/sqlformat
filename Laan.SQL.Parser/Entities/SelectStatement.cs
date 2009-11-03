@@ -5,6 +5,22 @@ using Laan.SQL.Parser.Expressions;
 
 namespace Laan.SQL.Parser
 {
+    public enum SetType
+    {
+        None,
+        Union,
+        UnionAll,
+        Intersect,
+        Except
+    }
+
+    public class SetOperation
+    {
+        public IStatement Statement { get; set; }
+        public SetType Type { get; set; }
+        
+    }
+
     public class SelectStatement : ProjectionStatement
     {
         public SelectStatement() : base()
@@ -20,5 +36,6 @@ namespace Laan.SQL.Parser
         public List<Field> OrderBy { get; set; }
         public List<Field> GroupBy { get; set; }
         public Expression Having { get; set; }
+        public SetOperation SetOperation { get; set; }
     }
 }
