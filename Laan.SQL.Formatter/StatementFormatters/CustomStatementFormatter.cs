@@ -19,7 +19,7 @@ namespace Laan.Sql.Formatter
     {
         BracketFormatOption bracketSpaceOption = BracketFormatOption.NoSpaces;
         private IIndentable _indentable;
-        private const int WrapMarginColumn = 80;
+        protected const int WrapMarginColumn = 80;
 
         private static Dictionary<BracketFormatOption, string> _bracketFormats;
 

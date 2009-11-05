@@ -4,6 +4,7 @@ using System.Text;
 
 using Laan.Sql.Parser;
 using Laan.Sql.Parser.Entities;
+using System.Collections.Generic;
 
 namespace Laan.Sql.Formatter
 {
@@ -33,14 +34,34 @@ namespace Laan.Sql.Formatter
             IndentAppendFormat( "{0} {1} {2}", Constants.Insert, Constants.Into, _statement.TableName );
         }
 
+        private string FormatColumnWithSeparator( int index )
+        {
+            return _statement.Columns[ index ] + ( index < _statement.Columns.Count - 1 ? ", " : "" );
+        }
+
         private void FormatColumns()
         {
             if ( _statement.Columns.Count > 0 )
             {
                 string text = String.Join( ", ", _statement.Columns.ToArray() );
+                List<string> lines = new List<string>();
+                if ( text.Length > WrapMarginColumn )
+                {
+                    string line = "";
+                    for ( int index = 0; index < _statement.Columns.Count; index++ )
+                    {
+                        if ( line.Length + _statement.Columns[ index ].Length >= WrapMarginColumn )
+                        {
+                            lines.Add( line );
+                            line = "";
+                        }
+                        line += FormatColumnWithSeparator( index );
+                    }
+                    lines.Add( line );
+                }
 
                 if ( _statement.Columns.Count <= MaxOneLineColumnCount && FitsOnRow( text ) )
-                    _sql.AppendFormat( " {0}", FormatBrackets( text ) );
+                    _sql.AppendFormat( " {0}\n", FormatBrackets( text ) );
                 else
                 {
                     _sql.Append( " (" );
@@ -48,11 +69,15 @@ namespace Laan.Sql.Formatter
 
                     using ( new IndentScope( this ) )
                     {
-                        IndentAppendLine( text );
+                        foreach ( string line in lines )
+                            IndentAppendLine( line );
+                        
                         IndentAppendLine( ")" );
                     }
                 }
             }
+            else
+                NewLine();
         }
 
         private void FormatInputData()
