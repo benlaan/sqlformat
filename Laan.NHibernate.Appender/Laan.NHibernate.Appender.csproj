@@ -31,6 +31,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Laan.SQL.Formatter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Laan.ContentMatters\References\Laan.SQL.Formatter.dll</HintPath>
+    </Reference>
+    <Reference Include="Laan.SQL.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=38381f803377176d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Laan.ContentMatters\References\Laan.SQL.Parser.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\log4net.dll</HintPath>
@@ -44,16 +52,6 @@
     <Compile Include="NHibernateAppender.cs" />
     <Compile Include="ParamBuilderFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Laan.SQL.Formatter\Laan.SQL.Formatter.csproj">
-      <Project>{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}</Project>
-      <Name>Laan.SQL.Formatter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Laan.SQL.Parser\Laan.SQL.Parser.csproj">
-      <Project>{E972B2B2-F549-418E-B830-FB5D97101168}</Project>
-      <Name>Laan.SQL.Parser</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

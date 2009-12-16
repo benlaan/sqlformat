@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-using Laan.Sql.Formatter;
-using Laan.Sql.Parser;
+using Laan.SQL.Formatter;
+using Laan.SQL.Parser;
 
 namespace Laan.NHibernate.Appender
 {
@@ -63,12 +64,12 @@ namespace Laan.NHibernate.Appender
         {
             // designed to convert the following format
             // "SELECT * FROM Table WHERE ID=@P1 AND Name=@P2;@P1=20,@P2='Users'"
-            string[] parts = sql.Split( ';' );
-            if ( parts.Length > 1 )
-                sql = UpdateParamsWithValues( parts[ 0 ], parts[ 1 ] );
-
             try
             {
+                string[] parts = sql.Split(';');
+                if ( parts.Length > 1 )
+                    sql = UpdateParamsWithValues( String.Join( ";", parts.Take( parts.Length - 1 ).ToArray() ), parts.Last() );
+
                 return _engine.Execute( sql );
             }
             catch ( Exception ex )
