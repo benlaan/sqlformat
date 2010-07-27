@@ -13,10 +13,8 @@ namespace Laan.Sql.Parser.Entities
         public CustomStatement()
         {
             From = new List<Table>();
-            Joins = new List<Join>();
         }
 
-        public List<Join> Joins { get; set; }
         public List<Table> From { get; set; }
         public Expression Where { get; set; }
     }

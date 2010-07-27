@@ -162,9 +162,11 @@ namespace Laan.Sql.Parser.Parsers
         {
             if ( !Tokenizer.TokenEquals( Constants.From ) )
                 return;
+
             do
             {
                 Table table = null;
+
                 if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
                     using ( Tokenizer.ExpectBrackets() )
                     {
@@ -211,13 +213,13 @@ namespace Laan.Sql.Parser.Parsers
                         ReadNextToken();
                     }
                 }
+                ProcessJoins(table);
             }
             while ( Tokenizer.TokenEquals( Constants.Comma ) );
 
-            ProcessJoins();
         }
 
-        private void ProcessJoins()
+        private void ProcessJoins(Table table)
         {
             do
             {
@@ -231,14 +233,14 @@ namespace Laan.Sql.Parser.Parsers
                 if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
                     using ( Tokenizer.ExpectBrackets() )
                     {
-                        join = new DerivedJoin { Type = (JoinType) joinType };
+                        join = new DerivedJoin { Type = joinType.Value };
                         Tokenizer.ExpectToken( Constants.Select );
                         var parser = new SelectStatementParser( Tokenizer );
                         ( (DerivedJoin) join ).SelectStatement = (SelectStatement) parser.Execute();
                     }
                 else
                 {
-                    join = new Join { Type = (JoinType) joinType };
+                    join = new Join { Type = joinType.Value };
                     join.Name = GetTableName();
                 }
 
@@ -263,7 +265,7 @@ namespace Laan.Sql.Parser.Parsers
 
                 join.Condition = expr;
 
-                _statement.Joins.Add( join );
+                table.Joins.Add( join );
             }
             while ( Tokenizer.HasMoreTokens && !Tokenizer.IsNextToken( Constants.Order, Constants.Group ) );
         }

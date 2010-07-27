@@ -1,6 +1,9 @@
 ﻿combine DECLARE statements
 split DECLARE statements
 
+combine declaration with initialisation
+split initialisation from declaration
+
 convert ROLLBACK to COMMIT
 convert COMMIT to ROLLBACK 
 
@@ -12,6 +15,7 @@ convert JOIN to LEFT JOIN
 convert JOIN to RIGHT JOIN
 convert LEFT JOIN to JOIN
 convert RIGHT JOIN to JOIN
+toggle JOIN
 
 move JOIN up
 move JOIN down

@@ -193,6 +193,7 @@ namespace Laan.Sql.Formatter.Test
             var expected = new[]
             {
                @"SELECT *",
+                "",
                 "FROM dbo.Table T",
                 "",
                 "ORDER BY",
@@ -217,6 +218,7 @@ namespace Laan.Sql.Formatter.Test
             var expected = new[]
             {
                @"SELECT *",
+                "",
                 "FROM dbo.Table T",
                 "",
                 "GROUP BY",
@@ -241,6 +243,7 @@ namespace Laan.Sql.Formatter.Test
             var expected = new[]
             {
                @"SELECT COUNT(*)",
+                "",
                 "FROM dbo.Table T",
                 "",
                 "GROUP BY",
@@ -358,7 +361,9 @@ namespace Laan.Sql.Formatter.Test
 
             // Exercise
             var actual = sut.Execute( @"
-                SELECT * FROM dbo.Events E WHERE Date=(SELECT MAX(Date) FROM dbo.Events )"
+                SELECT * FROM dbo.Events E WHERE Date=(SELECT MAX(Date)
+                FROM dbo.Events WHERE Date 
+                > Now - 10 )"
             );
 
             // Verify outcome
@@ -370,6 +375,7 @@ namespace Laan.Sql.Formatter.Test
                 "",
                 "    SELECT MAX(Date)",
                 "    FROM dbo.Events",
+                "    WHERE Date > Now - 10",
                 "",
                 ")"
             };
@@ -604,7 +610,7 @@ namespace Laan.Sql.Formatter.Test
         }
 
         [Test]
-        public void Can_Format_Select_with_Into_Statement()
+        public void Can_Format_Select_With_Into_Statement()
         {
             // Setup
             var sut = new FormattingEngine();
@@ -622,6 +628,56 @@ namespace Laan.Sql.Formatter.Test
                 "INTO #temp",
                 "",
                 "FROM dbo.Table T",
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_With_Multiple_Froms_With_Joins()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( "select id from table1 t1 join other1 o1 on t1.id = o1.id, table2 t2 join other2 o2 on t2.id = o2.id" );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT id",
+                "",
+                "FROM table1 t1",
+                "",
+                "    JOIN other1 o1",
+                "      ON t1.id = o1.id,",
+                "",
+                "FROM table2 t2",
+                "",
+                "    JOIN other2 o2",
+                "      ON t2.id = o2.id",
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_With_Simple_Sub_Select()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( @"
+                SELECT * FROM dbo.Events E WHERE Date=(SELECT TOP 1 Date FROM dbo.Events)"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT *",
+                "FROM dbo.Events E",
+                "WHERE Date = (SELECT TOP 1 Date FROM dbo.Events)"
             };
 
             Compare( actual, expected );

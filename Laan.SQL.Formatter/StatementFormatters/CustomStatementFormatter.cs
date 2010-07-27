@@ -15,13 +15,10 @@ namespace Laan.Sql.Formatter
         SpacesWithinBrackets
     }
 
-    public class CustomStatementFormatter<T> : IIndentable where T : CustomStatement
+    public class CustomStatementFormatter<T> : BaseFormatter, IIndentable where T : CustomStatement
     {
-        BracketFormatOption bracketSpaceOption = BracketFormatOption.NoSpaces;
         private IIndentable _indentable;
         protected const int WrapMarginColumn = 80;
-
-        private static Dictionary<BracketFormatOption, string> _bracketFormats;
 
         static CustomStatementFormatter()
         {
@@ -104,24 +101,27 @@ namespace Laan.Sql.Formatter
 
         protected void FormatFrom()
         {
+            bool multipleFroms = _statement.From.Count > 1;
             if ( _statement.From != null && _statement.From.Any() )
             {
-                NewLine( CanCompactFormat() ? 0 : 1 );
+                bool canCompactFormat = CanCompactFormat();
+                
+                NewLine( canCompactFormat ? 0 : 1 );
                 foreach ( var from in _statement.From )
                 {
-                    if ( from is DerivedTable )
+                    DerivedTable derivedTable = from as DerivedTable;
+                    if ( derivedTable != null )
                     {
-                        DerivedTable derivedTable = (DerivedTable) from;
                         NewLine();
                         IndentAppend( "FROM (" );
-                        NewLine( CanCompactFormat() ? 1 : 2 );
+                        NewLine( canCompactFormat ? 1 : 2 );
 
                         using ( new IndentScope( this ) )
                         {
                             var formatter = new SelectStatementFormatter( this, _sql, derivedTable.SelectStatement );
                             formatter.Execute();
                         }
-                        NewLine( CanCompactFormat() ? 1 : 2 );
+                        NewLine( canCompactFormat ? 1 : 2 );
                         IndentAppend( String.Format( "){0}", from.Alias.Value ) );
                     }
                     else
@@ -132,8 +132,10 @@ namespace Laan.Sql.Formatter
                             from.Name, from.Alias.Value
                         );
                     }
+                    FormatJoins( from, multipleFroms, from == _statement.From.Last() );
                 }
             }
+
         }
 
         private void FormatDerivedJoin( DerivedJoin derivedJoin )
@@ -155,24 +157,31 @@ namespace Laan.Sql.Formatter
             );
         }
 
-        protected void FormatJoins()
+        protected void FormatJoins( Table table, bool multipleFroms, bool isLastFrom )
         {
-            if ( _statement.Joins != null && _statement.Joins.Any() )
+            if ( table.Joins != null && table.Joins.Any() )
             {
-                foreach ( var join in _statement.Joins )
+                foreach ( var join in table.Joins )
                 {
                     if ( join is DerivedJoin )
-                        FormatDerivedJoin( (DerivedJoin) join );
+                        FormatDerivedJoin( ( DerivedJoin )join );
                     else
                     {
-                        NewLine( 2 );
-                        IndentAppend( join.Value );
-                        NewLine();
-                        IndentAppendFormat(
-                            "{0}ON {1}",
-                            new string( ' ', join.Length - Constants.On.Length ),
-                            join.Condition.FormattedValue( join.Length, this )
-                        );
+                        using (new IndentScope( this, multipleFroms ) )
+                        {
+                            NewLine( 2 );
+                            IndentAppend( join.Value );
+                            NewLine();
+
+                            bool isLastJoin = join == table.Joins.Last();
+                        
+                            IndentAppendFormat(
+                                "{0}ON {1}{2}",
+                                new string( ' ', join.Length - Constants.On.Length ),
+                                join.Condition.FormattedValue( join.Length, this ),
+                                ( !isLastFrom && isLastJoin ) ? Constants.Comma + "\n" : ""
+                            );
+                        }
                     }
                 }
             }
@@ -201,11 +210,6 @@ namespace Laan.Sql.Formatter
         {
             var formatter = StatementFormatterFactory.GetFormatter( this, _sql, statement );
             formatter.Execute();
-        }
-
-        protected string FormatBrackets( string text )
-        {
-            return String.Format( _bracketFormats[ bracketSpaceOption ], text );
         }
 
         protected void FormatBlock( IStatement statement )

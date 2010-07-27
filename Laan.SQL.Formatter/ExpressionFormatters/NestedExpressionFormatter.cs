@@ -7,7 +7,8 @@ namespace Laan.Sql.Formatter
 {
     public class NestedExpressionFormatter : CustomExpressionFormatter<NestedExpression>
     {
-        public NestedExpressionFormatter( NestedExpression expression ) : base( expression )
+        public NestedExpressionFormatter( NestedExpression expression )
+            : base( expression )
         {
         }
 
@@ -15,8 +16,11 @@ namespace Laan.Sql.Formatter
 
         public override string Execute()
         {
-            if ( CanInlineExpression( _expression.Expression, Offset ) )
-                return _expression.Value;
+            string formattedValue = _expression.Expression.FormattedValue( 0, this ).Replace( "\r\n", " " );
+            if ( CanInlineExpression( _expression.Expression, Offset + formattedValue.Length) )
+            {
+                return FormatBrackets( formattedValue );
+            }
             else
             {
                 var sql = new StringBuilder( "(" );

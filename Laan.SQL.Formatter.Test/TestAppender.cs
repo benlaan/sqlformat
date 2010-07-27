@@ -16,7 +16,8 @@ namespace Laan.Sql.Formatter.Test
         public void Setup()
         {
             // Setup
-            _appender = new ParamBuilderFormatter( new FormattingEngine() );
+            FormattingEngine engine = new FormattingEngine();
+            _appender = new ParamBuilderFormatter( engine );
         }
 
         [Test]

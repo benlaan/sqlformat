@@ -53,10 +53,10 @@ namespace Laan.AddIns.Ssms.Actions
 
         private void Initialise()
         {
-            string fontFamily = ReadProperty<string>( "FontsAndColors", "TextEditor", "FontFamily" );
-            float fontSize = ReadProperty<short>( "FontsAndColors", "TextEditor", "FontSize" );
+            string fontFamily = ReadProperty<string>( "FontsAndColors", "TextEditor", "FontFamily", "Courier New" );
+            short fontSize = ReadProperty<short>( "FontsAndColors", "TextEditor", "FontSize", 10 );
 
-            _font = new Font( fontFamily, fontSize );
+            _font = new Font( fontFamily, ( float )fontSize );
 
             _listBox = new Form.ListBox();
             _listBox.DrawMode = Form.DrawMode.OwnerDrawVariable;
@@ -78,18 +78,6 @@ namespace Laan.AddIns.Ssms.Actions
             //WriteProperty<bool>( "TextEditor", "SQL", "AutoListMembers", false );
             //WriteProperty<bool>( "TextEditor", "SQL", "AutoListParams", true );
             _window.SetParent( _listBox.Handle );
-        }
-
-        private T ReadProperty<T>( string category, string page, string property )
-        {
-            var prop = _addIn.TextDocument.DTE.get_Properties( category, page );
-            return (T) prop.Item( property ).Value;
-        }
-
-        private void WriteProperty<T>( string category, string page, string property, T value )
-        {
-            var prop = _addIn.TextDocument.DTE.get_Properties( category, page );
-            prop.Item( property ).Value = value;
         }
 
         private void InternalExecute()
@@ -204,7 +192,10 @@ namespace Laan.AddIns.Ssms.Actions
             if ( _window == null )
                 Initialise();
 
-            _showLineNumbers = ReadProperty<bool>( "TextEditor", "SQL", "ShowLineNumbers" );
+            if (PageExists( "TextEditor", "SQL" ))
+                _showLineNumbers = ReadProperty<bool>( "TextEditor", "SQL", "ShowLineNumbers", false );
+            else
+                _showLineNumbers = ReadProperty<bool>( "TextEditor", "AllLanguages", "ShowLineNumbers", false );
 
             _listBox.Items.Clear();
             _listBox.Items.AddRange( GetItems().ToArray() );
@@ -214,7 +205,7 @@ namespace Laan.AddIns.Ssms.Actions
             var point = editor.GetScreenPoint( _window );
             var cursor = _addIn.VirtualCursor;
 
-            int lineNumberWidth = _showLineNumbers ? LineNumber_Width : 0;
+            int lineNumberWidth = _showLineNumbers ? LineNumber_Width : 25;
             point.X += lineNumberWidth + Border_Width + (int) ( cursor.Column * Math.Ceiling( _fontSize.Width ) );
             point.Y += Border_Width + (int) ( cursor.Row * Math.Ceiling( _fontSize.Height ) );
 

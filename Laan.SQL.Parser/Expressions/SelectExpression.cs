@@ -22,5 +22,10 @@ namespace Laan.Sql.Parser.Expressions
         {
             get { return Statement.ToString(); }
         }
+
+        public override bool CanInline
+        {
+            get { return Statement.CanInLine(); }
+        }
     }
 }

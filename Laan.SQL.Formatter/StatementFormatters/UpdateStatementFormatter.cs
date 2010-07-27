@@ -21,7 +21,6 @@ namespace Laan.Sql.Formatter
             FormatUpdate();
             FormatFieldAssignment(); 
             FormatFrom();
-            FormatJoins();
             FormatWhere();
             FormatTerminator();
         }

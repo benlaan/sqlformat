@@ -37,7 +37,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( ExpectedTokenNotFoundException ), Message = "Expected: 'BY' but found: 'field'" )]
+        [ExpectedException( typeof( ExpectedTokenNotFoundException ), Message = "Expected: 'BY' but found: 'field' at Row: 1, Col: 27" )]
         public void TestExpectedError()
         {
             // Exercise
@@ -268,9 +268,9 @@ namespace Laan.Sql.Parser.Test
             Assert.AreEqual( AliasType.Implicit, statement.From[ 0 ].Alias.Type );
 
             // Test Join
-            Assert.AreEqual( 1, statement.Joins.Count );
+            Assert.AreEqual( 1, statement.From[ 0 ].Joins.Count );
 
-            Join join = statement.Joins[ 0 ];
+            Join join = statement.From[ 0 ].Joins[ 0 ];
 
             Assert.AreEqual( "table2", join.Name );
             Assert.AreEqual( "t2", join.Alias.Name );
@@ -322,9 +322,9 @@ namespace Laan.Sql.Parser.Test
             Assert.AreEqual( "t1", statement.From[ 0 ].Alias.Name );
 
             // Test Join
-            Assert.AreEqual( 1, statement.Joins.Count );
+            Assert.AreEqual( 1, statement.From[ 0 ].Joins.Count );
 
-            Join join = statement.Joins[ 0 ];
+            Join join = statement.From[ 0 ].Joins[ 0 ];
 
             Assert.AreEqual( "table2", join.Name );
             Assert.AreEqual( "t2", join.Alias.Name );
@@ -383,9 +383,9 @@ namespace Laan.Sql.Parser.Test
             Assert.AreEqual( "t1", statement.From[ 0 ].Alias.Name );
 
             // Test Join
-            Assert.AreEqual( 1, statement.Joins.Count );
+            Assert.AreEqual( 1, statement.From[ 0 ].Joins.Count );
 
-            Join join = statement.Joins[ 0 ];
+            Join join = statement.From[ 0 ].Joins[ 0 ];
 
             Assert.AreEqual( "table2", join.Name );
             Assert.AreEqual( "t2", join.Alias.Name );
@@ -602,9 +602,9 @@ namespace Laan.Sql.Parser.Test
             Assert.IsNotNull( statement );
             Assert.AreEqual( 1, statement.From.Count );
             Assert.AreEqual( "t", statement.From[ 0 ].Alias.Name );
-            Assert.IsTrue( statement.Joins[ 0 ] is DerivedJoin );
+            Assert.IsTrue( statement.From[ 0 ].Joins[ 0 ] is DerivedJoin );
 
-            DerivedJoin derivedJoin = ( DerivedJoin )statement.Joins[ 0 ];
+            DerivedJoin derivedJoin = ( DerivedJoin )statement.From[ 0 ].Joins[ 0 ];
             Assert.AreEqual( "field", derivedJoin.SelectStatement.Fields[ 0 ].Expression.Value );
             Assert.AreEqual( "other", derivedJoin.SelectStatement.From[ 0 ].Name );
             Assert.AreEqual( "o", derivedJoin.SelectStatement.From[ 0 ].Alias.Name );
@@ -645,6 +645,32 @@ namespace Laan.Sql.Parser.Test
             Assert.IsNotNull( statement );
             Assert.AreEqual( 2, statement.Fields.Count );
             Assert.AreEqual( "#T", statement.Into );
+        }
+    
+        [Test]
+        public void Select_With_Multiple_From_Tables()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( 
+                "select id from table1, table2" 
+            ).First();
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 2, statement.From.Count );
+        }
+
+        [Test]
+        public void Select_With_Multiple_From_Tables_With_Joins()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>( 
+                "select id from table1 t1 join other1 o1 on t1.id = o1.id, table2 t2 join other2 o2 on o2.id = j2.id" 
+            ).First();
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 2, statement.From.Count );
         }
     }
 }

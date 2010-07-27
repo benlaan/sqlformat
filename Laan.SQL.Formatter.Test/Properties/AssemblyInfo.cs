@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle( "Laan.Sql.Formatter.Test" )]
 [assembly: AssemblyDescription( "" )]
 [assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyCompany( "ABB Grain Ltd" )]
+[assembly: AssemblyCompany( "Laan Software" )]
 [assembly: AssemblyProduct( "Laan.Sql.Formatter.Test" )]
-[assembly: AssemblyCopyright( "Copyright © ABB Grain Ltd 2008" )]
+[assembly: AssemblyCopyright( "Copyright © Laan Software 2010" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 

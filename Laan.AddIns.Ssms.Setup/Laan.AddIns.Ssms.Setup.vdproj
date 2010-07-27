@@ -15,20 +15,20 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_02CC618717045442EC30C423FEE098E7"
-        "OwnerKey" = "8:_C59B21D2BF6E174370E8D7776E9BFB29"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_02CC618717045442EC30C423FEE098E7"
-        "OwnerKey" = "8:_D8921EA3D3454EFAA39FE4A1CFA9DA51"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_163F8F62168AF261FC6610E374238286"
         "OwnerKey" = "8:_A837F94F5B823688B0320B3B1A6B2DB0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_1C529D869986FAC5FC5DC9765116B547"
+        "OwnerKey" = "8:_AF2AF197371E8F687F426F88E454C9FC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_1C529D869986FAC5FC5DC9765116B547"
+        "OwnerKey" = "8:_D8921EA3D3454EFAA39FE4A1CFA9DA51"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -69,7 +69,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C59B21D2BF6E174370E8D7776E9BFB29"
+        "MsmKey" = "8:_AF2AF197371E8F687F426F88E454C9FC"
         "OwnerKey" = "8:_D8921EA3D3454EFAA39FE4A1CFA9DA51"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -136,13 +136,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C59B21D2BF6E174370E8D7776E9BFB29"
+        "OwnerKey" = "8:_AF2AF197371E8F687F426F88E454C9FC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_02CC618717045442EC30C423FEE098E7"
+        "OwnerKey" = "8:_1C529D869986FAC5FC5DC9765116B547"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -255,21 +255,10 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_02CC618717045442EC30C423FEE098E7"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_163F8F62168AF261FC6610E374238286"
             {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Laan.SQL.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=38381f803377176d, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_02CC618717045442EC30C423FEE098E7"
-                    {
-                    "Name" = "8:Laan.SQL.Parser.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Laan.SQL.Parser.dll"
-            "TargetName" = "8:"
+            "SourcePath" = "8:vsmso.olb"
+            "TargetName" = "8:vsmso.olb"
             "Tag" = "8:"
             "Folder" = "8:_9055B7278425486C88E532033C1BAF74"
             "Condition" = "8:"
@@ -286,10 +275,21 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_163F8F62168AF261FC6610E374238286"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1C529D869986FAC5FC5DC9765116B547"
             {
-            "SourcePath" = "8:vsmso.olb"
-            "TargetName" = "8:vsmso.olb"
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Laan.SQL.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=38381f803377176d, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_1C529D869986FAC5FC5DC9765116B547"
+                    {
+                    "Name" = "8:Laan.SQL.Parser.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Laan.SQL.Parser.dll"
+            "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9055B7278425486C88E532033C1BAF74"
             "Condition" = "8:"
@@ -439,14 +439,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C59B21D2BF6E174370E8D7776E9BFB29"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AF2AF197371E8F687F426F88E454C9FC"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Laan.SQL.Formatter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_C59B21D2BF6E174370E8D7776E9BFB29"
+                    "_AF2AF197371E8F687F426F88E454C9FC"
                     {
                     "Name" = "8:Laan.SQL.Formatter.dll"
                     "Attributes" = "3:512"
@@ -576,9 +576,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Laan Sql Add-Ins for Ssms 2008"
+        "ProductName" = "8:Sql Server Management Studio Add-Ins"
         "ProductCode" = "8:{67C613B1-A260-4FE7-8F1A-1792A7689279}"
-        "PackageCode" = "8:{BCEF6B6C-5790-4D24-8412-1539C7411F95}"
+        "PackageCode" = "8:{968E93F9-8BEE-405D-9D40-8517631D65E5}"
         "UpgradeCode" = "8:{20D691F1-81A2-4A35-83FC-23E7C7E9DF97}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -588,11 +588,11 @@
         "Manufacturer" = "8:Laan Software"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:Laan Sql AddIns for Ssms 2008"
+        "Title" = "8:Laan Sql AddIns for Ssms 2005 & 2008"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Ben Laan"
-        "Keywords" = "8:Laan SQL Formatter"
-        "ARPCOMMENTS" = "8:SQL Server Management Studio Sql Add-Ins Add-In"
+        "Keywords" = "8:Laan SQL Addins"
+        "ARPCOMMENTS" = "8:SQL Server Management Studio 2005 & 2008 Add-Ins"
         "ARPURLINFOABOUT" = "8:code.laanfamily.com"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
@@ -636,6 +636,84 @@
                                     "Transitive" = "11:FALSE"
                                         "Keys"
                                         {
+                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_0592780B4E3F40F58589918A6E8F9451"
+                                            {
+                                            "Name" = "8:90"
+                                            "Condition" = "8:"
+                                            "AlwaysCreate" = "11:FALSE"
+                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "Transitive" = "11:FALSE"
+                                                "Keys"
+                                                {
+                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_67F66355DD3145C4A7CDFB6076DE9D9D"
+                                                    {
+                                                    "Name" = "8:Tools"
+                                                    "Condition" = "8:"
+                                                    "AlwaysCreate" = "11:FALSE"
+                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                    "Transitive" = "11:FALSE"
+                                                        "Keys"
+                                                        {
+                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_19BA40B4712349D6A816158CFA367846"
+                                                            {
+                                                            "Name" = "8:Shell"
+                                                            "Condition" = "8:"
+                                                            "AlwaysCreate" = "11:FALSE"
+                                                            "DeleteAtUninstall" = "11:FALSE"
+                                                            "Transitive" = "11:FALSE"
+                                                                "Keys"
+                                                                {
+                                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_2A1F71B80D1E480E9C283F455F949B98"
+                                                                    {
+                                                                    "Name" = "8:Addins"
+                                                                    "Condition" = "8:"
+                                                                    "AlwaysCreate" = "11:FALSE"
+                                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                                    "Transitive" = "11:FALSE"
+                                                                        "Keys"
+                                                                        {
+                                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_A492F83E52184C02B47EC03EEC9D3C48"
+                                                                            {
+                                                                            "Name" = "8:Laan.Addins.Core.AddIn"
+                                                                            "Condition" = "8:"
+                                                                            "AlwaysCreate" = "11:FALSE"
+                                                                            "DeleteAtUninstall" = "11:FALSE"
+                                                                            "Transitive" = "11:FALSE"
+                                                                                "Keys"
+                                                                                {
+                                                                                }
+                                                                                "Values"
+                                                                                {
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_EF0E42A3FF0745FA8B0DC3BB9EC53B74"
+                                                                                    {
+                                                                                    "Name" = "8:LoadBehavior"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:3"
+                                                                                    "Value" = "3:1"
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        "Values"
+                                                                        {
+                                                                        }
+                                                                    }
+                                                                }
+                                                                "Values"
+                                                                {
+                                                                }
+                                                            }
+                                                        }
+                                                        "Values"
+                                                        {
+                                                        }
+                                                    }
+                                                }
+                                                "Values"
+                                                {
+                                                }
+                                            }
                                             "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_A8081BD34D2442719838AD6E2628E1D9"
                                             {
                                             "Name" = "8:100"

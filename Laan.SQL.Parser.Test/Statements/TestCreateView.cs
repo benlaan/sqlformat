@@ -237,9 +237,9 @@ namespace Laan.Sql.Parser.Test
             Assert.AreEqual( "T1", statement.From[ 0 ].Alias.Name );
 
             // Test Join
-            Assert.AreEqual( 1, statement.Joins.Count );
+            Assert.AreEqual( 1, statement.From[ 0 ].Joins.Count );
 
-            Join join = statement.Joins[ 0 ];
+            Join join = statement.From[ 0 ].Joins[ 0 ];
 
             Assert.AreEqual( "Table2", join.Name );
             Assert.AreEqual( "T2", join.Alias.Name );

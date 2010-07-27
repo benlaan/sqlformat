@@ -50,9 +50,9 @@ namespace Laan.AddIns.Core
 
         private void Initialise( object instance )
         {
-            _addIn = (EnvDTE.AddIn) instance;
-            _application = ( (EnvDTE.AddIn) instance ).DTE;
-            _commands = (Commands2) _application.Commands;
+            _addIn = ( EnvDTE.AddIn )instance;
+            _application = ( ( EnvDTE.AddIn )instance ).DTE;
+            _commands = ( Commands2 )_application.Commands;
         }
 
         private bool CommandIsInstalled( Action action )
@@ -149,7 +149,7 @@ namespace Laan.AddIns.Core
                 }
                 catch ( System.ArgumentException ex )
                 {
-                    Error( ex );
+                    Error( String.Format("PlaceCommandOnToolsMenu({0})", action.DisplayName), ex );
                 }
             }
         }
@@ -216,12 +216,12 @@ namespace Laan.AddIns.Core
 
         internal void Error( Exception ex )
         {
-            Trace.WriteLine( ex );
+            Debug.WriteLine( ex );
         }
 
         internal void Error( string message, Exception ex )
         {
-            Trace.WriteLine( message + "\n\t" + ex );
+            Debug.WriteLine( message + "\n\t" + ex );
         }
 
         internal void OpenUndoContext( string name, bool strict )
@@ -262,7 +262,7 @@ namespace Laan.AddIns.Core
         {
             if ( replace )
                 ClearSelection();
-            TextDocument.Selection.Insert( message, (int) vsInsertFlags.vsInsertFlagsContainNewText );
+            TextDocument.Selection.Insert( message, ( int )vsInsertFlags.vsInsertFlagsContainNewText );
         }
 
         internal string CurrentLine
@@ -294,7 +294,7 @@ namespace Laan.AddIns.Core
 
         internal TextDocument TextDocument
         {
-            get { return (TextDocument) _application.ActiveDocument.Object( "TextDocument" ); }
+            get { return ( TextDocument )_application.ActiveDocument.Object( "TextDocument" ); }
         }
 
         internal string AllText
@@ -330,7 +330,7 @@ namespace Laan.AddIns.Core
             {
                 var start = TextDocument.Selection.TextPane.StartPoint;
                 var top = TextDocument.Selection.TopPoint;
-                return new Cursor( top.DisplayColumn - start.DisplayColumn + 1 , top.Line - start.Line + 1 );
+                return new Cursor( top.DisplayColumn - start.DisplayColumn + 1, top.Line - start.Line + 1 );
             }
             set
             {
@@ -348,7 +348,7 @@ namespace Laan.AddIns.Core
                 Trace.WriteLine(
                     String.Format(
                         "{0} {1}: {2}",
-                        c.ID, c.Name, ( (object[]) c.Bindings ).FirstOrDefault() )
+                        c.ID, c.Name, ( ( object[] )c.Bindings ).FirstOrDefault() )
                 );
             }
         }
@@ -359,13 +359,27 @@ namespace Laan.AddIns.Core
 
         public void OnConnection( object application, ext_ConnectMode connectMode, object instance, ref Array custom )
         {
-            Initialise( instance );
-            PlaceCommandOnToolsMenu();
+            try
+            {
+                Initialise( instance );
+                PlaceCommandOnToolsMenu();
+            }
+            catch ( Exception ex )
+            {
+                Error( "OnConnection", ex );
+            }
         }
 
         public void OnDisconnection( ext_DisconnectMode disconnectMode, ref Array custom )
         {
-            RemoveCommandFromToolsMenu();
+            try
+            {
+                RemoveCommandFromToolsMenu();
+            }
+            catch ( Exception ex )
+            {
+                Error( "OnDisconnection", ex );
+            }
         }
 
         public void OnAddInsUpdate( ref Array custom )

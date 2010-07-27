@@ -90,17 +90,18 @@ namespace Laan.SqlParser.Test
             Assert.IsNotNull( statement );
             Assert.AreEqual( "t", statement.TableName );
             Assert.AreEqual( 1, statement.Fields.Count );
-            Assert.AreEqual( "1", statement.Fields[ 0 ].Expression.Value );
+            Assert.AreEqual( "1", statement.Fields[0].Expression.Value );
 
             Assert.AreEqual( 1, statement.From.Count );
-            Assert.AreEqual( "dbo.table", statement.From[ 0 ].Name );
-            Assert.AreEqual( "t", statement.From[ 0 ].Alias.Name );
-            Assert.AreEqual( AliasType.As, statement.From[ 0 ].Alias.Type );
+            Assert.AreEqual( "dbo.table", statement.From[0].Name );
+            Assert.AreEqual( "t", statement.From[0].Alias.Name );
+            Assert.AreEqual( AliasType.As, statement.From[0].Alias.Type );
 
-            Assert.AreEqual( 1, statement.Joins.Count );
-            Assert.AreEqual( "dbo.other", statement.Joins[ 0 ].Name );
-            Assert.AreEqual( "o", statement.Joins[ 0 ].Alias.Name );
-            Assert.AreEqual( AliasType.Implicit, statement.Joins[ 0 ].Alias.Type );
+            Assert.AreEqual( 1, statement.From[0].Joins.Count );
+            Join join = statement.From[0].Joins[0];
+            Assert.AreEqual( "dbo.other", join.Name );
+            Assert.AreEqual( "o", join.Alias.Name );
+            Assert.AreEqual( AliasType.Implicit, join.Alias.Type );
 
             Assert.IsTrue( statement.Where is CriteriaExpression );
             CriteriaExpression criteriaExpression = ( CriteriaExpression )statement.Where;

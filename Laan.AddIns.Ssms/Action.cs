@@ -1,5 +1,6 @@
 using System;
 using EnvDTE;
+using Laan.AddIns.Ssms.Actions;
 
 namespace Laan.AddIns.Core
 {
@@ -49,6 +50,46 @@ namespace Laan.AddIns.Core
         public string FullName
         {
             get { return String.Format( "Laan.AddIns.Core.Addin.{0}", KeyName ); }
+        }
+
+        protected bool PageExists(string category, string page)
+        {
+            try
+            {
+                _addIn.TextDocument.DTE.get_Properties( category, page );
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        protected T ReadProperty<T>( string category, string page, string property, T defaultValue )
+        {
+            try
+            {
+                var prop = _addIn.TextDocument.DTE.get_Properties( category, page );
+                return ( T )prop.Item( property ).Value;
+            }
+            catch ( Exception ex )
+            {
+                _addIn.Error( String.Format("Failed to ReadProperty('{0}', '{1}', '{2}')", category, page, property), ex );
+                return defaultValue;
+            }
+        }
+
+        protected void WriteProperty<T>( string category, string page, string property, T value )
+        {
+            try
+            {
+                var prop = _addIn.TextDocument.DTE.get_Properties( category, page );
+                prop.Item( property ).Value = value;
+            }
+            catch ( Exception ex )
+            {
+                _addIn.Error( String.Format("Failed to WriteProperty('{0}', '{1}', '{2}', '{3})", category, page, property), ex );
+            }
         }
 
     }

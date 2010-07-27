@@ -20,7 +20,6 @@ namespace Laan.Sql.Formatter
         {
             FormatDelete();
             FormatFrom();
-            FormatJoins();
             FormatWhere();
             FormatTerminator();
         }

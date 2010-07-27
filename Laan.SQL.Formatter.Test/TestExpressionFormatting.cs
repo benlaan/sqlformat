@@ -329,13 +329,7 @@ namespace Laan.Sql.Formatter.Test
             {
                 "SELECT *",
                 "FROM dbo.Table A",
-                "WHERE A.Field BETWEEN 10",
-                "                  AND (",
-                "",
-                "    SELECT TOP 1 ID",
-                "    FROM Keys",
-                "",
-                ")",
+                "WHERE A.Field BETWEEN 10 AND (SELECT TOP 1 ID FROM Keys)",
             };
 
             Compare( actual, expected );

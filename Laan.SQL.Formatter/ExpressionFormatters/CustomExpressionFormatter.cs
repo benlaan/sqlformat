@@ -6,7 +6,7 @@ using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Formatter
 {
-    public class CustomExpressionFormatter<T> : IExpressionFormatter, IIndentable where T : Expression
+    public class CustomExpressionFormatter<T> : BaseFormatter, IExpressionFormatter, IIndentable where T : Expression
     {
         private const int MaxColumnWidth = 80;
         private const int TabSize = 4;
@@ -21,7 +21,6 @@ namespace Laan.Sql.Formatter
 
         protected bool CanInlineExpression( Expression expr, int offset )
         {
-            //int startingColumn = offset +IndentLevel * Indent.Length;
             return
                 expr is IInlineFormattable &&
                 ( (IInlineFormattable) expr ).CanInline &&
