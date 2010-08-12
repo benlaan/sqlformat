@@ -3,6 +3,8 @@ using System;
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Exceptions;
+using System.Collections.Generic;
+using System.Net;
 
 namespace Laan.Sql.Parser.Parsers
 {
@@ -143,36 +145,77 @@ namespace Laan.Sql.Parser.Parsers
                 return factor;
         }
 
+        private SqlType ProcessType()
+        {
+            SqlTypeParser sqlTypeParser = new SqlTypeParser(Tokenizer);
+            return sqlTypeParser.Execute();
+        }
+
+        private Expression GetNestedExpression( Expression parent )
+        {
+            Expression result;
+            using ( Tokenizer.ExpectBrackets() )
+            {
+                result = ReadCriteriaList( parent );
+                if ( Tokenizer.IsNextToken( Constants.Comma ) )
+                {
+                    var list = new ExpressionList();
+                    list.Identifiers.Add( result );
+
+                    do
+                    {
+                        Tokenizer.ExpectToken( Constants.Comma );
+
+                        result = ReadCriteriaList( parent );
+                        list.Identifiers.Add( result );
+
+                    } while ( Tokenizer.IsNextToken( Constants.Comma ) );
+
+                    result = list;
+                }
+            }
+
+            NestedExpression nestedExpression = new NestedExpression( parent ) { Expression = result };
+            result.Parent = nestedExpression;
+            return nestedExpression;
+        }
+
+        private Expression GetFunction( Expression parent, string token )
+        {
+            FunctionExpression result = null;
+            var arguments = new List<Expression>();
+            string functionName = "";
+
+            using ( Tokenizer.ExpectBrackets() )
+            {
+                functionName = token;
+                if ( !Tokenizer.IsNextToken( Constants.CloseBracket ) )
+                    do
+                    {
+                        arguments.Add( ReadExpression( parent ) );
+                        if ( Tokenizer.TokenEquals( Constants.As ) )
+                        {
+                            if ( functionName != Constants.Cast )
+                                throw new SyntaxException( "AS is allowed only within a CAST expression" );
+
+                            result = new CastExpression( parent, ProcessType() );
+                            break;
+                        }
+                    }
+                    while ( Tokenizer.TokenEquals( Constants.Comma ) );
+            }
+
+            result = result ?? new FunctionExpression( parent ) { Name = functionName };
+            result.Arguments = arguments;
+            return result;
+        }
+
         private Expression ReadFactor( Expression parent )
         {
             // nested expressions first
             if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
             {
-                Expression result;
-                using ( Tokenizer.ExpectBrackets() )
-                {
-                    result = ReadCriteriaList( parent );
-                    if ( Tokenizer.IsNextToken( Constants.Comma ) )
-                    {
-                        var list = new ExpressionList();
-                        list.Identifiers.Add( result );
-
-                        do
-                        {
-                            Tokenizer.ExpectToken( Constants.Comma );
-
-                            result = ReadCriteriaList( parent );
-                            list.Identifiers.Add( result );
-
-                        } while ( Tokenizer.IsNextToken( Constants.Comma ) );
-
-                        result = list;
-                    }
-                }
-
-                NestedExpression nestedExpression = new NestedExpression( parent ) { Expression = result };
-                result.Parent = nestedExpression;
-                return nestedExpression;
+                return GetNestedExpression( parent );
             }
             else
             {
@@ -224,19 +267,7 @@ namespace Laan.Sql.Parser.Parsers
                 // check for an open bracket, indicating that the previous identifier is actually a function
                 if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
                 {
-                    FunctionExpression result = new FunctionExpression( parent );
-                    using ( Tokenizer.ExpectBrackets() )
-                    {
-                        result.Name = token;
-                        if ( !Tokenizer.IsNextToken( Constants.CloseBracket ) )
-                            do
-                            {
-                                result.Arguments.Add( ReadExpression( parent ) );
-                            }
-                            while ( Tokenizer.TokenEquals( Constants.Comma ) );
-                    }
-
-                    return result;
+                    return GetFunction( parent, token );
                 }
                 else
                     return new IdentifierExpression( token, parent );

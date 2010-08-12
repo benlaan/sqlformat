@@ -652,7 +652,7 @@ namespace Laan.Sql.Formatter.Test
                 "    JOIN other1 o1",
                 "      ON t1.id = o1.id,",
                 "",
-                "FROM table2 t2",
+                "table2 t2",
                 "",
                 "    JOIN other2 o2",
                 "      ON t2.id = o2.id",

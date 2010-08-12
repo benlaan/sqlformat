@@ -30,7 +30,7 @@ namespace Laan.Sql.Parser
                 { Constants.If,         typeof( IfStatementParser       ) },
                 { Constants.Begin,      typeof( BeginStatementParser    ) },
                 { Constants.Commit,     typeof( CommitStatementParser   ) },
-                { Constants.Rollback,   typeof( RollbackStatementParser ) },
+                { Constants.Rollback,   typeof( RollbackStatementParser ) }
             };
         }
 

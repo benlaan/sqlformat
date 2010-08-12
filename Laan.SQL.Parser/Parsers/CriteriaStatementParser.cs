@@ -252,7 +252,7 @@ namespace Laan.Sql.Parser.Parsers
                     alias.Type = AliasType.As;
                     Tokenizer.ReadNextToken();
                 }
-                if ( alias.Type != AliasType.Implicit || !Tokenizer.TokenEquals( Constants.On ) )
+                if ( alias.Type != AliasType.Implicit || !Tokenizer.IsNextToken( Constants.On ) )
                 {
                     alias.Name = GetIdentifier();
                     join.Alias = alias;

@@ -18,6 +18,7 @@ namespace Laan.Sql.Parser
         public const string Between = "BETWEEN";
         public const string By = "BY";
         public const string Case = "CASE";
+        public const string Cast = "CAST";
         public const string Clustered = "CLUSTERED";
         public const string Collate = "COLLATE";
         public const string Comma = ",";

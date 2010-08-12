@@ -12,7 +12,7 @@ namespace Laan.SqlParser.Test
     [TestFixture]
     public class TestExpressionParser
     {
-        private ITokenizer NewTokenizer( string input )
+        protected ITokenizer NewTokenizer( string input )
         {
             return new SqlTokenizer( input );
         }

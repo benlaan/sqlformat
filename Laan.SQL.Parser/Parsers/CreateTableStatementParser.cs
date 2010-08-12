@@ -2,6 +2,7 @@ using System;
 
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser;
 
 namespace Laan.Sql.Parser.Parsers
 {
@@ -31,42 +32,6 @@ namespace Laan.Sql.Parser.Parsers
             return _statement;
         }
 
-        private SqlType ProcessType()
-        {
-            string identifier = GetIdentifier();
-            SqlType result;
-            if (identifier == Constants.As )
-            {
-                result = null;
-            }
-            else
-            {
-                result = new SqlType( identifier );
-
-                if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
-                {
-                    using ( Tokenizer.ExpectBrackets() )
-                    {
-                        string token = CurrentToken;
-                        ReadNextToken();
-                        result.Max = ( String.Compare( token, "MAX", true ) == 0 );
-
-                        if ( !result.Max )
-                        {
-                            result.Length = Int32.Parse( token );
-
-                            if ( Tokenizer.TokenEquals( Constants.Comma ) )
-                            {
-                                result.Scale = Int32.Parse( CurrentToken );
-                                ReadNextToken();
-                            }
-                        }
-                    }
-                }
-            }
-            return result;
-        }
-
         private void ProcessPrimaryKeyConstraint()
         {
             // this is the name of the constraint - not currenly used!
@@ -87,6 +52,12 @@ namespace Laan.Sql.Parser.Parsers
                 if ( Tokenizer.TokenEquals( Constants.Ascending ) || Tokenizer.TokenEquals( Constants.Descending ) )
                     orderBy = token;
             }
+        }
+
+        private SqlType ProcessType()
+        {
+            SqlTypeParser sqlTypeParser = new SqlTypeParser(Tokenizer);
+            return sqlTypeParser.Execute();
         }
 
         private void ProcessFieldDefinition()

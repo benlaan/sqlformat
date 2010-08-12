@@ -11,7 +11,7 @@ using Laan.SQL.Formatter;
 
 namespace Laan.NHibernate.Appender
 {
-    public class NHibernateAppender : RollingFileAppender
+    public class NHibernateAppender : RollingFileAppender, IDisposable
     {
         private object _latch;
         private bool _done = false;
@@ -77,5 +77,20 @@ namespace Laan.NHibernate.Appender
             _done = true;
             base.OnClose();
         }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            if ( _worker.IsBusy && _queue.Count > 0 )
+            {
+                _worker.CancelAsync();
+                ProcessQueue( this, new DoWorkEventArgs( this ) );
+            }
+
+            _worker.Dispose();
+        }
+
+        #endregion
     }
 }

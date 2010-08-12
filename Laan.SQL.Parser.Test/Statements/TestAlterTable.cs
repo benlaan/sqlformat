@@ -9,6 +9,7 @@ using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Parser.Test
 {
+
     [TestFixture]
     public class TestAlterTable
     {

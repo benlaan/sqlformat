@@ -105,15 +105,17 @@ namespace Laan.Sql.Formatter
             if ( _statement.From != null && _statement.From.Any() )
             {
                 bool canCompactFormat = CanCompactFormat();
-                
+
                 NewLine( canCompactFormat ? 0 : 1 );
                 foreach ( var from in _statement.From )
                 {
+                    string fromText = !multipleFroms || from == _statement.From.First() ? "FROM " : "";
+                    
                     DerivedTable derivedTable = from as DerivedTable;
                     if ( derivedTable != null )
                     {
                         NewLine();
-                        IndentAppend( "FROM (" );
+                        IndentAppend( String.Format( "{0}(", fromText ) );
                         NewLine( canCompactFormat ? 1 : 2 );
 
                         using ( new IndentScope( this ) )
@@ -128,8 +130,8 @@ namespace Laan.Sql.Formatter
                     {
                         NewLine();
                         IndentAppendFormat(
-                            "FROM {0}{1}",
-                            from.Name, from.Alias.Value
+                            "{0}{1}{2}",
+                            fromText, from.Name, from.Alias.Value
                         );
                     }
                     FormatJoins( from, multipleFroms, from == _statement.From.Last() );

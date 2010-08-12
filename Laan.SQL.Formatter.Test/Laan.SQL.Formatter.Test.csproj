@@ -71,6 +71,10 @@
       <Project>{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}</Project>
       <Name>Laan.SQL.Formatter</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Laan.SQL.Parser\Laan.SQL.Parser.csproj">
+      <Project>{E972B2B2-F549-418E-B830-FB5D97101168}</Project>
+      <Name>Laan.SQL.Parser</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
