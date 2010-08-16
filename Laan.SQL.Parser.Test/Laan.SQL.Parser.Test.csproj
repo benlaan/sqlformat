@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Statements\TestBeginBlockStatementParser.cs" />
+    <Compile Include="Statements\TestSetStatements.cs" />
     <Compile Include="TestCastFunction.cs" />
     <Compile Include="Statements\TestExecuteSqlString.cs" />
     <Compile Include="Statements\TestIfStatements.cs" />

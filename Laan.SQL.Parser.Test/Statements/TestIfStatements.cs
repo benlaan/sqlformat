@@ -9,6 +9,7 @@ using Laan.Sql.Parser.Exceptions;
 
 namespace Laan.Sql.Parser.Test
 {
+
     [TestFixture]
     public class TestIfStatements
     {

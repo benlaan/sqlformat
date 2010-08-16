@@ -4,6 +4,7 @@ using System.Linq;
 
 using Laan.Sql.Parser.Parsers;
 using Laan.Sql.Parser.Exceptions;
+using Laan.SQL.Parser;
 
 namespace Laan.Sql.Parser
 {
@@ -30,7 +31,8 @@ namespace Laan.Sql.Parser
                 { Constants.If,         typeof( IfStatementParser       ) },
                 { Constants.Begin,      typeof( BeginStatementParser    ) },
                 { Constants.Commit,     typeof( CommitStatementParser   ) },
-                { Constants.Rollback,   typeof( RollbackStatementParser ) }
+                { Constants.Rollback,   typeof( RollbackStatementParser ) },
+                { Constants.Set,        typeof( SetStatementParser      ) }
             };
         }
 

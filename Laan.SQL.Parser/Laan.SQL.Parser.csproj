@@ -44,7 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BracketStructure.cs" />
+    <Compile Include="Entities\SetStatement.cs" />
     <Compile Include="Expressions\CastExpression.cs" />
+    <Compile Include="SetStatementParser.cs" />
     <Compile Include="SqlTypeParser.cs" />
     <Compile Include="Tokenizer\CustomTokenizer.cs" />
     <Compile Include="Entities\AliasedEntities.cs" />
