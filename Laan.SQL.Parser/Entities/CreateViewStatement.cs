@@ -10,9 +10,9 @@ namespace Laan.Sql.Parser.Entities
 
         #region IStatement Members
 
-        public string Value
+        public string Identifier
         {
-            get { return "CREATE VIEW " + Name + "AS " + SelectBlock.Value; }
+            get { return String.Format( "CREATE VIEW {0} AS {1}", Name, SelectBlock.Identifier ); }
         }
 
         #endregion

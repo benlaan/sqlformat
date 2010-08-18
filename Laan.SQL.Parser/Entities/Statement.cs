@@ -10,7 +10,7 @@ namespace Laan.Sql.Parser.Entities
 
         #region IStatement Members
 
-        public virtual string Value
+        public virtual string Identifier
         {
             get { return ""; }
         }

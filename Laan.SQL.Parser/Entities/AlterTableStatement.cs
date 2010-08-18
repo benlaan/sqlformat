@@ -16,7 +16,7 @@ namespace Laan.Sql.Parser.Entities
 
         #region IStatement Members
 
-        public string Value
+        public string Identifier
         {
             get
             {

@@ -5,6 +5,6 @@ namespace Laan.Sql.Parser
     public interface IStatement
     {
         bool Terminated { get; set; }
-        string Value { get; }
+        string Identifier { get; }
     }
 }

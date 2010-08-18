@@ -25,6 +25,9 @@ namespace Laan.Sql.Parser
         public const string Commit = "COMMIT";
         public const string Constraint = "CONSTRAINT";
         public const string Create = "CREATE";
+        public const string DateFirst = "DATEFIRST";
+        public const string DateFormat = "DATEFORMAT";
+        public const string DeadlockPriority = "DEADLOCK_PRIORITY";
         public const string Declare = "DECLARE";
         public const string Default = "DEFAULT";
         public const string Delete = "DELETE";
@@ -47,6 +50,7 @@ namespace Laan.Sql.Parser
         public const string Identity = "IDENTITY";
         public const string If = "IF";
         public const string In = "IN";
+        public const string Io = "IO";
         public const string Index = "INDEX";
         public const string Intersect = "INTERSECT";
         public const string Inner = "INNER";
@@ -60,6 +64,7 @@ namespace Laan.Sql.Parser
         public const string NonClustered = "NONCLUSTERED";
         public const string Not = "NOT";
         public const string Null = "NULL";
+        public const string Off = "OFF";
         public const string On = "ON";
         public const string Or = "OR";
         public const string Order = "ORDER";
@@ -68,16 +73,19 @@ namespace Laan.Sql.Parser
         public const string Primary = "PRIMARY";
         public const string Print = "PRINT";
         public const string Procedure = "PROCEDURE";
+        public const string Profile = "PROFILE";
         public const string References = "REFERENCES";
         public const string Right = "RIGHT";
         public const string Rollback = "ROLLBACK";
         public const string Select = "SELECT";
         public const string SemiColon = ";";
         public const string Set = "SET";
+        public const string Statistics = "STATISTICS";
         public const string Table = "TABLE";
         public const string Tran = "TRAN";
         public const string Transaction = "TRANSACTION";
         public const string Then = "THEN";
+        public const string Time = "TIME";
         public const string To = "TO";
         public const string Top = "TOP";
         public const string Union = "UNION";
@@ -89,5 +97,6 @@ namespace Laan.Sql.Parser
         public const string Where = "WHERE";
         public const string With = "WITH";
         public const string Work = "WORK";
+        public const string Xml = "XML";
     }
 }
