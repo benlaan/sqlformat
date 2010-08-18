@@ -137,6 +137,6 @@
     <CreateItem Include="$(ProjectDir)\bin\*.*">
       <Output TaskParameter="Include" ItemName="DllFiles" />
     </CreateItem>
-    <Copy SourceFiles="@(DllFiles)" DestinationFiles="@(DllFiles->'C:\Program Files\Laan Software\Laan Sql Add-Ins for Ssms 2008\%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DllFiles)" DestinationFiles="@(DllFiles->'C:\Program Files\Laan Software\Laan Sql Add-Ins for Ssms 2008\%(Filename)%(Extension)')" ContinueOnError="true" />
   </Target>
 </Project>

@@ -7,7 +7,7 @@ using System.Diagnostics;
 using log4net.Appender;
 using log4net.Core;
 
-using Laan.SQL.Formatter;
+using Laan.Sql.Formatter;
 
 namespace Laan.NHibernate.Appender
 {
