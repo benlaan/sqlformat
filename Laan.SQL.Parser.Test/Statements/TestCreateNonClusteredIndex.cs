@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using MbUnit.Framework;
 
-using Laan.Sql.Parser;
 using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Parser.Test
@@ -128,6 +125,43 @@ namespace Laan.Sql.Parser.Test
             Assert.AreEqual( "[ID1]", statement.Columns[ 0 ].Name );
         }
 
+        const string IgnoreDupKeySql = "CREATE UNIQUE NONCLUSTERED INDEX [IX_Sites_Code] ON dbo.Sites (Code) WITH (IGNORE_DUP_KEY = {0} )";
+
+        [Test]
+        [Row(Constants.On)]
+        [Row(Constants.Off)]
+        public void Test_Can_Read_Index_With_IgnoreDupKey(string value)
+        {
+            string sql = string.Format( IgnoreDupKeySql, value );
+
+            // Exercise
+            var statement = ParserFactory.Execute<CreateIndexStatement>(sql).First();
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 1, statement.RelationalIndexOptions.Count, "Should be one RelationalIndexOption" );
+            Assert.AreEqual( IndexWithOption.IgnoreDupKey, statement.RelationalIndexOptions[ 0 ].Option );
+            Assert.AreEqual( value, statement.RelationalIndexOptions[ 0 ].Assignment.Value );
+        }
+
+        const string IgnoreDupKeyAndMoreSql = "CREATE UNIQUE NONCLUSTERED INDEX [IX_Sites_Code] ON dbo.Sites (Code) WITH (IGNORE_DUP_KEY = {0}, SORT_IN_TEMPDB = {0} )";
+
+        [Test]
+        [Row( Constants.On )]
+        [Row( Constants.Off )]
+        public void Test_Can_Read_Index_With_Multiple( string value )
+        {
+            string sql = string.Format( IgnoreDupKeyAndMoreSql, value );
+
+            // Exercise
+            var statement = ParserFactory.Execute<CreateIndexStatement>( sql ).First();
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 2, statement.RelationalIndexOptions.Count, "Should be one RelationalIndexOption" );
+
+        }
+
         [Test]
         public void Test()
         {
@@ -136,7 +170,7 @@ namespace Laan.Sql.Parser.Test
 
                 CREATE UNIQUE INDEX dbo.IX_Stuff_Is_Unique ON dbo.Stuff
                 (
-	                A, B, C, D, E, F
+                    A, B, C, D, E, F
                 )
                 "
             ).First();

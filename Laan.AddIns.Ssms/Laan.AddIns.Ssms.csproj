@@ -133,10 +133,15 @@
     <VisualStudio>
     </VisualStudio>
   </ProjectExtensions>
-  <Target Name="AfterBuild" Condition="'$(Configuration)' == 'Debug'">
+  <PropertyGroup>
+    <InstalledDirectory>$(MSBuildExtensionsPath32)\..\Laan Software\Laan SQL Add-In for SSMS</InstalledDirectory>
+  </PropertyGroup>
+  <Target Name="AfterBuild" Condition="'$(Configuration)' == 'Debug' And Exists('$(InstalledDirectory)')">
+    <!--"-->
+    <Message Importance="high" Text="Copying assemblies to $(InstalledDirectory)" />
     <CreateItem Include="$(ProjectDir)\bin\*.*">
       <Output TaskParameter="Include" ItemName="DllFiles" />
     </CreateItem>
-    <Copy SourceFiles="@(DllFiles)" DestinationFiles="@(DllFiles->'C:\Program Files\Laan Software\Laan Sql Add-Ins for Ssms 2008\%(Filename)%(Extension)')" ContinueOnError="true" />
+    <Copy SourceFiles="@(DllFiles)" DestinationFiles="@(DllFiles->'$(InstalledDirectory)\%(Filename)%(Extension)')" ContinueOnError="true" />
   </Target>
 </Project>

@@ -95,8 +95,10 @@ namespace Laan.Sql.Parser
         /// <returns></returns>
         public static List<IStatement> Execute( string sql )
         {
-            var result = new List<IStatement>();
-            return Execute( new SqlTokenizer( sql ), true );
+            using ( SqlTokenizer sqlTokenizer = new SqlTokenizer( sql ) )
+            {
+                return Execute( sqlTokenizer, true );
+            }
         }
     }
 }

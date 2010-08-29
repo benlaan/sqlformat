@@ -1,5 +1,3 @@
-using System;
-using System.Diagnostics;
 using Laan.Sql.Parser.Exceptions;
 
 namespace Laan.Sql.Parser
@@ -40,6 +38,11 @@ namespace Laan.Sql.Parser
             get { return new Token(); }
         }
 
+        /// <summary>
+        /// Verify current token matches expected token. Read next token if successful.
+        /// </summary>
+        /// <param name="token">Expected token</param>
+        /// <exception cref="ExpectedTokenNotFoundException">current token did not match</exception>
         public void ExpectToken( string token )
         {
             if ( Current != token )

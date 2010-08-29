@@ -1,19 +1,47 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Collections;
+using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Parser.Entities
 {
-    public class CreateIndexStatement : IStatement
+    public enum IndexWithOption
     {
-        public bool Terminated { get; set; }
+        PadIndex,
+        SortInTempDb,
+        IgnoreDupKey,
+        StatisticsNorecompute,
+        DropExisting,
+        Online,
+        AllowRowLocks,
+        AllowPageLocks
+    }
+
+    public class RelationalIndexOption
+    {
+
+        /// <summary>
+        /// Initializes a new instance of the SortedField class.
+        /// </summary>
+        /// <param name="map"></param>
+        public RelationalIndexOption()
+        {
+        }
+
+        public IndexWithOption Option { get; set; }
+
+        public Expression Assignment { get; set; }
+
+    }
+
+    public class CreateIndexStatement : CustomStatement
+    {
         public CreateIndexStatement()
         {
             Unique = false;
             Clustered = false;
             Columns = new List<IndexedColumn>();
+            RelationalIndexOptions = new List<RelationalIndexOption>();
         }
 
         public bool Clustered { get; set; }
@@ -21,10 +49,12 @@ namespace Laan.Sql.Parser.Entities
         public string TableName { get; set; }
         public string IndexName { get; set; }
         public List<IndexedColumn> Columns { get; set; }
+        public List<RelationalIndexOption> RelationalIndexOptions { get; set; }
+        public string FileGroupName { get; set; }
 
         #region IStatement Members
 
-        public string Identifier
+        public override string Identifier
         {
             get
             {

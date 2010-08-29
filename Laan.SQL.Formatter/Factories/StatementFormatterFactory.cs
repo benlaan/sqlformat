@@ -18,6 +18,7 @@ namespace Laan.Sql.Formatter
             {
                 { typeof( SelectStatement ), typeof( SelectStatementFormatter ) },
                 { typeof( UpdateStatement ), typeof( UpdateStatementFormatter ) },
+                { typeof( CreateIndexStatement), typeof( CreateIndexStatementFormatter ) },
                 { typeof( DeleteStatement ), typeof( DeleteStatementFormatter ) },
                 { typeof( InsertStatement ), typeof( InsertStatementFormatter ) },
                 { typeof( DeclareStatement ), typeof( DeclareStatementFormatter ) },
@@ -27,6 +28,7 @@ namespace Laan.Sql.Formatter
                 { typeof( RollbackTransactionStatement ), typeof( RollbackTransactionStatementFormatter ) },
                 { typeof( CommitTransactionStatement ), typeof( CommitTransactionStatementFormatter ) },
                 { typeof( BlockStatement ), typeof( BlockStatementFormatter ) }
+
             };
         }
 

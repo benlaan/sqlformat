@@ -10,6 +10,8 @@ namespace Laan.Sql.Parser
 
         public const string Add = "ADD";
         public const string All = "ALL";
+        public const string AllowRowLocks = "ALLOW_ROW_LOCKS";
+        public const string AllowPageLocks = "ALLOW_PAGE_LOCKS";
         public const string Alter = "ALTER";
         public const string And = "AND";
         public const string As = "AS";
@@ -35,6 +37,7 @@ namespace Laan.Sql.Parser
         public const string Distinct = "DISTINCT";
         public const string Distributed = "DISTRIBUTED";
         public const string Dot = ".";
+        public const string DropExisting = "DROP_EXISTING";
         public const string Else = "ELSE";
         public const string End = "END";
         public const string Except = "EXCEPT";
@@ -49,6 +52,7 @@ namespace Laan.Sql.Parser
         public const string Having = "HAVING";
         public const string Identity = "IDENTITY";
         public const string If = "IF";
+        public const string IgnoreDupKey = "IGNORE_DUP_KEY";
         public const string In = "IN";
         public const string Io = "IO";
         public const string Index = "INDEX";
@@ -66,9 +70,11 @@ namespace Laan.Sql.Parser
         public const string Null = "NULL";
         public const string Off = "OFF";
         public const string On = "ON";
+        public const string Online = "ONLINE";
         public const string Or = "OR";
         public const string Order = "ORDER";
         public const string Outer = "OUTER";
+        public const string PadIndex = "PAD_INDEX"; 
         public const string Percent = "PERCENT";
         public const string Primary = "PRIMARY";
         public const string Print = "PRINT";
@@ -80,7 +86,9 @@ namespace Laan.Sql.Parser
         public const string Select = "SELECT";
         public const string SemiColon = ";";
         public const string Set = "SET";
+        public const string SortInTempDb = "SORT_IN_TEMPDB";
         public const string Statistics = "STATISTICS";
+        public const string StatisticsNorecompute = "STATISTICS_NORECOMPUTE";
         public const string Table = "TABLE";
         public const string Tran = "TRAN";
         public const string Transaction = "TRANSACTION";
@@ -98,5 +106,6 @@ namespace Laan.Sql.Parser
         public const string With = "WITH";
         public const string Work = "WORK";
         public const string Xml = "XML";
+
     }
 }

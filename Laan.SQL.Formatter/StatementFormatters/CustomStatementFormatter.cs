@@ -29,7 +29,7 @@ namespace Laan.Sql.Formatter
             };
         }
 
-        public CustomStatementFormatter( IIndentable indentable, StringBuilder sql, T statement )
+        protected CustomStatementFormatter( IIndentable indentable, StringBuilder sql, T statement )
         {
             _indentable = indentable;
             _sql = sql;
