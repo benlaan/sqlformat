@@ -4,7 +4,6 @@ using System.Linq;
 
 using Laan.Sql.Parser.Parsers;
 using Laan.Sql.Parser.Exceptions;
-using Laan.SQL.Parser;
 
 namespace Laan.Sql.Parser
 {

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Parsers;
-using Laan.Sql.Parser;
 using Laan.Sql.Parser.Exceptions;
 using Laan.Sql.Parser.Expressions;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser
 {
     public class SetStatementParser : StatementParser<SetStatement>
     {

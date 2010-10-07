@@ -65,7 +65,6 @@ WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGN
 
         }
         [Test]
-        [Ignore("Not implemented yet")]
         public void Can_Format_Simple_Create_Statement()
         {
             // Setup

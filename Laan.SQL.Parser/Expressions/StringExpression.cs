@@ -1,9 +1,3 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-
 namespace Laan.Sql.Parser.Expressions
 {
     public class StringExpression : Expression
