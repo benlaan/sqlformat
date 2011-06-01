@@ -2,9 +2,16 @@ using Laan.Sql.Parser.Exceptions;
 
 namespace Laan.Sql.Parser
 {
-    public class CustomTokenizer : ITokenizer
+    public abstract class CustomTokenizer
     {
-        public virtual bool IsNextToken( params string[] tokenSet )
+        //private abstract void InternalSetSkipWhiteSpace();
+
+        //public bool SkipWhiteSpace
+        //{
+        //    set { InternalSetSkipWhiteSpace(); }
+        //}
+        
+        public virtual bool IsNextToken(params string[] tokenSet)
         {
             foreach ( var token in tokenSet )
                 if ( Current == token  )
@@ -61,7 +68,7 @@ namespace Laan.Sql.Parser
 
         public BracketStructure ExpectBrackets()
         {
-            return new BracketStructure( this );
+            return new BracketStructure( this as ITokenizer);
         }
 
         public virtual bool HasMoreTokens

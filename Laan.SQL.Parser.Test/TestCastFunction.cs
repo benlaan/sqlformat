@@ -3,9 +3,8 @@ using System.Linq;
 
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Parsers;
-using Laan.SqlParser.Test;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Laan.Sql.Parser.Test
 {

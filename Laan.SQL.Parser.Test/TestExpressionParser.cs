@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 
 using Laan.Sql.Parser;
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Parsers;
 
-namespace Laan.SqlParser.Test
+namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
     public class TestExpressionParser
@@ -18,7 +18,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Expression_Reads_Multi_Part_Identifier()
+        public void Expression_Reads_Multi_Part_Identifier()
         {
             // setup
             var tokenizer = NewTokenizer( " Database.Owner.Table " );
@@ -36,7 +36,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Expression_Reads_Multi_Part_Identifier_With_Square_Brackets()
+        public void Expression_Reads_Multi_Part_Identifier_With_Square_Brackets()
         {
             // setup
             var tokenizer = NewTokenizer( " Database.[Owner].Table " );
@@ -54,7 +54,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Expression_Reads_Multi_Part_Identifier_With_Square_Brackets_Around_Two_Part_Identifier()
+        public void Expression_Reads_Multi_Part_Identifier_With_Square_Brackets_Around_Two_Part_Identifier()
         {
             // setup
             var tokenizer = NewTokenizer( " Database.[Some Owner].Table " );
@@ -72,7 +72,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Expression_Reads_Quoted_String_Around_Two_Part_Identifier()
+        public void Expression_Reads_Quoted_String_Around_Two_Part_Identifier()
         {
             // setup
             var tokenizer = NewTokenizer( " 'Some Owner' " );
@@ -90,11 +90,11 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        [Row( "''", "''" )]
-        [Row( " '' ", "''" )]
-        [Row( " ' ' ", "' '" )]
-        [Row( "' '", "' '" )]
-        public void Test_Expression_Reads_Empty_Quoted_String( string input, string output )
+        [TestCase( "''", "''" )]
+        [TestCase( " '' ", "''" )]
+        [TestCase( " ' ' ", "' '" )]
+        [TestCase( "' '", "' '" )]
+        public void Expression_Reads_Empty_Quoted_String( string input, string output )
         {
             // setup
             var tokenizer = NewTokenizer( input );
@@ -112,7 +112,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Expression_Reads_Function_Expression_Without_Params()
+        public void Expression_Reads_Function_Expression_Without_Params()
         {
             // setup
             var tokenizer = NewTokenizer( "SomeFunction()" );
@@ -132,7 +132,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Expression_Reads_Function_Expression_With_Multiple_Params()
+        public void Expression_Reads_Function_Expression_With_Multiple_Params()
         {
             // setup
             var tokenizer = NewTokenizer( "Max(120, A)" );
@@ -156,8 +156,8 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        [Row( "+" ), Row( "-" ), Row( "*" ), Row( "/" ), Row( "%" ), Row( "^" )]
-        public void Test_Expression_With_Add_Operator( string op )
+        [TestCase( "+" ), TestCase( "-" ), TestCase( "*" ), TestCase( "/" ), TestCase( "%" ), TestCase( "^" )]
+        public void Expression_With_Add_Operator( string op )
         {
             // setup
             var tokenizer = NewTokenizer( String.Format( "A.Field1 {0} 120", op ) );
@@ -183,7 +183,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Expression_With_Multiple_Operators_With_Addition_First()
+        public void Expression_With_Multiple_Operators_With_Addition_First()
         {
             // setup
             var tokenizer = NewTokenizer( "A.Field1 + 120 * 50" );
@@ -213,7 +213,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Expression_With_Multiple_Operators_With_Multiplication_First()
+        public void Expression_With_Multiple_Operators_With_Multiplication_First()
         {
             // setup
             var tokenizer = NewTokenizer( "A.Field1 * 120 + 50" );
@@ -243,7 +243,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Expression_With_Multiple_Operators_With_Brackets_Around_Addition()
+        public void Expression_With_Multiple_Operators_With_Brackets_Around_Addition()
         {
             // setup
             var tokenizer = NewTokenizer( "(A.Field1 + 120) * 50" );
@@ -277,7 +277,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Expression_With_Nested_Select_Statement()
+        public void Expression_With_Nested_Select_Statement()
         {
             // setup
             var tokenizer = NewTokenizer( "( SELECT A.Field1 FROM Table ) * ( 50 + ( 20 * F.ID ) )" );
@@ -306,8 +306,8 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        [Row( "=" ), Row( "<" ), Row( ">" ), Row( "<=" ), Row( ">=" ), Row( "IS" ), Row( "LIKE" )]
-        public void Test_Simple_Criteria_Expression( string op )
+        [TestCase( "=" ), TestCase( "<" ), TestCase( ">" ), TestCase( "<=" ), TestCase( ">=" ), TestCase( "IS" ), TestCase( "LIKE" )]
+        public void Simple_Criteria_Expression( string op )
         {
             // setup
             var tokenizer = NewTokenizer( String.Format( "A.Field1 {0} B.Field2", op ) );
@@ -328,7 +328,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Nested_Criteria_Expression()
+        public void Nested_Criteria_Expression()
         {
             // setup
             var tokenizer = NewTokenizer( "A.Field1 = (2 + B.Field2)" );
@@ -358,7 +358,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Can_Read_Case_Switch_Expression()
+        public void Can_Read_Case_Switch_Expression()
         {
             // setup
             var tokenizer = NewTokenizer( "CASE A.Field1 WHEN 1 THEN 'Y' WHEN 2 THEN 'N' ELSE 'U' END" );
@@ -387,7 +387,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Can_Read_Case_Expression_With_Nested_Case_Expression()
+        public void Can_Read_Case_Expression_With_Nested_Case_Expression()
         {
             // setup
             var tokenizer = NewTokenizer( @"
@@ -427,7 +427,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Can_Read_Case_When_Expression()
+        public void Can_Read_Case_When_Expression()
         {
             // setup
             var tokenizer = NewTokenizer( @"
@@ -464,7 +464,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Can_Read_Negated_Expression()
+        public void Can_Read_Negated_Expression()
         {
             var tokenizer = NewTokenizer( "NOT ( A.Field = 1 OR A.Other IS NULL )" );
             tokenizer.ReadNextToken();
@@ -492,7 +492,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Can_Read_Negated_Expression_Without_Brackets()
+        public void Can_Read_Negated_Expression_Without_Brackets()
         {
             var tokenizer = NewTokenizer( "NOT EXISTS(SELECT 1 FROM dbo.Table)" );
             tokenizer.ReadNextToken();
@@ -517,7 +517,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Can_Read_Not_Null_Expression()
+        public void Can_Read_Not_Null_Expression()
         {
             var tokenizer = NewTokenizer( "A.Field IS NOT NULL" );
             tokenizer.ReadNextToken();
@@ -537,7 +537,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Can_Read_Between_Expression_With_Identifiers()
+        public void Can_Read_Between_Expression_With_Identifiers()
         {
             var tokenizer = NewTokenizer( "A.Field BETWEEN 10 AND 20" );
             tokenizer.ReadNextToken();
@@ -566,7 +566,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void test_Can_Read_Natural_Negated_In_Expression()
+        public void Can_Read_Natural_Negated_In_Expression()
         {
             var tokenizer = NewTokenizer( "A.Field NOT IN (1, 2, 3)" );
             tokenizer.ReadNextToken();
@@ -584,7 +584,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void test_Can_Read_Natural_Negated_Between_Expression()
+        public void Can_Read_Natural_Negated_Between_Expression()
         {
             var tokenizer = NewTokenizer( "A.Field NOT BETWEEN 10 AND 20" );
             tokenizer.ReadNextToken();

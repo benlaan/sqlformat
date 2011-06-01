@@ -4,6 +4,8 @@ using System.Linq;
 
 using Laan.Sql.Formatter;
 using Laan.Sql.Parser;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace Laan.NHibernate.Appender
 {
@@ -14,67 +16,32 @@ namespace Laan.NHibernate.Appender
         /// <summary>
         /// Initializes a new instance of the ParamBuilderFormatter class.
         /// </summary>
+        public ParamBuilderFormatter() : this(null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ParamBuilderFormatter class.
+        /// </summary>
         /// <param name="engine"></param>
-        public ParamBuilderFormatter( IFormattingEngine engine )
+        public ParamBuilderFormatter(IFormattingEngine engine)
         {
             _engine = engine;
         }
 
-        private static string ProcessParameter( ITokenizer tokenizer )
+        public string Execute(string sql)
         {
-            // the following code produces a parameter that supports Guids. For unknown reasons, NH
-            // is supplying the parameter value as an unquoted set of alpha numerics, so, here they are processed 
-            // until the next token is NOT a dash
-            int tokenCount = 0;
-            string token = "";
-            do
-            {
-                token += tokenizer.Current.Value;
-                tokenizer.ReadNextToken();
-                tokenCount++;
-            }
-            while ( tokenizer.HasMoreTokens && !tokenizer.IsNextToken( Constants.Comma ) );
-
-            return tokenCount > 1 ? String.Format( "'{0}'", token.ToUpper() ) : token;
-        }
-
-        private string UpdateParamsWithValues( string sql, string paramList )
-        {
-            var parameters = new Dictionary<string, string>();
-            ITokenizer tokenizer = new SqlTokenizer( paramList );
-            tokenizer.ReadNextToken();
-            do
-            {
-                string parameter = tokenizer.Current.Value;
-
-                tokenizer.ReadNextToken();
-                tokenizer.ExpectToken( Constants.Assignment );
-
-                parameters.Add( parameter, ProcessParameter( tokenizer ) );
-            }
-            while ( tokenizer.TokenEquals( Constants.Comma ) );
-
-            foreach ( var item in parameters )
-                sql = sql.Replace( item.Key, item.Value );
-
-            return sql;
-        }
-
-        public string Execute( string sql )
-        {
+            var originalSql = sql;
             // designed to convert the following format
             // "SELECT * FROM Table WHERE ID=@P1 AND Name=@P2;@P1=20,@P2='Users'"
             try
             {
-                string[] parts = sql.Split(';');
-                if ( parts.Length > 1 )
-                    sql = UpdateParamsWithValues( String.Join( ";", parts.Take( parts.Length - 1 ).ToArray() ), parts.Last() );
-
-                return _engine.Execute( sql );
+                var parameterSubstituter = new ParameterSubstituter();
+                return _engine.Execute(parameterSubstituter.UpdateParamsWithValues(sql));
             }
-            catch ( Exception ex )
+            catch (Exception ex)
             {
-                return String.Format( "-- Error: {0}\n{1}", ex.Message, sql );
+                return String.Format("-- Error: {0}\n{1}", ex.Message, originalSql);
             }
         }
     }

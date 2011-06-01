@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 
 using Laan.Sql.Parser;
 using Laan.Sql.Parser.Entities;
 
-namespace Laan.SqlParser.Test
+namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
     public class TestInsertStatementParser
     {
         [Test]
-        public void Test_Basic_Insert_Statement()
+        public void Basic_Insert_Statement()
         {
             // Exercise
             InsertStatement statement = ParserFactory.Execute<InsertStatement>( "insert into table values (1, 'A')" ).First();
@@ -31,7 +31,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Basic_Insert_Statement_With_Columns()
+        public void Basic_Insert_Statement_With_Columns()
         {
             // Exercise
             InsertStatement statement = ParserFactory.Execute<InsertStatement>( @"
@@ -55,7 +55,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Insert_Statement_With_Select_Statement()
+        public void Insert_Statement_With_Select_Statement()
         {
             // Exercise
             InsertStatement statement = ParserFactory.Execute<InsertStatement>( "insert into table select a from source" ).First();
@@ -71,7 +71,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Insert_Statement_With_Multiple_Value_Sets()
+        public void Insert_Statement_With_Multiple_Value_Sets()
         {
             // Exercise
             InsertStatement statement = ParserFactory.Execute<InsertStatement>( @"

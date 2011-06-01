@@ -27,7 +27,8 @@ namespace Laan.Sql.Formatter
                 { typeof( BeginTransactionStatement ), typeof( BeginTransactionStatementFormatter ) },
                 { typeof( RollbackTransactionStatement ), typeof( RollbackTransactionStatementFormatter ) },
                 { typeof( CommitTransactionStatement ), typeof( CommitTransactionStatementFormatter ) },
-                { typeof( BlockStatement ), typeof( BlockStatementFormatter ) }
+                { typeof( BlockStatement ), typeof( BlockStatementFormatter ) },
+                { typeof( ExecuteSqlStatement ), typeof( ExecuteSqlStatementFormatter ) }
 
             };
         }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
@@ -13,7 +13,7 @@ namespace Laan.Sql.Parser.Test
     public class TestBatchStatements
     {
         [Test]
-        public void Test_Implicit_Termination_Of_Statement()
+        public void Implicit_Termination_Of_Statement()
         {
             // Setup
             var sql = "SELECT * FROM Table SELECT * FROM OtherTable";

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 
 using Laan.Sql.Parser.Entities;
 
@@ -11,7 +11,7 @@ namespace Laan.Sql.Parser.Test
     public class TestCreateNonClusteredIndex
     {
         [Test]
-        public void Test_Can_Read_Non_Clustered_Index()
+        public void Can_Read_Non_Clustered_Index()
         {
             // Exercise
             var statement = ParserFactory.Execute<CreateIndexStatement>( @"
@@ -33,7 +33,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Can_Read_Non_Clustered_Index_In_Descending_Order()
+        public void Can_Read_Non_Clustered_Index_In_Descending_Order()
         {
             // Exercise
             var statement = ParserFactory.Execute<CreateIndexStatement>( @"
@@ -60,7 +60,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Can_Read_Non_Clustered_Index_Again()
+        public void Can_Read_Non_Clustered_Index_Again()
         {
             // Exercise
             var statement = ParserFactory.Execute<CreateIndexStatement>( @"
@@ -86,7 +86,7 @@ namespace Laan.Sql.Parser.Test
 
 
         [Test]
-        public void Test_Can_Read_Clustered_Index()
+        public void Can_Read_Clustered_Index()
         {
             // Exercise
             var statement = ParserFactory.Execute<CreateIndexStatement>( @"
@@ -106,7 +106,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Can_Read_Unique_Clustered_Index()
+        public void Can_Read_Unique_Clustered_Index()
         {
             // Exercise
             var statement = ParserFactory.Execute<CreateIndexStatement>( @"

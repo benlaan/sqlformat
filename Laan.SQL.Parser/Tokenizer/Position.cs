@@ -4,9 +4,9 @@ namespace Laan.Sql.Parser
 {
     public class Position
     {
-        private ITokenizer _tokenizer;
+        private CustomTokenizer _tokenizer;
 
-        public Position( ITokenizer tokenizer )
+        public Position( CustomTokenizer tokenizer )
         {
             _tokenizer = tokenizer;
             Row = 1;

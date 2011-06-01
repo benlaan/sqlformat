@@ -2,6 +2,7 @@ namespace Laan.Sql.Parser
 {
     public interface ITokenizer
     {
+        bool SkipWhiteSpace { set; }
         bool HasMoreTokens { get; }
 
         bool IsNextToken( params string[] tokenSet );

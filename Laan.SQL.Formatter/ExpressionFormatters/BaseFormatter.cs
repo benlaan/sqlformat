@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Laan.Sql.Parser.Entities;
+using System.Text;
 
 namespace Laan.Sql.Formatter
 {
@@ -10,12 +12,17 @@ namespace Laan.Sql.Formatter
 
         public BaseFormatter()
         {
-
         }
-        
+
         protected string FormatBrackets( string text )
         {
             return String.Format( _bracketFormats[bracketSpaceOption], text );
         }
+
+        public virtual bool CanInline
+        {
+            get { return false; }
+        }
+
     }
 }

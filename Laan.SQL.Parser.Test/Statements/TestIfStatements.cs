@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
@@ -14,7 +14,7 @@ namespace Laan.Sql.Parser.Test
     public class TestIfStatements
     {
         [Test]
-        [ExpectedException( typeof( SyntaxException ), "missing condition for IF" )]
+        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "missing condition for IF" )]
         public void Declare_Statement_With_No_Variables_Should_Fail()
         {
             // Setup
@@ -25,7 +25,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( SyntaxException ), "missing success block for IF" )]
+        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "missing success block for IF" )]
         public void If_Statement_Without_Statement_Should_Fail()
         {
             // Setup

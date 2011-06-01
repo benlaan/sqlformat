@@ -210,7 +210,27 @@ namespace Laan.Sql.Parser.Parsers
             return result;
         }
 
-        private Expression ReadFactor( Expression parent )
+
+        private Expression GetCaseExpression(Expression parent)
+        {
+            ReadNextToken();
+            if (Tokenizer.IsNextToken(Constants.When))
+                return GetCaseWhenExpression(parent);
+            else
+                return GetCaseSwitchExpression(parent);
+        }
+
+        private Expression GetSelectExpression()
+        {
+            ReadNextToken();
+            SelectExpression selectExpression = new SelectExpression();
+
+            var parser = new SelectStatementParser(Tokenizer);
+            selectExpression.Statement = (SelectStatement)parser.Execute();
+            return selectExpression;
+        }
+
+        private Expression ReadFactor(Expression parent)
         {
             // nested expressions first
             if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
@@ -221,29 +241,26 @@ namespace Laan.Sql.Parser.Parsers
             {
                 if ( Tokenizer.IsNextToken( Constants.Case ) )
                 {
-                    ReadNextToken();
-                    if ( Tokenizer.IsNextToken( Constants.When ) )
-                        return GetCaseWhenExpression( parent );
-                    else
-                        return GetCaseSwitchExpression( parent );
+                    return GetCaseExpression(parent);
                 }
                 else if ( Tokenizer.IsNextToken( Constants.Select ) )
                 {
-                    ReadNextToken();
-                    SelectExpression selectExpression = new SelectExpression();
-
-                    var parser = new SelectStatementParser( Tokenizer );
-                    selectExpression.Statement = (SelectStatement) parser.Execute();
-                    return selectExpression;
+                    return GetSelectExpression();
                 }
 
                 string token;
-
-                if ( Tokenizer.HasMoreTokens && Tokenizer.Current.Type == TokenType.QuotedText ) // StartsWith( Constants.Quote ) && Tokenizer.Current.EndsWith( Constants.Quote ) )
+                if ( Tokenizer.HasMoreTokens && Tokenizer.Current.Type == TokenType.SingleQuote ) // StartsWith( Constants.Quote ) && Tokenizer.Current.EndsWith( Constants.Quote ) )
                 {
-                    token = Tokenizer.Current.Value;
+                    var value = Tokenizer.Current.Value;
+                    do
+                    {
+                        ReadNextToken();
+                    	value += Tokenizer.Current.Value;
+                    } 
+                    while (Tokenizer.Current.Type != TokenType.SingleQuote);
                     ReadNextToken();
-                    return new StringExpression( token, parent );
+
+                    return new StringExpression( value, parent );
                 }
 
                 if ( Tokenizer.IsNextToken( Constants.Not ) )
@@ -256,7 +273,7 @@ namespace Laan.Sql.Parser.Parsers
                 }
 
                 if ( Tokenizer.Current != (Token) null && !Tokenizer.Current.IsTypeIn(
-                    TokenType.QuotedText, TokenType.Variable, TokenType.Alpha, TokenType.AlphaNumeric,
+                    TokenType.SingleQuote, TokenType.Variable, TokenType.Alpha, TokenType.AlphaNumeric,
                     TokenType.Numeric, TokenType.Operator, TokenType.BlockedText )
                 )
                     throw new SyntaxException( "expected alpha, numeric, or variable, found " + Tokenizer.Current.Value );
@@ -265,10 +282,8 @@ namespace Laan.Sql.Parser.Parsers
                 token = GetDotNotationIdentifier();
 
                 // check for an open bracket, indicating that the previous identifier is actually a function
-                if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
-                {
-                    return GetFunction( parent, token );
-                }
+                if (Tokenizer.IsNextToken(Constants.OpenBracket))
+                    return GetFunction(parent, token);
                 else
                     return new IdentifierExpression( token, parent );
             }

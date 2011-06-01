@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Exceptions;
@@ -15,7 +15,7 @@ namespace Laan.Sql.Parser.Test
     public class TestCreateView
     {
         [Test]
-        [ExpectedException( typeof( ParserNotImplementedException ), Message = "No parser exists for statement type: merge" )]
+        [ExpectedException( typeof( ParserNotImplementedException ), ExpectedMessage = "No parser exists for statement type: merge" )]
         public void TestNoParserException()
         {
             //TODO: needs to be moved into a ParserFactory specific unit test
@@ -56,7 +56,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( SyntaxException ), Message = "Expected integer but found: '*'" )]
+        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "Expected integer but found: '*'" )]
         public void Select_Top_Missing_Top_Param_StarField()
         {
             // Exercise

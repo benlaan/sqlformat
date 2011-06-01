@@ -1,6 +1,6 @@
 using System;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Laan.Sql.Parser.Test
 {
@@ -8,7 +8,7 @@ namespace Laan.Sql.Parser.Test
     public class TestTokens
     {
         [Test]
-        public void Test_Empty_Tokens_Are_The_Same()
+        public void Empty_Tokens_Are_The_Same()
         {
             // Setup
             Token empty1 = new Token();
@@ -19,7 +19,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_One_Empty_And_One_Non_Empty_Tokens_Are_Different()
+        public void One_Empty_And_One_Non_Empty_Tokens_Are_Different()
         {
             // Setup
             Token nonEmpty = new Token( "SELECT", TokenType.Alpha );
@@ -30,7 +30,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Two_Non_Empty_Tokens_Are_Same()
+        public void Two_Non_Empty_Tokens_Are_Same()
         {
             // Setup
             Token nonEmpty1 = new Token( "SELECT", TokenType.Alpha );
@@ -41,7 +41,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Two_Non_Empty_Tokens_Are_Different()
+        public void Two_Non_Empty_Tokens_Are_Different()
         {
             // Setup
             Token nonEmpty1 = new Token( "SELECT", TokenType.Alpha );
@@ -52,7 +52,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_One_Non_Empty_Tokens_And_One_String_Are_Same()
+        public void One_Non_Empty_Tokens_And_One_String_Are_Same()
         {
             // Setup
             Token nonEmpty = new Token( "SELECT", TokenType.Alpha );
@@ -63,7 +63,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_One_Non_Empty_Tokens_And_One_String_Are_Different()
+        public void One_Non_Empty_Tokens_And_One_String_Are_Different()
         {
             // Setup
             Token nonEmpty = new Token( "SELECT", TokenType.Alpha );

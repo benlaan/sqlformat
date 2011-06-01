@@ -3,33 +3,167 @@ using System.Linq;
 
 using Laan.Sql.Parser.Entities;
 
-using MbUnit.Framework;
+using NUnit.Framework;
+using System.Collections.Generic;
+using Laan.NHibernate.Appender;
 
 namespace Laan.Sql.Parser.Test
 {
-    public class ExecuteSqlStatement : Statement
-    {
-        public ExecuteSqlStatement()
-        {
-            
-        }
-    }
-
     [TestFixture]
     public class TestExecuteSqlString
     {
+        /// <summary>
+        /// This sql is captured from a sql profiler, and has escaped strings and the 'triple' string
+        /// input to sp_executesql
+        /// </summary>
         [Test]
-        public void Test_Can_Execute_Simple_Sql_String()
+        //[Ignore("Not Implemented yet!")]
+        public void Can_Execute_Simple_Sql_String()
         {
-          //  // Exercise
-          //  var statement = ParserFactory.Execute<ExecuteSqlStatement>( @"
-          //      sp_execute ( 'SELECT * FROM Table WHERE ID=@P1 AND Name=@P2',@P1 INT, @P2 VARCHAR(10),'@P1=20,@P2='Users'')
-		        //"
-          //  ).First();
+            var sql = @"exec sp_executesql 
+                  N'select TOP (@p0) T.Id, T.Name from [Transaction] T 
+                    where T.Type in (''Process'', ''TransferFrom'') 
+                      and T.Code in (@p1) and T.Name <> @p2',
+                  N'@p0 int,@p1 int,@p2 nvarchar(4000)',
+                  @p0=100,@p1=44,@p2=N'WOO'
+            ";
 
-          //  // Verify outcome
-          //  Assert.IsNotNull( statement );
-          //  Assert.AreEqual( "[dbo].[Computers]", "" );
+            // Exercise
+            var statement = ParserFactory.Execute<ExecuteSqlStatement>(sql).First();
+
+            // Verify outcome
+            Assert.IsNotNull(statement);
+
+            SelectStatement selectStatement = statement.InnerStatement as SelectStatement;
+            Assert.IsNotNull(selectStatement);
+            
+            Assert.AreEqual("[Transaction]", selectStatement.From.First().Name);
+            Assert.AreEqual(3, statement.Arguments.Count);
+            Assert.AreEqual(new string[] { "@p0", "@p1", "@p2" }, statement.Arguments.Select(a => a.Name).ToArray());
+            Assert.AreEqual(new string[] { "100", "44", "N'WOO'" }, statement.Arguments.Select(a => a.Value).ToArray());
+        }
+
+        /// <summary>
+        /// This sql is captured via NHibernate.SQL logs
+        /// </summary>
+        [Test]
+        public void Can_Parse_NHibernate_Log_Message_With_Parameters()
+        {
+            var sql = @"
+                select TOP (@p0) T.Name
+                from [Transaction]
+                where (T.Code in (@p1, @p2));
+
+                @p0 = 100 [Type: Int32 (0)], 
+                @p1 = 'AA BB' [Type: String (4000)], 
+                @p2 = 'CCC' [Type: String (4000)]
+            ";
+            
+            // cleanup test data to match 'real' input, while allowing it to be readable above
+            sql = sql.Replace(Environment.NewLine, " ");
+
+            //  // Exercise
+            ParameterSubstituter builder = new ParameterSubstituter();
+            var splitSql = builder.UpdateParamsWithValues(sql);
+
+              var statement = ParserFactory.Execute<SelectStatement>( splitSql ).First();
+
+              // Verify outcome
+              Assert.IsNotNull( statement );
+              Assert.AreEqual( "[Transaction]", statement.From.First().Name );
+              Assert.AreEqual( "100", statement.Top.Expression.Value );
+              Assert.AreEqual( "(T.Code IN ('AA BB', 'CCC'))", statement.Where.Value );
+        }
+
+        /// <summary>
+        /// This sql is captured via NHibernate.SQL logs
+        /// </summary>
+        [Test]
+        public void Can_Parse_NHibernate_Log_Message_With_More_Than_Nine_Parameters()
+        {
+            var sql = @"
+                select TOP (@p0) T.*
+                from [Transaction]
+                where (Code in (@p1, @p2, @p3 , @p4 , @p5 , @p6 , @p7 , @p8 , @p9 , @p10 , @p11 , @p12, @p13));
+
+                @p0  = 100 [Type: Int32 (0)],   @p1  = 'A' [Type: String (1)],  @p2 =  'B' [Type: String (2)], 
+                @p3  = 'C' [Type: String (3)],  @p4  = 'D' [Type: String (4)],  @p5 =  'E' [Type: String (5)], 
+                @p6  = 'F' [Type: String (6)],  @p7  = 'G' [Type: String (7)],  @p8 =  'H' [Type: String (8)],
+                @p9  = 'I' [Type: String (9)],  @p10 = 'J' [Type: String (10)], @p11 = 'K' [Type: String (11)], 
+                @p12 = 'L' [Type: String (12)], @p13 = 'M' [Type: String (13)]
+            ";
+            
+            // cleanup test data to match 'real' input, while allowing it to be readable above
+            sql = sql.Replace(Environment.NewLine, " ");
+
+            //  // Exercise
+            ParameterSubstituter builder = new ParameterSubstituter();
+            var splitSql = builder.UpdateParamsWithValues(sql);
+
+              var statement = ParserFactory.Execute<SelectStatement>( splitSql ).First();
+
+              // Verify outcome
+              Assert.IsNotNull( statement );
+              Assert.AreEqual( "[Transaction]", statement.From.First().Name );
+              Assert.AreEqual( "100", statement.Top.Expression.Value );
+              Assert.AreEqual( "(Code IN ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'))", statement.Where.Value );
+        }
+
+        /// <summary>
+        /// This sql is captured via NHibernate.SQL logs
+        /// </summary>
+        [Test]
+        public void Can_Parse_NHibernate_Log_Message_With_DateTime_Parameter()
+        {
+            var sql = @"
+                select T.Name
+                from [Transaction]
+                where Start > @p0;
+
+                @p0 = 23/05/2011 2:51:54 PM [Type: DateTime (0)]
+            ";
+            
+            // cleanup test data to match 'real' input, while allowing it to be readable above
+            sql = sql.Replace(Environment.NewLine, " ");
+
+            //  // Exercise
+            ParameterSubstituter builder = new ParameterSubstituter();
+            var splitSql = builder.UpdateParamsWithValues(sql);
+
+              var statement = ParserFactory.Execute<SelectStatement>( splitSql ).First();
+
+              // Verify outcome
+              Assert.IsNotNull( statement );
+              Assert.AreEqual( "[Transaction]", statement.From.First().Name );
+              Assert.AreEqual( "Start > '23/05/2011 2:51:54 PM'", statement.Where.Value );
+        }
+
+        /// <summary>
+        /// This sql is captured via NHibernate.SQL logs
+        /// </summary>
+        [Test]
+        public void Can_Parse_NHibernate_Log_Message_Without_Parameters()
+        {
+            var sql = @"
+                select TOP (100) T.Name
+                from [Transaction]
+                where (T.Code in (1, 2))
+            ";
+            
+            // cleanup test data to match 'real' input, while allowing it to be readable above
+            sql = sql.Replace(Environment.NewLine, " ");
+
+            // Exercise
+            ParameterSubstituter builder = new ParameterSubstituter();
+            var splitSql = builder.UpdateParamsWithValues(sql);
+
+              var statement = ParserFactory.Execute<SelectStatement>( splitSql ).First();
+
+              // Verify outcome
+              Assert.IsNotNull( statement );
+              Assert.AreEqual( "[Transaction]", statement.From.First().Name );
+              Assert.AreEqual( "100", statement.Top.Expression.Value );
+              Assert.AreEqual( "(T.Code IN (1, 2))", statement.Where.Value );
         }
     }
 }

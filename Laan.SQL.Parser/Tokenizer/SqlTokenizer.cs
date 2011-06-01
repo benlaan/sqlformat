@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Laan.Sql.Parser
 {
-    public class SqlTokenizer : RegexTokenizer
+    public class SqlTokenizer : RegexTokenizer, ITokenizer
     {
 
         public bool SkipComments
@@ -41,9 +41,10 @@ namespace Laan.Sql.Parser
                     new TokenDefinition( TokenType.Numeric,          false, @"^[-]?\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$" ),
                     new TokenDefinition( TokenType.OpenBracket,      false, @"^\($" ),
                     new TokenDefinition( TokenType.CloseBracket,     false, @"^\)$" ),
-                    new TokenDefinition( TokenType.QuotedText,       false, @"^(?:([""'])|(“)|‘).*?(?<!\\)(?(1)\1|(?(2)”|’))$" ),
+                    new TokenDefinition( TokenType.SingleQuote,      false, @"^'$"),
+                    new TokenDefinition( TokenType.DoubleQuote,      false, @"^""$"),
                     new TokenDefinition( TokenType.BlockedText,      false, @"^\[.*\]$" ),
-                    new TokenDefinition( TokenType.Symbol,           false, @"^[,.;]$" ),
+                    new TokenDefinition( TokenType.Symbol,           false, @"^[,.;:]$" ),
                     new TokenDefinition( TokenType.Operator,         false, @"^([\+\-\*/\^\%]|<?>?|[!<>]?=)$" ),
                     new TokenDefinition( TokenType.InLineComment,    true,  @"^\-\-[^\n\r]*$" ),
                     new TokenDefinition( TokenType.MultiLineComment, true,  @"\/\*(\s|.)*?(\*\/)|\/\*(\s|.)*" ),

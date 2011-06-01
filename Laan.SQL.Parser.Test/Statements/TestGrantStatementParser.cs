@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Gallio.Framework;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 using Laan.Sql.Parser;
 using Laan.Sql.Parser.Entities;
 
-namespace Laan.SqlParser.Test
+namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
     public class TestGrantStatementParser
     {
         [Test]
-        [Row( "SELECT" ), Row( "INSERT" ), Row( "UPDATE" ), Row( "DELETE" ), Row( "ALL" )]
+        [TestCase( "SELECT" ), TestCase( "INSERT" ), TestCase( "UPDATE" ), TestCase( "DELETE" ), TestCase( "ALL" )]
         public void TestGrantOperation( string operation )
         {
             // Exercise

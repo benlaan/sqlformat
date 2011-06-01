@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
 
@@ -11,7 +11,7 @@ namespace Laan.Sql.Parser.Test
     public class TestCreateTable
     {
         [Test]
-        public void Test_One_Int_Column()
+        public void One_Int_Column()
         {
             // Exercise
             var statement = ParserFactory.Execute<CreateTableStatement>( "create table Test ( id int )" ).First();
@@ -25,7 +25,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_One_Column_With_Owned_Table_Name()
+        public void One_Column_With_Owned_Table_Name()
         {
             // Exercise
             var statement = ParserFactory.Execute<CreateTableStatement>( "create table dbo.Test ( id int )" ).First();
@@ -39,7 +39,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_One_Column_With_Multi_Scope_Table_Name()
+        public void One_Column_With_Multi_Scope_Table_Name()
         {
             // Exercise
             var statement = ParserFactory.Execute<CreateTableStatement>( "create table SomeDatabase.dbo.Schema.Test ( id int )" ).First();
@@ -53,7 +53,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Multiple_Int_Columns()
+        public void Multiple_Int_Columns()
         {
             // Exercise
             var statement = ParserFactory.Execute<CreateTableStatement>( @"
@@ -79,7 +79,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Multiple_Int_Columns_With_Escaped_Names()
+        public void Multiple_Int_Columns_With_Escaped_Names()
         {
             // Exercise
             var statement = ParserFactory.Execute<CreateTableStatement>( @"
@@ -104,11 +104,11 @@ namespace Laan.Sql.Parser.Test
                 new FieldDefinition() { Name = "[id3]", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
             };
 
-            Assert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreEqual( expected, statement.Fields );
         }
 
         [Test]
-        public void Test_Int_Column_With_Nullability()
+        public void Int_Column_With_Nullability()
         {
             // Exercise
             var statement = ParserFactory.Execute<CreateTableStatement>( @"
@@ -132,11 +132,11 @@ namespace Laan.Sql.Parser.Test
                 new FieldDefinition() { Name = "id3", Type = new SqlType( "int" ), IsPrimaryKey = false, Nullability = Nullability.NotNullable },
             };
 
-            Assert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreEqual( expected, statement.Fields );
         }
 
         [Test]
-        public void Test_Columns_With_Complex_Data_Types()
+        public void Columns_With_Complex_Data_Types()
         {
             var statement = ParserFactory.Execute<CreateTableStatement>( @"
 
@@ -165,11 +165,11 @@ namespace Laan.Sql.Parser.Test
                 new FieldDefinition() { Name = "id6", Type = new SqlType( "varchar" ) { Max = true }, IsPrimaryKey = false, Nullability = Nullability.Nullable },
             };
 
-            Assert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreEqual( expected, statement.Fields );
         }
 
         [Test]
-        public void Test_Primary_Key_As_Constraint()
+        public void Primary_Key_As_Constraint()
         {
             // Setup
             var statement = ParserFactory.Execute<CreateTableStatement>( @"
@@ -197,11 +197,11 @@ namespace Laan.Sql.Parser.Test
                 new FieldDefinition() { Name = "id4", Type = new SqlType( "decimal", 10,2) , IsPrimaryKey = false, Nullability = Nullability.NotNullable },
             };
 
-            Assert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreEqual( expected, statement.Fields );
         }
 
         [Test]
-        public void Test_Int_Column_With_Identity()
+        public void Int_Column_With_Identity()
         {
             // Setup
             var statement = ParserFactory.Execute<CreateTableStatement>( @"
@@ -233,11 +233,11 @@ namespace Laan.Sql.Parser.Test
                 },
             };
 
-            Assert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreEqual( expected, statement.Fields );
         }
 
         [Test]
-        public void Test_Int_Column_With_Identity_After_Not_Null()
+        public void Int_Column_With_Identity_After_Not_Null()
         {
             // Setup
             var statement = ParserFactory.Execute<CreateTableStatement>( @"
@@ -269,11 +269,11 @@ namespace Laan.Sql.Parser.Test
                 },
             };
 
-            Assert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreEqual( expected, statement.Fields );
         }
 
         [Test]
-        public void Test_VarChar_Column_With_Collation()
+        public void VarChar_Column_With_Collation()
         {
             // Setup
             var statement = ParserFactory.Execute<CreateTableStatement>( @"
@@ -301,11 +301,11 @@ namespace Laan.Sql.Parser.Test
                 },
             };
 
-            Assert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreEqual( expected, statement.Fields );
         }
 
         [Test]
-        public void Test_VarChar_Column_With_Constraint()
+        public void VarChar_Column_With_Constraint()
         {
             // Setup
             var statement = ParserFactory.Execute<CreateTableStatement>( @"
@@ -341,11 +341,11 @@ namespace Laan.Sql.Parser.Test
                 },
             };
 
-            Assert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreEqual( expected, statement.Fields );
         }
 
         [Test]
-        public void Test_VarChar_Column_With_Constraint_As_Complex_Expressions()
+        public void VarChar_Column_With_Constraint_As_Complex_Expressions()
         {
             // Setup
             var statement = ParserFactory.Execute<CreateTableStatement>( @"
@@ -397,11 +397,11 @@ namespace Laan.Sql.Parser.Test
                 },
             };
 
-            Assert.AreElementsEqual( expected, statement.Fields );
+            Assert.AreEqual( expected, statement.Fields );
         }
 
         [Test]
-        public void Test_VarChar_Column_With_Calculated_Value()
+        public void VarChar_Column_With_Calculated_Value()
         {
             // Setup
             var statement = ParserFactory.Execute<CreateTableStatement>( @"

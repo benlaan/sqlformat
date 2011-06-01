@@ -22,7 +22,7 @@ namespace Laan.Sql.Formatter
         {
             DecreaseIndent();
             IndentAppendFormat(
-                "COMMIT {1}",
+                "COMMIT {0}{1}",
                 GetDescription(),
                 ( !String.IsNullOrEmpty( _statement.Name ) ? " " + _statement.Name : "" )
             );

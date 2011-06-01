@@ -1,6 +1,8 @@
 using System;
 
 using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Exceptions;
 
 namespace Laan.Sql.Parser.Parsers
 {
@@ -30,9 +32,11 @@ namespace Laan.Sql.Parser.Parsers
             if ( _statement.Descriptor != TransactionDescriptor.None && Tokenizer.HasMoreTokens && !Tokenizer.IsNextToken( 
                     Constants.Select, Constants.Update, Constants.Declare, Constants.Insert, Constants.Create, 
                     Constants.Alter, Constants.Go, Constants.Print, Constants.Exec, Constants.Grant, Constants.Begin
-                ) 
+                )
             )
+            {
                 _statement.Name = GetIdentifier();
+            }
 
             ProcessTerminator();
             return _statement;

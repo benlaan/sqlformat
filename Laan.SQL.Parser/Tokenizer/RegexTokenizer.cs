@@ -22,7 +22,8 @@ namespace Laan.Sql.Parser
         CloseBrace,
         OpenBracket,
         CloseBracket,
-        QuotedText,
+        SingleQuote,
+        DoubleQuote,
         BlockedText,
         Operator,
         Symbol,
@@ -36,53 +37,58 @@ namespace Laan.Sql.Parser
         public bool Skip;
         public TokenType Type;
 
-        public TokenDefinition( TokenType type, bool skip, string regex )
+        public TokenDefinition(TokenType type, bool skip, string regex)
         {
             Skip = skip;
-            Regex = new Regex( regex, RegexOptions.Compiled );
+            Regex = new Regex(regex, RegexOptions.Compiled);//| RegexOptions.Multiline | RegexOptions.Singleline );
             Type = type;
         }
     }
 
-    [DebuggerDisplay( "Current: {Current} Position: {Position} [{HasMoreTokens ? \"Y\" : \"N\"}]" )]
+    [DebuggerDisplay("Current: {Current} Position: {Position} [{HasMoreTokens ? \"Y\" : \"N\"}]")]
     public abstract class RegexTokenizer : CustomTokenizer, IDisposable
     {
+        private TokenType _currentQuoteType = TokenType.None;
         private TextReader _reader;
         private Token _current;
 
-        public RegexTokenizer( string input )
+        public RegexTokenizer(string input)
         {
             TokenDefinitions = new List<TokenDefinition>();
-            Position = new Position( this );
-
-            _reader = new StringReader( input );
+            Position = new Position(this);
+            _reader = new StringReader(input);
         }
 
         private int ReadChar()
         {
             int read = _reader.Read();
-            if ( read == '\n' )
+            if (read == '\n')
                 Position.NewRow();
             else
                 Position.Column++;
 
             return read;
         }
-        
+
         /// <summary>
         /// Returns the number of matches that the current token could be
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        private int MatchCount( string token, out TokenDefinition definition )
+        private int MatchCount(string token, out TokenDefinition definition)
         {
             var matches = TokenDefinitions.Where(
-                tokenDefinition => 
-                    tokenDefinition.Regex.Matches( token ).Cast<Match>().Any( match => match.Value == token )
+                tokenDefinition =>
+                    tokenDefinition.Regex.Matches(token).Cast<Match>().Any(match => match.Value == token)
             );
 
             definition = matches.FirstOrDefault();
             return matches.Count();
+        }
+
+        private bool IsQuote(TokenType type)
+        {
+            return type == TokenType.SingleQuote || type == TokenType.DoubleQuote; ;
         }
 
         public override void ReadNextToken()
@@ -93,37 +99,44 @@ namespace Laan.Sql.Parser
             TokenDefinition last;
 
             int next = -1;
-            while ( ( next = _reader.Peek() ) != -1 )
+            while ((next = _reader.Peek()) != -1)
             {
-                int matchCount = MatchCount( current.ToString() + (char) next, out definition );
+                int matchCount = MatchCount(current.ToString() + (char)next, out definition);
                 last = definition;
                 int lastMatchCount = 0;
 
-                while ( _reader.Peek() != -1 && ( matchCount > 0 || ( lastMatchCount == 0 ) ) )
+                while (_reader.Peek() != -1 && (matchCount > 0 || (lastMatchCount == 0)))
                 {
                     last = definition;
                     ReadChar();
-                    current.Append( (char) next );
+                    current.Append((char)next);
 
                     next = _reader.Peek();
-                    if ( next == -1 )
+                    if (next == -1)
                         break;
 
                     lastMatchCount = matchCount;
-                    matchCount = MatchCount( current.ToString() + (char) next, out definition );
+                    matchCount = MatchCount(current.ToString() + (char)next, out definition);
                 }
 
-                if ( last != null && last.Skip )
+                if (last != null && last.Skip && !IsQuote(_currentQuoteType))
                 {
                     ReadNextToken();
                     return;
                 }
 
                 // if we get here, we either have a good token, or the token is not recognised
-                if ( MatchCount( current.ToString(), out definition ) == 0 )
-                    throw new UnknownTokenException( current.ToString() );
+                if (MatchCount(current.ToString(), out definition) == 0)
+                    throw new UnknownTokenException(current.ToString());
 
-                _current = new Token( current.ToString(), last != null ? last.Type : TokenType.None );
+                _current = new Token(current.ToString(), last != null ? last.Type : TokenType.None);
+                if (IsQuote(_current.Type))
+                {
+                    if (_currentQuoteType != _current.Type) 
+                        _currentQuoteType = _current.Type;
+                    else
+                        _currentQuoteType = TokenType.None;
+                }
                 return;
             }
         }

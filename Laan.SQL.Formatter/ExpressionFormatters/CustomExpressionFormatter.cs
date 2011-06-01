@@ -13,7 +13,7 @@ namespace Laan.Sql.Formatter
 
         protected T _expression;
 
-        public CustomExpressionFormatter( T expression )
+        public CustomExpressionFormatter( T expression)
         {
             Indent = GetSpaces(TabSize);
             _expression = expression;
@@ -47,7 +47,10 @@ namespace Laan.Sql.Formatter
             return new string( ' ', offset );
         }
 
-        #region IExpressionFormatter Members
+        protected T _statement;
+
+
+#region IExpressionFormatter Members
 
         public virtual string Execute()
         {

@@ -30,6 +30,12 @@ namespace Laan.NHibernate.Appender
             _worker.RunWorkerAsync();
         }
 
+        public override void ActivateOptions()
+        {
+            File = Environment.ExpandEnvironmentVariables(File);
+            base.ActivateOptions();
+        }
+
         private void ProcessQueue( object sender, DoWorkEventArgs e )
         {
             while ( !_done )

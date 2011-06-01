@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 using Laan.Sql.Parser;
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Exceptions;
 
-namespace Laan.SqlParser.Test
+namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
     public class TestUpdateStatementParser
     {
         [Test]
-        public void Test_Basic_Update_Statement()
+        public void Basic_Update_Statement()
         {
             // Exercise
             UpdateStatement statement = ParserFactory.Execute<UpdateStatement>( "update dbo.table set field = 1" ).First();
@@ -29,7 +29,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Update_Statement_With_Where_Clause()
+        public void Update_Statement_With_Where_Clause()
         {
             // Exercise
             UpdateStatement statement = ParserFactory.Execute<UpdateStatement>( "update dbo.table set field = 1 where field <> 2" ).First();
@@ -51,7 +51,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Update_Statement_With_From_And_Where_Clause()
+        public void Update_Statement_With_From_And_Where_Clause()
         {
             // Exercise
             UpdateStatement statement = ParserFactory.Execute<UpdateStatement>( 
@@ -79,7 +79,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Update_Statement_With_From_Join_And_Where_Clauses()
+        public void Update_Statement_With_From_Join_And_Where_Clauses()
         {
             // Exercise
             UpdateStatement statement = ParserFactory.Execute<UpdateStatement>(
@@ -113,7 +113,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Update_Statement_With_Top_N_Clause()
+        public void Update_Statement_With_Top_N_Clause()
         {
             // Exercise
             UpdateStatement statement = ParserFactory.Execute<UpdateStatement>(
@@ -135,8 +135,8 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( SyntaxException ), "expected alpha, numeric, or variable, found )" )]
-        public void Test_Update_Statement_With_Top_N_Clause_With_Missing_Value()
+        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "expected alpha, numeric, or variable, found )" )]
+        public void Update_Statement_With_Top_N_Clause_With_Missing_Value()
         {
             // Exercise
             UpdateStatement statement = ParserFactory.Execute<UpdateStatement>(

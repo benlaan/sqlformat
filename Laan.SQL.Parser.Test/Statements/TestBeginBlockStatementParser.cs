@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MbUnit.Framework;
+using NUnit.Framework;
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
 
@@ -12,9 +12,9 @@ namespace Laan.Sql.Parser.Test
     public class TestBeginBlockStatementParser
     {
         [Test]
-        [Row( "begin select id from t end", 1 )]
-        [Row( "begin select id from t select id from x end", 2 )]
-        public void Test_Begin_End_Block( string sql, int statementCount )
+        [TestCase( "begin select id from t end", 1 )]
+        [TestCase( "begin select id from t select id from x end", 2 )]
+        public void Begin_End_Block( string sql, int statementCount )
         {
             // Exercise
             var statement = ParserFactory.Execute<BlockStatement>( sql ).First();

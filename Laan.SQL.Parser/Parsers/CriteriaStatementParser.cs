@@ -203,7 +203,7 @@ namespace Laan.Sql.Parser.Parsers
                     if ( Tokenizer.HasMoreTokens )
                     {
                         if ( !Tokenizer.Current.IsTypeIn(
-                                TokenType.Alpha, TokenType.AlphaNumeric, TokenType.BlockedText, TokenType.QuotedText
+                                TokenType.Alpha, TokenType.AlphaNumeric, TokenType.BlockedText, TokenType.SingleQuote
                             )
                         )
                             throw new SyntaxException( String.Format( "Incorrect syntax near '{0}'", CurrentToken ) );

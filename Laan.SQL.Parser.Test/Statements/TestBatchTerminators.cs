@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Parser.Test
@@ -10,7 +10,7 @@ namespace Laan.Sql.Parser.Test
     public class TestBatchTerminators
     {
         [Test]
-        public void Test_Statements_With_Semicolon_Terminators()
+        public void Statements_With_Semicolon_Terminators()
         {
             // Exercise
             var statements = ParserFactory.Execute( @"
@@ -28,7 +28,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Statements_With_Go_Terminators()
+        public void Statements_With_Go_Terminators()
         {
             // Exercise
             var statements = ParserFactory.Execute( @"

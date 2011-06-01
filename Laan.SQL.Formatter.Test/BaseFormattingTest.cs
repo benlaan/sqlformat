@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Laan.Sql.Formatter.Test
 {
@@ -50,7 +50,7 @@ namespace Laan.Sql.Formatter.Test
         protected static void Compare( string actual, string[] expected )
         {
             var actualAsList = actual.Replace("\r", "" ).Split( new string[] { "\n" }, StringSplitOptions.None );
-            Assert.AreElementsEqual( expected, actualAsList, DisplayLists( expected, actualAsList ) );
+            Assert.AreEqual( expected, actualAsList, DisplayLists( expected, actualAsList ) );
         }
     }
 }

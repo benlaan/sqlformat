@@ -43,15 +43,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BracketStructure.cs" />
+    <Compile Include="Utilities\BracketStructure.cs" />
+    <Compile Include="Entities\ExecuteSqlStatement.cs" />
     <Compile Include="Entities\SetDateFirstStatement.cs" />
     <Compile Include="Entities\SetDeadlockPriorityStatement.cs" />
     <Compile Include="Entities\SetOptionStatement.cs" />
     <Compile Include="Entities\SetStatement.cs" />
     <Compile Include="Entities\SetVariableStatement.cs" />
     <Compile Include="Expressions\CastExpression.cs" />
+    <Compile Include="Utilities\ParameterSubstituter.cs" />
+    <Compile Include="Parsers\ExecuteSqlStatementParser.cs" />
     <Compile Include="Parsers\SetStatementParser.cs" />
-    <Compile Include="SqlTypeParser.cs" />
+    <Compile Include="Utilities\SqlTypeParser.cs" />
     <Compile Include="Tokenizer\CustomTokenizer.cs" />
     <Compile Include="Entities\AliasedEntities.cs" />
     <Compile Include="Entities\AlterTableStatement.cs" />

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Exceptions;
@@ -13,7 +13,7 @@ namespace Laan.Sql.Parser.Test
     public class TestDeclareStatements
     {
         [Test]
-        [ExpectedException( typeof( SyntaxException ), "DECLARE requires at least one variable declaration" )]
+        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "DECLARE requires at least one variable declaration" )]
         public void Declare_Statement_With_No_Variables_Should_Fail()
         {
             // Setup
@@ -24,7 +24,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( SyntaxException ), "type missing for declaration of variable '@Variable'" )]
+        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "type missing for declaration of variable '@Variable'" )]
         public void Declare_Statement_With_One_Variable_Without_Type_Should_Fail()
         {
             // Setup

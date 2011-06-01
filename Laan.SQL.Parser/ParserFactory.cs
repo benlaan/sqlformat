@@ -31,7 +31,8 @@ namespace Laan.Sql.Parser
                 { Constants.Begin,      typeof( BeginStatementParser    ) },
                 { Constants.Commit,     typeof( CommitStatementParser   ) },
                 { Constants.Rollback,   typeof( RollbackStatementParser ) },
-                { Constants.Set,        typeof( SetStatementParser      ) }
+                { Constants.Set,        typeof( SetStatementParser      ) },
+                { Constants.Exec,       typeof( ExecuteSqlStatementParser      ) }
             };
         }
 

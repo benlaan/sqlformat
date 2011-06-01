@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
@@ -15,7 +15,7 @@ namespace Laan.Sql.Parser.Test
     public class TestSelectStatementParser
     {
         [Test]
-        [ExpectedException( typeof( ParserNotImplementedException ), Message = "No parser exists for statement type: merge" )]
+        [ExpectedException( typeof( ParserNotImplementedException ), ExpectedMessage = "No parser exists for statement type: merge" )]
         public void TestNoParserException()
         {
             // Exercise
@@ -37,7 +37,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( ExpectedTokenNotFoundException ), Message = "Expected: 'BY' but found: 'field' at Row: 1, Col: 27" )]
+        [ExpectedException( typeof( ExpectedTokenNotFoundException ), ExpectedMessage = "Expected: 'BY' but found: 'field' at Row: 1, Col: 27" )]
         public void TestExpectedError()
         {
             // Exercise
@@ -45,7 +45,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( SyntaxException ), Message = "Identifier expected" )]
+        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "Identifier expected" )]
         public void Should_Fail_With_ExpectedSyntaxError_When_Using_Reserved_Word_As_Alias()
         {
             // Exercise
@@ -82,7 +82,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( SyntaxException ), Message = "Expected integer but found: '*'" )]
+        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "Expected integer but found: '*'" )]
         public void Select_Top_Missing_Top_Param_StarField()
         {
             // Exercise
@@ -446,7 +446,7 @@ namespace Laan.Sql.Parser.Test
             Assert.IsTrue( statement.Where is CriteriaExpression );
 
             CriteriaExpression criteriaExpression = ( CriteriaExpression )statement.Where;
-            Assert.AreEqual( "and", criteriaExpression.Operator, StringComparison.CurrentCultureIgnoreCase );
+            Assert.AreEqual( "and", criteriaExpression.Operator.ToLower() );
             Assert.IsTrue( criteriaExpression.Left is CriteriaExpression );
 
             CriteriaExpression leftCriteriaExpression = ( CriteriaExpression )criteriaExpression.Left;
@@ -477,7 +477,7 @@ namespace Laan.Sql.Parser.Test
             NestedExpression nestedExpression = ( NestedExpression )statement.Where;
 
             CriteriaExpression criteriaExpression = ( CriteriaExpression )nestedExpression.Expression;
-            Assert.AreEqual( "or", criteriaExpression.Operator, StringComparison.CurrentCultureIgnoreCase );
+            Assert.AreEqual( "or", criteriaExpression.Operator.ToLower() );
             Assert.IsTrue( criteriaExpression.Left is CriteriaExpression );
 
             CriteriaExpression leftCriteriaExpression = ( CriteriaExpression )criteriaExpression.Left;
@@ -612,10 +612,10 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [Row( "union", SetType.Union )]
-        [Row( "union all", SetType.UnionAll )]
-        [Row( "except", SetType.Except )]
-        [Row( "intersect", SetType.Intersect )]
+        [TestCase( "union", SetType.Union )]
+        [TestCase( "union all", SetType.UnionAll )]
+        [TestCase( "except", SetType.Except )]
+        [TestCase( "intersect", SetType.Intersect )]
         public void Select_With_Union( string setOperator, SetType type )
         {
             // Exercise

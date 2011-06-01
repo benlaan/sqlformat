@@ -77,8 +77,25 @@ namespace Laan.Sql.Parser.Parsers
             if ( !Tokenizer.HasMoreTokens )
                 throw new SyntaxException( "Identifier expected" );
 
-            string identifier = CurrentToken;
-            ReadNextToken();
+            string identifier = String.Empty;
+            switch (Tokenizer.Current.Type)
+            {
+                case TokenType.SingleQuote:
+                    var parser = new ExpressionParser(Tokenizer);
+                    var expression = parser.Execute();
+
+                    if (!(expression is StringExpression))
+                        throw new SyntaxException("Transaction name must be a string");
+
+                    identifier = expression.Value;
+                    break;
+
+                default:
+                    identifier = CurrentToken;
+                    ReadNextToken();
+                    break;
+            }
+            
             return identifier;
         }
 

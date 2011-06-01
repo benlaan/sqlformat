@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using MbUnit.Framework;
+using NUnit.Framework;
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Exceptions;
@@ -90,8 +90,8 @@ namespace Laan.Sql.Parser.Test
         };
 
         [ Test ]
-        [ Factory( "Options" ) ]
-        public void Test_On_Off_Set_Options( string option)
+        [ TestCaseSource( "Options" ) ]
+        public void On_Off_Set_Options( string option)
         {
             foreach ( bool value in new[] { false, true } )
             {
@@ -109,7 +109,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Set_DateFirst_With_Constant()
+        public void Set_DateFirst_With_Constant()
         {
             // Setup
             var sql = String.Format( "SET DATEFIRST 10");
@@ -123,7 +123,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Set_DateFirst_With_Variable()
+        public void Set_DateFirst_With_Variable()
         {
             // Setup
             var sql = String.Format( "SET DATEFIRST @dateFirst");
@@ -137,7 +137,7 @@ namespace Laan.Sql.Parser.Test
         }
         
         [Test]
-        public void Test_Set_DateFormat_With_Constant()
+        public void Set_DateFormat_With_Constant()
         {
             // Setup
             var sql = String.Format( "SET DATEFORMAT 'dd/mm/yyyy'");
@@ -151,7 +151,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Set_DateFormat_With_Variable()
+        public void Set_DateFormat_With_Variable()
         {
             // Setup
             var sql = String.Format( "SET DATEFORMAT @Dateformat");
@@ -165,13 +165,13 @@ namespace Laan.Sql.Parser.Test
         }
 
         [ Test ]
-        [ Row( "LOW" ) ]
-        [ Row( "NORMAL" ) ]
-        [ Row( "HIGH" ) ]
-        [ Row( "-10" ) ]
-        [ Row( "10" ) ]
-        [ Row( "@Priority" ) ]
-        public void Test_Set_Deadlock_Priority_With_Variable(string option)
+        [ TestCase( "LOW" ) ]
+        [ TestCase( "NORMAL" ) ]
+        [ TestCase( "HIGH" ) ]
+        [ TestCase( "-10" ) ]
+        [ TestCase( "10" ) ]
+        [ TestCase( "@Priority" ) ]
+        public void Set_Deadlock_Priority_With_Variable(string option)
         {
             // Setup
             var sql = String.Format("SET DEADLOCK_PRIORITY {0}", option);

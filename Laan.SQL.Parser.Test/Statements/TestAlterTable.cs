@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 
 using Laan.Sql.Parser.Entities;
 
@@ -14,7 +14,7 @@ namespace Laan.Sql.Parser.Test
     public class TestAlterTable
     {
         [Test]
-        public void Test_Add_Clustered_Primary_Key()
+        public void Add_Clustered_Primary_Key()
         {
             // Exercise
             var statement = ParserFactory.Execute<AlterTableStatement>( @"
@@ -30,7 +30,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Add_Clustered_Primary_Key_With_No_Check()
+        public void Add_Clustered_Primary_Key_With_No_Check()
         {
             // Exercise
             var statement = ParserFactory.Execute<AlterTableStatement>( @"
@@ -46,7 +46,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Add_Clustered_Primary_Key_With_Multiple_Columns()
+        public void Add_Clustered_Primary_Key_With_Multiple_Columns()
         {
             // Exercise
             var statement = ParserFactory.Execute<AlterTableStatement>( @"
@@ -68,7 +68,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Add_Foreign_Key()
+        public void Add_Foreign_Key()
         {
             // Exercise
             var statement = ParserFactory.Execute<AlterTableStatement>( @"
@@ -84,7 +84,7 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Test_Add_Unique_Non_Clustered_Index()
+        public void Add_Unique_Non_Clustered_Index()
         {
             // Exercise
             var statement = ParserFactory.Execute<AlterTableStatement>( @"

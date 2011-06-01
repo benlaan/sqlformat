@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 using Laan.Sql.Parser;
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Exceptions;
 
-namespace Laan.SqlParser.Test
+namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
     public class TestDeleteStatementParser
     {
         [Test]
-        public void Test_Basic_Delete_Statement()
+        public void Basic_Delete_Statement()
         {
             // Exercise
             DeleteStatement statement = ParserFactory.Execute<DeleteStatement>( "delete from dbo.table" ).First();
@@ -27,7 +27,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Delete_Statement_With_Where_Clause()
+        public void Delete_Statement_With_Where_Clause()
         {
             // Exercise
             DeleteStatement statement = ParserFactory.Execute<DeleteStatement>( "delete from dbo.table where field <> 2" ).First();
@@ -46,7 +46,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Delete_Statement_With_From_And_Where_Clause()
+        public void Delete_Statement_With_From_And_Where_Clause()
         {
             // Exercise
             DeleteStatement statement = ParserFactory.Execute<DeleteStatement>( 
@@ -72,7 +72,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Delete_Statement_With_From_Join_And_Where_Clauses()
+        public void Delete_Statement_With_From_Join_And_Where_Clauses()
         {
             // Exercise
             DeleteStatement statement = ParserFactory.Execute<DeleteStatement>(
@@ -103,7 +103,7 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        public void Test_Delete_Statement_With_Top_N_Clause()
+        public void Delete_Statement_With_Top_N_Clause()
         {
             // Exercise
             DeleteStatement statement = ParserFactory.Execute<DeleteStatement>(
@@ -123,8 +123,8 @@ namespace Laan.SqlParser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( SyntaxException ), "expected alpha, numeric, or variable, found )" )]
-        public void Test_Delete_Statement_With_Top_N_Clause_With_Missing_Value()
+        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "expected alpha, numeric, or variable, found )" )]
+        public void Delete_Statement_With_Top_N_Clause_With_Missing_Value()
         {
             // Exercise
             DeleteStatement statement = ParserFactory.Execute<DeleteStatement>(

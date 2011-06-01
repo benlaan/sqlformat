@@ -1,6 +1,6 @@
 using System;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Laan.Sql.Formatter.Test
 {

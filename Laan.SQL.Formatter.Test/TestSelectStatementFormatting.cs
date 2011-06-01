@@ -1,6 +1,6 @@
 ﻿using System;
 
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Laan.Sql.Formatter.Test
 {
@@ -634,34 +634,6 @@ namespace Laan.Sql.Formatter.Test
         }
 
         [Test]
-        public void Can_Format_Select_With_Multiple_Froms_With_Joins()
-        {
-            // Setup
-            var sut = new FormattingEngine();
-
-            // Exercise
-            var actual = sut.Execute( "select id from table1 t1 join other1 o1 on t1.id = o1.id, table2 t2 join other2 o2 on t2.id = o2.id" );
-
-            // Verify outcome
-            var expected = new[]
-            {
-               @"SELECT id",
-                "",
-                "FROM table1 t1",
-                "",
-                "    JOIN other1 o1",
-                "      ON t1.id = o1.id,",
-                "",
-                "table2 t2",
-                "",
-                "    JOIN other2 o2",
-                "      ON t2.id = o2.id",
-            };
-
-            Compare( actual, expected );
-        }
-
-        [Test]
         public void Can_Format_Select_With_Simple_Sub_Select()
         {
             // Setup
@@ -682,5 +654,59 @@ namespace Laan.Sql.Formatter.Test
 
             Compare( actual, expected );
         }
-    }
+
+        [Test]
+        public void Can_Format_Simple_Select_Statement_With_Multiple_From_Tables()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( "SELECT Field1, Field2 FROM dbo.Table T1, dbo.Table T2, dbo.Table T3" );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT",
+                "    Field1,",
+                "    Field2",
+                "",
+               "FROM dbo.Table T1,",
+                "",
+               "     dbo.Table T2,",
+                "",
+               "     dbo.Table T3",
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
+        public void Can_Format_Select_With_Multiple_Froms_With_Joins()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( "select id from table1 t1 join other1 o1 on t1.id = o1.id, table2 t2 join other2 o2 on t2.id = o2.id" );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT id",
+                "",
+                "FROM table1 t1",
+                "",
+                "    JOIN other1 o1",
+                "      ON t1.id = o1.id,",
+                "",
+                "     table2 t2",
+                "",
+                "    JOIN other2 o2",
+                "      ON t2.id = o2.id",
+            };
+
+            Compare( actual, expected );
+        }
+   }
 }
