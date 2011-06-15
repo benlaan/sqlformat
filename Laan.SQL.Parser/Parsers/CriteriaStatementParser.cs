@@ -14,7 +14,7 @@ namespace Laan.Sql.Parser.Parsers
         protected string[] FieldTerminatorSet = { Constants.From, Constants.Comma, Constants.Having, Constants.Go, Constants.SemiColon, Constants.End, Constants.Into };
         protected string[] FromTerminatorSet = { Constants.Inner, Constants.Join, Constants.Left, Constants.Right, Constants.Full, Constants.Comma, Constants.CloseBracket, Constants.Order, Constants.Group, Constants.Where };
 
-        public CriteriaStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
+        protected CriteriaStatementParser( ITokenizer tokenizer ) : base( tokenizer ) { }
 
         protected enum FieldType
         {
@@ -198,7 +198,7 @@ namespace Laan.Sql.Parser.Parsers
                     alias.Type = AliasType.As;
                     Tokenizer.ReadNextToken();
                 }
-                if ( alias.Type != AliasType.Implicit || !Tokenizer.IsNextToken( FromTerminatorSet ) )
+                if ( !Tokenizer.IsNextToken( Constants.OpenBracket) && ( alias.Type != AliasType.Implicit || !Tokenizer.IsNextToken( FromTerminatorSet ) ))
                 {
                     if ( Tokenizer.HasMoreTokens )
                     {
@@ -213,14 +213,17 @@ namespace Laan.Sql.Parser.Parsers
                         ReadNextToken();
                     }
                 }
+                ProcessTableHints( table );
                 ProcessJoins(table);
             }
-            while ( Tokenizer.TokenEquals( Constants.Comma ) );
+            while ( Tokenizer.HasMoreTokens && Tokenizer.TokenEquals( Constants.Comma ) );
 
         }
 
         private void ProcessJoins(Table table)
         {
+            if ( !Tokenizer.HasMoreTokens )
+                return;
             do
             {
                 JoinType? joinType = GetJoinType();
@@ -257,6 +260,7 @@ namespace Laan.Sql.Parser.Parsers
                     alias.Name = GetIdentifier();
                     join.Alias = alias;
                 }
+                ProcessTableHints(join);
                 ExpectToken( Constants.On );
                 Expression expr = ProcessExpression();
 

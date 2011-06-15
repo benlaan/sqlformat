@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Formatter.Test", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Formatter", "Laan.SQL.Formatter\Laan.SQL.Formatter.csproj", "{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}"
 EndProject
-Project("{00000000-0000-0000-0000-000000000000}") = "Laan.SQL.Formatter.Web", "Laan.SQL.Formatter.WebForm\Laan.SQL.Formatter.Web.csproj", "{21C94801-B58A-49F3-8DA2-7A64B48632E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Formatter.Web", "Laan.SQL.Formatter.WebForm\Laan.SQL.Formatter.Web.csproj", "{21C94801-B58A-49F3-8DA2-7A64B48632E0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.NHibernate.Appender", "Laan.NHibernate.Appender\Laan.NHibernate.Appender.csproj", "{1532F037-944F-4969-81BA-5A7C34E1D299}"
 EndProject
@@ -60,7 +60,6 @@ Global
 		{BEE4EB3F-2BB1-4EA7-A89E-AE54C3C76C72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEE4EB3F-2BB1-4EA7-A89E-AE54C3C76C72}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6A6A860C-2471-4AD8-9D60-9915E33762CB}.Debug|Any CPU.ActiveCfg = Debug
-		{6A6A860C-2471-4AD8-9D60-9915E33762CB}.Debug|Any CPU.Build.0 = Debug
 		{6A6A860C-2471-4AD8-9D60-9915E33762CB}.Release|Any CPU.ActiveCfg = Release
 		{6A6A860C-2471-4AD8-9D60-9915E33762CB}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection

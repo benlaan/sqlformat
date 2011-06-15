@@ -1,5 +1,6 @@
-﻿using MbUnit.Framework;
-using Laan.Sql.Parser.Entities;
+﻿using Laan.Sql.Parser.Entities;
+
+using NUnit.Framework;
 
 namespace Laan.SQLParser.Test.Entities
 {

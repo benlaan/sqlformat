@@ -17,6 +17,7 @@ namespace Laan.Sql.Parser.Parsers
 
             _statement.TableName = GetTableName();
 
+            ProcessTableHints( _statement );
             Tokenizer.ExpectToken( Constants.Set );
 
             ProcessFields( FieldType.Update, _statement.Fields );

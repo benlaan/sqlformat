@@ -71,6 +71,26 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
+        public void Declare_Statement_With_One_Variable_With_National_Character_Set()
+        {
+            // Setup
+            var sql = "DECLARE @Variable NVARCHAR(MAX) = 'blah'";
+
+            // Exercise
+            var statement = ParserFactory.Execute<DeclareStatement>( sql ).First();
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 1, statement.Definitions.Count );
+
+            VariableDefinition definition = statement.Definitions.First();
+            Assert.AreEqual( "@Variable", definition.Name );
+            //Assert.AreEqual( "INT", definition.Type );
+            //Assert.AreEqual( typeof( OperatorExpression ), definition.DefaultValue.GetType() );
+            //Assert.AreEqual( "*", ( (OperatorExpression) definition.DefaultValue ).Operator );
+        }
+
+        [Test]
         public void Declare_Statement_With_Multiple_Variables()
         {
             // Setup

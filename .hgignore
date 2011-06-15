@@ -1,0 +1,9 @@
+syntax: glob
+_ReSharper.Laan.*
+Laan.AddIns.Ssms.Setup/Debug/
+*.suo
+*.user
+*.docstates
+syntax: regexp
+[Bb]in
+[Oo]bj

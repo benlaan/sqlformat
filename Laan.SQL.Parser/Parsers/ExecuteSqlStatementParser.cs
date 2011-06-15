@@ -1,13 +1,9 @@
-using System;
 using System.Linq;
 using System.Collections.Generic;
-
-using Laan.Sql.Parser;
 using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Parsers;
-using Laan.NHibernate.Appender;
 
-namespace Laan.SQL.Parser
+namespace Laan.Sql.Parser
 {
     public class ExecuteSqlStatementParser : StatementParser<ExecuteSqlStatement>
     {
@@ -19,7 +15,7 @@ namespace Laan.SQL.Parser
 
         public override ExecuteSqlStatement Execute()
         {
-            ExecuteSqlStatement statement = new ExecuteSqlStatement();
+            var statement = new ExecuteSqlStatement();
             string name = GetDotNotationIdentifier();
             statement.FunctionName = name;
             switch (name)
@@ -27,13 +23,13 @@ namespace Laan.SQL.Parser
                 case "sp_executesql":
                     if (Tokenizer.IsNextToken("N"))
                     {
-                        List<string> parts = new List<string>();
+                        var parts = new List<string>();
                         ReadNextToken();
                         do
                         {
                             string body = "";
                             bool withinQuotes = false;
-                            bool canContinue = false;
+                            bool canContinue;
                             do
                             {
                                 withinQuotes ^= Tokenizer.Current.Type == TokenType.SingleQuote;
@@ -59,8 +55,8 @@ namespace Laan.SQL.Parser
                         {
                             var assignment = arg.Split('=');
                             statement.Arguments.Add(
-                                new Argument() 
-                                { 
+                                new Argument
+                                    { 
                                     Name = assignment[0],
                                     Value = assignment[1],
                                     Type = args[index++].Split(' ').Last()

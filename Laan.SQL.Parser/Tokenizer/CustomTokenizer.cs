@@ -1,4 +1,6 @@
+using System;
 using Laan.Sql.Parser.Exceptions;
+using System.Linq;
 
 namespace Laan.Sql.Parser
 {
@@ -19,21 +21,16 @@ namespace Laan.Sql.Parser
 
             return false;
         }
-        
-        /// <summary>
-        /// Utility (psuedo-function) to check that the current token equals the input parameter
-        /// if so, the current token is advanced
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+
         public bool TokenEquals( string value )
         {
             bool areEqual = Current == value;
             if ( areEqual )
                 ReadNextToken();
 
-            return areEqual;
+            return areEqual;            
         }
+
 
         public virtual void ReadNextToken()
         {
@@ -58,6 +55,11 @@ namespace Laan.Sql.Parser
                 ReadNextToken();
         }
 
+        /// <summary>
+        /// Verify current tokens match expected tokens. Read next token if successful.
+        /// </summary>
+        /// <param name="tokens">Expected tokens</param>
+        /// <exception cref="ExpectedTokenNotFoundException">current token did not match</exception>
         public void ExpectTokens( string[] tokens )
         {
             foreach ( string token in tokens )

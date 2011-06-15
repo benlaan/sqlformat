@@ -1,4 +1,4 @@
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Laan.Sql.Formatter.Test
 {
@@ -64,7 +64,9 @@ WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGN
             Compare( actual, expected );
 
         }
+
         [Test]
+        [Ignore("CreateStatementFormatter not implemented yet")]
         public void Can_Format_Simple_Create_Statement()
         {
             // Setup

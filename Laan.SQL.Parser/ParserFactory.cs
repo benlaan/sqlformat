@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Laan.Sql.Parser;
 using Laan.Sql.Parser.Parsers;
 using Laan.Sql.Parser.Exceptions;
 

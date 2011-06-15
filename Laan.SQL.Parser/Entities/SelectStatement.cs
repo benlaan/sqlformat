@@ -15,11 +15,6 @@ namespace Laan.Sql.Parser.Entities
         Except
     }
 
-    public class SetOperation
-    {
-        public SelectStatement Statement { get; set; }
-        public SetType Type { get; set; }
-    }
 
     public class SelectStatement : ProjectionStatement
     {

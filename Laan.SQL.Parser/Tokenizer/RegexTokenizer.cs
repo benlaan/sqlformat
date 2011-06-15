@@ -49,17 +49,17 @@ namespace Laan.Sql.Parser
     public abstract class RegexTokenizer : CustomTokenizer, IDisposable
     {
         private TokenType _currentQuoteType = TokenType.None;
-        private TextReader _reader;
+        private readonly TextReader _reader;
         private Token _current;
 
-        public RegexTokenizer(string input)
+        protected RegexTokenizer( string input )
         {
             TokenDefinitions = new List<TokenDefinition>();
             Position = new Position(this);
             _reader = new StringReader(input);
         }
 
-        private int ReadChar()
+        private void ReadChar()
         {
             int read = _reader.Read();
             if (read == '\n')
@@ -67,13 +67,14 @@ namespace Laan.Sql.Parser
             else
                 Position.Column++;
 
-            return read;
+            return;
         }
 
         /// <summary>
         /// Returns the number of matches that the current token could be
         /// </summary>
         /// <param name="token"></param>
+        /// <param name="definition"></param>
         /// <returns></returns>
         private int MatchCount(string token, out TokenDefinition definition)
         {
@@ -98,7 +99,7 @@ namespace Laan.Sql.Parser
             TokenDefinition definition;
             TokenDefinition last;
 
-            int next = -1;
+            int next;
             while ((next = _reader.Peek()) != -1)
             {
                 int matchCount = MatchCount(current.ToString() + (char)next, out definition);

@@ -45,11 +45,15 @@
   <ItemGroup>
     <Compile Include="Utilities\BracketStructure.cs" />
     <Compile Include="Entities\ExecuteSqlStatement.cs" />
+    <Compile Include="Entities\InsertDeleteStatementBase.cs" />
+    <Compile Include="Entities\ITableHints.cs" />
     <Compile Include="Entities\SetDateFirstStatement.cs" />
     <Compile Include="Entities\SetDeadlockPriorityStatement.cs" />
+    <Compile Include="Entities\SetOperation.cs" />
     <Compile Include="Entities\SetOptionStatement.cs" />
     <Compile Include="Entities\SetStatement.cs" />
     <Compile Include="Entities\SetVariableStatement.cs" />
+    <Compile Include="Entities\TableHint.cs" />
     <Compile Include="Expressions\CastExpression.cs" />
     <Compile Include="Utilities\ParameterSubstituter.cs" />
     <Compile Include="Parsers\ExecuteSqlStatementParser.cs" />
@@ -132,6 +136,7 @@
     <Compile Include="Tokenizer\Token.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="key.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

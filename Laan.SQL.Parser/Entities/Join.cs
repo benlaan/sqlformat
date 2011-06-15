@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 using System.ComponentModel;
-
+using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Parser.Entities
@@ -36,7 +36,7 @@ namespace Laan.Sql.Parser.Entities
         CrossJoin
     }
 
-    public class Join : AliasedEntity
+    public class Join : AliasedEntity, ITableHints
     {
         public Join()
         {
@@ -54,6 +54,7 @@ namespace Laan.Sql.Parser.Entities
                 { JoinType.FullOuterJoin, "FULL OUTER JOIN" },
                 { JoinType.CrossJoin, "CROSS JOIN" }
             };
+            TableHints = new List<TableHint>();
         }
 
         protected Dictionary<JoinType, string> _joinMap;
@@ -69,6 +70,7 @@ namespace Laan.Sql.Parser.Entities
         }
 
         public int Length { get { return _joinMap[ Type ].Length; } }
+        public List<TableHint> TableHints { get; set; }
     }
 
     public class DerivedJoin : Join

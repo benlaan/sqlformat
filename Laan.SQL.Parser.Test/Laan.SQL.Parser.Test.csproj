@@ -54,10 +54,9 @@
   <ItemGroup>
     <Compile Include="Entities\TestAlias.cs" />
     <Compile Include="Entities\TestStatement.cs" />
-    <Compile Include="Exceptions\CustomExceptionContract.cs" />
-    <Compile Include="Exceptions\TestExceptions.cs" />
     <Compile Include="Statements\TestBeginBlockStatementParser.cs" />
     <Compile Include="Statements\TestSetStatements.cs" />
+    <Compile Include="Statements\TestTableHints.cs" />
     <Compile Include="TestCastFunction.cs" />
     <Compile Include="Statements\TestExecuteSqlString.cs" />
     <Compile Include="Statements\TestIfStatements.cs" />

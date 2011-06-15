@@ -1,5 +1,6 @@
-using MbUnit.Framework;
 using Laan.Sql.Parser.Entities;
+
+using NUnit.Framework;
 
 namespace Laan.SQLParser.Test.Entities
 {
@@ -8,7 +9,7 @@ namespace Laan.SQLParser.Test.Entities
     {
 
         [Test]
-        [Row("test name")]
+        [TestCase("test name")]
         public void Implicit_Value( string name )
         {
             // Arrange
@@ -24,7 +25,7 @@ namespace Laan.SQLParser.Test.Entities
         }
 
         [Test]
-        [Row("test name")]
+        [TestCase("test name")]
         public void Equals_Value( string name )
         {
             // Arrange
@@ -40,7 +41,7 @@ namespace Laan.SQLParser.Test.Entities
         }
 
         [Test]
-        [Row("test name")]
+        [TestCase("test name")]
         public void As_Value( string name )
         {
             // Arrange

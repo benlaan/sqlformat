@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-
+using Laan.Sql.Parser.Exceptions;
 using NUnit.Framework;
 
 using Laan.Sql.Parser.Entities;
@@ -128,8 +128,8 @@ namespace Laan.Sql.Parser.Test
         const string IgnoreDupKeySql = "CREATE UNIQUE NONCLUSTERED INDEX [IX_Sites_Code] ON dbo.Sites (Code) WITH (IGNORE_DUP_KEY = {0} )";
 
         [Test]
-        [Row(Constants.On)]
-        [Row(Constants.Off)]
+        [TestCase(Constants.On)]
+        [TestCase(Constants.Off)]
         public void Test_Can_Read_Index_With_IgnoreDupKey(string value)
         {
             string sql = string.Format( IgnoreDupKeySql, value );
@@ -147,8 +147,8 @@ namespace Laan.Sql.Parser.Test
         const string IgnoreDupKeyAndMoreSql = "CREATE UNIQUE NONCLUSTERED INDEX [IX_Sites_Code] ON dbo.Sites (Code) WITH (IGNORE_DUP_KEY = {0}, SORT_IN_TEMPDB = {0} )";
 
         [Test]
-        [Row( Constants.On )]
-        [Row( Constants.Off )]
+        [TestCase(Constants.On)]
+        [TestCase(Constants.Off)]
         public void Test_Can_Read_Index_With_Multiple( string value )
         {
             string sql = string.Format( IgnoreDupKeyAndMoreSql, value );

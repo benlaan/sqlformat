@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using NUnit.Framework;
 
 using Laan.Sql.Parser;
@@ -53,6 +50,7 @@ namespace Laan.Sql.Parser.Test
             Assert.AreEqual( "field1", statement.Columns[ 0 ] );
             Assert.AreEqual( "field2", statement.Columns[ 1 ] );
         }
+
 
         [Test]
         public void Insert_Statement_With_Select_Statement()

@@ -196,7 +196,40 @@ namespace Laan.Sql.Parser.Test
         SET TRANSACTION ISOLATION LEVEL { READ UNCOMMITTED | READ COMMITTED | REPEATABLE READ | SNAPSHOT | SERIALIZABLE }
         SET LOCK_TIMEOUT timeout_period
         SET TEXTSIZE { number } 
-        */ 
-         
+        */
+
+        [Test]
+        [ExpectedException(typeof(SyntaxException))]
+        public void Set_Boolean_Option_With_Invalid_Value()
+        {
+            // Setup
+            var sql = "SET XACT_ABORT BLAH";
+
+            // Exercise
+            ParserFactory.Execute<SetOptionStatement>( sql );
+        }
+
+        [Test]
+        [ExpectedException(typeof(SyntaxException))]
+        public void Set_Statistics_With_Invalid_Value()
+        {
+            // Setup
+            var sql = "SET STATISTICS BLAH OFF";
+
+            // Exercise
+            ParserFactory.Execute<SetOptionStatement>( sql );
+        }
+
+        [Test]
+        [ExpectedException( typeof( ParserNotImplementedException ) )]
+        public void Set_Unknown_Option()
+        {
+            // Setup
+            var sql = "SET BLAH OFF";
+
+            // Exercise
+            ParserFactory.Execute<SetOptionStatement>( sql );
+        }
     }
+
 }
