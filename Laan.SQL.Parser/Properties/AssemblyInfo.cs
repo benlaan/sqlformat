@@ -1,16 +1,16 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle( "SQL Parser" )]
+[assembly: AssemblyTitle( "Laan SQL Parser" )]
 [assembly: AssemblyDescription( "" )]
 [assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyCompany( "ABB Grain Ltd" )]
+[assembly: AssemblyCompany( "Laan Software" )]
 [assembly: AssemblyProduct( "SQL Parser" )]
-[assembly: AssemblyCopyright( "Copyright © ABB Grain Ltd 2008" )]
+[assembly: AssemblyCopyright( "Copyright © Laan Software 2009" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 

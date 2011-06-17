@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle( "Laan.Sql.Formatter.Web" )]
 [assembly: AssemblyDescription( "" )]
 [assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyCompany( "ABB Grain Ltd" )]
+[assembly: AssemblyCompany( "Laan Software" )]
 [assembly: AssemblyProduct( "Laan.Sql.Formatter.Web" )]
-[assembly: AssemblyCopyright( "Copyright © ABB Grain Ltd 2009" )]
+[assembly: AssemblyCopyright( "Copyright © Laan Software 2009" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
