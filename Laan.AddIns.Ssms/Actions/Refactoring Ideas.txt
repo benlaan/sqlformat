@@ -46,3 +46,8 @@ convert procedure call to sql
 extract embedded sql (in execute_sql)
 auto-generate join signature
 
+----------------------------
+-- warnings
+----------------------------
+
+DECIMAL without precision 
