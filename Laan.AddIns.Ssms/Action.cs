@@ -1,6 +1,7 @@
 using System;
 using EnvDTE;
 using Laan.AddIns.Ssms.Actions;
+using Microsoft.Win32;
 
 namespace Laan.AddIns.Core
 {
@@ -65,10 +66,59 @@ namespace Laan.AddIns.Core
             }
         }
 
+        // Because SMSS doesn't appear to allow custom properties to be defined, use Registry instead
+        protected T ReadConfigValue<T>( string name, T defaultValue )
+        {
+            using ( var laanSoftwareKey = Registry.CurrentUser.CreateSubKey( "Laan Software" ) )
+            {
+                using ( var smssAddinKey = laanSoftwareKey.CreateSubKey( "SMSS Addin" ) )
+                {
+                    object obj = smssAddinKey.GetValue( name );
+
+                    if ( obj != null && smssAddinKey.GetValueKind( name ) == RegistryValueKind.String && typeof(T) == typeof(string) )
+                        return (T) obj;
+
+                    return defaultValue;
+                }
+            }
+        }        
+        
+        protected bool ReadConfigValue( string name, bool defaultValue )
+        {
+            using ( var laanSoftwareKey = Registry.CurrentUser.CreateSubKey( "Laan Software" ) )
+            {
+                using ( var smssAddinKey = laanSoftwareKey.CreateSubKey( "SMSS Addin" ) )
+                {
+                    object obj = smssAddinKey.GetValue( name );
+
+                    if ( obj != null && smssAddinKey.GetValueKind( name ) == RegistryValueKind.DWord )
+                        return Convert.ToBoolean( obj );
+
+                    return defaultValue;
+                }
+            }
+        }
+
+        protected void WriteConfigValue<T>( string name, T value )
+        {
+            using ( var laanSoftwareKey = Registry.CurrentUser.CreateSubKey( "Laan Software" ) )
+            {
+                using ( var smssAddinKey = laanSoftwareKey.CreateSubKey( "SMSS Addin" ) )
+                {
+                    if (typeof(T) == typeof(string))
+                        smssAddinKey.SetValue(name, value, RegistryValueKind.String);
+                    else if (typeof(T) == typeof(bool))
+                        smssAddinKey.SetValue( name, value, RegistryValueKind.DWord );
+                }
+            }
+            
+        }
+
         protected T ReadProperty<T>( string category, string page, string property, T defaultValue )
         {
             try
             {
+                
                 var prop = AddIn.TextDocument.DTE.get_Properties( category, page );
                 return ( T )prop.Item( property ).Value;
             }

@@ -148,6 +148,8 @@ namespace Laan.AddIns.Core
 
                         //_commands.AddNamedCommand( _addInInstance, "MyCommand", "My Command", "blah", true, 0, ref contextGuids, (int) vsCommandStatus.vsCommandStatusEnabled + (int) vsCommandStatus.vsCommandStatusSupported );
 
+                        
+                        
                         var command = _commands.AddNamedCommand2(
                             _addIn,
                             action.KeyName,
@@ -157,9 +159,9 @@ namespace Laan.AddIns.Core
                             action.ImageIndex,
                             ref contextGUIDS,
                             (int) vsCommandStatus.vsCommandStatusSupported +
-                            (int) vsCommandStatus.vsCommandStatusEnabled//,
-                            //(int) vsCommandStyle.vsCommandStylePictAndText,
-                            //vsCommandControlType.vsCommandControlTypeButton
+                            (int) vsCommandStatus.vsCommandStatusEnabled,
+                            (int) vsCommandStyle.vsCommandStylePictAndText,
+                            vsCommandControlType.vsCommandControlTypeButton
                             );
 
                         if ( command != null )
@@ -442,9 +444,32 @@ namespace Laan.AddIns.Core
         {
             var action = FindAction( commandName );
 
+            string text = action.ButtonText;
+
             if ( action.CanExecute()
                 && neededText == vsCommandStatusTextWanted.vsCommandStatusTextWantedNone )
                 status = vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
+
+            string updatedText = action.ButtonText;
+
+            if ( text == updatedText )
+                return;
+
+            var attr = (MenuAttribute) action.GetType().GetCustomAttributes( typeof (MenuAttribute), false ).FirstOrDefault();
+
+            if ( attr != null )
+            {
+                string commandBarName = attr.CommandBar;
+
+                var commandBar = ( (CommandBars) Application.CommandBars )[ commandBarName ];
+
+                CommandBarControl control = commandBar.Controls[ text ];
+
+                if ( control != null )
+                    control.Caption = updatedText;
+
+
+            }
         }
 
         #endregion

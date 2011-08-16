@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using EnvDTE;
+using Laan.AddIns.Forms;
 using Microsoft.SqlServer.Management.UI.VSIntegration;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Action = Laan.AddIns.Core.Action;
@@ -28,7 +30,16 @@ namespace Laan.AddIns.Actions
             DescriptivePhrase = "Save Results to log file";
             ButtonText = "Save Results to .log";
             ToolTip = "hi there";
+            SaveResultsAsPatternName = Settings.Constants.SaveResultsAsPattern1;
+            SaveResultsAsPatternDefault = Settings.Defaults.SaveResultsAsPattern1;
+            SaveResultsAsCopyToClipboardName = Settings.Constants.SaveResultsCopyToClipboard1;
+            SaveResultsAsCopyToClipboardDefault = Settings.Defaults.SaveResultsCopyToClipboard1;
         }
+
+        protected string SaveResultsAsPatternName { get; set; }
+        protected string SaveResultsAsPatternDefault { get; set; }
+        protected string SaveResultsAsCopyToClipboardName { get; set; }
+        protected bool SaveResultsAsCopyToClipboardDefault { get; set; }
 
         /// <summary>
         /// </summary>
@@ -174,19 +185,34 @@ namespace Laan.AddIns.Actions
 
                                 string sourceFilename = w.Document.FullName;
 
-                                string logFilename =
+                                string pattern =
+                                    ReadConfigValue( SaveResultsAsPatternName, SaveResultsAsPatternDefault );
+
+
+                                string logFilename = string.Format(pattern, 
                                     Path.Combine( Path.GetDirectoryName( sourceFilename ),
-                                                Path.GetFileNameWithoutExtension( sourceFilename ) +
-                                                " - AccTest Rollback" +
-                                                ".log" );
+                                                Path.GetFileNameWithoutExtension( sourceFilename ) 
+                                                )
+                                            );
 
                                 SaveLogFile( textBuffer, logFilename );
+
+                                bool doCopy = ReadConfigValue( SaveResultsAsCopyToClipboardName, SaveResultsAsCopyToClipboardDefault );
+
+                                if ( doCopy )
+                                {
+                                    var filePaths = new StringCollection {logFilename};
+
+                                    Clipboard.SetFileDropList( filePaths );
+
+                                }
                             }
                         }
                     }
                 }
             }
         }
+
 
         protected virtual void SaveLogFile( string textBuffer, string logFilename )
         {
@@ -201,7 +227,29 @@ namespace Laan.AddIns.Actions
 
         public override bool CanExecute()
         {
+            // update button text with filename
+            Window w = GetWindow();
+
+            if ( w != null )
+            {
+                string sourceFilename = w.Document.FullName;
+
+                string pattern = ReadConfigValue( SaveResultsAsPatternName, SaveResultsAsPatternDefault );
+
+                bool copyToClipboard = ReadConfigValue( SaveResultsAsCopyToClipboardName, SaveResultsAsCopyToClipboardDefault );
+
+                ButtonText = string.Format("Save Results to '{0}'{1}", 
+                    string.Format( pattern, Path.GetFileNameWithoutExtension( sourceFilename )),
+                    copyToClipboard ? " and Copy" : string.Empty
+                    );
+            }
+
             return true;
+        }
+
+        private Window GetWindow()
+        {
+            return AddIn.Application.DTE.ActiveDocument.Windows.Item( 1 );
         }
     }
 }
