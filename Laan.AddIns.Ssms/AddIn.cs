@@ -10,7 +10,7 @@ using System.Resources;
 using EnvDTE;
 using EnvDTE80;
 using Extensibility;
-
+using Laan.AddIns.Actions;
 using Microsoft.VisualStudio.CommandBars;
 
 namespace Laan.AddIns.Core
@@ -21,7 +21,7 @@ namespace Laan.AddIns.Core
         private string _uniqueKey;
         private EnvDTE.AddIn _addIn;
         private List<Action> _actions;
-        private DTE _application;
+        public DTE Application { get; private set; }
 
         public AddIn()
         {
@@ -37,10 +37,11 @@ namespace Laan.AddIns.Core
             try
             {
                 var actions = Assembly.GetExecutingAssembly().GetTypes()
-                    .Where( type => !type.IsAbstract && typeof( Action ).IsAssignableFrom( type ) )
-                    .Select( type => (Action) Activator.CreateInstance( type, this ) ).ToList<Action>();
+                    .Where( type => !type.IsAbstract && typeof( Action ).IsAssignableFrom( type ))
+                    .Select( type => (Action) Activator.CreateInstance( type, this ) );
 
                 _actions.AddRange( actions );
+
             }
             catch ( Exception ex )
             {
@@ -51,8 +52,8 @@ namespace Laan.AddIns.Core
         private void Initialise( object instance )
         {
             _addIn = ( EnvDTE.AddIn )instance;
-            _application = ( ( EnvDTE.AddIn )instance ).DTE;
-            _commands = ( Commands2 )_application.Commands;
+            Application = ( ( EnvDTE.AddIn )instance ).DTE;
+            _commands = ( Commands2 )Application.Commands;
         }
 
         private bool CommandIsInstalled( Action action )
@@ -70,9 +71,9 @@ namespace Laan.AddIns.Core
             return found;
         }
 
-        private string GetToolsMenuName()
+        private string GetMenuName( string menuName )
         {
-            string toolsMenuName;
+            string localisedMenuName;
 
             try
             {
@@ -83,25 +84,25 @@ namespace Laan.AddIns.Core
                 string resourceName;
                 var assembly = Assembly.GetExecutingAssembly();
                 var resourceManager = new ResourceManager( assembly.GetName().Name + ".CommandBar", assembly );
-                var cultureInfo = new CultureInfo( _application.LocaleID );
+                var cultureInfo = new CultureInfo( Application.LocaleID );
 
                 if ( cultureInfo.TwoLetterISOLanguageName == "zh" )
                 {
-                    System.Globalization.CultureInfo parentCultureInfo = cultureInfo.Parent;
-                    resourceName = String.Concat( parentCultureInfo.Name, "Tools" );
+                    CultureInfo parentCultureInfo = cultureInfo.Parent;
+                    resourceName = String.Concat( parentCultureInfo.Name, menuName );
                 }
                 else
-                    resourceName = String.Concat( cultureInfo.TwoLetterISOLanguageName, "Tools" );
+                    resourceName = String.Concat( cultureInfo.TwoLetterISOLanguageName, menuName );
 
-                toolsMenuName = resourceManager.GetString( resourceName );
+                localisedMenuName = resourceManager.GetString( resourceName );
             }
             catch
             {
                 //We tried to find a localized version of the word Tools, but one was not found.
                 //  Default to the en-US word, which may work for the current culture.
-                toolsMenuName = "Tools";
+                localisedMenuName = menuName;
             }
-            return toolsMenuName;
+            return localisedMenuName;
         }
 
         private Action FindAction( string commandName )
@@ -109,13 +110,10 @@ namespace Laan.AddIns.Core
             return _actions.Single( c => ( _uniqueKey + "." + c.KeyName ).Equals( commandName, StringComparison.CurrentCultureIgnoreCase ) );
         }
 
-        private void PlaceCommandOnToolsMenu()
+        private void PlaceCommandsOnMenus()
         {
             //Place the command on the tools menu.
             //Find the MenuBar command bar, which is the top-level command bar holding all the main menu items:
-            var menuBarCommandBar = ( (CommandBars) _application.CommandBars )[ "MenuBar" ];
-            var toolsControl = menuBarCommandBar.Controls[ GetToolsMenuName() ];
-            var toolsPopup = (CommandBarPopup) toolsControl;
 
             if ( _actions.Count == 0 )
                 throw new Exception( String.Format( "No actions defined for this AddIn: {0}", GetType().Name ) );
@@ -125,36 +123,62 @@ namespace Laan.AddIns.Core
                 if ( CommandIsInstalled( action ) )
                     continue;
 
-                try
+                var attr = (MenuAttribute) action.GetType().GetCustomAttributes( typeof (MenuAttribute), false ).FirstOrDefault();
+
+                if ( attr != null )
                 {
-                    object[] contextGUIDS = new object[] { };
+                    string commandBarName = attr.CommandBar;
+                    string menuName = attr.Menu;
 
-                    var command = _commands.AddNamedCommand2(
-                        _addIn,
-                        action.KeyName,
-                        action.ButtonText,
-                        action.ToolTip,
-                        true,
-                        action.ImageIndex,
-                        ref contextGUIDS,
-                        (int) vsCommandStatus.vsCommandStatusSupported + (int) vsCommandStatus.vsCommandStatusEnabled,
-                        (int) vsCommandStyle.vsCommandStylePictAndText,
-                        vsCommandControlType.vsCommandControlTypeButton
-                    );
 
-                    if ( command != null && toolsPopup != null )
-                        command.AddControl( toolsPopup.CommandBar, 1 );
+                    var commandBar = ( (CommandBars) Application.CommandBars )[ commandBarName ];
 
-                    command.Bindings = action.KeyboardBinding;
-                }
-                catch ( System.ArgumentException ex )
-                {
-                    Error( String.Format("PlaceCommandOnToolsMenu({0})", action.DisplayName), ex );
+
+                    CommandBarPopup toolsPopup = null;
+
+                    if ( menuName != null )
+                    {
+                        CommandBarControl toolsControl = commandBar.Controls[ GetMenuName( menuName ) ];
+                        toolsPopup = (CommandBarPopup) toolsControl;
+                    }
+
+                    try
+                    {
+                        var contextGUIDS = new object[] {};
+
+                        //_commands.AddNamedCommand( _addInInstance, "MyCommand", "My Command", "blah", true, 0, ref contextGuids, (int) vsCommandStatus.vsCommandStatusEnabled + (int) vsCommandStatus.vsCommandStatusSupported );
+
+                        var command = _commands.AddNamedCommand2(
+                            _addIn,
+                            action.KeyName,
+                            action.ButtonText,
+                            action.ToolTip,
+                            true,
+                            action.ImageIndex,
+                            ref contextGUIDS,
+                            (int) vsCommandStatus.vsCommandStatusSupported +
+                            (int) vsCommandStatus.vsCommandStatusEnabled//,
+                            //(int) vsCommandStyle.vsCommandStylePictAndText,
+                            //vsCommandControlType.vsCommandControlTypeButton
+                            );
+
+                        if ( command != null )
+                        {
+                            command.AddControl( toolsPopup != null ? toolsPopup.CommandBar : commandBar, 1 );
+
+                            if ( action.KeyboardBinding != null )
+                                command.Bindings = action.KeyboardBinding;
+                        }
+                    }
+                    catch ( System.ArgumentException ex )
+                    {
+                        Error( String.Format( "PlaceCommandsOnMenus({0})", action.DisplayName ), ex );
+                    }
                 }
             }
         }
 
-        private void RemoveCommandFromToolsMenu()
+        private void RemoveCommandsFromMenus()
         {
             foreach ( var action in _actions )
             {
@@ -198,7 +222,7 @@ namespace Laan.AddIns.Core
 
         internal string DocumentFullName
         {
-            get { return _application.ActiveDocument != null ? _application.ActiveDocument.FullName : ""; }
+            get { return Application.ActiveDocument != null ? Application.ActiveDocument.FullName : ""; }
         }
 
         internal bool IsCurrentDocumentExtension( string extension )
@@ -211,7 +235,7 @@ namespace Laan.AddIns.Core
 
         internal void SetStatus( string message, params object[] args )
         {
-            _application.StatusBar.Text = String.Format( message, args );
+            Application.StatusBar.Text = String.Format( message, args );
         }
 
         internal void Error( Exception ex )
@@ -226,12 +250,12 @@ namespace Laan.AddIns.Core
 
         internal void OpenUndoContext( string name, bool strict )
         {
-            _application.UndoContext.Open( name, strict );
+            Application.UndoContext.Open( name, strict );
         }
 
         internal void CloseUndoContext()
         {
-            _application.UndoContext.Close();
+            Application.UndoContext.Close();
         }
 
         internal void CancelSelection()
@@ -294,7 +318,7 @@ namespace Laan.AddIns.Core
 
         internal TextDocument TextDocument
         {
-            get { return ( TextDocument )_application.ActiveDocument.Object( "TextDocument" ); }
+            get { return ( TextDocument )Application.ActiveDocument.Object( "TextDocument" ); }
         }
 
         internal string AllText
@@ -362,7 +386,7 @@ namespace Laan.AddIns.Core
             try
             {
                 Initialise( instance );
-                PlaceCommandOnToolsMenu();
+                PlaceCommandsOnMenus();
             }
             catch ( Exception ex )
             {
@@ -374,7 +398,7 @@ namespace Laan.AddIns.Core
         {
             try
             {
-                RemoveCommandFromToolsMenu();
+                RemoveCommandsFromMenus();
             }
             catch ( Exception ex )
             {

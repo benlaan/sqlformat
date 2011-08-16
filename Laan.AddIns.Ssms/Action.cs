@@ -6,14 +6,14 @@ namespace Laan.AddIns.Core
 {
     public abstract class Action
     {
-        protected readonly AddIn _addIn;
+        protected internal AddIn AddIn { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the Action class.
         /// </summary>
         public Action( AddIn addIn )
         {
-            _addIn = addIn;
+            AddIn = addIn;
         }
 
         public object ImageIndex { get; set; }
@@ -56,7 +56,7 @@ namespace Laan.AddIns.Core
         {
             try
             {
-                _addIn.TextDocument.DTE.get_Properties( category, page );
+                AddIn.TextDocument.DTE.get_Properties( category, page );
                 return true;
             }
             catch
@@ -69,12 +69,12 @@ namespace Laan.AddIns.Core
         {
             try
             {
-                var prop = _addIn.TextDocument.DTE.get_Properties( category, page );
+                var prop = AddIn.TextDocument.DTE.get_Properties( category, page );
                 return ( T )prop.Item( property ).Value;
             }
             catch ( Exception ex )
             {
-                _addIn.Error( String.Format("Failed to ReadProperty('{0}', '{1}', '{2}')", category, page, property), ex );
+                AddIn.Error( String.Format("Failed to ReadProperty('{0}', '{1}', '{2}')", category, page, property), ex );
                 return defaultValue;
             }
         }
@@ -83,12 +83,12 @@ namespace Laan.AddIns.Core
         {
             try
             {
-                var prop = _addIn.TextDocument.DTE.get_Properties( category, page );
+                var prop = AddIn.TextDocument.DTE.get_Properties( category, page );
                 prop.Item( property ).Value = value;
             }
             catch ( Exception ex )
             {
-                _addIn.Error( String.Format("Failed to WriteProperty('{0}', '{1}', '{2}', '{3})", category, page, property), ex );
+                AddIn.Error( String.Format("Failed to WriteProperty('{0}', '{1}', '{2}', '{3})", category, page, property), ex );
             }
         }
 

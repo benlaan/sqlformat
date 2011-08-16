@@ -1,11 +1,12 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using Laan.AddIns.Actions;
 using Laan.AddIns.Core;
 
 namespace Laan.AddIns.Ssms.Actions
 {
+    [MenuBarToolsMenu]
     public class SqlTemplating : DropDownList
     {
         private static Dictionary<string, string> _templates;
@@ -128,9 +129,9 @@ namespace Laan.AddIns.Ssms.Actions
         public override bool CanExecute()
         {
             return (
-                _addIn.IsCurrentDocumentExtension( "sql" )
+                AddIn.IsCurrentDocumentExtension( "sql" )
                 && 
-                _addIn.CurrentSelection == ""
+                AddIn.CurrentSelection == ""
             );
         }
 
@@ -138,14 +139,14 @@ namespace Laan.AddIns.Ssms.Actions
         {
             try
             {
-                _addIn.SelectCurrentWord();
+                AddIn.SelectCurrentWord();
                 string padding = new string( ' ', 4 );
                 var raw = _templates[ word ]
                     .Split( '\n' )
                     .Select( line => line.Replace( "\t", padding ) )
                     .ToList();
 
-                string offset = new string( ' ', _addIn.Cursor.Column - 1 );
+                string offset = new string( ' ', AddIn.Cursor.Column - 1 );
 
                 // add lines, indenting as required, except the first
                 var lines = new List<String>();
@@ -157,12 +158,12 @@ namespace Laan.AddIns.Ssms.Actions
                 if ( cursor.Row < lines.Count )
                     lines[ cursor.Row ] = lines[ cursor.Row ].Replace( "|", "" );
 
-                _addIn.InsertText( String.Join( "\n", lines.ToArray() ) );
-                _addIn.Cursor = cursor;
+                AddIn.InsertText( String.Join( "\n", lines.ToArray() ) );
+                AddIn.Cursor = cursor;
             }
             finally
             {
-                _addIn.CancelSelection();
+                AddIn.CancelSelection();
             }
         }
 
@@ -173,7 +174,7 @@ namespace Laan.AddIns.Ssms.Actions
 
         protected override IEnumerable<Item> GetItems()
         {
-            var word = _addIn.CurrentWord;
+            var word = AddIn.CurrentWord;
 
             foreach ( var template in _templates.OrderBy( k => k.Key ) )
             {

@@ -1,10 +1,11 @@
 using System;
-
+using Laan.AddIns.Actions;
 using Laan.AddIns.Core;
 using Laan.Sql.Formatter;
 
 namespace Laan.AddIns.Ssms.Actions
 {
+    [MenuBarToolsMenu]
     public class SqlFormatter : Core.Action
     {
         private FormattingEngine _engine;
@@ -37,19 +38,19 @@ namespace Laan.AddIns.Ssms.Actions
 
         public override bool CanExecute()
         {
-            return ( _addIn.IsCurrentDocumentExtension( "sql" ) );
+            return ( AddIn.IsCurrentDocumentExtension( "sql" ) );
         }
 
         public override void Execute()
         {
-            var textDocument = _addIn.TextDocument;
+            var textDocument = AddIn.TextDocument;
 
             if ( textDocument.Selection.IsEmpty )
                 textDocument.Selection.SelectAll();
 
             try
             {
-                _addIn.InsertText( _engine.Execute( textDocument.Selection.Text ) );
+                AddIn.InsertText( _engine.Execute( textDocument.Selection.Text ) );
             }
             finally
             {

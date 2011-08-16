@@ -6,36 +6,10 @@ using Form = System.Windows.Forms;
 using Laan.AddIns.Core;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Diagnostics;
 
 namespace Laan.AddIns.Ssms.Actions
 {
-    public class Item
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-
-        public string TightDescription
-        {
-            get
-            {
-                return String.Join(
-                    "\n",
-                    Description.Split(
-                        new []{"\n"},
-                        StringSplitOptions.RemoveEmptyEntries
-                    )
-                );
-
-            }
-        }
-        public override string ToString()
-        {
-            return Name;
-        }
-    }
-
-    public abstract class DropDownList : Laan.AddIns.Core.Action
+    public abstract class DropDownList : Core.Action
     {
         private const string EditorWindowClassName = "DockingView";
         private const int LineNumber_Width = 70;
@@ -69,7 +43,7 @@ namespace Laan.AddIns.Ssms.Actions
             _listBox.LostFocus += ListBoxLostFocus;
             _listBox.Hide();
 
-            _window = new Window( (IntPtr) _addIn.TextDocument.DTE.MainWindow.HWnd );
+            _window = new Window( (IntPtr) AddIn.TextDocument.DTE.MainWindow.HWnd );
 
             _fontSize = TextRenderer.MeasureText( "W", _font );
             _fontSize.Width = TextRenderer.MeasureText( "WW", _font ).Width - _fontSize.Width;
@@ -127,7 +101,7 @@ namespace Laan.AddIns.Ssms.Actions
                 if ( e.KeyCode == Form.Keys.Enter )
                 {
                     ExecuteItem( (Item) lb.Items[ lb.SelectedIndex ] );
-                    _addIn.CancelSelection();
+                    AddIn.CancelSelection();
                     Done();
                 }
         }
@@ -179,11 +153,11 @@ namespace Laan.AddIns.Ssms.Actions
         public override bool CanExecute()
         {
             return (
-                _addIn.IsCurrentDocumentExtension( "sql" )
+                AddIn.IsCurrentDocumentExtension( "sql" )
                 &&
-                _addIn.CurrentSelection == ""
+                AddIn.CurrentSelection == ""
                 &&
-                _addIn.CurrentWord != ""
+                AddIn.CurrentWord != ""
             );
         }
 
@@ -203,7 +177,7 @@ namespace Laan.AddIns.Ssms.Actions
 
             var editor = _window.FindByClassName( EditorWindowClassName );
             var point = editor.GetScreenPoint( _window );
-            var cursor = _addIn.VirtualCursor;
+            var cursor = AddIn.VirtualCursor;
 
             int lineNumberWidth = _showLineNumbers ? LineNumber_Width : 25;
             point.X += lineNumberWidth + Border_Width + (int) ( cursor.Column * Math.Ceiling( _fontSize.Width ) );

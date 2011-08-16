@@ -38,6 +38,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.SqlServer.SqlTools.VSIntegration">
+      <HintPath>..\..\..\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\VSShell\Common7\IDE\Microsoft.SqlServer.SqlTools.VSIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -49,6 +55,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\DropDownList.cs" />
+    <Compile Include="Actions\Item.cs" />
+    <Compile Include="Actions\MenuAttribute.cs" />
+    <Compile Include="Actions\SaveResultAsWithCopy.cs" />
+    <Compile Include="Actions\SaveResultsAs.cs" />
     <Compile Include="Window.cs" />
     <Compile Include="AddIn.cs" />
     <Compile Include="AssemblyInfo.cs">
