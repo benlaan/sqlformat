@@ -65,6 +65,7 @@
     <Compile Include="Statements\TestTransactionParsers.cs" />
     <Compile Include="TestBatchStatements.cs" />
     <Compile Include="Statements\TestDeclareStatements.cs" />
+    <Compile Include="TestNHibernateStatements.cs" />
     <Compile Include="TestTokens.cs" />
     <Compile Include="Statements\TestUpdateStatementParser.cs" />
     <Compile Include="TestExpressionParser.cs" />

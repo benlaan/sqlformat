@@ -96,10 +96,33 @@ namespace Laan.Sql.Parser
         /// <returns></returns>
         public static List<IStatement> Execute( string sql )
         {
-            using ( SqlTokenizer sqlTokenizer = new SqlTokenizer( sql ) )
+            sql = TrimBatchMetadata(sql);
+
+            using ( var sqlTokenizer = new SqlTokenizer( sql ) )
             {
                 return Execute( sqlTokenizer, true );
             }
+        }
+
+        // clean NHibernate info from front of SQL statement
+        public static string TrimBatchMetadata(string sql)
+        {
+            const string batchCommands = "Batch commands:\r\n";
+            if (sql.StartsWith(batchCommands))
+            {
+                sql = sql.Remove(0, batchCommands.Length);
+
+                const string command = "command";
+
+                if (sql.StartsWith(command))
+                {
+                    int colonPos = sql.IndexOf(":", StringComparison.Ordinal);
+
+                    if (colonPos > 0)
+                        sql = sql.Remove(0, colonPos + 1);
+                }
+            }
+            return sql;
         }
     }
 }

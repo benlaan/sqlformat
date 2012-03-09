@@ -4,8 +4,6 @@ using System.Linq;
 
 using Laan.Sql.Formatter;
 using Laan.Sql.Parser;
-using System.Text.RegularExpressions;
-using System.Globalization;
 
 namespace Laan.NHibernate.Appender
 {
@@ -29,24 +27,8 @@ namespace Laan.NHibernate.Appender
             // "SELECT * FROM Table WHERE ID=@P1 AND Name=@P2;@P1=20,@P2='Users'"
             try
             {
-                // clean NHibernate rubbish from front of SQL statement
-                const string batchCommands = "Batch commands:\r\n";
-                if (sql.StartsWith(batchCommands))
-                {
-                    sql = sql.Remove(0, batchCommands.Length);
 
-                    const string command = "command";
-
-                    if (sql.StartsWith(command))
-                    {
-                        int colonPos = sql.IndexOf(":", StringComparison.Ordinal);
-
-                        if (colonPos > 0)
-                        {
-                            sql = sql.Remove(0, colonPos+1);
-                        }
-                    }
-                }
+                sql = ParserFactory.TrimBatchMetadata(sql);
 
                 var parameterSubstituter = new ParameterSubstituter();
                 return _engine.Execute(parameterSubstituter.UpdateParamsWithValues(sql));
