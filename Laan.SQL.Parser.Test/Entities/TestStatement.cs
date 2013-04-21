@@ -2,7 +2,7 @@
 
 using NUnit.Framework;
 
-namespace Laan.SQLParser.Test.Entities
+namespace Laan.Sql.Parser.Test.Entities
 {
     [TestFixture]
     public class TestStatement

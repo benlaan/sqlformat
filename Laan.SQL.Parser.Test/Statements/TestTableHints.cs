@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Enumerable = System.Linq.Enumerable;
 using System.Linq;
 
-namespace Laan.SqlParser.Test
+namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
     public class TestTableHints
