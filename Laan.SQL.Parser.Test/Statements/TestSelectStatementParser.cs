@@ -222,6 +222,36 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
+        public void Select_Field_With_Alias_As_String()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>("select field as 'a string' from table").First();
+
+            // Verify outcome
+            Assert.IsNotNull(statement);
+            Assert.AreEqual(1, statement.Fields.Count);
+
+            Assert.AreEqual("field", statement.Fields[0].Expression.Value);
+            Assert.AreEqual("'a string'", statement.Fields[0].Alias.Name);
+            Assert.AreEqual(AliasType.As, statement.Fields[0].Alias.Type);
+        }
+
+        [Test]
+        public void Select_Field_With_Alias_As_Identifier_With_Spaces()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>("select field as [an identifier with spaces] from table").First();
+
+            // Verify outcome
+            Assert.IsNotNull(statement);
+            Assert.AreEqual(1, statement.Fields.Count);
+
+            Assert.AreEqual("field", statement.Fields[0].Expression.Value);
+            Assert.AreEqual("[an identifier with spaces]", statement.Fields[0].Alias.Name);
+            Assert.AreEqual(AliasType.As, statement.Fields[0].Alias.Type);
+        }
+
+        [Test]
         public void Select_Multiple_Fields_With_Table_Alias_Prefix()
         {
             // Exercise

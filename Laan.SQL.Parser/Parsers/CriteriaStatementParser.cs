@@ -49,10 +49,9 @@ namespace Laan.Sql.Parser.Parsers
             else
                 if ( Tokenizer.TokenEquals( Constants.As ) )
                 {
-                    alias.Name = CurrentToken;
+                    alias.Name = GetIdentifier();
                     alias.Type = AliasType.As;
                     expression = token;
-                    ReadNextToken();
                 }
                 else
                 {
