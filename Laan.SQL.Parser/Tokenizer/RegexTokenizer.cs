@@ -28,7 +28,8 @@ namespace Laan.Sql.Parser
         Operator,
         Symbol,
         InLineComment,
-        MultiLineComment
+        MultiLineComment,
+        QuotedText
     }
 
     public class TokenDefinition
@@ -36,6 +37,7 @@ namespace Laan.Sql.Parser
         public Regex Regex;
         public bool Skip;
         public TokenType Type;
+        public bool WithinQuotesOnly;
 
         public TokenDefinition(TokenType type, bool skip, string regex)
         {
@@ -78,7 +80,11 @@ namespace Laan.Sql.Parser
         /// <returns></returns>
         private int MatchCount(string token, out TokenDefinition definition)
         {
-            var matches = TokenDefinitions.Where(
+            var definitions = TokenDefinitions.ToList();
+            if (!IsQuote(_currentQuoteType))
+                definitions.RemoveAll(d => d.WithinQuotesOnly);
+            
+            var matches = definitions.Where(
                 tokenDefinition =>
                     tokenDefinition.Regex.Matches(token).Cast<Match>().Any(match => match.Value == token)
             );

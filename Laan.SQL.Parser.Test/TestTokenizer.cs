@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,8 +40,8 @@ namespace Laan.Sql.Parser.Test
 
         [Test]
         [TestCase( "Hello", new[] { "Hello" } )]
-        [TestCase( "Hello World", new[] { "Hello", "World" } )]
-        public void Tokenize_Alpha_Strings( string input, string[] tokens )
+        [TestCase("Hello World", new[] { "Hello", "World" })]
+        public void Tokenize_Alpha_Strings(string input, string[] tokens)
         {
             Verify( input, tokens );
         }
@@ -86,17 +86,22 @@ namespace Laan.Sql.Parser.Test
         [TestCase( "2 <= 5", new[] { "2", "<=", "5" } )]
         [TestCase( "A != B", new[] { "A", "!=", "B" } )]
         [TestCase( "@Ben_Laan", new[] { "@Ben_Laan" } )]
-        [TestCase( "Database.[Some Owner].Table", new[] { "Database", ".", "[Some Owner]", ".", "Table" } )]
-        [TestCase( "#table ##global", new[] { "#table", "##global" } )]
-        public void Tokenize_Alpha_Numeric_And_Special_Strings( string input, string[] tokens )
+        [TestCase( "Database.[Some Owner].Table", new[] { "Database", ".", "[Some Owner]", ".", "Table" })]
+        [TestCase("Database.[日本].Table", new[] { "Database", ".", "[日本]", ".", "Table" })]
+        [TestCase("#table ##global", new[] { "#table", "##global" })]
+        public void Tokenize_Alpha_Numeric_And_Special_Strings(string input, string[] tokens)
         {
             Verify( input, tokens );
         }
 
         [Test]
-        //[TestCase("CONVERT(INT, '10')", new[] { "CONVERT", "(", "INT", ",", "'", "10", "'", ")" } )]
-        [TestCase("'Hello World'", new[] { "'", "Hello", " ", "World", "'" } )]
-        public void Can_Tokenize_Strings_As_One_Token( string input, string[] tokens )
+        [TestCase("'Hello World'", new[] { "'", "Hello World", "'" })]
+        [TestCase("'A&R'", new[] { "'", "A&R", "'" })]
+        [TestCase("'!@#$%^&*('", new[] { "'", "!@#$%^&*(", "'" })]
+        [TestCase("'☀☂☭'", new[] { "'", "☀☂☭", "'" })]
+        [TestCase("'日本の漢字'", new[] { "'", "日本の漢字", "'" })]
+        [TestCase("'中国字符'", new[] { "'", "中国字符", "'" })]
+        public void Can_Tokenize_Strings_As_One_Token(string input, string[] tokens)
         {
             Verify( input, tokens );
         }

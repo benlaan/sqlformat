@@ -48,6 +48,7 @@ namespace Laan.Sql.Parser
                     new TokenDefinition( TokenType.Operator,         false, @"^([\+\-\*/\^\%]|<?>?|[!<>]?=)$" ),
                     new TokenDefinition( TokenType.InLineComment,    true,  @"^\-\-[^\n\r]*$" ),
                     new TokenDefinition( TokenType.MultiLineComment, true,  @"\/\*(\s|.)*?(\*\/)|\/\*(\s|.)*" ),
+                    new TokenDefinition( TokenType.QuotedText,       false, @"^[^'\""]+$" ) { WithinQuotesOnly = true },
                 }
             );
         }
