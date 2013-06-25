@@ -17,7 +17,8 @@ namespace Laan.Sql.Formatter
 
         public override string Execute()
         {
-            if ( _expression.Operator != Constants.And && _expression.Operator != Constants.Or )
+            if ( !String.Equals(_expression.Operator, Constants.And, StringComparison.InvariantCultureIgnoreCase) && 
+                 !String.Equals(_expression.Operator, Constants.Or, StringComparison.InvariantCultureIgnoreCase) )
                 return
                     String.Format(
                     "{0} {1} {2}",

@@ -18,7 +18,7 @@ namespace Laan.Sql.Parser
         {
             string identifier = GetIdentifier();
             SqlType result;
-            if ( identifier == Constants.As )
+            if ( String.Equals( identifier, Constants.As, StringComparison.InvariantCultureIgnoreCase ) )
             {
                 result = null;
             }
