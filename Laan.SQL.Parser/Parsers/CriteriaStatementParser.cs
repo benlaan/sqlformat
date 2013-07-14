@@ -157,6 +157,16 @@ namespace Laan.Sql.Parser.Parsers
             return joinType;
         }
 
+        private bool IsTerminatingFromExpression()
+        {
+            return Tokenizer.IsNextToken(
+                Constants.SemiColon, Constants.Go, Constants.Select, Constants.Insert,
+                Constants.Update, Constants.Delete, Constants.Create, Constants.Alter,
+                Constants.Union, Constants.Else, Constants.Commit, Constants.Rollback,
+                Constants.End, Constants.Except, Constants.Intersect
+            );
+        }
+
         protected void ProcessFrom()
         {
             if ( !Tokenizer.TokenEquals( Constants.From ) )
@@ -182,13 +192,7 @@ namespace Laan.Sql.Parser.Parsers
 
                 // TODO: This needs to be changed to test Tokenizer.Token.Current.TokenType for TokenType.Keyword
                 // if a new statement is initiated here, do not process the alias
-                if ( Tokenizer.IsNextToken( 
-                        Constants.SemiColon, Constants.Go, Constants.Select, Constants.Insert, 
-                        Constants.Update, Constants.Delete, Constants.Create, Constants.Alter, 
-                        Constants.Union, Constants.Else, Constants.Commit, Constants.Rollback, 
-                        Constants.End, Constants.Except, Constants.Intersect
-                    ) 
-                )
+                if ( IsTerminatingFromExpression() )
                     return;
 
                 Alias alias = new Alias( null );
