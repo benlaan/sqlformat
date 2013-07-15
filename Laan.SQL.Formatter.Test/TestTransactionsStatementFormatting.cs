@@ -18,17 +18,17 @@ namespace Laan.Sql.Formatter.Test
 
             // Verify outcome
             var expected = new[]
-		            {
-		               @"BEGIN TRAN",
-		                "",
-		                "    SELECT TOP 20",
-		                "        Field1,",
-		                "        Field2",
-		                "",
-		                "    FROM dbo.Table T",
-		                "",
-		                "ROLLBACK"
-		            };
+                    {
+                       @"BEGIN TRAN",
+                        "",
+                        "    SELECT TOP 20",
+                        "        Field1,",
+                        "        Field2",
+                        "",
+                        "    FROM dbo.Table T",
+                        "",
+                        "ROLLBACK"
+                    };
 
             Compare( actual, expected );
         }

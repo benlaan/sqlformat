@@ -8,18 +8,6 @@ namespace Laan.Sql.Formatter.Test
     public class TestUpdateStatementFormatting : BaseFormattingTest
     {
         [Test]
-        public void Can_Create_Formatting_Engine()
-        {
-            // Setup
-            var sut = new FormattingEngine();
-
-            // Exercise
-
-            // Verify outcome
-            Assert.IsNotNull( sut );
-        }
-
-        [Test]
         public void Can_Format_Simple_Update_Statement()
         {
             // Setup
