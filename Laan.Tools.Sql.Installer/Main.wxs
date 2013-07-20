@@ -29,7 +29,10 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
         <Directory Id="LaanSoftware" Name="Laan Software">
-          <Directory Id="INSTALLLOCATION" Name="Laan SQL Add-In for SSMS"/>
+          <Directory Id="INSTALLLOCATION" Name="Laan SQL Add-In for SSMS">
+            <Directory Id="Templates" Name="Templates">
+            </Directory>
+          </Directory>
         </Directory>
       </Directory>
     </Directory>
@@ -43,6 +46,9 @@
       </Component>
       <Component Id="Parser" Guid="{D668D5B7-0EC5-40A1-8148-6DBCA6E6FFA6}">
         <File Id="Laan.SQL.Parser.dll" Source="$(var.SolutionDir)Laan.AddIns.Ssms\bin\Laan.SQL.Parser.dll" DiskId="1"/>
+      </Component>
+    <Component Id="Templates" Guid="{37D0B076-7A4A-4C1F-B625-ACAB4112FEE2}">
+        <File Id="default.xml" Source="$(var.SolutionDir)Laan.AddIns.Ssms\bin\Templates\default.xml" DiskId="1"/>
       </Component>
     </DirectoryRef>
 
@@ -105,6 +111,7 @@
       <ComponentRef Id="Formatter"/>
       <ComponentRef Id="Parser"/>
       <ComponentRef Id="RegistryEntries"/>
+      <ComponentRef Id="Templates"/>
     </Feature>
 
   </Product>

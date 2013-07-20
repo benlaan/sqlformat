@@ -242,12 +242,14 @@ namespace Laan.AddIns.Core
 
         internal void Error( Exception ex )
         {
-            Debug.WriteLine( ex );
+            System.IO.File.AppendAllText(@"D:\dump.log", ex.ToString() + Environment.NewLine);
+            Debug.WriteLine(ex);
         }
 
         internal void Error( string message, Exception ex )
         {
-            Debug.WriteLine( message + "\n\t" + ex );
+            System.IO.File.AppendAllText(@"D:\dump.log", message + " : " + ex.ToString() + Environment.NewLine);
+            Debug.WriteLine(message + "\n\t" + ex);
         }
 
         internal void OpenUndoContext( string name, bool strict )
