@@ -34,7 +34,7 @@ namespace Laan.Sql.Parser.Expressions
 
         public override bool CanInline
         {
-            get { return Operator != Constants.Or; }
+            get { return !String.Equals( Operator, Constants.Or, StringComparison.InvariantCultureIgnoreCase ); }
         }
 
         #endregion

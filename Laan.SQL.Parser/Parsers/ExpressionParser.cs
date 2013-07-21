@@ -195,7 +195,7 @@ namespace Laan.Sql.Parser.Parsers
                         arguments.Add( ReadExpression( parent ) );
                         if ( Tokenizer.TokenEquals( Constants.As ) )
                         {
-                            if ( functionName != Constants.Cast )
+                            if ( !String.Equals( functionName, Constants.Cast, StringComparison.InvariantCultureIgnoreCase ) )
                                 throw new SyntaxException( "AS is allowed only within a CAST expression" );
 
                             result = new CastExpression( parent, ProcessType() );

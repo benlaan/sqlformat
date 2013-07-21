@@ -174,7 +174,8 @@ namespace Laan.Sql.Formatter
         protected bool IsExpressionOperatorAndOr(Expression expression)
         {
             CriteriaExpression where = expression as CriteriaExpression;
-            return where == null || (where.Operator != Constants.And && where.Operator != Constants.Or);
+            return where == null || (!String.Equals( where.Operator, Constants.And, StringComparison.InvariantCultureIgnoreCase ) && 
+                                     !String.Equals( where.Operator, Constants.Or, StringComparison.InvariantCultureIgnoreCase ) );
         }
 
         public string Indent
