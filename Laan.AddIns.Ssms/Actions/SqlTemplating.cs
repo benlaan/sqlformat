@@ -125,11 +125,11 @@ namespace Laan.AddIns.Ssms.Actions
 
         protected override IEnumerable<Item> GetItems()
         {
-            var word = AddIn.CurrentWord;
+            var word = AddIn.CurrentWord.ToLower();
 
             foreach (var template in Templates.OrderBy(k => k.Code))
             {
-                if (template.Code.StartsWith(word))
+                if (template.Code.ToLower().StartsWith(word))
                     yield return new Item() { Code = template.Code, Name = template.Name };
             }
         }
