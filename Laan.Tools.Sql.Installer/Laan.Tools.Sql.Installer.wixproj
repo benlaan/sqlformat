@@ -28,9 +28,6 @@
     <Compile Include="Main.wxs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="combined.reg" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Laan.SQL.Formatter\Laan.SQL.Formatter.csproj">
       <Name>Laan.SQL.Formatter</Name>
       <Project>{5af58723-f939-4955-9b29-2a6a0a4cfba8}</Project>
