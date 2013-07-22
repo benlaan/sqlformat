@@ -323,9 +323,9 @@ PRINT '|'
         </body>
       </template>
   <template>
-    <name>declare guid</name>
-    <code>dg</code>
-    <description>dg</description>
+    <name>declare uniqueidentifier</name>
+    <code>du</code>
+    <description>du</description>
     <body>
       <![CDATA[
 DECLARE @| UNIQUEIDENTIFIER
@@ -403,6 +403,14 @@ DECLARE @| DATE
         </body>
       </template>
       <template>
+        <name>declare xml</name>
+        <code>dx</code>
+        <description>dx</description>
+        <body><![CDATA[
+DECLARE @| XML
+]]></body>
+    </template>
+      <template>
         <name>declare integer with assignment</name>
         <code>die</code>
         <description>die</description>
@@ -433,9 +441,9 @@ DECLARE @| NUMERIC(12,4) =
         </body>
       </template>
       <template>
-        <name>declare guid with assignment</name>
-        <code>dge</code>
-        <description>dge</description>
+        <name>declare uniqueidentifier with assignment</name>
+        <code>due</code>
+        <description>due</description>
         <body>
           <![CDATA[
 DECLARE @| UNIQUEIDENTIFIER = 
@@ -472,6 +480,14 @@ DECLARE @| TIME =
         <description>dde</description>
         <body><![CDATA[
 DECLARE @| DATE = 
+]]></body>
+    </template>
+  <template>
+        <name>declare xml with assignment</name>
+        <code>dxe</code>
+        <description>dxe</description>
+        <body><![CDATA[
+DECLARE @| XML = CONVERT(XML, '')
 ]]></body>
     </template>
     <template>
@@ -530,4 +546,5 @@ BEGIN
 END
 ]]></body>
     </template>
-</templates></templateDocument>
+</templates>
+</templateDocument>

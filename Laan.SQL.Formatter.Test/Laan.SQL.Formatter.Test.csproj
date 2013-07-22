@@ -8,8 +8,8 @@
     <ProjectGuid>{0B133315-395D-46CC-8E50-513AB2E88A9E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laan.SQL.Formatter.Test</RootNamespace>
-    <AssemblyName>Laan.SQL.Formatter.Test</AssemblyName>
+    <RootNamespace>Laan.Sql.Formatter.Test</RootNamespace>
+    <AssemblyName>Laan.Sql.Formatter.Test</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>

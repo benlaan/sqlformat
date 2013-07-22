@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Diagnostics;
 
 namespace Laan.AddIns.Ssms.Actions
 {
@@ -14,12 +15,41 @@ namespace Laan.AddIns.Ssms.Actions
     {
         private static string _templatePath;
 
+        private static string LoadDefaultResourceFile(string resourceName)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
         static TemplateDocument()
         {
-            _templatePath = Path.Combine(
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), 
-                @"Templates\default.xml"
-            );
+            try
+            {
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                path = Path.Combine(path, @"Laan Sql Tools\\Templates");
+                _templatePath = Path.Combine(path, "config.xml");
+
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                if (!File.Exists(_templatePath))
+                {
+                    var xml = LoadDefaultResourceFile(@"Laan.AddIns.Templates.default.xml");
+                    File.WriteAllText(_templatePath, xml);
+                }
+            }
+            catch (Exception ex)
+            {
+                EventLog.WriteEntry("Laan SSMS AddIn", ex.ToString(), EventLogEntryType.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+            }
         }
 
         /// <summary>
@@ -59,6 +89,7 @@ namespace Laan.AddIns.Ssms.Actions
             }
             catch (Exception ex)
             {
+                EventLog.WriteEntry("Laan SSMS AddIn", ex.ToString(), EventLogEntryType.Error);
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
             }
         }

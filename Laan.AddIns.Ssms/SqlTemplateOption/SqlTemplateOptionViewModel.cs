@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 
 using Laan.AddIns.Forms;
+using System.Collections;
 
 namespace Laan.AddIns.Ssms.Actions
 {
@@ -23,12 +24,33 @@ namespace Laan.AddIns.Ssms.Actions
             Templates = new ObservableCollection<Template>(templates);
 
             Save = new DelegateCommand(ExecuteSave, IsDirty);
-            Cancel = new DelegateCommand(ExecuteCancel, IsDirty);
+            Cancel = new DelegateCommand(ExecuteCancel);
             Add = new DelegateCommand(ExecuteAdd);
             Remove = new DelegateCommand(ExecuteRemove, () => SelectedTemplate != null);
 
-            Templates.CollectionChanged += (s, e) => Remove.RaiseCanExecuteChanged();
+            Templates.CollectionChanged += CollectionChanged;
+            AssignPropertyChangedHandler(Templates);
             SelectedTemplate = Templates.FirstOrDefault();
+        }
+
+        private void ItemPropertyChanged(object sender, PropertyChangedEventArgs ev)
+        {
+            MarkAsDirty();
+        }
+
+        private void AssignPropertyChangedHandler(IList newItems)
+        {
+            foreach (var item in newItems.OfType<INotifyPropertyChanged>())
+                item.PropertyChanged += ItemPropertyChanged;
+        }
+
+        private void CollectionChanged(object s, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Remove.RaiseCanExecuteChanged();
+
+            AssignPropertyChangedHandler(e.NewItems);
+            foreach (var item in e.OldItems.OfType<INotifyPropertyChanged>())
+                item.PropertyChanged -= ItemPropertyChanged;
         }
 
         private bool IsDirty()
@@ -38,16 +60,22 @@ namespace Laan.AddIns.Ssms.Actions
 
         private void ExecuteSave()
         {
+            _isDirty = false;
             if (OnSave != null)
                 OnSave(this, EventArgs.Empty);
         }
 
         private void ExecuteCancel()
         {
-            string confirmCancel = "There are unsaved changed - are you sure you wish to cancel?";
+            if (_isDirty)
+            {
+                string confirmCancel = "There are unsaved changes - are you sure you wish to cancel?";
 
-            if (MessageBox.Show(confirmCancel, "Confirm Cancel changes", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
-                return;
+                if (MessageBox.Show(confirmCancel, "Confirm Cancel changes", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                    return;
+
+                _isDirty = false;
+            }
 
             if (OnCancel != null)
                 OnCancel(this, EventArgs.Empty);
@@ -77,7 +105,6 @@ namespace Laan.AddIns.Ssms.Actions
         {
             _isDirty = true;
             Save.RaiseCanExecuteChanged();
-            Cancel.RaiseCanExecuteChanged();
         }
 
         private int Clamp(int item, int minimum, int maximum)
@@ -118,5 +145,10 @@ namespace Laan.AddIns.Ssms.Actions
         public DelegateCommand Cancel { get; set; }
         public DelegateCommand Add { get; set; }
         public DelegateCommand Remove { get; set; }
+
+        public bool CanCancel
+        {
+            get { return !_isDirty; }
+        }
     }
 }

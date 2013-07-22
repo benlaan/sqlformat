@@ -45,16 +45,21 @@
                 </Grid.RowDefinitions>
                 
                 <Label Grid.Row="0" Grid.Column="0" Content="Name" />
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay, NotifyOnSourceUpdated=True}" />
 
                 <Label Grid.Row="1" Grid.Column="0" Content="Code" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Code, Mode=TwoWay}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Code, Mode=TwoWay, NotifyOnSourceUpdated=True}" />
 
                 <Label Grid.Row="2" Grid.Column="0" Content="Description" />
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Description, Mode=TwoWay}" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Description, Mode=TwoWay, NotifyOnSourceUpdated=True}" />
 
                 <Label Grid.Row="3" Grid.Column="0" Content="Template" />
-                <TextBox Grid.Row="3" TextWrapping="WrapWithOverflow" Grid.Column="1" Text="{Binding Body, Mode=TwoWay}" Width="Auto" FontFamily="Consolas" />
+                <TextBox 
+                    Grid.Row="3" Grid.Column="1" 
+                    AcceptsReturn="True" AcceptsTab="False"
+                    TextWrapping="WrapWithOverflow" 
+                    Text="{Binding Body, Mode=TwoWay, NotifyOnSourceUpdated=True}" 
+                    Width="Auto" FontFamily="Consolas" />
 
             </Grid>
         </DataTemplate>

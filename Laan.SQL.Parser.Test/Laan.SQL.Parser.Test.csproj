@@ -8,8 +8,8 @@
     <ProjectGuid>{1D0DE8C1-0D05-433B-93E7-AAB7A34A93BC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laan.SQLParser.Test</RootNamespace>
-    <AssemblyName>Laan.SQLParser.Test</AssemblyName>
+    <RootNamespace>Laan.Sql.Parser.Test</RootNamespace>
+    <AssemblyName>Laan.Sql.Parser.Test</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -84,9 +84,9 @@
       <Project>{1532F037-944F-4969-81BA-5A7C34E1D299}</Project>
       <Name>Laan.NHibernate.Appender</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Laan.SQL.Parser\Laan.SQL.Parser.csproj">
+    <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj">
       <Project>{E972B2B2-F549-418E-B830-FB5D97101168}</Project>
-      <Name>Laan.SQL.Parser</Name>
+      <Name>Laan.Sql.Parser</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

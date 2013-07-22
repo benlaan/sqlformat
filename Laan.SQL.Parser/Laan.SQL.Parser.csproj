@@ -8,8 +8,8 @@
     <ProjectGuid>{E972B2B2-F549-418E-B830-FB5D97101168}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laan.SQL.Parser</RootNamespace>
-    <AssemblyName>Laan.SQL.Parser</AssemblyName>
+    <RootNamespace>Laan.Sql.Parser</RootNamespace>
+    <AssemblyName>Laan.Sql.Parser</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>

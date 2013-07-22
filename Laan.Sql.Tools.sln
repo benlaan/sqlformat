@@ -7,25 +7,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{8D8E06DF-2C58-4E98-97BD-5BB8089C51C0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{D3F6DCB4-21B6-4310-A7EA-5B3C6D7AED26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.Sql.Formatter.Test", "Laan.SQL.Formatter.Test\Laan.Sql.Formatter.Test.csproj", "{0B133315-395D-46CC-8E50-513AB2E88A9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Formatter.Test", "Laan.SQL.Formatter.Test\Laan.SQL.Formatter.Test.csproj", "{0B133315-395D-46CC-8E50-513AB2E88A9E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.Sql.Formatter", "Laan.SQL.Formatter\Laan.Sql.Formatter.csproj", "{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Formatter", "Laan.SQL.Formatter\Laan.SQL.Formatter.csproj", "{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Formatter.Web", "Laan.SQL.Formatter.WebForm\Laan.SQL.Formatter.Web.csproj", "{21C94801-B58A-49F3-8DA2-7A64B48632E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.Sql.Formatter.Web", "Laan.SQL.Formatter.WebForm\Laan.Sql.Formatter.Web.csproj", "{21C94801-B58A-49F3-8DA2-7A64B48632E0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.NHibernate.Appender", "Laan.NHibernate.Appender\Laan.NHibernate.Appender.csproj", "{1532F037-944F-4969-81BA-5A7C34E1D299}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Parser", "Laan.SQL.Parser\Laan.SQL.Parser.csproj", "{E972B2B2-F549-418E-B830-FB5D97101168}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.Sql.Parser", "Laan.SQL.Parser\Laan.Sql.Parser.csproj", "{E972B2B2-F549-418E-B830-FB5D97101168}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.SQL.Parser.Test", "Laan.SQL.Parser.Test\Laan.SQL.Parser.Test.csproj", "{1D0DE8C1-0D05-433B-93E7-AAB7A34A93BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.Sql.Parser.Test", "Laan.SQL.Parser.Test\Laan.Sql.Parser.Test.csproj", "{1D0DE8C1-0D05-433B-93E7-AAB7A34A93BC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.AddIns.Ssms", "Laan.AddIns.Ssms\Laan.AddIns.Ssms.csproj", "{BEE4EB3F-2BB1-4EA7-A89E-AE54C3C76C72}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.NHibernate.Appender.Test", "Laan.NHibernate.Appender.Test\Laan.NHibernate.Appender.Test.csproj", "{C307A6B0-E866-4685-9227-3D13A744EFFB}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Laan.Tools.Sql.Installer", "Laan.Tools.Sql.Installer\Laan.Tools.Sql.Installer.wixproj", "{6D9B793E-778B-49DA-BF2B-F90C4590AE10}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Laan.Sql.Tools.Installer", "Laan.Tools.Sql.Installer\Laan.Sql.Tools.Installer.wixproj", "{6D9B793E-778B-49DA-BF2B-F90C4590AE10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -137,11 +135,10 @@ Global
 		{C307A6B0-E866-4685-9227-3D13A744EFFB} = {0BCF224A-F0ED-4D7D-ACE7-398C75888F0F}
 		{5AF58723-F939-4955-9B29-2A6A0A4CFBA8} = {C76E8675-9290-4C7F-A3AC-2C9CA0C6F2E6}
 		{E972B2B2-F549-418E-B830-FB5D97101168} = {C76E8675-9290-4C7F-A3AC-2C9CA0C6F2E6}
-		{D3F6DCB4-21B6-4310-A7EA-5B3C6D7AED26} = {8D8E06DF-2C58-4E98-97BD-5BB8089C51C0}
 		{21C94801-B58A-49F3-8DA2-7A64B48632E0} = {8D8E06DF-2C58-4E98-97BD-5BB8089C51C0}
 		{1532F037-944F-4969-81BA-5A7C34E1D299} = {8D8E06DF-2C58-4E98-97BD-5BB8089C51C0}
 		{BEE4EB3F-2BB1-4EA7-A89E-AE54C3C76C72} = {8D8E06DF-2C58-4E98-97BD-5BB8089C51C0}
-		{6D9B793E-778B-49DA-BF2B-F90C4590AE10} = {D3F6DCB4-21B6-4310-A7EA-5B3C6D7AED26}
+		{6D9B793E-778B-49DA-BF2B-F90C4590AE10} = {8D8E06DF-2C58-4E98-97BD-5BB8089C51C0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = .
