@@ -1,27 +1,33 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 
 using Laan.AddIns.Forms;
-using System.Collections;
 
 namespace Laan.AddIns.Ssms.Actions
 {
     public class SqlTemplateOptionViewModel : INotifyPropertyChanged, IDialog
     {
+        private string _filterText;
         private bool _isDirty;
         private Template _selectedTemplate;
-
+        private readonly List<Template> _originalTemplates;
+                
         /// <summary>
         /// Initializes a new instance of the SqlTemplateOptionViewModel class.
         /// </summary>
         /// <param name="templates"></param>
         public SqlTemplateOptionViewModel(List<Template> templates)
         {
-            Templates = new ObservableCollection<Template>(templates);
+            _filterText = String.Empty;
+            _originalTemplates = templates;
+
+            Templates = new ObservableCollection<Template>(_originalTemplates);
 
             Save = new DelegateCommand(ExecuteSave, IsDirty);
             Cancel = new DelegateCommand(ExecuteCancel);
@@ -40,15 +46,22 @@ namespace Laan.AddIns.Ssms.Actions
 
         private void AssignPropertyChangedHandler(IList newItems)
         {
+            if (newItems == null)
+                return;
+
             foreach (var item in newItems.OfType<INotifyPropertyChanged>())
                 item.PropertyChanged += ItemPropertyChanged;
         }
 
-        private void CollectionChanged(object s, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void CollectionChanged(object s, NotifyCollectionChangedEventArgs e)
         {
             Remove.RaiseCanExecuteChanged();
 
             AssignPropertyChangedHandler(e.NewItems);
+
+            if (e.OldItems == null)
+                return;
+
             foreach (var item in e.OldItems.OfType<INotifyPropertyChanged>())
                 item.PropertyChanged -= ItemPropertyChanged;
         }
@@ -118,6 +131,32 @@ namespace Laan.AddIns.Ssms.Actions
             return item;
         }
 
+        private bool IsTemplatedSelectedByFilter(string filterText, Template template)
+        {
+            return String.IsNullOrEmpty(_filterText)
+                || template.Code.ToLower().Contains(filterText)
+                || template.Name.ToLower().Contains(filterText);
+        }
+
+        private void ReselectPreviousItem(int selectedIndex)
+        {
+            if (!Templates.Any())
+                return;
+
+            int index = Templates.IndexOf(SelectedTemplate);
+            
+            if (index >= 0)
+                SelectedTemplate = Templates[index];
+            else
+                SelectedTemplate = Templates[Clamp(selectedIndex, 0, Templates.Count - 1)];
+        }
+
+        private void NotifyPropertyChanged(string memberName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(memberName));
+        }
+
         public ObservableCollection<Template> Templates { get; set; }
 
         public Template SelectedTemplate
@@ -130,10 +169,35 @@ namespace Laan.AddIns.Ssms.Actions
 
                 _selectedTemplate = value;
 
-                if (PropertyChanged != null)
-                    PropertyChanged(this, new PropertyChangedEventArgs("SelectedTemplate"));
-
+                NotifyPropertyChanged("SelectedTemplate");
                 Remove.RaiseCanExecuteChanged();
+            }
+        }
+
+        public string FilterText
+        {
+            get { return _filterText; }
+            set
+            {
+                if (_filterText == value)
+                    return;
+
+                _filterText = value;
+
+                var selectedIndex = SelectedTemplate != null ? Templates.IndexOf(SelectedTemplate) : 0;
+                var filterText = _filterText.ToLower();
+
+                Templates.Clear();
+                foreach (Template template in _originalTemplates)
+                {
+                    if (IsTemplatedSelectedByFilter(filterText, template))
+                        Templates.Add(template);
+                }
+
+                ReselectPreviousItem(selectedIndex);
+
+                NotifyPropertyChanged("FilterText");
+                NotifyPropertyChanged("Templates");
             }
         }
 

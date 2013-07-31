@@ -42,7 +42,7 @@
         Output SQL
         <pre class="code prettyprint" style="width: 100%">
             <asp:Repeater ID="sqlOutput" runat="server">
-                <ItemTemplate><%# Container.DataItem %></ItemTemplate>
+                <ItemTemplate><br /><%# Container.DataItem %></ItemTemplate>
             </asp:Repeater>     
         </pre>
     </div>

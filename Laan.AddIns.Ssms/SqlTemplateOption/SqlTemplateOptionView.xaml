@@ -4,101 +4,108 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             MinWidth="700" MinHeight="450"
+             MinWidth="700" MinHeight="650"
              FocusManager.FocusedElement="{Binding Templates}"
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
-        
+
         <Style TargetType="TextBox">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="Margin" Value="5" />
             <Setter Property="TextAlignment" Value="Left" />
         </Style>
-        
+
         <Style TargetType="Label">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="HorizontalContentAlignment" Value="Right" />
             <Setter Property="Margin" Value="5" />
         </Style>
-        
+
         <Style TargetType="Button">
             <Setter Property="Margin" Value="5" />
             <Setter Property="Width" Value="75" />
             <Setter Property="Height" Value="25" />
         </Style>
-        
+
         <DataTemplate x:Key="SqlTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                
+
                 <Label Grid.Row="0" Grid.Column="0" Content="Name" />
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay, NotifyOnSourceUpdated=True}" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <Label Grid.Row="1" Grid.Column="0" Content="Code" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Code, Mode=TwoWay, NotifyOnSourceUpdated=True}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Code, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <Label Grid.Row="2" Grid.Column="0" Content="Description" />
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Description, Mode=TwoWay, NotifyOnSourceUpdated=True}" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <Label Grid.Row="3" Grid.Column="0" Content="Template" />
                 <TextBox 
                     Grid.Row="3" Grid.Column="1" 
                     AcceptsReturn="True" AcceptsTab="False"
                     TextWrapping="WrapWithOverflow" 
-                    Text="{Binding Body, Mode=TwoWay, NotifyOnSourceUpdated=True}" 
+                    Text="{Binding Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                     Width="Auto" FontFamily="Consolas" />
 
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition MinWidth="300" Width="300"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        
+
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ListBox Grid.Column="0" x:Name="Templates"
+        <Label Grid.Column="0" ToolTip="Search" Content="Filter" HorizontalAlignment="Left" />
+        <TextBox Grid.Column="1" Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        
+        <ListBox Grid.Column="0" x:Name="Templates" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5"
             ItemsSource="{Binding Templates}" 
-            SelectedItem="{Binding SelectedTemplate, Mode=TwoWay}"
-        >
+            SelectedItem="{Binding SelectedTemplate, Mode=TwoWay}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <GridSplitter MinWidth="5" HorizontalAlignment="Left" Width="5" Grid.Column="1" ResizeDirection="Columns"/>
-        <ContentPresenter Content="{Binding SelectedTemplate}" Grid.Column="2" ContentTemplate="{StaticResource SqlTemplate}"/>
 
-        <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+        <GridSplitter MinWidth="5" HorizontalAlignment="Left" Width="5" Grid.Column="2" Grid.RowSpan="4" ResizeDirection="Columns" />
+
+        <ContentPresenter Content="{Binding SelectedTemplate}" Grid.Column="3" Grid.Row="0" Grid.RowSpan="3" ContentTemplate="{StaticResource SqlTemplate}"/>
+
+        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="40,0" Width="170">
             <Button Content="_Add" Command="{Binding Add}" />
             <Button Content="_Remove" Command="{Binding Remove}" />
         </StackPanel>
-        
-        <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+
+        <StackPanel Grid.Column="3" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Width="170">
             <Button Content="_Save" IsDefault="True" Command="{Binding Save}" />
             <Button Content="_Cancel" IsCancel="True" Command="{Binding Cancel}" />
         </StackPanel>
-
     </Grid>
 </UserControl>
