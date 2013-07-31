@@ -21,15 +21,29 @@ namespace Options
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
+        private SqlTemplateOptionViewModel _viewModel;
+
         public MainWindow()
         {
             InitializeComponent();
             var templates = TemplateDocument.Load();
+
+            _viewModel = new SqlTemplateOptionViewModel(templates);
+            _viewModel.OnSave += viewModel_OnSave;
+            _viewModel.OnCancel += _viewModel_OnCancel;
             
-            var viewModel = new SqlTemplateOptionViewModel(templates);
+            DataContext = _viewModel;
+        }
 
-            this.DataContext = viewModel;
+        private void _viewModel_OnCancel(object sender, EventArgs e)
+        {
+            Close();
+        }
 
+        private void viewModel_OnSave(object sender, EventArgs e)
+        {
+            TemplateDocument.Save(_viewModel.Templates.ToList());
+            Close();
         }
     }
 }

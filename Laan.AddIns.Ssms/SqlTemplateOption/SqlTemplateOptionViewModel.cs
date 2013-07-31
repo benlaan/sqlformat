@@ -73,6 +73,7 @@ namespace Laan.AddIns.Ssms.Actions
 
         private void ExecuteSave()
         {
+            FilterText = "";
             _isDirty = false;
             if (OnSave != null)
                 OnSave(this, EventArgs.Empty);
@@ -97,7 +98,10 @@ namespace Laan.AddIns.Ssms.Actions
         private void ExecuteAdd()
         {
             Template newTemplate = new Template() { Name = "New Template" };
+            _originalTemplates.Add(newTemplate);
             Templates.Add(newTemplate);
+            AssignPropertyChangedHandler(new[] { newTemplate });
+
             SelectedTemplate = newTemplate;
             MarkAsDirty();
         }
@@ -105,8 +109,8 @@ namespace Laan.AddIns.Ssms.Actions
         private void ExecuteRemove()
         {
             var indexOfRemovedItem = Templates.IndexOf(SelectedTemplate);
-            if (indexOfRemovedItem >= 0)
-                Templates.RemoveAt(indexOfRemovedItem);
+            Templates.Remove(SelectedTemplate);
+            _originalTemplates.Remove(SelectedTemplate);
 
             if (Templates.Count > 0)
                 SelectedTemplate = Templates[Clamp(indexOfRemovedItem, 0, Templates.Count - 1)];
