@@ -6,7 +6,7 @@
       Language="1033"
       Version="$(var.ProductVersion)"
       Manufacturer="Laan Software"
-      UpgradeCode="09802A8E-D100-4537-B656-B94082FEA505">
+      UpgradeCode="20D691F1-81A2-4A35-83FC-23E7C7E9DF97">
 
     <Package
       InstallerVersion="200"
