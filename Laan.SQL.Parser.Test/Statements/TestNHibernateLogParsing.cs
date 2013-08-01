@@ -1,48 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
+using Laan.NHibernate.Appender;
 using Laan.Sql.Parser.Entities;
 
 using NUnit.Framework;
-using System.Collections.Generic;
-using Laan.NHibernate.Appender;
 
 namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
-    public class TestExecuteSqlString
+    public class TestNHibernateLogParsing
     {
-        /// <summary>
-        /// This sql is captured from a sql profiler, and has escaped strings and the 'triple' string
-        /// input to sp_executesql
-        /// </summary>
-        [Test]
-        //[Ignore("Not Implemented yet!")]
-        public void Can_Execute_Simple_Sql_String()
-        {
-            var sql = @"exec sp_executesql 
-                  N'select TOP (@p0) T.Id, T.Name from [Transaction] T 
-                    where T.Type in (''Process'', ''TransferFrom'') 
-                      and T.Code in (@p1) and T.Name <> @p2',
-                  N'@p0 int,@p1 int,@p2 nvarchar(4000)',
-                  @p0=100,@p1=44,@p2=N'WOO'
-            ";
-
-            // Exercise
-            var statement = ParserFactory.Execute<ExecuteSqlStatement>(sql).First();
-
-            // Verify outcome
-            Assert.IsNotNull(statement);
-
-            SelectStatement selectStatement = statement.InnerStatement as SelectStatement;
-            Assert.IsNotNull(selectStatement);
-            
-            Assert.AreEqual("[Transaction]", selectStatement.From.First().Name);
-            Assert.AreEqual(3, statement.Arguments.Count);
-            Assert.AreEqual(new string[] { "@p0", "@p1", "@p2" }, statement.Arguments.Select(a => a.Name).ToArray());
-            Assert.AreEqual(new string[] { "100", "44", "N'WOO'" }, statement.Arguments.Select(a => a.Value).ToArray());
-        }
-
         /// <summary>
         /// This sql is captured via NHibernate.SQL logs
         /// </summary>
@@ -58,7 +27,7 @@ namespace Laan.Sql.Parser.Test
                 @p1 = 'AA BB' [Type: String (4000)], 
                 @p2 = 'CCC' [Type: String (4000)]
             ";
-            
+
             // cleanup test data to match 'real' input, while allowing it to be readable above
             sql = sql.Replace(Environment.NewLine, " ");
 
@@ -66,13 +35,13 @@ namespace Laan.Sql.Parser.Test
             ParameterSubstituter builder = new ParameterSubstituter();
             var splitSql = builder.UpdateParamsWithValues(sql);
 
-              var statement = ParserFactory.Execute<SelectStatement>( splitSql ).First();
+            var statement = ParserFactory.Execute<SelectStatement>(splitSql).First();
 
-              // Verify outcome
-              Assert.IsNotNull( statement );
-              Assert.AreEqual( "[Transaction]", statement.From.First().Name );
-              Assert.AreEqual( "100", statement.Top.Expression.Value );
-              Assert.AreEqual( "(T.Code IN ('AA BB', 'CCC'))", statement.Where.Value );
+            // Verify outcome
+            Assert.IsNotNull(statement);
+            Assert.AreEqual("[Transaction]", statement.From.First().Name);
+            Assert.AreEqual("100", statement.Top.Expression.Value);
+            Assert.AreEqual("(T.Code IN ('AA BB', 'CCC'))", statement.Where.Value);
         }
 
         /// <summary>
@@ -92,7 +61,7 @@ namespace Laan.Sql.Parser.Test
                 @p9  = 'I' [Type: String (9)],  @p10 = 'J' [Type: String (10)], @p11 = 'K' [Type: String (11)], 
                 @p12 = 'L' [Type: String (12)], @p13 = 'M' [Type: String (13)]
             ";
-            
+
             // cleanup test data to match 'real' input, while allowing it to be readable above
             sql = sql.Replace(Environment.NewLine, " ");
 
@@ -100,13 +69,13 @@ namespace Laan.Sql.Parser.Test
             ParameterSubstituter builder = new ParameterSubstituter();
             var splitSql = builder.UpdateParamsWithValues(sql);
 
-              var statement = ParserFactory.Execute<SelectStatement>( splitSql ).First();
+            var statement = ParserFactory.Execute<SelectStatement>(splitSql).First();
 
-              // Verify outcome
-              Assert.IsNotNull( statement );
-              Assert.AreEqual( "[Transaction]", statement.From.First().Name );
-              Assert.AreEqual( "100", statement.Top.Expression.Value );
-              Assert.AreEqual( "(Code IN ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'))", statement.Where.Value );
+            // Verify outcome
+            Assert.IsNotNull(statement);
+            Assert.AreEqual("[Transaction]", statement.From.First().Name);
+            Assert.AreEqual("100", statement.Top.Expression.Value);
+            Assert.AreEqual("(Code IN ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'))", statement.Where.Value);
         }
 
         /// <summary>
@@ -122,7 +91,7 @@ namespace Laan.Sql.Parser.Test
 
                 @p0 = 23/05/2011 2:51:54 PM [Type: DateTime (0)]
             ";
-            
+
             // cleanup test data to match 'real' input, while allowing it to be readable above
             sql = sql.Replace(Environment.NewLine, " ");
 
@@ -130,12 +99,12 @@ namespace Laan.Sql.Parser.Test
             ParameterSubstituter builder = new ParameterSubstituter();
             var splitSql = builder.UpdateParamsWithValues(sql);
 
-              var statement = ParserFactory.Execute<SelectStatement>( splitSql ).First();
+            var statement = ParserFactory.Execute<SelectStatement>(splitSql).First();
 
-              // Verify outcome
-              Assert.IsNotNull( statement );
-              Assert.AreEqual( "[Transaction]", statement.From.First().Name );
-              Assert.AreEqual( "Start > '23/05/2011 2:51:54 PM'", statement.Where.Value );
+            // Verify outcome
+            Assert.IsNotNull(statement);
+            Assert.AreEqual("[Transaction]", statement.From.First().Name);
+            Assert.AreEqual("Start > '23/05/2011 2:51:54 PM'", statement.Where.Value);
         }
 
         /// <summary>
@@ -149,7 +118,7 @@ namespace Laan.Sql.Parser.Test
                 from [Transaction]
                 where (T.Code in (1, 2))
             ";
-            
+
             // cleanup test data to match 'real' input, while allowing it to be readable above
             sql = sql.Replace(Environment.NewLine, " ");
 
@@ -157,13 +126,13 @@ namespace Laan.Sql.Parser.Test
             ParameterSubstituter builder = new ParameterSubstituter();
             var splitSql = builder.UpdateParamsWithValues(sql);
 
-              var statement = ParserFactory.Execute<SelectStatement>( splitSql ).First();
+            var statement = ParserFactory.Execute<SelectStatement>(splitSql).First();
 
-              // Verify outcome
-              Assert.IsNotNull( statement );
-              Assert.AreEqual( "[Transaction]", statement.From.First().Name );
-              Assert.AreEqual( "100", statement.Top.Expression.Value );
-              Assert.AreEqual( "(T.Code IN (1, 2))", statement.Where.Value );
+            // Verify outcome
+            Assert.IsNotNull(statement);
+            Assert.AreEqual("[Transaction]", statement.From.First().Name);
+            Assert.AreEqual("100", statement.Top.Expression.Value);
+            Assert.AreEqual("(T.Code IN (1, 2))", statement.Where.Value);
         }
     }
 }

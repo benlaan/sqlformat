@@ -19,21 +19,21 @@ namespace Laan.Sql.Parser
         {
             _parsers = new Dictionary<string, Type>
             {
-                { Constants.Select,     typeof( SelectStatementParser   ) },
-                { Constants.Insert,     typeof( InsertStatementParser   ) },
-                { Constants.Update,     typeof( UpdateStatementParser   ) },
-                { Constants.Delete,     typeof( DeleteStatementParser   ) },
-                { Constants.Grant,      typeof( GrantStatementParser    ) },
-                { Constants.Go,         typeof( GoTerminatorParser      ) },
-                { Constants.Create,     typeof( CreateStatementParser   ) },
-                { Constants.Alter,      typeof( AlterStatementParser    ) },
-                { Constants.Declare,    typeof( DeclareStatementParser  ) },
-                { Constants.If,         typeof( IfStatementParser       ) },
-                { Constants.Begin,      typeof( BeginStatementParser    ) },
-                { Constants.Commit,     typeof( CommitStatementParser   ) },
-                { Constants.Rollback,   typeof( RollbackStatementParser ) },
-                { Constants.Set,        typeof( SetStatementParser      ) },
-                { Constants.Exec,       typeof( ExecuteSqlStatementParser      ) }
+                { Constants.Select,   typeof( SelectStatementParser   ) },
+                { Constants.Insert,   typeof( InsertStatementParser   ) },
+                { Constants.Update,   typeof( UpdateStatementParser   ) },
+                { Constants.Delete,   typeof( DeleteStatementParser   ) },
+                { Constants.Grant,    typeof( GrantStatementParser    ) },
+                { Constants.Go,       typeof( GoTerminatorParser      ) },
+                { Constants.Create,   typeof( CreateStatementParser   ) },
+                { Constants.Alter,    typeof( AlterStatementParser    ) },
+                { Constants.Declare,  typeof( DeclareStatementParser  ) },
+                { Constants.If,       typeof( IfStatementParser       ) },
+                { Constants.Begin,    typeof( BeginStatementParser    ) },
+                { Constants.Commit,   typeof( CommitStatementParser   ) },
+                { Constants.Rollback, typeof( RollbackStatementParser ) },
+                { Constants.Set,      typeof( SetStatementParser      ) },
+                { Constants.Exec,     typeof( ExecStatementParser     ) }
             };
         }
 

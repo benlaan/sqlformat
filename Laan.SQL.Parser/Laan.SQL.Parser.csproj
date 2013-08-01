@@ -56,7 +56,7 @@
     <Compile Include="Entities\TableHint.cs" />
     <Compile Include="Expressions\CastExpression.cs" />
     <Compile Include="Utilities\ParameterSubstituter.cs" />
-    <Compile Include="Parsers\ExecuteSqlStatementParser.cs" />
+    <Compile Include="Parsers\ExecStatementParser.cs" />
     <Compile Include="Parsers\SetStatementParser.cs" />
     <Compile Include="Utilities\SqlTypeParser.cs" />
     <Compile Include="Tokenizer\CustomTokenizer.cs" />

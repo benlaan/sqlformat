@@ -55,10 +55,11 @@
     <Compile Include="Entities\TestAlias.cs" />
     <Compile Include="Entities\TestStatement.cs" />
     <Compile Include="Statements\TestBeginBlockStatementParser.cs" />
+    <Compile Include="Statements\TestNHibernateLogParsing.cs" />
     <Compile Include="Statements\TestSetStatements.cs" />
     <Compile Include="Statements\TestTableHints.cs" />
     <Compile Include="TestCastFunction.cs" />
-    <Compile Include="Statements\TestExecuteSqlString.cs" />
+    <Compile Include="Statements\TestExecStatementParser.cs" />
     <Compile Include="Statements\TestIfStatements.cs" />
     <Compile Include="Statements\TestBatchTerminators.cs" />
     <Compile Include="Statements\TestDeleteStatementParser.cs" />
