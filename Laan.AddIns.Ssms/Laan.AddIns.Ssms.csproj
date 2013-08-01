@@ -17,6 +17,7 @@
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
+    <ExpressionBlendVersion>5.0.40218.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,15 +37,21 @@
     <WarningLevel>4</WarningLevel>
     <IncrementalBuild>false</IncrementalBuild>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ssms|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>C:\Program Files %28x86%29\Laan Software\Laan SQL Add-In for SSMS\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.SqlServer.SqlTools.VSIntegration">
-      <HintPath>..\..\..\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\VSShell\Common7\IDE\Microsoft.SqlServer.SqlTools.VSIntegration.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -53,21 +60,30 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\DropDownList.cs" />
     <Compile Include="Actions\Item.cs" />
     <Compile Include="Actions\MenuAttribute.cs" />
-    <Compile Include="Actions\SaveResultAs2.cs" />
-    <Compile Include="Actions\SaveResultsAs.cs" />
-    <Compile Include="Actions\SettingsDialog.cs" />
-    <Compile Include="Forms\Settings.cs">
+    <Compile Include="Actions\SqlTemplateOptionAction.cs" />
+    <Compile Include="SqlTemplateOption\DelegateCommand.cs" />
+    <Compile Include="SqlTemplateOption\SqlTemplateOptionViewModel.cs" />
+    <Compile Include="SqlTemplateOption\DialogHost.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Settings.Designer.cs">
-      <DependentUpon>Settings.cs</DependentUpon>
+    <Compile Include="SqlTemplateOption\DialogHost.Designer.cs">
+      <DependentUpon>DialogHost.cs</DependentUpon>
     </Compile>
-    <Compile Include="Window.cs" />
+    <Compile Include="SqlTemplateOption\SqlTemplateOptionView.xaml.cs">
+      <DependentUpon>SqlTemplateOptionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TemplateDocument.cs" />
+    <Compile Include="Utils\ObjectExtensions.cs" />
+    <Compile Include="Models\Template.cs" />
+    <Compile Include="Utils\Window.cs" />
     <Compile Include="AddIn.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -75,13 +91,13 @@
     <Compile Include="Action.cs" />
     <Compile Include="Actions\SqlTemplating.cs" />
     <Compile Include="Actions\SqlFormatter.cs" />
-    <Compile Include="Cursor.cs" />
-    <Compile Include="ScopedUndoContext.cs" />
+    <Compile Include="Utils\Cursor.cs" />
+    <Compile Include="Utils\ScopedUndoContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CommandBar.resx" />
-    <EmbeddedResource Include="Forms\Settings.resx">
-      <DependentUpon>Settings.cs</DependentUpon>
+    <EmbeddedResource Include="SqlTemplateOption\DialogHost.resx">
+      <DependentUpon>DialogHost.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -127,21 +143,27 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\..\Documents and Settings\blaan\My Documents\Visual Studio 2008\Addins\SqlFormatter - For Testing.AddIn">
-      <Link>SqlFormatter - For Testing.AddIn</Link>
-    </Content>
     <Content Include="Actions\Refactoring Ideas.txt" />
     <Content Include="Laan.AddIns.Core.AddIn" />
+    <EmbeddedResource Include="Templates\default.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Laan.SQL.Formatter\Laan.SQL.Formatter.csproj">
+    <ProjectReference Include="..\Laan.SQL.Formatter\Laan.Sql.Formatter.csproj">
       <Project>{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}</Project>
-      <Name>Laan.SQL.Formatter</Name>
+      <Name>Laan.Sql.Formatter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Laan.SQL.Parser\Laan.SQL.Parser.csproj">
+    <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj">
       <Project>{E972B2B2-F549-418E-B830-FB5D97101168}</Project>
-      <Name>Laan.SQL.Parser</Name>
+      <Name>Laan.Sql.Parser</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="SqlTemplateOption\SqlTemplateOptionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
   <PropertyGroup>

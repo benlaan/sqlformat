@@ -132,7 +132,7 @@ namespace Laan.AddIns.Ssms.Actions
                 using ( SolidBrush nameBrush = new SolidBrush( selected ? Color.Black : e.ForeColor ) )
                 using ( SolidBrush descriptionBrush = new SolidBrush( selected ? e.ForeColor : Color.Blue ) )
                 {
-                    e.Graphics.DrawString( item.Name, _font, nameBrush, e.Bounds.Left, e.Bounds.Top );
+                    e.Graphics.DrawString( item.Code, _font, nameBrush, e.Bounds.Left, e.Bounds.Top );
 
                     e.Graphics.DrawString(
                         item.TightDescription,

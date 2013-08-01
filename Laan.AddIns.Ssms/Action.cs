@@ -138,7 +138,7 @@ namespace Laan.AddIns.Core
             }
             catch ( Exception ex )
             {
-                AddIn.Error( String.Format("Failed to WriteProperty('{0}', '{1}', '{2}', '{3})", category, page, property), ex );
+                AddIn.Error( String.Format("Failed to WriteProperty('{0}', '{1}', '{2}')", category, page, property), ex );
             }
         }
 

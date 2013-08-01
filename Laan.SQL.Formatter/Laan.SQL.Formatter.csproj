@@ -8,8 +8,8 @@
     <ProjectGuid>{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laan.SQL.Formatter</RootNamespace>
-    <AssemblyName>Laan.SQL.Formatter</AssemblyName>
+    <RootNamespace>Laan.Sql.Formatter</RootNamespace>
+    <AssemblyName>Laan.Sql.Formatter</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -82,9 +82,9 @@
     <Compile Include="StatementFormatters\GoTerminatorFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Laan.SQL.Parser\Laan.SQL.Parser.csproj">
+    <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj">
       <Project>{E972B2B2-F549-418E-B830-FB5D97101168}</Project>
-      <Name>Laan.SQL.Parser</Name>
+      <Name>Laan.Sql.Parser</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

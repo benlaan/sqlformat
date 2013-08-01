@@ -4,8 +4,8 @@ namespace Laan.AddIns.Ssms.Actions
 {
     public class Item
     {
+        public string Code { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
 
         public string TightDescription
         {
@@ -13,17 +13,18 @@ namespace Laan.AddIns.Ssms.Actions
             {
                 return String.Join(
                     "\n",
-                    Description.Split(
-                        new []{"\n"},
+                    Name.Split(
+                        new[] { "\n" },
                         StringSplitOptions.RemoveEmptyEntries
                         )
                     );
 
             }
         }
+
         public override string ToString()
         {
-            return Name;
+            return Code;
         }
     }
 }

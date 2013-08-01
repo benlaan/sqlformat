@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product
+      Id="*"
+      Name="Laan Sql Add-In for SSMS"
+      Language="1033"
+      Version="$(var.ProductVersion)"
+      Manufacturer="Laan Software"
+      UpgradeCode="09802A8E-D100-4537-B656-B94082FEA505">
+
+    <Package
+      InstallerVersion="200"
+      InstallScope="perMachine"
+      Compressed="yes"
+      InstallPrivileges="elevated"
+      Platform="x86"
+    />
+
+    <Media Id="1" Cabinet="setup.cab" EmbedCab="yes" />
+
+    <PropertyRef Id="NETFRAMEWORK40FULL"/>
+    
+    <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again.">
+      <![CDATA[Installed OR NETFRAMEWORK40FULL]]>
+    </Condition>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="LaanSoftwareBin" Name="Laan Software">
+          <Directory Id="INSTALLLOCATION" Name="Laan SQL Add-In for SSMS"/>
+        </Directory>
+      </Directory>      
+    </Directory>
+
+    <DirectoryRef Id="INSTALLLOCATION">
+      <Component Id="SSms.AddIn" Guid="{432CEE6E-36B0-4C83-95B4-41E00C01B840}">
+        <File Id="Laan.AddIns.Ssms.dll" Source="$(var.SolutionDir)Laan.AddIns.Ssms\bin\Laan.AddIns.Ssms.dll" DiskId="1"/>
+      </Component>
+      <Component Id="Formatter" Guid="{1CA04D29-A6BE-4F68-940D-3B2285C8B3BD}">
+        <File Id="Laan.SQL.Formatter.dll" Source="$(var.SolutionDir)Laan.AddIns.Ssms\bin\Laan.SQL.Formatter.dll" DiskId="1"/>
+      </Component>
+      <Component Id="Parser" Guid="{D668D5B7-0EC5-40A1-8148-6DBCA6E6FFA6}">
+        <File Id="Laan.SQL.Parser.dll" Source="$(var.SolutionDir)Laan.AddIns.Ssms\bin\Laan.SQL.Parser.dll" DiskId="1"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="TARGETDIR">
+      <Component Id="RegistryEntries" Guid="{04D2B77F-D05E-494C-A675-25FC7D6F1559}">
+
+        <RegistryKey Root="HKLM" Key="SOFTWARE">
+
+          <RegistryKey Key="Microsoft\Microsoft SQL Server">
+
+            <RegistryKey Key="90\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
+              <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
+            </RegistryKey>
+
+            <RegistryKey Key="100\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
+              <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
+            </RegistryKey>
+
+            <RegistryKey Key="110\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
+              <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
+            </RegistryKey>
+
+          </RegistryKey>
+
+          <RegistryKey Key="Classes\CLSID\{CC5866B2-5695-4557-AA26-A7AFB5072533}">
+            <RegistryValue Value="Laan.AddIns.Core.AddIn" Type="string" />
+
+            <RegistryKey Key="ProgId">
+              <RegistryValue Value="Laan.AddIns" Type="string" />
+            </RegistryKey>
+
+            <RegistryKey Key="InprocServer32">
+              <RegistryValue Value="mscoree.dll" Type="string" />
+              <RegistryValue Name="CodeBase" Value="file:///C:\\Program Files (x86)\\Laan Software\\Laan SQL Add-In for SSMS\\Laan.AddIns.Ssms.dll" Type="string"/>
+              <RegistryValue Name="Assembly" Value="Laan.AddIns.Ssms, Version=$(var.ProductVersion), Culture=neutral, PublicKeyToken=null" Type="string"/>
+              <RegistryValue Name="Class" Value="Laan.AddIns.Core.AddIn" Type="string"/>
+              <RegistryValue Name="ThreadingModel" Value="Both" Type="string"/>
+              <RegistryValue Name="RuntimeVersion" Value="v2.0.50727" Type="string"/>
+
+              <RegistryKey Key="$(var.ProductVersion)">
+                <RegistryValue Name="CodeBase" Value="file:///C:\\Program Files (x86)\\Laan Software\\Laan SQL Add-In for SSMS\\Laan.AddIns.Ssms.dll" Type="string"/>
+                <RegistryValue Name="Class" Value="Laan.AddIns.Core.AddIn" Type="string" />
+                <RegistryValue Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
+                <RegistryValue Name="Assembly" Value="Laan.AddIns.Ssms, Version=$(var.ProductVersion), Culture=neutral, PublicKeyToken=null" Type="string" />
+              </RegistryKey>
+
+            </RegistryKey>
+          </RegistryKey>
+        </RegistryKey>
+
+        <Class Id="{CC5866B2-5695-4557-AA26-A7AFB5072533}" SafeForScripting="yes" Advertise="no" Context="InprocServer32" Description="Laan Sql Formatter SSMS AddIn" ThreadingModel="both" ForeignServer="mscoree.dll" Control="yes">
+          <ProgId Id="Laan.AddIns.Core.AddIn" Description="Laan Sql Formatter SSMS AddIn" />
+        </Class>
+
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="Main" Title="Main AddIn" Level="1">
+      <ComponentRef Id="SSms.AddIn"/>
+      <ComponentRef Id="Formatter"/>
+      <ComponentRef Id="Parser"/>
+      <ComponentRef Id="RegistryEntries"/>
+    </Feature>
+
+  </Product>
+</Wix>

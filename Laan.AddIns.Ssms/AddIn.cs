@@ -37,41 +37,41 @@ namespace Laan.AddIns.Core
             try
             {
                 var actions = Assembly.GetExecutingAssembly().GetTypes()
-                    .Where( type => !type.IsAbstract && typeof( Action ).IsAssignableFrom( type ))
-                    .Select( type => (Action) Activator.CreateInstance( type, this ) );
+                    .Where(type => !type.IsAbstract && typeof(Action).IsAssignableFrom(type))
+                    .Select(type => (Action)Activator.CreateInstance(type, this));
 
-                _actions.AddRange( actions );
+                _actions.AddRange(actions);
 
             }
-            catch ( Exception ex )
+            catch (Exception ex)
             {
-                Error( ex );
+                Error(ex);
             }
         }
 
-        private void Initialise( object instance )
+        private void Initialise(object instance)
         {
-            _addIn = ( EnvDTE.AddIn )instance;
-            Application = ( ( EnvDTE.AddIn )instance ).DTE;
-            _commands = ( Commands2 )Application.Commands;
+            _addIn = (EnvDTE.AddIn)instance;
+            Application = ((EnvDTE.AddIn)instance).DTE;
+            _commands = (Commands2)Application.Commands;
         }
 
-        private bool CommandIsInstalled( Action action )
+        private bool CommandIsInstalled(Action action)
         {
             bool found = true;
             try
             {
-                var findCommand = _commands.Item( action.FullName, 1 );
+                var findCommand = _commands.Item(action.FullName, 1);
             }
-            catch ( Exception ex )
+            catch (Exception ex)
             {
                 found = false;
-                Error( action.DisplayName + " not found: ", ex );
+                Error(action.DisplayName + " not found: ", ex);
             }
             return found;
         }
 
-        private string GetMenuName( string menuName )
+        private string GetMenuName(string menuName)
         {
             string localisedMenuName;
 
@@ -83,18 +83,18 @@ namespace Laan.AddIns.Core
                 //  CommandBar.resx.
                 string resourceName;
                 var assembly = Assembly.GetExecutingAssembly();
-                var resourceManager = new ResourceManager( assembly.GetName().Name + ".CommandBar", assembly );
-                var cultureInfo = new CultureInfo( Application.LocaleID );
+                var resourceManager = new ResourceManager(assembly.GetName().Name + ".CommandBar", assembly);
+                var cultureInfo = new CultureInfo(Application.LocaleID);
 
-                if ( cultureInfo.TwoLetterISOLanguageName == "zh" )
+                if (cultureInfo.TwoLetterISOLanguageName == "zh")
                 {
                     CultureInfo parentCultureInfo = cultureInfo.Parent;
-                    resourceName = String.Concat( parentCultureInfo.Name, menuName );
+                    resourceName = String.Concat(parentCultureInfo.Name, menuName);
                 }
                 else
-                    resourceName = String.Concat( cultureInfo.TwoLetterISOLanguageName, menuName );
+                    resourceName = String.Concat(cultureInfo.TwoLetterISOLanguageName, menuName);
 
-                localisedMenuName = resourceManager.GetString( resourceName );
+                localisedMenuName = resourceManager.GetString(resourceName);
             }
             catch
             {
@@ -105,9 +105,9 @@ namespace Laan.AddIns.Core
             return localisedMenuName;
         }
 
-        private Action FindAction( string commandName )
+        private Action FindAction(string commandName)
         {
-            return _actions.Single( c => ( _uniqueKey + "." + c.KeyName ).Equals( commandName, StringComparison.CurrentCultureIgnoreCase ) );
+            return _actions.Single(c => (_uniqueKey + "." + c.KeyName).Equals(commandName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         private void PlaceCommandsOnMenus()
@@ -115,41 +115,41 @@ namespace Laan.AddIns.Core
             //Place the command on the tools menu.
             //Find the MenuBar command bar, which is the top-level command bar holding all the main menu items:
 
-            if ( _actions.Count == 0 )
-                throw new Exception( String.Format( "No actions defined for this AddIn: {0}", GetType().Name ) );
+            if (_actions.Count == 0)
+                throw new Exception(String.Format("No actions defined for this AddIn: {0}", GetType().Name));
 
-            foreach ( var action in _actions )
+            foreach (var action in _actions)
             {
-                if ( CommandIsInstalled( action ) )
+                if (CommandIsInstalled(action))
                     continue;
 
-                var attr = (MenuAttribute) action.GetType().GetCustomAttributes( typeof (MenuAttribute), false ).FirstOrDefault();
+                var attr = (MenuAttribute)action.GetType().GetCustomAttributes(typeof(MenuAttribute), false).FirstOrDefault();
 
-                if ( attr != null )
+                if (attr != null)
                 {
                     string commandBarName = attr.CommandBar;
                     string menuName = attr.Menu;
 
 
-                    var commandBar = ( (CommandBars) Application.CommandBars )[ commandBarName ];
+                    var commandBar = ((CommandBars)Application.CommandBars)[commandBarName];
 
 
                     CommandBarPopup toolsPopup = null;
 
-                    if ( menuName != null )
+                    if (menuName != null)
                     {
-                        CommandBarControl toolsControl = commandBar.Controls[ GetMenuName( menuName ) ];
-                        toolsPopup = (CommandBarPopup) toolsControl;
+                        CommandBarControl toolsControl = commandBar.Controls[GetMenuName(menuName)];
+                        toolsPopup = (CommandBarPopup)toolsControl;
                     }
 
                     try
                     {
-                        var contextGUIDS = new object[] {};
+                        var contextGUIDS = new object[] { };
 
                         //_commands.AddNamedCommand( _addInInstance, "MyCommand", "My Command", "blah", true, 0, ref contextGuids, (int) vsCommandStatus.vsCommandStatusEnabled + (int) vsCommandStatus.vsCommandStatusSupported );
 
-                        
-                        
+
+
                         var command = _commands.AddNamedCommand2(
                             _addIn,
                             action.KeyName,
@@ -158,23 +158,23 @@ namespace Laan.AddIns.Core
                             true,
                             action.ImageIndex,
                             ref contextGUIDS,
-                            (int) vsCommandStatus.vsCommandStatusSupported +
-                            (int) vsCommandStatus.vsCommandStatusEnabled,
-                            (int) vsCommandStyle.vsCommandStylePictAndText,
+                            (int)vsCommandStatus.vsCommandStatusSupported +
+                            (int)vsCommandStatus.vsCommandStatusEnabled,
+                            (int)vsCommandStyle.vsCommandStylePictAndText,
                             vsCommandControlType.vsCommandControlTypeButton
                             );
 
-                        if ( command != null )
+                        if (command != null)
                         {
-                            command.AddControl( toolsPopup != null ? toolsPopup.CommandBar : commandBar, 1 );
+                            command.AddControl(toolsPopup != null ? toolsPopup.CommandBar : commandBar, 1);
 
-                            if ( action.KeyboardBinding != null )
+                            if (action.KeyboardBinding != null)
                                 command.Bindings = action.KeyboardBinding;
                         }
                     }
-                    catch ( System.ArgumentException ex )
+                    catch (System.ArgumentException ex)
                     {
-                        Error( String.Format( "PlaceCommandsOnMenus({0})", action.DisplayName ), ex );
+                        Error(String.Format("PlaceCommandsOnMenus({0})", action.DisplayName), ex);
                     }
                 }
             }
@@ -182,38 +182,38 @@ namespace Laan.AddIns.Core
 
         private void RemoveCommandsFromMenus()
         {
-            foreach ( var action in _actions )
+            foreach (var action in _actions)
             {
                 try
                 {
-                    var command = _commands.Item( action.FullName, 1 );
+                    var command = _commands.Item(action.FullName, 1);
                     command.Delete();
                 }
-                catch ( Exception ex )
+                catch (Exception ex)
                 {
-                    Error( action.DisplayName + " not found: ", ex );
+                    Error(action.DisplayName + " not found: ", ex);
                 }
             }
         }
 
-        private void Execute( Action action )
+        private void Execute(Action action)
         {
             Stopwatch timer = Stopwatch.StartNew();
 
             System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
             try
             {
-                SetStatus( "{0}...", action.DescriptivePhrase );
-                using ( new ScopedUndoContext( this, action.KeyName ) )
+                SetStatus("{0}...", action.DescriptivePhrase);
+                using (new ScopedUndoContext(this, action.KeyName))
                 {
                     action.Execute();
                 }
-                SetStatus( "{0} completed in {1} seconds", action.DescriptivePhrase, timer.Elapsed.TotalSeconds );
+                SetStatus("{0} completed in {1} seconds", action.DescriptivePhrase, timer.Elapsed.TotalSeconds);
             }
-            catch ( Exception ex )
+            catch (Exception ex)
             {
-                Error( ex );
-                SetStatus( "Error {0}: {1}", action.DescriptivePhrase, ex.Message );
+                Error(ex);
+                SetStatus("Error {0}: {1}", action.DescriptivePhrase, ex.Message);
             }
             finally
             {
@@ -227,32 +227,36 @@ namespace Laan.AddIns.Core
             get { return Application.ActiveDocument != null ? Application.ActiveDocument.FullName : ""; }
         }
 
-        internal bool IsCurrentDocumentExtension( string extension )
+        internal bool IsCurrentDocumentExtension(string extension)
         {
-            return Path.GetExtension( DocumentFullName ).Equals(
-                String.Format( ".{0}", extension ),
+            return Path.GetExtension(DocumentFullName).Equals(
+                String.Format(".{0}", extension),
                 StringComparison.CurrentCultureIgnoreCase
             );
         }
 
-        internal void SetStatus( string message, params object[] args )
+        internal void SetStatus(string message, params object[] args)
         {
-            Application.StatusBar.Text = String.Format( message, args );
+            Application.StatusBar.Text = String.Format(message, args);
         }
 
-        internal void Error( Exception ex )
+        [Conditional("DEBUG")]
+        internal void Error(Exception ex)
         {
-            Debug.WriteLine( ex );
+            System.IO.File.AppendAllText(@"D:\dump.log", ex.ToString() + Environment.NewLine);
+            Debug.WriteLine(ex);
         }
 
-        internal void Error( string message, Exception ex )
+        [Conditional("DEBUG")]
+        internal void Error(string message, Exception ex)
         {
-            Debug.WriteLine( message + "\n\t" + ex );
+            System.IO.File.AppendAllText(@"D:\dump.log", message + " : " + ex.ToString() + Environment.NewLine);
+            Debug.WriteLine(message + "\n\t" + ex);
         }
 
-        internal void OpenUndoContext( string name, bool strict )
+        internal void OpenUndoContext(string name, bool strict)
         {
-            Application.UndoContext.Open( name, strict );
+            Application.UndoContext.Open(name, strict);
         }
 
         internal void CloseUndoContext()
@@ -269,9 +273,9 @@ namespace Laan.AddIns.Core
         {
             var cursor = TextDocument.Selection.ActivePoint;
             var point = cursor.CreateEditPoint();
-            point.WordLeft( 1 );
-            TextDocument.Selection.MoveToPoint( point, false );
-            TextDocument.Selection.WordRight( true, 1 );
+            point.WordLeft(1);
+            TextDocument.Selection.MoveToPoint(point, false);
+            TextDocument.Selection.WordRight(true, 1);
         }
 
         internal void ClearSelection()
@@ -279,16 +283,16 @@ namespace Laan.AddIns.Core
             TextDocument.Selection.Text = "";
         }
 
-        internal void InsertText( string message )
+        internal void InsertText(string message)
         {
-            InsertText( message, true );
+            InsertText(message, true);
         }
 
-        internal void InsertText( string message, bool replace )
+        internal void InsertText(string message, bool replace)
         {
-            if ( replace )
+            if (replace)
                 ClearSelection();
-            TextDocument.Selection.Insert( message, ( int )vsInsertFlags.vsInsertFlagsContainNewText );
+            TextDocument.Selection.Insert(message, (int)vsInsertFlags.vsInsertFlagsContainNewText);
         }
 
         internal string CurrentLine
@@ -298,7 +302,7 @@ namespace Laan.AddIns.Core
                 var cursor = TextDocument.Selection.ActivePoint;
                 var point = cursor.CreateEditPoint();
                 point.StartOfLine();
-                return point.GetText( cursor );
+                return point.GetText(cursor);
             }
         }
 
@@ -308,8 +312,8 @@ namespace Laan.AddIns.Core
             {
                 var cursor = TextDocument.Selection.ActivePoint;
                 var point = cursor.CreateEditPoint();
-                point.WordLeft( 1 );
-                return point.GetText( cursor ).Trim();
+                point.WordLeft(1);
+                return point.GetText(cursor).Trim();
             }
         }
 
@@ -320,7 +324,7 @@ namespace Laan.AddIns.Core
 
         internal TextDocument TextDocument
         {
-            get { return ( TextDocument )Application.ActiveDocument.Object( "TextDocument" ); }
+            get { return (TextDocument)Application.ActiveDocument.Object("TextDocument"); }
         }
 
         internal string AllText
@@ -330,7 +334,7 @@ namespace Laan.AddIns.Core
                 var cursor = TextDocument.StartPoint;
                 var point = cursor.CreateEditPoint();
                 point.StartOfDocument();
-                return point.GetText( TextDocument.EndPoint );
+                return point.GetText(TextDocument.EndPoint);
             }
         }
 
@@ -339,14 +343,14 @@ namespace Laan.AddIns.Core
             get
             {
                 var point = TextDocument.Selection.TopPoint;
-                return new Cursor( point.DisplayColumn, point.Line );
+                return new Cursor(point.DisplayColumn, point.Line);
             }
             set
             {
                 var point = TextDocument.Selection.TopPoint.CreateEditPoint();
-                point.LineDown( value.Row );
-                point.CharRight( value.Column );
-                TextDocument.Selection.MoveToPoint( point, false );
+                point.LineDown(value.Row);
+                point.CharRight(value.Column);
+                TextDocument.Selection.MoveToPoint(point, false);
             }
         }
 
@@ -356,25 +360,25 @@ namespace Laan.AddIns.Core
             {
                 var start = TextDocument.Selection.TextPane.StartPoint;
                 var top = TextDocument.Selection.TopPoint;
-                return new Cursor( top.DisplayColumn - start.DisplayColumn + 1, top.Line - start.Line + 1 );
+                return new Cursor(top.DisplayColumn - start.DisplayColumn + 1, top.Line - start.Line + 1);
             }
             set
             {
                 var point = TextDocument.Selection.TopPoint.CreateEditPoint();
-                point.LineDown( value.Row );
-                point.CharRight( value.Column );
-                TextDocument.Selection.MoveToPoint( point, false );
+                point.LineDown(value.Row);
+                point.CharRight(value.Column);
+                TextDocument.Selection.MoveToPoint(point, false);
             }
         }
 
         private void DumpCommands()
         {
-            foreach ( Command c in _commands )
+            foreach (Command c in _commands)
             {
                 Trace.WriteLine(
                     String.Format(
                         "{0} {1}: {2}",
-                        c.ID, c.Name, ( ( object[] )c.Bindings ).FirstOrDefault() )
+                        c.ID, c.Name, ((object[])c.Bindings).FirstOrDefault())
                 );
             }
         }
@@ -383,40 +387,40 @@ namespace Laan.AddIns.Core
 
         #region IDTExtensibility2 Members
 
-        public void OnConnection( object application, ext_ConnectMode connectMode, object instance, ref Array custom )
+        public void OnConnection(object application, ext_ConnectMode connectMode, object instance, ref Array custom)
         {
             try
             {
-                Initialise( instance );
+                Initialise(instance);
                 PlaceCommandsOnMenus();
             }
-            catch ( Exception ex )
+            catch (Exception ex)
             {
-                Error( "OnConnection", ex );
+                Error("OnConnection", ex);
             }
         }
 
-        public void OnDisconnection( ext_DisconnectMode disconnectMode, ref Array custom )
+        public void OnDisconnection(ext_DisconnectMode disconnectMode, ref Array custom)
         {
             try
             {
                 RemoveCommandsFromMenus();
             }
-            catch ( Exception ex )
+            catch (Exception ex)
             {
-                Error( "OnDisconnection", ex );
+                Error("OnDisconnection", ex);
             }
         }
 
-        public void OnAddInsUpdate( ref Array custom )
+        public void OnAddInsUpdate(ref Array custom)
         {
         }
 
-        public void OnStartupComplete( ref Array custom )
+        public void OnStartupComplete(ref Array custom)
         {
         }
 
-        public void OnBeginShutdown( ref Array custom )
+        public void OnBeginShutdown(ref Array custom)
         {
         }
 
@@ -425,14 +429,18 @@ namespace Laan.AddIns.Core
         #region IDTCommandTarget Members
 
         public void Exec(
-            string commandName, vsCommandExecOption executeOption, ref object varIn, ref object varOut, ref bool handled
+            string commandName, 
+            vsCommandExecOption executeOption, 
+            ref object varIn, 
+            ref object varOut, 
+            ref bool handled
         )
         {
             handled = false;
-            if ( executeOption == vsCommandExecOption.vsCommandExecOptionDoDefault )
+            if (executeOption == vsCommandExecOption.vsCommandExecOptionDoDefault)
             {
-                var action = FindAction( commandName );
-                Execute( action );
+                var action = FindAction(commandName);
+                Execute(action);
                 handled = true;
                 return;
             }
@@ -442,30 +450,30 @@ namespace Laan.AddIns.Core
             string commandName, vsCommandStatusTextWanted neededText, ref vsCommandStatus status, ref object commandText
         )
         {
-            var action = FindAction( commandName );
+            var action = FindAction(commandName);
 
             string text = action.ButtonText;
 
-            if ( action.CanExecute()
-                && neededText == vsCommandStatusTextWanted.vsCommandStatusTextWantedNone )
+            if (action.CanExecute()
+                && neededText == vsCommandStatusTextWanted.vsCommandStatusTextWantedNone)
                 status = vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
 
             string updatedText = action.ButtonText;
 
-            if ( text == updatedText )
+            if (text == updatedText)
                 return;
 
-            var attr = (MenuAttribute) action.GetType().GetCustomAttributes( typeof (MenuAttribute), false ).FirstOrDefault();
+            var attr = (MenuAttribute)action.GetType().GetCustomAttributes(typeof(MenuAttribute), false).FirstOrDefault();
 
-            if ( attr != null )
+            if (attr != null)
             {
                 string commandBarName = attr.CommandBar;
 
-                var commandBar = ( (CommandBars) Application.CommandBars )[ commandBarName ];
+                var commandBar = ((CommandBars)Application.CommandBars)[commandBarName];
 
-                CommandBarControl control = commandBar.Controls[ text ];
+                CommandBarControl control = commandBar.Controls[text];
 
-                if ( control != null )
+                if (control != null)
                     control.Caption = updatedText;
 
 

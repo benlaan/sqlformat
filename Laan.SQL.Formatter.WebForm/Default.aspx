@@ -21,9 +21,9 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div style="margin-top:10px; margin-bottom:10px; background-color:White; border-width: 1px">
-        <span>Want the code? <a href="http://code.google.com/p/sqlformat/source/browse">have a look</a></span>
+        <span>Want the code? <a href="http://github.com/benlaan/sqlformat">have a look</a></span>
         <br/>
-        <span>Found a bug? <a href="http://code.google.com/p/sqlformat/issues/list">log it</a></span>
+        <span>Found a bug? <a href="http://github.com/benlaan/sqlformat/issues">log it</a></span>
     </div>
     <div>
         Input SQL
@@ -41,8 +41,9 @@
         <% } %>
         Output SQL
         <pre class="code prettyprint" style="width: 100%">
-<asp:Repeater ID="sqlOutput" runat="server"><ItemTemplate><%# Container.DataItem %>
-</ItemTemplate></asp:Repeater>     
+            <asp:Repeater ID="sqlOutput" runat="server">
+                <ItemTemplate><br /><%# Container.DataItem %></ItemTemplate>
+            </asp:Repeater>     
         </pre>
     </div>
 </asp:Content>

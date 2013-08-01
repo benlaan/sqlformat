@@ -5,6 +5,7 @@ using Laan.Sql.Formatter;
 
 namespace Laan.AddIns.Ssms.Actions
 {
+
     [MenuBarToolsMenu]
     public class SqlFormatter : Core.Action
     {
