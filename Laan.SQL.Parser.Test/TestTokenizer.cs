@@ -66,7 +66,7 @@ namespace Laan.Sql.Parser.Test
 
         [Test]
         [TestCase( "Ben 1234", new[] { "Ben", "1234" } )]
-        [TestCase( "Ben1234 Laan9876 12Hello 34World", new[] { "Ben1234", "Laan9876", "12", "Hello", "34", "World" } )]
+        //[TestCase( "Ben1234 Laan9876 12Hello 34World", new[] { "Ben1234", "Laan9876", "12", "Hello", "34", "World" } )]
         public void Tokenize_Alpha_Numeric_Strings( string input, string[] tokens )
         {
             Verify( input, tokens );
@@ -74,15 +74,12 @@ namespace Laan.Sql.Parser.Test
 
         [Test]
         [TestCase( "Ben 1234", new[] { "Ben", "1234" } )]
-        [TestCase(
-            "Ben1234 Laan9876 12Hello 34World",
-            new[] { "Ben1234", "Laan9876", "12", "Hello", "34", "World" } )
-        ]
-        [TestCase(
-            @"Ben(Test1234), Laan(9876) ""12"" [Hello, 'World']",
-            new[] { "Ben", "(", "Test1234", ")", ",", "Laan", "(", "9876", ")", "\"", "12", "\"", "[Hello, 'World']" } )
-        ]
-        [TestCase( "A = 1", new[] { "A", "=", "1" } )]
+        [TestCase("Ben1234 Laan9876 12Hello 34World", new[] { "Ben1234", "Laan9876", "12", "Hello", "34", "World" } )]
+        [TestCase(@"Ben(Test1234)", new[] { "Ben", "(", "Test1234", ")" })]
+        [TestCase(@"""12"" [Hello, 'World']", new[] { @"""12""", "[Hello, 'World']" })]
+        [TestCase(@"""A"" [Hello, World]", new[] { @"""A""", "[Hello, World]" })]
+        [TestCase(@"[Hello, 'World']", new[] { "[Hello, 'World']" })]
+        [TestCase("A = 1", new[] { "A", "=", "1" })]
         [TestCase( "2 <= 5", new[] { "2", "<=", "5" } )]
         [TestCase( "A != B", new[] { "A", "!=", "B" } )]
         [TestCase( "@Ben_Laan", new[] { "@Ben_Laan" } )]
@@ -95,15 +92,37 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [TestCase("'Hello World'", new[] { "'", "Hello World", "'" })]
-        [TestCase("'A&R'", new[] { "'", "A&R", "'" })]
-        [TestCase("'!@#$%^&*('", new[] { "'", "!@#$%^&*(", "'" })]
-        [TestCase("'☀☂☭'", new[] { "'", "☀☂☭", "'" })]
-        [TestCase("'日本の漢字'", new[] { "'", "日本の漢字", "'" })]
-        [TestCase("'中国字符'", new[] { "'", "中国字符", "'" })]
+        [TestCase("'Hello World'", new[] { "'Hello World'" })]
+        [TestCase("'A&R'", new[] { "'A&R'" })]
+        [TestCase("'!@#$%^&*('", new[] { "'!@#$%^&*('" })]
+        [TestCase("'☀☂☭'", new[] { "'☀☂☭'" })]
+        [TestCase("'日本の漢字'", new[] { "'日本の漢字'" })]
+        [TestCase("'中国字符'", new[] { "'中国字符'" })]
         public void Can_Tokenize_Strings_As_One_Token(string input, string[] tokens)
         {
-            Verify( input, tokens );
+            Verify(input, tokens);
+        }
+
+        [Test]
+        [TestCase("N'XX'", new[] { "N'XX'" })]
+        //[TestCase("N'Hello World'", new[] { "N'Hello World'" })]
+        //[TestCase("N'A&R'", new[] { "N'A&R'" })]
+        //[TestCase("N'!@#$%^&*('", new[] { "N'!@#$%^&*('" })]
+        //[TestCase("N'☀☂☭'", new[] { "N'☀☂☭'" })]
+        //[TestCase("N'日本の漢字'", new[] { "N'日本の漢字'" })]
+        //[TestCase("N'中国字符'", new[] { "N'中国字符'" })]
+        //[TestCase("'N'", new[] { "'N'" })]
+        public void Can_Tokenize_Strings_With_N_Prefix(string input, string[] tokens)
+        {
+            Verify(input, tokens);
+        }
+
+        [TestCase("'WHERE Name = ''Laan'''", new[] { "'WHERE NAme = ''Laan'''" })]
+        [TestCase("'''The Coder'''", new[] { "'''The Coder'''" })]
+        [TestCase("N'Ben ''The Coder'' Laan'", new[] { "N'Ben ''The Coder'' Laan'" })]
+        public void Can_Tokenize_Strings_With_Escaped_Inner_Quotes(string input, string[] tokens)
+        {
+            Verify(input, tokens);
         }
 
         [Test]

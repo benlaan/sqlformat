@@ -22,7 +22,7 @@ namespace Laan.Sql.Parser.Test
         public void One_Empty_And_One_Non_Empty_Tokens_Are_Different()
         {
             // Setup
-            Token nonEmpty = new Token( "SELECT", TokenType.Alpha );
+            Token nonEmpty = new Token( "SELECT", TokenType.AlphaNumeric );
             Token empty = new Token();
 
             // Verify outcome
@@ -33,8 +33,8 @@ namespace Laan.Sql.Parser.Test
         public void Two_Non_Empty_Tokens_Are_Same()
         {
             // Setup
-            Token nonEmpty1 = new Token( "SELECT", TokenType.Alpha );
-            Token nonEmpty2 = new Token( "SELECT", TokenType.Alpha );
+            Token nonEmpty1 = new Token( "SELECT", TokenType.AlphaNumeric );
+            Token nonEmpty2 = new Token( "SELECT", TokenType.AlphaNumeric );
 
             // Verify outcome
             Assert.IsTrue( nonEmpty1 == nonEmpty2 );
@@ -44,8 +44,8 @@ namespace Laan.Sql.Parser.Test
         public void Two_Non_Empty_Tokens_Are_Different()
         {
             // Setup
-            Token nonEmpty1 = new Token( "SELECT", TokenType.Alpha );
-            Token nonEmpty2 = new Token( "UPDATE", TokenType.Alpha );
+            Token nonEmpty1 = new Token( "SELECT", TokenType.AlphaNumeric );
+            Token nonEmpty2 = new Token( "UPDATE", TokenType.AlphaNumeric );
 
             // Verify outcome
             Assert.IsTrue( nonEmpty1 != nonEmpty2 );
@@ -55,7 +55,7 @@ namespace Laan.Sql.Parser.Test
         public void One_Non_Empty_Tokens_And_One_String_Are_Same()
         {
             // Setup
-            Token nonEmpty = new Token( "SELECT", TokenType.Alpha );
+            Token nonEmpty = new Token( "SELECT", TokenType.AlphaNumeric );
             string value = "SELECT";
 
             // Verify outcome
@@ -66,7 +66,7 @@ namespace Laan.Sql.Parser.Test
         public void One_Non_Empty_Tokens_And_One_String_Are_Different()
         {
             // Setup
-            Token nonEmpty = new Token( "SELECT", TokenType.Alpha );
+            Token nonEmpty = new Token( "SELECT", TokenType.AlphaNumeric );
             string value = "UPDATE";
 
             // Verify outcome

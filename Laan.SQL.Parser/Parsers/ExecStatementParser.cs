@@ -4,66 +4,52 @@ using System.Collections.Generic;
 
 using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Parsers;
+using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Parser
 {
     public class ExecStatementParser : StatementParser<ExecStatement>
     {
-        public ExecStatementParser(ITokenizer tokenizer)
-            : base(tokenizer)
+        public ExecStatementParser(ITokenizer tokenizer) : base(tokenizer)
         {
         }
 
         private ExecStatement ParseExecuteSql(string functionName)
         {
             var statement = new ExecuteSqlStatement() { FunctionName = functionName };
-            if (!Tokenizer.IsNextToken("N"))
+            var parts = new List<string>();
+            
+            var parser = new ExpressionParser(Tokenizer);
+
+            var sqlStringExpression = parser.Execute<StringExpression>();
+            statement.InnerStatement = ParserFactory.Execute(sqlStringExpression.Content).First();
+
+            if (!Tokenizer.IsNextToken(Constants.Comma))
                 return statement;
 
-            var parts = new List<string>();
-            ReadNextToken();
+            Tokenizer.ReadNextToken();
+
+            var parameters = parser.Execute<StringExpression>()
+                .Content.Split(',')
+                .Select(p => p.Split(' ').Last())
+                .ToList();
+
+            Tokenizer.ExpectToken(Constants.Comma);
+            int parameterIndex = 0;
             do
             {
-                string body = "";
-                bool withinQuotes = false;
-                bool canContinue;
-                do
-                {
-                    withinQuotes ^= Tokenizer.Current.Type == TokenType.SingleQuote;
+                var argumentValue = parser.Execute<CriteriaExpression>();
 
-                    canContinue = withinQuotes || !Tokenizer.TokenEquals(Constants.Comma);
-                    if (canContinue)
-                    {
-                        body += CurrentToken;
-                        ReadNextToken();
-                    }
-                }
-                while (canContinue && Tokenizer.HasMoreTokens);
-
-                parts.Add(body);
-            }
-            while (Tokenizer.HasMoreTokens);
-
-            if (!parts.Any())
-                return statement;
-
-            var args = parts.Skip(1).First().Trim('\'').Split(',');
-            int index = 0;
-            foreach (string arg in parts.Skip(2))
-            {
-                var assignment = arg.Split('=');
-
-                statement.Arguments.Add(new Argument
-                {
-                    Name = assignment[0],
-                    Value = assignment[1],
-                    Type = args[index++].Split(' ').Last()
+                statement.Arguments.Add(new Argument 
+                { 
+                    Name = argumentValue.Left.Value, 
+                    Value = argumentValue.Right.Value,
+                    Type = parameters[parameterIndex]
                 });
+                parameterIndex++;
             }
+            while (Tokenizer.TokenEquals(Constants.Comma));
 
-            string sql = parts.First().Replace("''", "'").Trim('\'');
-            var parser = ParserFactory.Execute(sql);
-            statement.InnerStatement = parser.FirstOrDefault();
             return statement;
         }
 

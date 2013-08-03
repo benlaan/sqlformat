@@ -14,7 +14,6 @@ namespace Laan.Sql.Parser
     {
         None,
         WhiteSpace,
-        Alpha,
         Numeric,
         AlphaNumeric,
         Variable,
@@ -29,6 +28,7 @@ namespace Laan.Sql.Parser
         Symbol,
         InLineComment,
         MultiLineComment,
+        String,
         QuotedText
     }
 
@@ -42,7 +42,7 @@ namespace Laan.Sql.Parser
         public TokenDefinition(TokenType type, bool skip, string regex)
         {
             Skip = skip;
-            Regex = new Regex(regex, RegexOptions.Compiled);//| RegexOptions.Multiline | RegexOptions.Singleline );
+            Regex = new Regex(regex, RegexOptions.Compiled | RegexOptions.ExplicitCapture);//| RegexOptions.Multiline | RegexOptions.Singleline );
             Type = type;
         }
     }
@@ -95,7 +95,7 @@ namespace Laan.Sql.Parser
 
         private bool IsQuote(TokenType type)
         {
-            return type == TokenType.SingleQuote || type == TokenType.DoubleQuote; ;
+            return type == TokenType.SingleQuote;// || type == TokenType.DoubleQuote; ;
         }
 
         public override void ReadNextToken()

@@ -1,10 +1,9 @@
 using System;
+using System.Collections.Generic;
 
-using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Exceptions;
-using System.Collections.Generic;
-using System.Net;
+using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Parser.Parsers
 {
@@ -17,26 +16,31 @@ namespace Laan.Sql.Parser.Parsers
 
     public class ExpressionParser : CustomParser
     {
-        public ExpressionParser( ITokenizer tokenizer ) : base( tokenizer ) { }
+        public ExpressionParser(ITokenizer tokenizer) : base(tokenizer) { }
 
         public Expression Execute()
         {
-            return ReadCriteriaList( null );
+            return ReadCriteriaList(null);
         }
 
-        private Expression ReadCriteriaList( Expression parent )
+        public T Execute<T>() where T : Expression
         {
-            Expression expression = ReadCriteria( parent );
+            return (T)Execute();
+        }
 
-            if ( Tokenizer.IsNextToken( "AND", "OR" ) )
+        private Expression ReadCriteriaList(Expression parent)
+        {
+            Expression expression = ReadCriteria(parent);
+
+            if (Tokenizer.IsNextToken("AND", "OR"))
             {
-                CriteriaExpression result = new CriteriaExpression( parent );
+                CriteriaExpression result = new CriteriaExpression(parent);
                 result.Left = expression;
 
                 result.Operator = CurrentToken;
                 ReadNextToken();
 
-                result.Right = ReadCriteriaList( result );
+                result.Right = ReadCriteriaList(result);
 
                 return result;
             }
@@ -44,105 +48,105 @@ namespace Laan.Sql.Parser.Parsers
                 return expression;
         }
 
-        private BetweenExpression ProcessBetween( Expression parent, Expression expression )
+        private BetweenExpression ProcessBetween(Expression parent, Expression expression)
         {
-            BetweenExpression betweenExpression = new BetweenExpression( parent );
+            BetweenExpression betweenExpression = new BetweenExpression(parent);
             betweenExpression.Expression = expression;
-            betweenExpression.From = ReadCriteria( betweenExpression );
+            betweenExpression.From = ReadCriteria(betweenExpression);
 
-            ExpectToken( Constants.And );
-            betweenExpression.To = ReadCriteria( betweenExpression );
+            ExpectToken(Constants.And);
+            betweenExpression.To = ReadCriteria(betweenExpression);
 
             return betweenExpression;
         }
 
-        private CriteriaExpression ProcessCriteria( Expression parent, Expression expression )
+        private CriteriaExpression ProcessCriteria(Expression parent, Expression expression)
         {
-            CriteriaExpression result = new CriteriaExpression( parent );
+            CriteriaExpression result = new CriteriaExpression(parent);
             result.Left = expression;
 
             result.Operator = CurrentToken;
             ReadNextToken();
 
-            result.Right = ReadExpression( parent );
+            result.Right = ReadExpression(parent);
 
             return result;
         }
 
-        private Expression ReadCriteria( Expression parent )
+        private Expression ReadCriteria(Expression parent)
         {
-            Expression expression = ReadExpression( parent );
+            Expression expression = ReadExpression(parent);
 
             // this handles the (non-standard) case of NOT being placed after the 'left' operand, instead
             // of the more accurate grammar of being before the operand
             // e.g. WHERE NOT A.ID IN (10, 20) ~ WHERE A.ID NOT IN (10, 20)
             // Although probably inaccurate, it is easiest to simply make the NOT part of the operator
-            if ( Tokenizer.TokenEquals( Constants.Not ) )
+            if (Tokenizer.TokenEquals(Constants.Not))
             {
-                if ( Tokenizer.TokenEquals( Constants.Between ) )
+                if (Tokenizer.TokenEquals(Constants.Between))
                 {
-                    var between = ProcessBetween( parent, expression );
+                    var between = ProcessBetween(parent, expression);
                     between.Negated = true;
                     return between;
                 }
 
-                if ( Tokenizer.IsNextToken( Constants.In, Constants.Like ) )
+                if (Tokenizer.IsNextToken(Constants.In, Constants.Like))
                 {
-                    CriteriaExpression criteria = ProcessCriteria( parent, expression );
+                    CriteriaExpression criteria = ProcessCriteria(parent, expression);
                     criteria.Operator = Constants.Not + " " + criteria.Operator;
                     return criteria;
                 }
 
-                throw new ExpectedTokenNotFoundException( "IN or BETWEEN", CurrentToken, Tokenizer.Position );
+                throw new ExpectedTokenNotFoundException("IN or BETWEEN", CurrentToken, Tokenizer.Position);
             }
-            else 
-            if ( Tokenizer.TokenEquals( Constants.Between ) )
-                return ProcessBetween( parent, expression );
-            else 
-            if ( Tokenizer.IsNextToken( "=", "<>", "!=", ">=", "<=", ">", "<", "IS", "IN", "ANY", "LIKE" ) )
-                return ProcessCriteria( parent, expression );
-            else
-                return expression;
+
+            if (Tokenizer.TokenEquals(Constants.Between))
+                return ProcessBetween(parent, expression);
+
+            if (Tokenizer.IsNextToken("=", "<>", "!=", ">=", "<=", ">", "<", "IS", "IN", "ANY", "LIKE"))
+                return ProcessCriteria(parent, expression);
+
+            return expression;
         }
 
-        private Expression ReadExpression( Expression parent )
+        private Expression ReadExpression(Expression parent)
         {
-            Expression term = ReadTerm( parent );
+            Expression term = ReadTerm(parent);
 
-            if ( Tokenizer.IsNextToken( "+", "-" ) )
+            if (Tokenizer.IsNextToken("+", "-"))
             {
-                OperatorExpression result = new OperatorExpression( parent );
+                OperatorExpression result = new OperatorExpression(parent);
                 result.Left = term;
 
                 result.Operator = CurrentToken;
                 ReadNextToken();
 
-                result.Right = ReadExpression( parent );
+                result.Right = ReadExpression(parent);
 
                 return result;
             }
-            else
-                return term;
+
+            return term;
         }
 
-        private Expression ReadTerm( Expression parent )
+        private Expression ReadTerm(Expression parent)
         {
-            Expression factor = ReadFactor( parent );
+            Expression factor = ReadFactor(parent);
 
-            if ( Tokenizer.IsNextToken( "*", "/", "%", "^" ) )
+            if (Tokenizer.IsNextToken("*", "/", "%", "^"))
             {
-                OperatorExpression result = new OperatorExpression( parent );
+                OperatorExpression result = new OperatorExpression(parent);
                 result.Left = factor;
 
                 result.Operator = CurrentToken;
                 ReadNextToken();
 
-                result.Right = ReadExpression( parent );
+                result.Right = ReadExpression(parent);
 
                 return result;
             }
-            else
-                return factor;
+
+            return factor;
         }
 
         private SqlType ProcessType()
@@ -151,73 +155,72 @@ namespace Laan.Sql.Parser.Parsers
             return sqlTypeParser.Execute();
         }
 
-        private Expression GetNestedExpression( Expression parent )
+        private Expression GetNestedExpression(Expression parent)
         {
             Expression result;
-            using ( Tokenizer.ExpectBrackets() )
+            using (Tokenizer.ExpectBrackets())
             {
-                result = ReadCriteriaList( parent );
-                if ( Tokenizer.IsNextToken( Constants.Comma ) )
+                result = ReadCriteriaList(parent);
+                if (Tokenizer.IsNextToken(Constants.Comma))
                 {
                     var list = new ExpressionList();
-                    list.Identifiers.Add( result );
+                    list.Identifiers.Add(result);
 
                     do
                     {
-                        Tokenizer.ExpectToken( Constants.Comma );
+                        Tokenizer.ExpectToken(Constants.Comma);
 
-                        result = ReadCriteriaList( parent );
-                        list.Identifiers.Add( result );
+                        result = ReadCriteriaList(parent);
+                        list.Identifiers.Add(result);
 
-                    } while ( Tokenizer.IsNextToken( Constants.Comma ) );
+                    } while (Tokenizer.IsNextToken(Constants.Comma));
 
                     result = list;
                 }
             }
 
-            NestedExpression nestedExpression = new NestedExpression( parent ) { Expression = result };
+            NestedExpression nestedExpression = new NestedExpression(parent) { Expression = result };
             result.Parent = nestedExpression;
             return nestedExpression;
         }
 
-        private Expression GetFunction( Expression parent, string token )
+        private Expression GetFunction(Expression parent, string token)
         {
             FunctionExpression result = null;
             var arguments = new List<Expression>();
             string functionName = "";
 
-            using ( Tokenizer.ExpectBrackets() )
+            using (Tokenizer.ExpectBrackets())
             {
                 functionName = token;
-                if ( !Tokenizer.IsNextToken( Constants.CloseBracket ) )
+                if (!Tokenizer.IsNextToken(Constants.CloseBracket))
                     do
                     {
-                        arguments.Add( ReadExpression( parent ) );
-                        if ( Tokenizer.TokenEquals( Constants.As ) )
+                        arguments.Add(ReadExpression(parent));
+                        if (Tokenizer.TokenEquals(Constants.As))
                         {
-                            if ( !String.Equals( functionName, Constants.Cast, StringComparison.InvariantCultureIgnoreCase ) )
-                                throw new SyntaxException( "AS is allowed only within a CAST expression" );
+                            if (!String.Equals(functionName, Constants.Cast, StringComparison.InvariantCultureIgnoreCase))
+                                throw new SyntaxException("AS is allowed only within a CAST expression");
 
-                            result = new CastExpression( parent, ProcessType() );
+                            result = new CastExpression(parent, ProcessType());
                             break;
                         }
                     }
-                    while ( Tokenizer.TokenEquals( Constants.Comma ) );
+                    while (Tokenizer.TokenEquals(Constants.Comma));
             }
 
-            result = result ?? new FunctionExpression( parent ) { Name = functionName };
+            result = result ?? new FunctionExpression(parent) { Name = functionName };
             result.Arguments = arguments;
             return result;
         }
-
 
         private Expression GetCaseExpression(Expression parent)
         {
             ReadNextToken();
             if (Tokenizer.IsNextToken(Constants.When))
                 return GetCaseWhenExpression(parent);
-            else
-                return GetCaseSwitchExpression(parent);
+            
+            return GetCaseSwitchExpression(parent);
         }
 
         private Expression GetSelectExpression()
@@ -230,102 +233,102 @@ namespace Laan.Sql.Parser.Parsers
             return selectExpression;
         }
 
+        private StringExpression ReadString(Expression parent)
+        {
+            var value = Tokenizer.Current.Value;
+            do
+            {
+                ReadNextToken();
+                value += Tokenizer.Current.Value;
+            }
+            while (Tokenizer.Current.Type != TokenType.SingleQuote);
+            ReadNextToken();
+
+            return new StringExpression(value, parent);
+        }
+
         private Expression ReadFactor(Expression parent)
         {
             // nested expressions first
-            if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
+            if (Tokenizer.IsNextToken(Constants.OpenBracket))
             {
-                return GetNestedExpression( parent );
+                return GetNestedExpression(parent);
             }
             else
             {
-                if ( Tokenizer.IsNextToken( Constants.Case ) )
-                {
+                if (Tokenizer.IsNextToken(Constants.Case))
                     return GetCaseExpression(parent);
-                }
-                else if ( Tokenizer.IsNextToken( Constants.Select ) )
-                {
+
+                if (Tokenizer.IsNextToken(Constants.Select))
                     return GetSelectExpression();
+
+                if (Tokenizer.HasMoreTokens && Tokenizer.Current.Type == TokenType.String)
+                {
+                    return ReadString(parent);
                 }
 
-                string token;
-                if ( Tokenizer.HasMoreTokens && Tokenizer.Current.Type == TokenType.SingleQuote ) // StartsWith( Constants.Quote ) && Tokenizer.Current.EndsWith( Constants.Quote ) )
-                {
-                    var value = Tokenizer.Current.Value;
-                    do
-                    {
-                        ReadNextToken();
-                    	value += Tokenizer.Current.Value;
-                    } 
-                    while (Tokenizer.Current.Type != TokenType.SingleQuote);
-                    ReadNextToken();
-
-                    return new StringExpression( value, parent );
-                }
-
-                if ( Tokenizer.IsNextToken( Constants.Not ) )
+                if (Tokenizer.IsNextToken(Constants.Not))
                 {
                     ReadNextToken();
-                    NegationExpression negationExpression = new NegationExpression( parent );
-                    var result = ReadCriteriaList( negationExpression );
+                    NegationExpression negationExpression = new NegationExpression(parent);
+                    var result = ReadCriteriaList(negationExpression);
                     negationExpression.Expression = result;
                     return negationExpression;
                 }
 
-                if ( Tokenizer.Current != (Token) null && !Tokenizer.Current.IsTypeIn(
-                    TokenType.SingleQuote, TokenType.Variable, TokenType.Alpha, TokenType.AlphaNumeric,
-                    TokenType.Numeric, TokenType.Operator, TokenType.BlockedText )
+                if (Tokenizer.Current != (Token)null && !Tokenizer.Current.IsTypeIn(
+                    TokenType.SingleQuote, TokenType.Variable, TokenType.AlphaNumeric, TokenType.AlphaNumeric,
+                    TokenType.Numeric, TokenType.Operator, TokenType.BlockedText)
                 )
-                    throw new SyntaxException( "expected alpha, numeric, or variable, found " + Tokenizer.Current.Value );
+                    throw new SyntaxException("expected alpha, numeric, or variable, found " + Tokenizer.Current.Value);
 
                 // get (possibly dot notated) identifier next
-                token = GetDotNotationIdentifier();
+                string token = GetDotNotationIdentifier();
 
                 // check for an open bracket, indicating that the previous identifier is actually a function
                 if (Tokenizer.IsNextToken(Constants.OpenBracket))
                     return GetFunction(parent, token);
                 else
-                    return new IdentifierExpression( token, parent );
+                    return new IdentifierExpression(token, parent);
             }
         }
 
-        private void ParseCaseExpression( CaseExpression caseExpression )
+        private void ParseCaseExpression(CaseExpression caseExpression)
         {
-            while ( Tokenizer.IsNextToken( Constants.When ) )
+            while (Tokenizer.IsNextToken(Constants.When))
             {
                 ReadNextToken();
-                CaseSwitch caseSwitch = new CaseSwitch( caseExpression );
-                caseSwitch.When = ReadCriteriaList( caseExpression );
+                CaseSwitch caseSwitch = new CaseSwitch(caseExpression);
+                caseSwitch.When = ReadCriteriaList(caseExpression);
 
-                Tokenizer.ExpectToken( Constants.Then );
-                caseSwitch.Then = ReadExpression( caseExpression );
+                Tokenizer.ExpectToken(Constants.Then);
+                caseSwitch.Then = ReadExpression(caseExpression);
 
-                caseExpression.Cases.Add( caseSwitch );
+                caseExpression.Cases.Add(caseSwitch);
             }
 
-            if ( Tokenizer.IsNextToken( Constants.Else ) )
+            if (Tokenizer.IsNextToken(Constants.Else))
             {
                 ReadNextToken();
-                caseExpression.Else = ReadExpression( caseExpression );
+                caseExpression.Else = ReadExpression(caseExpression);
             }
 
-            ExpectToken( Constants.End );
+            ExpectToken(Constants.End);
         }
 
-        private Expression GetCaseWhenExpression( Expression parent )
+        private Expression GetCaseWhenExpression(Expression parent)
         {
-            CaseWhenExpression result = new CaseWhenExpression( parent );
-            ParseCaseExpression( result );
+            CaseWhenExpression result = new CaseWhenExpression(parent);
+            ParseCaseExpression(result);
             return result;
         }
 
-        private Expression GetCaseSwitchExpression( Expression parent )
+        private Expression GetCaseSwitchExpression(Expression parent)
         {
-            CaseSwitchExpression result = new CaseSwitchExpression( parent );
-            result.Switch = ReadCriteriaList( result );
-            ParseCaseExpression( result );
+            CaseSwitchExpression result = new CaseSwitchExpression(parent);
+            result.Switch = ReadCriteriaList(result);
+            ParseCaseExpression(result);
             return result;
         }
     }
 }
-

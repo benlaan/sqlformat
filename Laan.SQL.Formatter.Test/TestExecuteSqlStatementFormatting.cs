@@ -8,7 +8,7 @@ namespace Laan.Sql.Formatter.Test
     public class TestExecuteSqlStatementFormatting : BaseFormattingTest
     {
         [Test]
-        public void Can_Format_Select_With_Multiple_Froms_With_Joins()
+        public void Can_Format_Select_Within_spExecuteSql()
         {
             // Setup
             var sut = new FormattingEngine();
