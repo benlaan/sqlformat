@@ -156,13 +156,18 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [TestCase( "+" ), TestCase( "-" ), TestCase( "*" ), TestCase( "/" ), TestCase( "%" ), TestCase( "^" )]
+        [TestCase( "+" )] 
+        [TestCase( "-" )]
+        [TestCase( "*" )]
+        [TestCase( "/" )]
+        [TestCase( "%" )]
+        [TestCase( "^" )]
         public void Expression_With_Add_Operator( string op )
         {
             // setup
             var tokenizer = NewTokenizer( String.Format( "A.Field1 {0} 120", op ) );
             tokenizer.ReadNextToken();
-
+            
             ExpressionParser parser = new ExpressionParser( tokenizer );
 
             // exercise

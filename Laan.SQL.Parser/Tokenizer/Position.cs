@@ -9,7 +9,7 @@ namespace Laan.Sql.Parser
         public Position( CustomTokenizer tokenizer )
         {
             _tokenizer = tokenizer;
-            Row = 1;
+            Row = 0;
             Column = 1;
         }
 

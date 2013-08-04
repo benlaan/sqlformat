@@ -236,12 +236,12 @@ namespace Laan.Sql.Parser.Parsers
         private StringExpression ReadString(Expression parent)
         {
             var value = Tokenizer.Current.Value;
-            do
-            {
-                ReadNextToken();
-                value += Tokenizer.Current.Value;
-            }
-            while (Tokenizer.Current.Type != TokenType.SingleQuote);
+            //do
+            //{
+            //    ReadNextToken();
+            //    value += Tokenizer.Current.Value;
+            //}
+            //while (Tokenizer.Current.Type != TokenType.SingleQuote);
             ReadNextToken();
 
             return new StringExpression(value, parent);

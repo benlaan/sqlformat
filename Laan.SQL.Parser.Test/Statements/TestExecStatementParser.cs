@@ -20,11 +20,8 @@ namespace Laan.Sql.Parser.Test
         {
             var sql = @"exec sp_executesql 
 
-                  N'select Id from [Transaction] T 
-                    where Id = @p0 and OtherId = @p1 and Name <> @p2',
-
+                  N'select Id from [Transaction] T where Id = @p0 and OtherId = @p1 and Name <> @p2',
                   N'@p0 int,@p1 int,@p2 nvarchar(max)',
-
                   @p0=100,@p1=44,@p2=N'WOO'
             ";
 
@@ -51,11 +48,8 @@ namespace Laan.Sql.Parser.Test
         public void Can_Execute_Sql_String_Containing_Quotes_Within_Sql()
         {
             var sql = @"exec sp_executesql 
-                  N'select T.Id, T.Name from [Transaction] T 
-                    where T.Type in (''Process'', ''TransferFrom'') and Name <> @p0',
-
+                  N'select T.Id, T.Name from [Transaction] T where T.Type in (''Process'', ''TransferFrom'') and Name <> @p0',
                   N'@p0 nvarchar(4000)',
-
                   @p0=N'WOO'
             ";
 
@@ -69,9 +63,9 @@ namespace Laan.Sql.Parser.Test
             Assert.IsNotNull(selectStatement);
 
             Assert.AreEqual("[Transaction]", selectStatement.From.First().Name);
-            Assert.AreEqual(3, statement.Arguments.Count);
-            Assert.AreEqual(new string[] { "@p0", "@p1", "@p2" }, statement.Arguments.Select(a => a.Name).ToArray());
-            Assert.AreEqual(new string[] { "100", "44", "N'WOO'" }, statement.Arguments.Select(a => a.Value).ToArray());
+            Assert.AreEqual(1, statement.Arguments.Count);
+            Assert.AreEqual(new string[] { "@p0" }, statement.Arguments.Select(a => a.Name).ToArray());
+            Assert.AreEqual(new string[] { "N'WOO'" }, statement.Arguments.Select(a => a.Value).ToArray());
         }
 
         /// <summary>
@@ -84,21 +78,15 @@ namespace Laan.Sql.Parser.Test
             var sql = @"
 
                 exec sp_executesql 
-                  N'select Id from [Transaction] T 
-                    where Id = @p0 and OtherId = @p1 and Name <> @p2',
-
+                  N'select Id from [Transaction] T where Id = @p0 and OtherId = @p1 and Name <> @p2',
                   N'@p0 int,@p1 int,@p2 nvarchar(max)',
-
                   @p0=100,@p1=44,@p2=N'WOO'
                 
                 go
 
                 exec sp_executesql 
-                  N'select Id from [Transaction] T 
-                    where Id = @p0 and OtherId = @p1 and Name <> @p2',
-
+                  N'select Id from [Transaction] T where Id = @p0 and OtherId = @p1 and Name <> @p2',
                   N'@p0 int,@p1 int,@p2 nvarchar(max)',
-
                   @p0=100,@p1=44,@p2=N'WOO'
 
             ";

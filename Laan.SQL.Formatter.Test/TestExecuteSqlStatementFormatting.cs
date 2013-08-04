@@ -15,9 +15,7 @@ namespace Laan.Sql.Formatter.Test
 
             // Exercise
             var sql = @"exec sp_executesql 
-                  N'select TOP (@p0) T.Id, T.Name from [Transaction] T 
-                    where T.Type in (''Process'', ''TransferFrom'') 
-                      and T.Code in (@p1) and T.Name <> @p2',
+                  N'select TOP (@p0) T.Id, T.Name from [Transaction] T where T.Type in (''Process'', ''TransferFrom'') and T.Code in (@p1) and T.Name <> @p2',
                   N'@p0 int,@p1 int,@p2 nvarchar(4000)',
                   @p0=100,@p1=44,@p2=N'WOO'
             ";
