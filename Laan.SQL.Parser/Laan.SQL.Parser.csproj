@@ -43,6 +43,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Tokenizer\CandidateDefinition.cs" />
+    <Compile Include="Tokenizer\TokenDefinition.cs" />
     <Compile Include="Utilities\BracketStructure.cs" />
     <Compile Include="Entities\ExecuteSqlStatement.cs" />
     <Compile Include="Entities\InsertDeleteStatementBase.cs" />
