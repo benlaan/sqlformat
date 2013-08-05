@@ -19,7 +19,7 @@ namespace Laan.Sql.Parser
             if (!String.IsNullOrEmpty(multiLineTerminator))
             {
                 MultiLineTerminator = new Regex(multiLineTerminator, RegexOptions.Compiled | RegexOptions.ExplicitCapture);
-                MultiLineContinuation = new Regex(String.Format("[^({0})]*", multiLineTerminator), RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+                MultiLineContinuation = new Regex(String.Format("[^{0}]*", multiLineTerminator), RegexOptions.Compiled | RegexOptions.ExplicitCapture);
             }
 
             Skip = skip;

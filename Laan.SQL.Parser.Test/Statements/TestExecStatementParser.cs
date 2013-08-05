@@ -20,7 +20,9 @@ namespace Laan.Sql.Parser.Test
         {
             var sql = @"exec sp_executesql 
 
-                  N'select Id from [Transaction] T where Id = @p0 and OtherId = @p1 and Name <> @p2',
+                  N'select Id from [Transaction] T 
+                    where Id = @p0 and OtherId = @p1 
+                    and Name <> @p2',
                   N'@p0 int,@p1 int,@p2 nvarchar(max)',
                   @p0=100,@p1=44,@p2=N'WOO'
             ";

@@ -11,8 +11,8 @@ namespace Laan.Sql.Parser
             TokenDefinitions.AddRange(new[]
             {
                 new TokenDefinition( TokenType.InLineComment,      true,  @"\-\-[^\n^\r]*" ),
-                new TokenDefinition( TokenType.MultiLineComment,   true,  @"\/\**", @"\*\/"),
-                new TokenDefinition( TokenType.String,             false, @"N?'(''|[^'])*'"),
+                new TokenDefinition( TokenType.MultiLineComment,   true,  @"(\/\*)", @"(\*\/)"),
+                new TokenDefinition( TokenType.String,             false, @"N?'", @"'"),
                 new TokenDefinition( TokenType.Variable,           false, @"(:|@{1,2}|#{1,2})[A-Za-z_]+[[A-Za-z_0-9]*" ),
                 new TokenDefinition( TokenType.AlphaNumeric,       false, @"[A-Za-z_]+\w*" ),
                 new TokenDefinition( TokenType.Numeric,            false, @"[-]?\d*[0-9](|.\d*[0-9]|,\d*[0-9])?" ),
@@ -21,7 +21,7 @@ namespace Laan.Sql.Parser
                 new TokenDefinition( TokenType.DoubleQuote,        false, @""".*"""),
                 new TokenDefinition( TokenType.BlockedText,        false, @"\[.*?\]" ),
                 new TokenDefinition( TokenType.Symbol,             false, @"[,.;:]" ),
-                new TokenDefinition( TokenType.Operator,           false, @"(\<\>)|[\*\\+\-!\<\>]?=|[\<\>]|[\+\-\*/\\%\^]" ),
+                new TokenDefinition( TokenType.Operator,           false, @"(\<\>)|[\*\\\/+\-!\<\>]?=|[\<\>]|[\+\-\*/\\/\%\^]" ),
                 new TokenDefinition( TokenType.WhiteSpace,         true,  @"\s+" )
             });
         }

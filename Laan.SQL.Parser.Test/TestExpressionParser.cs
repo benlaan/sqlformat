@@ -93,8 +93,11 @@ namespace Laan.Sql.Parser.Test
         [TestCase( "''", "''" )]
         [TestCase( " '' ", "''" )]
         [TestCase( " ' ' ", "' '" )]
-        [TestCase( "' '", "' '" )]
-        public void Expression_Reads_Empty_Quoted_String( string input, string output )
+        [TestCase("' '", "' '")]
+        [TestCase("'Ben ''The Coder'' Laan'", "'Ben ''The Coder'' Laan'")]
+        [TestCase("'IF @A <> ''A B'' AND @B <> ''C D'''", "'IF @A <> ''A B'' AND @B <> ''C D'''")]
+        [TestCase("'IF (@A <> ''A B'')'", "'IF (@A <> ''A B'')'")]
+        public void Expression_Reads_Empty_Quoted_String(string input, string output)
         {
             // setup
             var tokenizer = NewTokenizer( input );

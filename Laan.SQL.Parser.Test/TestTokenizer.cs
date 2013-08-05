@@ -100,6 +100,7 @@ namespace Laan.Sql.Parser.Test
         [TestCase("'☀☂☭'", new[] { "'☀☂☭'" })]
         [TestCase("'日本の漢字'", new[] { "'日本の漢字'" })]
         [TestCase("'中国字符'", new[] { "'中国字符'" })]
+        [TestCase("CASE A WHEN 'N' THEN 1 WHEN 'Y' THEN 2 END", new[] { "CASE", "A", "WHEN", "'N'", "THEN", "1", "WHEN", "'Y'", "THEN", "2", "END" })]
         public void Can_Tokenize_Strings_As_One_Token(string input, string[] tokens)
         {
             Verify(input, tokens);
@@ -114,8 +115,14 @@ namespace Laan.Sql.Parser.Test
         [TestCase("N'日本の漢字'", new[] { "N'日本の漢字'" })]
         [TestCase("N'中国字符'", new[] { "N'中国字符'" })]
         [TestCase("'N'", new[] { "'N'" })]
-        //[TestCase("N'1\n\r2\n\r'", new[] { "N'1\n\r2\n\r'" })]
         public void Can_Tokenize_Strings_With_N_Prefix(string input, string[] tokens)
+        {
+            Verify(input, tokens);
+        }
+
+        [Test]
+        [TestCase("N'1\r\n2\r\n'", new[] { "N'1\r\n2\r\n'" })]
+        public void Can_Tokenize_MultiLine_Strings_With_N_Prefix(string input, string[] tokens)
         {
             Verify(input, tokens);
         }
@@ -128,9 +135,9 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [TestCase("'WHERE Name = ''Laan'''", new[] { "'WHERE Name = ''Laan'''" })]
-        [TestCase("'''The Coder'''", new[] { "'''The Coder'''" })]
-        [TestCase("N'Ben ''The Coder'' Laan'", new[] { "N'Ben ''The Coder'' Laan'" })]
+        [TestCase("'WHERE Name = ''Laan'''", new[] { "'WHERE Name = '", "'Laan'", "''" })]
+        [TestCase("'''The Coder'''", new[] { "''", "'The Coder'", "''" })]
+        [TestCase("N'Ben ''The Coder'' Laan'", new[] { "N'Ben '", "'The Coder'", "' Laan'" })]
         public void Can_Tokenize_Strings_With_Escaped_Inner_Quotes(string input, string[] tokens)
         {
             Verify(input, tokens);
@@ -149,6 +156,8 @@ namespace Laan.Sql.Parser.Test
         [TestCase("ID > 10;", new[] { "ID", ">", "10", ";" })]
         [TestCase("ID >= 10", new[] { "ID", ">=", "10" })]
         [TestCase("ID <> 10", new[] { "ID", "<>", "10" })]
+        [TestCase("ID * 10", new[] { "ID", "*", "10" })]
+        [TestCase("ID / 10", new[] { "ID", "/", "10" })]
         public void Tokenize_Comparator_Operators(string input, string[] tokens)
         {
             Verify(input, tokens);

@@ -127,7 +127,7 @@ namespace Laan.Sql.Parser
             else if (matchingToken.Definition.IsMultiLine)
             {
                 ProcessMultiLine(matchingToken);
-            }
+           } 
         }
 
         public override Token Current
