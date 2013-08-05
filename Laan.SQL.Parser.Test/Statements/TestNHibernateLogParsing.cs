@@ -40,7 +40,7 @@ namespace Laan.Sql.Parser.Test
             // Verify outcome
             Assert.IsNotNull(statement);
             Assert.AreEqual("[Transaction]", statement.From.First().Name);
-            Assert.AreEqual("100", statement.Top.Expression.Value);
+            Assert.AreEqual("(100)", statement.Top.Expression.Value);
             Assert.AreEqual("(T.Code IN ('AA BB', 'CCC'))", statement.Where.Value);
         }
 
@@ -74,7 +74,7 @@ namespace Laan.Sql.Parser.Test
             // Verify outcome
             Assert.IsNotNull(statement);
             Assert.AreEqual("[Transaction]", statement.From.First().Name);
-            Assert.AreEqual("100", statement.Top.Expression.Value);
+            Assert.AreEqual("(100)", statement.Top.Expression.Value);
             Assert.AreEqual("(Code IN ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'))", statement.Where.Value);
         }
 
@@ -131,7 +131,7 @@ namespace Laan.Sql.Parser.Test
             // Verify outcome
             Assert.IsNotNull(statement);
             Assert.AreEqual("[Transaction]", statement.From.First().Name);
-            Assert.AreEqual("100", statement.Top.Expression.Value);
+            Assert.AreEqual("(100)", statement.Top.Expression.Value);
             Assert.AreEqual("(T.Code IN (1, 2))", statement.Where.Value);
         }
     }

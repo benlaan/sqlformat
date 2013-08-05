@@ -90,28 +90,46 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [TestCase( "''", "''" )]
-        [TestCase( " '' ", "''" )]
-        [TestCase( " ' ' ", "' '" )]
+        [TestCase("''", "''")]
+        [TestCase(" '' ", "''")]
+        [TestCase(" ' ' ", "' '")]
         [TestCase("' '", "' '")]
-        [TestCase("'Ben ''The Coder'' Laan'", "'Ben ''The Coder'' Laan'")]
-        [TestCase("'IF @A <> ''A B'' AND @B <> ''C D'''", "'IF @A <> ''A B'' AND @B <> ''C D'''")]
-        [TestCase("'IF (@A <> ''A B'')'", "'IF (@A <> ''A B'')'")]
         public void Expression_Reads_Empty_Quoted_String(string input, string output)
         {
             // setup
-            var tokenizer = NewTokenizer( input );
+            var tokenizer = NewTokenizer(input);
             tokenizer.ReadNextToken();
 
-            ExpressionParser parser = new ExpressionParser( tokenizer );
+            ExpressionParser parser = new ExpressionParser(tokenizer);
 
             // exercise
             Expression expression = parser.Execute();
 
             // verify
-            Assert.IsNotNull( expression );
-            Assert.AreEqual( output, expression.Value );
-            Assert.IsTrue( expression is StringExpression );
+            Assert.IsNotNull(expression);
+            Assert.AreEqual(output, expression.Value);
+            Assert.IsTrue(expression is StringExpression);
+        }
+
+        [Test]
+        [TestCase("'Ben ''The Coder'' Laan'", "'Ben ''The Coder'' Laan'")]
+        [TestCase("'IF @A <> ''A B'' AND @B <> ''C D'''", "'IF @A <> ''A B'' AND @B <> ''C D'''")]
+        [TestCase("'IF (@A <> ''A B'')'", "'IF (@A <> ''A B'')'")]
+        public void Expression_Reads_Encoded_Strings(string input, string output)
+        {
+            // setup
+            var tokenizer = NewTokenizer(input);
+            tokenizer.ReadNextToken();
+
+            ExpressionParser parser = new ExpressionParser(tokenizer);
+
+            // exercise
+            Expression expression = parser.Execute();
+
+            // verify
+            Assert.IsNotNull(expression);
+            Assert.AreEqual(output, expression.Value);
+            Assert.IsTrue(expression is StringExpression);
         }
 
         [Test]

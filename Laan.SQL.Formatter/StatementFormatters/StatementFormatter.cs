@@ -32,8 +32,6 @@ namespace Laan.Sql.Formatter
             _statement = statement;
         }
 
-        #region Rendering Utilities
-
         protected void IndentAppend(string text)
         {
             for (int count = 0; count < IndentLevel; count++)
@@ -72,13 +70,12 @@ namespace Laan.Sql.Formatter
             NewLine(1);
         }
 
-        #endregion
         protected void FormatTop(Top top)
         {
             if (top == null)
                 return;
 
-            string format = top.Brackets ? " TOP ({0}){1}" : " TOP {0}{1}";
+            string format = " TOP {0}{1}";
 
             Append(
                 String.Format(

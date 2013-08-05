@@ -134,35 +134,33 @@ namespace Laan.Sql.Parser.Parsers
 
         protected Top GetTop()
         {
-            // consume 'TOP' token first
-            Tokenizer.ExpectToken( Constants.Top );
+            Tokenizer.ExpectToken(Constants.Top);
 
             Top top;
-            if ( Tokenizer.IsNextToken( Constants.OpenBracket ) )
+            if (Tokenizer.IsNextToken(Constants.OpenBracket))
             {
-                using ( Tokenizer.ExpectBrackets() )
+                using (Tokenizer.ExpectBrackets())
                 {
-                    var parser = new ExpressionParser( Tokenizer );
+                    var parser = new ExpressionParser(Tokenizer);
                     var expression = parser.Execute();
-                    if ( expression != null )
-                    {
-                        top = new Top( expression, true );
-                        return top;
-                    }
-                    else
-                        throw new SyntaxException( "TOP clause requires an expression" );
+                    if (expression == null)
+                        throw new SyntaxException("TOP clause requires an expression");
+
+                    var brackets = new NestedExpression(null);
+                    brackets.Expression = expression;
+                    top = new Top(brackets);
                 }
             }
             else
             {
-                if ( Tokenizer.Current.Type != TokenType.Numeric || Tokenizer.Current.Value.Contains( "." ) )
-                    throw new SyntaxException( String.Format( "Expected integer but found: '{0}'", Tokenizer.Current.Value ) );
+                if (Tokenizer.Current.Type != TokenType.Numeric || Tokenizer.Current.Value.Contains("."))
+                    throw new SyntaxException(String.Format("Expected integer but found: '{0}'", Tokenizer.Current.Value));
 
-                top = new Top( new StringExpression( Tokenizer.Current.Value, null ), false );
+                top = new Top(new StringExpression(Tokenizer.Current.Value, null));
                 ReadNextToken();
             }
 
-            if ( Tokenizer.TokenEquals( Constants.Percent ) )
+            if (Tokenizer.TokenEquals(Constants.Percent))
                 top.Percent = true;
 
             return top;

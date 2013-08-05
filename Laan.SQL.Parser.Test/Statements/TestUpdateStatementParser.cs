@@ -124,7 +124,7 @@ namespace Laan.Sql.Parser.Test
             Assert.IsNotNull( statement );
             Assert.AreEqual( "t", statement.TableName );
             Assert.IsNotNull( statement.Top );
-            Assert.AreEqual( "10", statement.Top.Expression.Value );
+            Assert.AreEqual( "(10)", statement.Top.Expression.Value );
             Assert.AreEqual( 1, statement.Fields.Count );
             Assert.AreEqual( "1", statement.Fields[ 0 ].Expression.Value );
 
