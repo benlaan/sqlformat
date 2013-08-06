@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Entities\TestAlias.cs" />
     <Compile Include="Entities\TestStatement.cs" />
+    <Compile Include="Statements\TestStatementParsingWithComments.cs" />
     <Compile Include="Statements\TestBeginBlockStatementParser.cs" />
     <Compile Include="Statements\TestNHibernateLogParsing.cs" />
     <Compile Include="Statements\TestSetStatements.cs" />

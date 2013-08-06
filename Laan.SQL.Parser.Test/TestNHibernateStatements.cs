@@ -11,13 +11,12 @@ namespace Laan.Sql.Parser.Test
     [TestFixture]
     public class TestNHibernateStatements
     {
-
         private const string sample =
-    @"Batch commands:
-command 0:INSERT INTO dbo.[SimpleEntity] (Version, Name, UserName, Created, Modified, IsDeleted, Id) VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6)";
+            @"Batch commands:
+        command 0:INSERT INTO dbo.[SimpleEntity] (Version, Name, UserName, Created, Modified, IsDeleted, Id) VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6)";
 
         [Test]
-        public void TestMethod()
+        public void Test_ParserFactory_Correctly_Strips_Batch_Commands_Preamble()
         {
             // Arrange
 

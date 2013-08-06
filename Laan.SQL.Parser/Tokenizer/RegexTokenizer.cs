@@ -120,14 +120,11 @@ namespace Laan.Sql.Parser
             if (matchingToken == null)
                 throw new SyntaxException();
 
-            if (matchingToken.Definition.Skip)
-            {
-                ReadNextToken();
-            }
-            else if (matchingToken.Definition.IsMultiLine)
-            {
+            if (matchingToken.Definition.IsMultiLine)
                 ProcessMultiLine(matchingToken);
-           } 
+
+            if (matchingToken.Definition.Skip)
+                ReadNextToken();
         }
 
         public override Token Current

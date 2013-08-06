@@ -11,14 +11,10 @@ namespace Laan.Sql.Parser.Test
     [TestFixture]
     public class TestTokenizer
     {
-        private static ITokenizer GetTokenizer(string input)
+        private static void Verify(string input, string[] tokens, bool skipComments = true)
         {
-            return new SqlTokenizer(input);
-        }
-
-        private static void Verify(string input, string[] tokens)
-        {
-            var tokenizer = GetTokenizer(input);
+            var tokenizer = new SqlTokenizer(input);
+            tokenizer.SkipComments = skipComments;
 
             foreach (string token in tokens)
             {
@@ -170,39 +166,31 @@ namespace Laan.Sql.Parser.Test
         {
             // Hack: Change the Skip flag for comments so they can be tested..
             //       Eventually, when comments are processed correctly, this can be removed!
-            var tokenizer = GetTokenizer(input);
-            SqlTokenizer sqlTokenizer = tokenizer as SqlTokenizer;
-            sqlTokenizer.SkipComments = false;
-            foreach (string token in tokens)
-            {
-                Assert.IsTrue(tokenizer.HasMoreTokens);
-                tokenizer.ReadNextToken();
+            Verify(input, tokens, false);
+        }
 
-                Assert.AreEqual(token, tokenizer.Current.Value);
-            }
-            tokenizer.ReadNextToken();
-            Assert.IsFalse(tokenizer.HasMoreTokens);
+        [Test]
+        //[TestCase("/* !@#$%^ */", new[] { "/* !@#$%^ */" })]
+        [TestCase("/* * */", new[] { "/* * */" })]
+        //[TestCase("/* / */", new[] { "/* / */" })]
+        //[TestCase("/* A\r\nB */\r\nC", new[] { "/* A\r\nB */", "C" })]
+        //[TestCase("select * from /* dbo.table t */ dbo.otherTable t", new[] { "select", "*", "from", "dbo", ".", "otherTable", "t" })]
+        public void Can_Tokenize_Strings_With_Block_Comment_With_Symbols_In_Comments(string input, string[] tokens)
+        {
+            // Hack: Change the Skip flag for comments so they can be tested..
+            //       Eventually, when comments are processed correctly, this can be removed!
+            Verify(input, tokens, false);
         }
 
         [Test]
         [TestCase( "SELECT * /* Get All\r\nFields */\r\nFROM dbo.Table", new[] { "SELECT", "*", "/* Get All\r\nFields */", "FROM", "dbo", ".", "Table" } )]
         [TestCase("/* A\r\nB */\r\nC", new[] { "/* A\r\nB */", "C" })]
+        [TestCase("select * from /* dbo.table t */ dbo.otherTable t", new[] { "select", "*", "from", "/* dbo.table t */", "dbo", ".", "otherTable", "t" })]
         public void Can_Tokenize_Strings_With_Block_Comment(string input, string[] tokens)
         {
             // Hack: Change the Skip flag for comments so they can be tested..
             //       Eventually, when comments are processed correctly, this can be removed!
-            var tokenizer = GetTokenizer(input);
-            SqlTokenizer sqlTokenizer = tokenizer as SqlTokenizer;
-            sqlTokenizer.SkipComments = false;
-            foreach (string token in tokens)
-            {
-                Assert.IsTrue(tokenizer.HasMoreTokens);
-                tokenizer.ReadNextToken();
-
-                Assert.AreEqual(token, tokenizer.Current.Value);
-            }
-            tokenizer.ReadNextToken();
-            Assert.IsFalse(tokenizer.HasMoreTokens);
+            Verify(input, tokens, false);
         }
     }
 }
