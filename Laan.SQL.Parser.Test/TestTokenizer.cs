@@ -170,11 +170,11 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        //[TestCase("/* !@#$%^ */", new[] { "/* !@#$%^ */" })]
-        [TestCase("/* * */", new[] { "/* * */" })]
+        //[TestCase("/* * */", new[] { "/* * */" })]
         //[TestCase("/* / */", new[] { "/* / */" })]
-        //[TestCase("/* A\r\nB */\r\nC", new[] { "/* A\r\nB */", "C" })]
-        //[TestCase("select * from /* dbo.table t */ dbo.otherTable t", new[] { "select", "*", "from", "dbo", ".", "otherTable", "t" })]
+        [TestCase("/* !@#$%^ */", new[] { "/* !@#$%^ */" })]
+        [TestCase("/* A\r\nB */\r\nC", new[] { "/* A\r\nB */", "C" })]
+        [TestCase("select * from /* dbo.table t */ dbo.otherTable t", new[] { "select", "*", "from", "/* dbo.table t */", "dbo", ".", "otherTable", "t" })]
         public void Can_Tokenize_Strings_With_Block_Comment_With_Symbols_In_Comments(string input, string[] tokens)
         {
             // Hack: Change the Skip flag for comments so they can be tested..
