@@ -77,8 +77,12 @@ namespace Laan.Sql.Formatter
                     bool isLast = from == _statement.From.Last();
                     NewLine(1);
                     IndentAppendFormat(
-                        "{0}{1}{2}{3}{4}",
-                        fromIndex > 0 ? Indent + " " : "", fromText, from.Name, from.Alias.Value, !isLast && !from.Joins.Any() ? Constants.Comma + "\n" : ""
+                        "{0}{1}{2}{3}{4}{5}",
+                        fromIndex > 0 ? Indent + " " : "", fromText, 
+                        from.Name, 
+                        from.Alias.Value, 
+                        FormatHints(from),
+                        !isLast && !from.Joins.Any() ? Constants.Comma + "\n" : ""
                     );
                 }
                 FormatJoins(from, multipleFroms, from == _statement.From.Last());

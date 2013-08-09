@@ -708,5 +708,142 @@ namespace Laan.Sql.Formatter.Test
 
             Compare( actual, expected );
         }
+
+        [Test]
+        public void Can_Format_Select_Statement_With_Table_Hint()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute("SELECT TOP 20 Field1, Field2 FROM dbo.Table T WITH (NOLOCK)");
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT TOP 20",
+                "    Field1,",
+                "    Field2",
+                "",
+                "FROM dbo.Table T WITH (NOLOCK)",
+            };
+
+            Compare(actual, expected);
+        }
+
+        [Test]
+        public void Can_Format_Select_Statement_With_Multiple_Table_Hints()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute(@"
+                SELECT TOP 20 Field1, Field2 
+                FROM dbo.Table T WITH (  NOLOCK,HOLDLOCK)"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT TOP 20",
+                "    Field1,",
+                "    Field2",
+                "",
+                "FROM dbo.Table T WITH (NOLOCK, HOLDLOCK)"
+            };
+
+            Compare(actual, expected);
+        }
+
+        [Test]
+        public void Can_Format_Select_Statement_With_Table_Hint_On_Primary_Table()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute(@"
+                SELECT TOP 20 Field1, Field2 
+                FROM dbo.Table T WITH (
+                    NOLOCK , 
+                    HOLDLOCK  
+                    ) 
+                JOIN dbo.Other O ON O.Id = T.Id
+            ");
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT TOP 20",
+                "    Field1,",
+                "    Field2",
+                "",
+                "FROM dbo.Table T WITH (NOLOCK, HOLDLOCK)",
+                "",
+                "JOIN dbo.Other O",
+                "  ON O.Id = T.Id"
+            };
+
+            Compare(actual, expected);
+        }
+
+        [Test]
+        public void Can_Format_Select_Statement_With_Table_Hint_On_Joined_Table()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute(@"
+                SELECT TOP 20 Field1, Field2 
+                FROM dbo.Table T JOIN dbo.Other O 
+                WITH ( NOLOCK ) ON O.Id = T.Id
+            ");
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT TOP 20",
+                "    Field1,",
+                "    Field2",
+                "",
+                "FROM dbo.Table T",
+                "",
+                "JOIN dbo.Other O WITH (NOLOCK)",
+                "  ON O.Id = T.Id"
+            };
+
+            Compare(actual, expected);
+        }
+
+        [Test]
+        public void Can_Format_Select_Statement_With_Multiple_Table_Hints_On_Joined_Table()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute(@"
+                SELECT TOP 20 Field1, Field2 
+                FROM dbo.Table T JOIN dbo.Other O 
+                WITH (NOLOCK,HOLDLOCK) ON O.Id = T.Id"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT TOP 20",
+                "    Field1,",
+                "    Field2",
+                "",
+                "FROM dbo.Table T",
+                "",
+                "JOIN dbo.Other O WITH (NOLOCK, HOLDLOCK)",
+                "  ON O.Id = T.Id"
+            };
+
+            Compare(actual, expected);
+        }
    }
 }

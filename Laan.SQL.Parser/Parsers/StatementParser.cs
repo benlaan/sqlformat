@@ -117,6 +117,7 @@ namespace Laan.Sql.Parser.Parsers
                 }
             }
         }
+
         private void ProcessHint(ITableHints hintable)
         {
             if (Tokenizer.IsNextToken(_tableHints))

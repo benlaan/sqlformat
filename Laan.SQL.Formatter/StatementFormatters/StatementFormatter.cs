@@ -38,6 +38,7 @@ namespace Laan.Sql.Formatter
                 _sql.Append(Indent);
             _sql.Append(text);
         }
+
         protected void IndentAppendFormat(string text, params object[] args)
         {
             IndentAppend(String.Format(text, args));
@@ -119,7 +120,7 @@ namespace Laan.Sql.Formatter
                     using (new IndentScope(this, multipleFroms))
                     {
                         NewLine(2);
-                        IndentAppend(join.Value);
+                        IndentAppend(join.Value + FormatHints(join));
                         NewLine();
 
                         bool isLastJoin = join == table.Joins.Last();
@@ -158,6 +159,12 @@ namespace Laan.Sql.Formatter
                     FormatStatement(statement);
         }
 
+        protected string FormatHints(ITableHints hinting)
+        {
+            if (!hinting.TableHints.Any())
+                return "";
+            return String.Format(" WITH ({0})", String.Join(", ", hinting.TableHints.Select(t => t.Hint).ToArray()));
+        }
         protected bool FitsOnRow(string text)
         {
             return text.Length <= (WrapMarginColumn - (IndentLevel * Indent.Length + CurrentColumn));

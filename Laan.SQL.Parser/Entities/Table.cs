@@ -1,12 +1,12 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+
 using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Parser.Entities
 {
-
     public class Table : AliasedEntity, ITableHints
     {
         public string Name { get; set; }

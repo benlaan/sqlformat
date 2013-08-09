@@ -11,7 +11,7 @@ namespace Laan.Sql.Parser.Test
     [TestFixture]
     public class TestTableHints
     {
-        [Test]    
+        [Test]
         public void Update_With_Tablock()
         {
             // Arrange
@@ -21,12 +21,12 @@ SET ListPrice = ListPrice * 1.10
 WHERE ProductNumber LIKE 'BK-%';
 ";
             // Act
-            var statement = Enumerable.First( ParserFactory.Execute<UpdateStatement>( sql ) );
+            var statement = Enumerable.First(ParserFactory.Execute<UpdateStatement>(sql));
 
             // Assert
-            Assert.IsNotNull( statement );
-            Assert.IsNotEmpty( statement.TableHints );
-            Assert.IsTrue( statement.TableHints.Where( x => x.Hint == "TABLOCK" ).Count() == 1 );
+            Assert.IsNotNull(statement);
+            Assert.IsNotEmpty(statement.TableHints);
+            Assert.IsTrue(statement.TableHints.Count(th => th.Hint == "TABLOCK") == 1);
         }
 
         [Test]
@@ -60,14 +60,13 @@ WHERE h.TotalDue > 100
 AND (d.OrderQty > 5 OR d.LineTotal < 1000.00);";
 
             // Act
-            var statement = Enumerable.First( ParserFactory.Execute<SelectStatement>( sql ) );
+            var statement = Enumerable.First(ParserFactory.Execute<SelectStatement>(sql));
 
             // Assert
-            Assert.IsNotNull( statement );
-            Assert.IsNotEmpty( statement.From );
-            Assert.IsNotEmpty( statement.From[0].Joins );
-            Assert.IsTrue( statement.From[0].Joins[0].TableHints.Where( x => x.Hint == "FORCESEEK" ).Count() == 1 );
-
+            Assert.IsNotNull(statement);
+            Assert.IsNotEmpty(statement.From);
+            Assert.IsNotEmpty(statement.From[0].Joins);
+            Assert.IsTrue(statement.From[0].Joins[0].TableHints.Where(x => x.Hint == "FORCESEEK").Count() == 1);
         }
 
         [Test]
@@ -77,10 +76,10 @@ AND (d.OrderQty > 5 OR d.LineTotal < 1000.00);";
             const string sql = @"SELECT * FROM t (TABLOCK)";
 
             // Act
-            var statement = ParserFactory.Execute<SelectStatement>( sql ).First();
+            var statement = ParserFactory.Execute<SelectStatement>(sql).First();
 
             // Assert
-            Assert.IsTrue( statement.From[0].TableHints.Where( x => x.Hint == "TABLOCK" ).Count() == 1, "Should be one hint - TABLOCK");
+            Assert.IsTrue(statement.From[0].TableHints.Where(x => x.Hint == "TABLOCK").Count() == 1, "Should be one hint - TABLOCK");
         }
 
     }
