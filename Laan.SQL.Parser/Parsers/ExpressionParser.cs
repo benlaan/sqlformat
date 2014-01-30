@@ -133,7 +133,32 @@ namespace Laan.Sql.Parser.Parsers
         {
             Expression factor = ReadFactor(parent);
 
-            if (Tokenizer.IsNextToken("*", "/", "%", "^"))
+            if (Tokenizer.IsNextToken(Constants.Over))
+            {
+                var rankingFunctionExpression = new RankingFunctionExpression(parent);
+                rankingFunctionExpression.Name = factor.Value;
+                ReadNextToken();
+                using (Tokenizer.ExpectBrackets())
+                {
+                    if (Tokenizer.TokenEquals(Constants.Partition))
+                    {
+                        ExpectToken(Constants.By);
+                        var selectStatementParser = new SelectStatementParser(Tokenizer);
+                        selectStatementParser.ProcessFields(FieldType.OrderBy, rankingFunctionExpression.PartitionBy);
+                    }
+
+                    if (Tokenizer.IsNextToken(Constants.Order))
+                    {
+                        ReadNextToken();
+                        ExpectToken(Constants.By);
+                        var selectStatementParser = new SelectStatementParser(Tokenizer);
+                        selectStatementParser.ProcessFields(FieldType.OrderBy, rankingFunctionExpression.OrderBy);
+                    }
+                }
+
+                return rankingFunctionExpression;
+            }
+            else if (Tokenizer.IsNextToken("*", "/", "%", "^"))
             {
                 OperatorExpression result = new OperatorExpression(parent);
                 result.Left = factor;

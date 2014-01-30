@@ -20,9 +20,9 @@ namespace Laan.Sql.Parser.Entities
         {
             _map = new Dictionary<SortOrder, string>
             {
-            	{ SortOrder.Implicit, "" },
-            	{ SortOrder.Ascending, " ASC" },
-            	{ SortOrder.Descending, " DESC" }
+                { SortOrder.Implicit, "" },
+                { SortOrder.Ascending, " ASC" },
+                { SortOrder.Descending, " DESC" }
             };
         }
 
@@ -30,7 +30,7 @@ namespace Laan.Sql.Parser.Entities
 
         public override string Value
         {
-            get { return base.Value + _map[ SortOrder ]; }
+            get { return Expression.Value + _map[ SortOrder ]; }
             protected set { base.Value = value; }
         }
     }

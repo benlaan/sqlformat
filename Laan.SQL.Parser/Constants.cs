@@ -80,10 +80,12 @@ namespace Laan.Sql.Parser
         public const string Online = "ONLINE";
         public const string Or = "OR";
         public const string Order = "ORDER";
+        public const string Over = "OVER";
         public const string Outer = "OUTER";
         public const string Output = "OUTPUT";
         public const string PadIndex = "PAD_INDEX";
         public const string PagLock = "PAGLOCK";
+        public const string Partition = "PARTITION";
         public const string Percent = "PERCENT";
         public const string Primary = "PRIMARY";
         public const string Print = "PRINT";

@@ -717,5 +717,46 @@ namespace Laan.Sql.Parser.Test
             Assert.IsNotNull( statement );
             Assert.AreEqual( 2, statement.From.Count );
         }
+
+        [Test]
+        public void Select_With_Row_Number_Over()
+        {
+            // Exercise
+            var statement = ParserFactory.Execute<SelectStatement>(
+            @"
+                SELECT *
+                FROM (
+
+                    SELECT 
+                        RowIndex = ROW_NUMBER() OVER (ORDER BY SomeNumber, OtherNumber DESC), 
+                        *
+                    FROM [PagedTable]
+                ) T
+
+                WHERE RowIndex BETWEEN 2 AND 3
+            "
+            ).First();
+
+            // Verify outcome
+            Assert.IsNotNull( statement );
+            Assert.AreEqual( 1, statement.From.Count );
+
+            Assert.AreEqual( "T", statement.From[0].Alias.Name );
+            Assert.IsTrue( statement.From[0] is DerivedTable );
+            Assert.AreEqual( "RowIndex BETWEEN 2 AND 3", statement.Where.Value );
+
+            DerivedTable derivedTable = (DerivedTable)statement.From[0];
+            Assert.AreEqual( "RowIndex", derivedTable.SelectStatement.Fields[0].Alias.Name );
+            Assert.IsTrue( derivedTable.SelectStatement.Fields[0].Expression is RankingFunctionExpression );
+
+            var rankingFunctionExpression = (RankingFunctionExpression)derivedTable.SelectStatement.Fields[0].Expression;
+
+            Assert.AreEqual( "ROW_NUMBER()", rankingFunctionExpression.Name );
+            Assert.AreEqual("ROW_NUMBER() OVER (ORDER BY SomeNumber, OtherNumber DESC)", rankingFunctionExpression.Value);
+            Assert.AreEqual( 2, rankingFunctionExpression.OrderBy.Count );
+            Assert.AreEqual("SomeNumber", rankingFunctionExpression.OrderBy[0].Expression.Value);
+            Assert.AreEqual("OtherNumber", rankingFunctionExpression.OrderBy[1].Expression.Value);
+
+        }
     }
 }
