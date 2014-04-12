@@ -29,6 +29,14 @@
     <Compile Include="Main.wxs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Laan.AddIns.Ssms\Laan.AddIns.Ssms.csproj">
+      <Name>Laan.AddIns.Ssms</Name>
+      <Project>{54c786e5-fd14-4036-92ae-e9f25b71534b}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
     <ProjectReference Include="..\Laan.SQL.Formatter\Laan.SQL.Formatter.csproj">
       <Name>Laan.Sql.Formatter</Name>
       <Project>{5af58723-f939-4955-9b29-2a6a0a4cfba8}</Project>
@@ -37,8 +45,20 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
+    <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj">
+      <Name>Laan.Sql.Parser</Name>
+      <Project>{e972b2b2-f549-418e-b830-fb5d97101168}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
     <WixExtension Include="WixNetFxExtension">
       <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
       <Name>WixNetFxExtension</Name>

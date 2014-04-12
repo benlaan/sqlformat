@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Product
       Id="*"
       Name="Laan Sql Add-In for SSMS"
@@ -29,18 +29,39 @@
         <Directory Id="LaanSoftwareBin" Name="Laan Software">
           <Directory Id="INSTALLLOCATION" Name="Laan SQL Add-In for SSMS"/>
         </Directory>
-      </Directory>      
+      </Directory>
+      <Directory Id="CommonAppDataFolder">
+        <Directory Id="Microsoft" Name="Microsoft">
+          <Directory Id="MSEnvShared" Name="MSEnvShared">
+            <Directory Id="AddIns" Name="AddIns">
+              <Component Id="AddinFile" Guid="{B2457704-C7B4-496F-BA1A-80B4CB0121D7}">
+                <File Id="Laan.AddIns.Core.AddIn" Source="$(var.Laan.AddIns.Ssms.ProjectDir)Laan.AddIns.Core.AddIn" />
+                <util:XmlFile 
+                  Id='XmlSettings1' 
+                  File='[#Laan.AddIns.Core.AddIn]' 
+                  Action='setValue' 
+                  Value='[#Laan.AddIns.Ssms.dll]' 
+                  ElementPath='/Extensibility/Addin/Assembly' 
+                  Sequence='1' />
+              </Component>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
     </Directory>
 
     <DirectoryRef Id="INSTALLLOCATION">
       <Component Id="SSms.AddIn" Guid="{432CEE6E-36B0-4C83-95B4-41E00C01B840}">
-        <File Id="Laan.AddIns.Ssms.dll" Source="$(var.SolutionDir)Laan.AddIns.Ssms\bin\Laan.AddIns.Ssms.dll" DiskId="1"/>
+        <File Id="Laan.AddIns.Ssms.dll" Source="$(var.Laan.AddIns.Ssms.TargetDir)Laan.AddIns.Ssms.dll" DiskId="1"/>
+        <File Source="$(var.Laan.AddIns.Ssms.TargetDir)Laan.AddIns.Ssms.pdb" />
       </Component>
       <Component Id="Formatter" Guid="{1CA04D29-A6BE-4F68-940D-3B2285C8B3BD}">
-        <File Id="Laan.SQL.Formatter.dll" Source="$(var.SolutionDir)Laan.AddIns.Ssms\bin\Laan.SQL.Formatter.dll" DiskId="1"/>
+        <File Id="Laan.SQL.Formatter.dll" Source="$(var.Laan.Sql.Formatter.TargetDir)Laan.SQL.Formatter.dll" DiskId="1"/>
+        <File Source="$(var.Laan.Sql.Formatter.TargetDir)Laan.SQL.Formatter.pdb" />
       </Component>
       <Component Id="Parser" Guid="{D668D5B7-0EC5-40A1-8148-6DBCA6E6FFA6}">
-        <File Id="Laan.SQL.Parser.dll" Source="$(var.SolutionDir)Laan.AddIns.Ssms\bin\Laan.SQL.Parser.dll" DiskId="1"/>
+        <File Id="Laan.SQL.Parser.dll" Source="$(var.Laan.Sql.Parser.TargetDir)Laan.SQL.Parser.dll" DiskId="1"/>
+        <File Source="$(var.Laan.Sql.Parser.TargetDir)Laan.SQL.Parser.pdb" />
       </Component>
     </DirectoryRef>
 
@@ -71,17 +92,16 @@
             <RegistryKey Key="ProgId">
               <RegistryValue Value="Laan.AddIns" Type="string" />
             </RegistryKey>
-
             <RegistryKey Key="InprocServer32">
               <RegistryValue Value="mscoree.dll" Type="string" />
-              <RegistryValue Name="CodeBase" Value="file:///C:\\Program Files (x86)\\Laan Software\\Laan SQL Add-In for SSMS\\Laan.AddIns.Ssms.dll" Type="string"/>
+              <RegistryValue Name="CodeBase" Value="file:///[#Laan.AddIns.Ssms.dll]" Type="string"/>
               <RegistryValue Name="Assembly" Value="Laan.AddIns.Ssms, Version=$(var.ProductVersion), Culture=neutral, PublicKeyToken=null" Type="string"/>
               <RegistryValue Name="Class" Value="Laan.AddIns.Core.AddIn" Type="string"/>
               <RegistryValue Name="ThreadingModel" Value="Both" Type="string"/>
               <RegistryValue Name="RuntimeVersion" Value="v2.0.50727" Type="string"/>
 
               <RegistryKey Key="$(var.ProductVersion)">
-                <RegistryValue Name="CodeBase" Value="file:///C:\\Program Files (x86)\\Laan Software\\Laan SQL Add-In for SSMS\\Laan.AddIns.Ssms.dll" Type="string"/>
+                <RegistryValue Name="CodeBase" Value="file:///[#Laan.AddIns.Ssms.dll]" Type="string"/>
                 <RegistryValue Name="Class" Value="Laan.AddIns.Core.AddIn" Type="string" />
                 <RegistryValue Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
                 <RegistryValue Name="Assembly" Value="Laan.AddIns.Ssms, Version=$(var.ProductVersion), Culture=neutral, PublicKeyToken=null" Type="string" />
@@ -103,6 +123,7 @@
       <ComponentRef Id="Formatter"/>
       <ComponentRef Id="Parser"/>
       <ComponentRef Id="RegistryEntries"/>
+      <ComponentRef Id="AddinFile"/>
     </Feature>
 
   </Product>
