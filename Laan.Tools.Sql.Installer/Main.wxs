@@ -72,15 +72,13 @@
 
           <RegistryKey Key="Microsoft\Microsoft SQL Server">
 
+            <!-- 2005 -->
             <RegistryKey Key="90\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
               <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
             </RegistryKey>
 
+            <!-- 2008/R2 -->
             <RegistryKey Key="100\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
-              <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
-            </RegistryKey>
-
-            <RegistryKey Key="110\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
               <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
             </RegistryKey>
 

@@ -12,6 +12,8 @@
     <NoStandardLibraries>false</NoStandardLibraries>
     <AssemblyName>Laan.AddIns.Ssms</AssemblyName>
     <DeploymentDirectory>.\bin\</DeploymentDirectory>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
