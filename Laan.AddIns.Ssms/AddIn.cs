@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -15,6 +15,8 @@ using Microsoft.VisualStudio.CommandBars;
 
 namespace Laan.AddIns.Core
 {
+    /// <summary>The object for implementing an Add-in.</summary>
+    /// <seealso class='IDTExtensibility2' />
     public class AddIn : IDTExtensibility2, IDTCommandTarget
     {
         private Commands2 _commands;
@@ -23,6 +25,7 @@ namespace Laan.AddIns.Core
         private List<Action> _actions;
         public DTE Application { get; private set; }
 
+        /// <summary>Implements the constructor for the Add-in object. Place your initialization code within this method.</summary>
         public AddIn()
         {
             _uniqueKey = GetType().FullName;
@@ -30,7 +33,146 @@ namespace Laan.AddIns.Core
             BuildActions();
         }
 
-        #region Utilities
+        /// <summary>
+        ///     Implements the OnConnection method of the IDTExtensibility2 interface. Receives notification that the Add-in
+        ///     is being loaded.
+        /// </summary>
+        /// <param name='application'>Root object of the host application.</param>
+        /// <param name='connectMode'>Describes how the Add-in is being loaded.</param>
+        /// <param name='instance'>Object representing this Add-in.</param>
+        /// <param name="custom"></param>
+        /// <seealso class='IDTExtensibility2' />
+        public void OnConnection(object application, ext_ConnectMode connectMode, object instance, ref Array custom)
+        {
+            try
+            {
+                Initialise(instance);
+                PlaceCommandsOnMenus();
+            }
+            catch (Exception ex)
+            {
+                Error("OnConnection", ex);
+            }
+        }
+
+        /// <summary>
+        ///     Implements the OnDisconnection method of the IDTExtensibility2 interface. Receives notification that the
+        ///     Add-in is being unloaded.
+        /// </summary>
+        /// <param name='disconnectMode'>Describes how the Add-in is being unloaded.</param>
+        /// <param name='custom'>Array of parameters that are host application specific.</param>
+        /// <seealso class='IDTExtensibility2' />
+        public void OnDisconnection(ext_DisconnectMode disconnectMode, ref Array custom)
+        {
+            try
+            {
+                RemoveCommandsFromMenus();
+            }
+            catch (Exception ex)
+            {
+                Error("OnDisconnection", ex);
+            }
+        }
+
+        /// <summary>
+        ///     Implements the OnAddInsUpdate method of the IDTExtensibility2 interface. Receives notification when the
+        ///     collection of Add-ins has changed.
+        /// </summary>
+        /// <param name='custom'>Array of parameters that are host application specific.</param>
+        /// <seealso class='IDTExtensibility2' />
+        public void OnAddInsUpdate(ref Array custom)
+        {
+        }
+
+        /// <summary>
+        ///     Implements the OnStartupComplete method of the IDTExtensibility2 interface. Receives notification that the
+        ///     host application has completed loading.
+        /// </summary>
+        /// <param name='custom'>Array of parameters that are host application specific.</param>
+        /// <seealso class='IDTExtensibility2' />
+        public void OnStartupComplete(ref Array custom)
+        {
+        }
+
+        /// <summary>
+        ///     Implements the OnBeginShutdown method of the IDTExtensibility2 interface. Receives notification that the host
+        ///     application is being unloaded.
+        /// </summary>
+        /// <param name='custom'>Array of parameters that are host application specific.</param>
+        /// <seealso class='IDTExtensibility2' />
+        public void OnBeginShutdown(ref Array custom)
+        {
+        }
+
+        /// <summary>Implements the Exec method of the IDTCommandTarget interface. This is called when the command is invoked.</summary>
+        /// <param name='commandName'>The name of the command to execute.</param>
+        /// <param name='executeOption'>Describes how the command should be run.</param>
+        /// <param name='varIn'>Parameters passed from the caller to the command handler.</param>
+        /// <param name='varOut'>Parameters passed from the command handler to the caller.</param>
+        /// <param name='handled'>Informs the caller if the command was handled or not.</param>
+        /// <seealso class='Exec' />
+        public void Exec(string commandName, vsCommandExecOption executeOption, ref object varIn, ref object varOut, ref bool handled)
+        {
+            try
+            {
+                handled = false;
+                if (executeOption == vsCommandExecOption.vsCommandExecOptionDoDefault)
+                {
+                    var action = FindAction(commandName);
+                    Execute(action);
+                    handled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
+            }
+        }
+
+        /// <summary>
+        /// Implements the QueryStatus method of the IDTCommandTarget interface. This is called when the command's availability is updated
+        /// </summary>
+        /// <param name='commandName'>The name of the command to determine state for.</param>
+        /// <param name='neededText'>Text that is needed for the command.</param>
+        /// <param name='status'>The state of the command in the user interface.</param>
+        /// <param name='commandText'>Text requested by the neededText parameter.</param>
+        /// <seealso class='Exec' />
+        public void QueryStatus(string commandName, vsCommandStatusTextWanted neededText, ref vsCommandStatus status, ref object commandText)
+        {
+            try
+            {
+                var action = FindAction(commandName);
+
+                string text = action.ButtonText;
+
+                if (action.CanExecute()
+                    && neededText == vsCommandStatusTextWanted.vsCommandStatusTextWantedNone)
+                    status = vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
+
+                string updatedText = action.ButtonText;
+
+                if (text == updatedText)
+                    return;
+
+                var attr = (MenuAttribute)action.GetType().GetCustomAttributes(typeof(MenuAttribute), false).FirstOrDefault();
+
+                if (attr != null)
+                {
+                    string commandBarName = attr.CommandBar;
+
+                    var commandBar = ((CommandBars)Application.CommandBars)[commandBarName];
+
+                    CommandBarControl control = commandBar.Controls[text];
+
+                    if (control != null)
+                        control.Caption = updatedText;
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
+            }
+        }
 
         private void BuildActions()
         {
@@ -41,7 +183,6 @@ namespace Laan.AddIns.Core
                     .Select(type => (Action)Activator.CreateInstance(type, this));
 
                 _actions.AddRange(actions);
-
             }
             catch (Exception ex)
             {
@@ -63,10 +204,10 @@ namespace Laan.AddIns.Core
             {
                 var findCommand = _commands.Item(action.FullName, 1);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 found = false;
-                Error(action.DisplayName + " not found: ", ex);
+                // Error(action.DisplayName + " not found: ", ex);
             }
             return found;
         }
@@ -147,8 +288,6 @@ namespace Laan.AddIns.Core
                         var contextGUIDS = new object[] { };
 
                         //_commands.AddNamedCommand( _addInInstance, "MyCommand", "My Command", "blah", true, 0, ref contextGuids, (int) vsCommandStatus.vsCommandStatusEnabled + (int) vsCommandStatus.vsCommandStatusSupported );
-
-
 
                         var command = _commands.AddNamedCommand2(
                             _addIn,
@@ -240,17 +379,36 @@ namespace Laan.AddIns.Core
             Application.StatusBar.Text = String.Format(message, args);
         }
 
+        private string GetDumpFile()
+        {
+            return Path.Combine(System.IO.Path.GetTempPath(), "Laan.Ssms.log");
+        }
+
         [Conditional("DEBUG")]
         internal void Error(Exception ex)
         {
-            System.IO.File.AppendAllText(@"D:\dump.log", ex.ToString() + Environment.NewLine);
+            try
+            {
+                System.IO.File.AppendAllText(GetDumpFile(), ex.ToString() + Environment.NewLine);
+            }
+            catch (Exception)
+            {
+            }
+
             Debug.WriteLine(ex);
         }
 
         [Conditional("DEBUG")]
         internal void Error(string message, Exception ex)
         {
-            System.IO.File.AppendAllText(@"D:\dump.log", message + " : " + ex.ToString() + Environment.NewLine);
+            try
+            {
+                System.IO.File.AppendAllText(GetDumpFile(), message + " : " + ex.ToString() + Environment.NewLine);
+            }
+            catch (Exception)
+            {
+            }
+
             Debug.WriteLine(message + "\n\t" + ex);
         }
 
@@ -370,117 +528,5 @@ namespace Laan.AddIns.Core
                 TextDocument.Selection.MoveToPoint(point, false);
             }
         }
-
-        private void DumpCommands()
-        {
-            foreach (Command c in _commands)
-            {
-                Trace.WriteLine(
-                    String.Format(
-                        "{0} {1}: {2}",
-                        c.ID, c.Name, ((object[])c.Bindings).FirstOrDefault())
-                );
-            }
-        }
-
-        #endregion
-
-        #region IDTExtensibility2 Members
-
-        public void OnConnection(object application, ext_ConnectMode connectMode, object instance, ref Array custom)
-        {
-            try
-            {
-                Initialise(instance);
-                PlaceCommandsOnMenus();
-            }
-            catch (Exception ex)
-            {
-                Error("OnConnection", ex);
-            }
-        }
-
-        public void OnDisconnection(ext_DisconnectMode disconnectMode, ref Array custom)
-        {
-            try
-            {
-                RemoveCommandsFromMenus();
-            }
-            catch (Exception ex)
-            {
-                Error("OnDisconnection", ex);
-            }
-        }
-
-        public void OnAddInsUpdate(ref Array custom)
-        {
-        }
-
-        public void OnStartupComplete(ref Array custom)
-        {
-        }
-
-        public void OnBeginShutdown(ref Array custom)
-        {
-        }
-
-        #endregion
-
-        #region IDTCommandTarget Members
-
-        public void Exec(
-            string commandName, 
-            vsCommandExecOption executeOption, 
-            ref object varIn, 
-            ref object varOut, 
-            ref bool handled
-        )
-        {
-            handled = false;
-            if (executeOption == vsCommandExecOption.vsCommandExecOptionDoDefault)
-            {
-                var action = FindAction(commandName);
-                Execute(action);
-                handled = true;
-                return;
-            }
-        }
-
-        public void QueryStatus(
-            string commandName, vsCommandStatusTextWanted neededText, ref vsCommandStatus status, ref object commandText
-        )
-        {
-            var action = FindAction(commandName);
-
-            string text = action.ButtonText;
-
-            if (action.CanExecute()
-                && neededText == vsCommandStatusTextWanted.vsCommandStatusTextWantedNone)
-                status = vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
-
-            string updatedText = action.ButtonText;
-
-            if (text == updatedText)
-                return;
-
-            var attr = (MenuAttribute)action.GetType().GetCustomAttributes(typeof(MenuAttribute), false).FirstOrDefault();
-
-            if (attr != null)
-            {
-                string commandBarName = attr.CommandBar;
-
-                var commandBar = ((CommandBars)Application.CommandBars)[commandBarName];
-
-                CommandBarControl control = commandBar.Controls[text];
-
-                if (control != null)
-                    control.Caption = updatedText;
-
-
-            }
-        }
-
-        #endregion
-
     }
 }
