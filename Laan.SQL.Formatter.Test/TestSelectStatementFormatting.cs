@@ -845,5 +845,35 @@ namespace Laan.Sql.Formatter.Test
 
             Compare(actual, expected);
         }
+
+        [Test]
+        [TestCase("ROW_NUMBER()")]
+        [TestCase("RANK()")]
+        [TestCase("DENSE_RANK()")]
+        [TestCase("NTILE(4)")]
+        public void Can_Format_Select_Statement_With_Ranking_Functions(string functionName)
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute(String.Format(@"
+                SELECT Id = A, R = {0} 
+                OVER (ORDER BY 
+                Code) FROM dbo.Table", functionName
+            ));
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT",
+                "    Id = A,",
+                "    R = " + functionName + " OVER (ORDER BY Code)",
+                "",
+                "FROM dbo.Table"
+            };
+
+            Compare(actual, expected);
+        }
    }
 }

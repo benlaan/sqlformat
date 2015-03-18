@@ -111,8 +111,7 @@ namespace Laan.Sql.Formatter
 
         private string FormatField( Field field )
         {
-            return String.Format(
-                "{0}{1}{2}",
+            return String.Concat(
                 field.Alias.Type == AliasType.Equals ? field.Alias.Value : "",
                 field.Expression.FormattedValue( 0, this ) + field.Value,
                 ( field.Alias.Type == AliasType.As || field.Alias.Type == AliasType.Implicit ) ? field.Alias.Value : ""

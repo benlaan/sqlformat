@@ -27,15 +27,6 @@ namespace Laan.Sql.Parser.Expressions
             get
             {
                 List<string> parts = new List<string>();
-                if (OrderBy.Any())
-                {
-                    parts.Add(String.Format(
-                        "{0} {1} {2}",
-                        Constants.Order,
-                        Constants.By,
-                        OrderBy.Select(arg => arg.Value).ToCsv()
-                    ));
-                }
 
                 if (PartitionBy.Any())
                 {
@@ -43,9 +34,16 @@ namespace Laan.Sql.Parser.Expressions
                         "{0} {1} {2}",
                         Constants.Partition,
                         Constants.By,
-                        PartitionBy.Select(arg => arg.Value).ToCsv()
+                        PartitionBy.Select(arg => arg.Expression.Value).ToCsv()
                     ));
                 }
+
+                parts.Add(String.Format(
+                    "{0} {1} {2}",
+                    Constants.Order,
+                    Constants.By,
+                    OrderBy.Select(arg => arg.Expression.Value).ToCsv()
+                ));
 
                 return String.Format("{0} OVER ({1})", Name, parts.Join(" "));
             }

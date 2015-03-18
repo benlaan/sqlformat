@@ -30,7 +30,7 @@ namespace Laan.Sql.Parser.Entities
 
         public override string Value
         {
-            get { return Expression.Value + _map[ SortOrder ]; }
+            get { return base.Value + _map[ SortOrder ]; }
             protected set { base.Value = value; }
         }
     }
