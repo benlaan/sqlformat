@@ -66,8 +66,33 @@ namespace Laan.Sql.Parser.Test
 
             Assert.AreEqual("[Transaction]", selectStatement.From.First().Name);
             Assert.AreEqual(1, statement.Arguments.Count);
-            Assert.AreEqual(new string[] { "@p0" }, statement.Arguments.Select(a => a.Name).ToArray());
-            Assert.AreEqual(new string[] { "N'WOO'" }, statement.Arguments.Select(a => a.Value).ToArray());
+            Assert.AreEqual(new[] { "@p0" }, statement.Arguments.Select(a => a.Name).ToArray());
+            Assert.AreEqual(new[] { "N'WOO'" }, statement.Arguments.Select(a => a.Value).ToArray());
+        }
+
+        [Test]
+        public void Can_Execute_Sql_Parameter_Containing_Type_With_A_Comma()
+        {
+            var sql = @"exec sp_executesql 
+                  N'select T.Id, T.Name from [Transaction] T WHERE Amount <> @p0',
+                  N'@p0 decimal(10,4)',
+                  @p0=400.50
+            ";
+
+            // Exercise
+            var statement = ParserFactory.Execute<ExecuteSqlStatement>(sql).First();
+
+            // Verify outcome
+            Assert.IsNotNull(statement);
+
+            SelectStatement selectStatement = statement.InnerStatement as SelectStatement;
+            Assert.IsNotNull(selectStatement);
+
+            Assert.AreEqual("[Transaction]", selectStatement.From.First().Name);
+            Assert.AreEqual(1, statement.Arguments.Count);
+            Assert.AreEqual(new[] { "@p0" }, statement.Arguments.Select(a => a.Name).ToArray());
+            Assert.AreEqual(new[] { "400.50" }, statement.Arguments.Select(a => a.Value).ToArray());
+            Assert.AreEqual(new[] { "decimal(10, 4)" }, statement.Arguments.Select(a => a.Type).ToArray());
         }
 
         /// <summary>
@@ -106,8 +131,8 @@ namespace Laan.Sql.Parser.Test
 
                 Assert.AreEqual("[Transaction]", selectStatement.From.First().Name);
                 Assert.AreEqual(3, statement.Arguments.Count);
-                Assert.AreEqual(new string[] { "@p0", "@p1", "@p2" }, statement.Arguments.Select(a => a.Name).ToArray());
-                Assert.AreEqual(new string[] { "100", "44", "N'WOO'" }, statement.Arguments.Select(a => a.Value).ToArray());
+                Assert.AreEqual(new[] { "@p0", "@p1", "@p2" }, statement.Arguments.Select(a => a.Name).ToArray());
+                Assert.AreEqual(new[] { "100", "44", "N'WOO'" }, statement.Arguments.Select(a => a.Value).ToArray());
             }
         }
 

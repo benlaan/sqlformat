@@ -157,12 +157,12 @@ namespace Laan.Sql.Parser.Test
 
             var expected = new[] 
             { 
-                new FieldDefinition() { Name = "id1", Type = new SqlType( "int" ), IsPrimaryKey = true, Nullability = Nullability.NotNullable },
-                new FieldDefinition() { Name = "id2", Type = new SqlType( "varchar", 10 ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
-                new FieldDefinition() { Name = "id3", Type = new SqlType( "varchar" ), IsPrimaryKey = false, Nullability = Nullability.NotNullable },
-                new FieldDefinition() { Name = "id4", Type = new SqlType( "decimal", 10, 2), IsPrimaryKey = false, Nullability = Nullability.NotNullable },
-                new FieldDefinition() { Name = "id5", Type = new SqlType( "decimal", 25, 3), IsPrimaryKey = false, Nullability = Nullability.Nullable },
-                new FieldDefinition() { Name = "id6", Type = new SqlType( "varchar" ) { Max = true }, IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { Name = "id1", Type = new SqlType("int"), IsPrimaryKey = true, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id2", Type = new SqlType("varchar") { Length = 10 } , IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { Name = "id3", Type = new SqlType("varchar"), IsPrimaryKey = false, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id4", Type = new SqlType("decimal") { Length = 10, Scale = 2 }, IsPrimaryKey = false, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id5", Type = new SqlType("decimal") { Length = 25, Scale = 3 }, IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { Name = "id6", Type = new SqlType("varchar") { Max = true }, IsPrimaryKey = false, Nullability = Nullability.Nullable },
             };
 
             Assert.AreEqual( expected, statement.Fields );
@@ -192,9 +192,9 @@ namespace Laan.Sql.Parser.Test
             var expected = new[] 
             { 
                 new FieldDefinition() { Name = "id1", Type = new SqlType( "int" ), IsPrimaryKey = true, Nullability = Nullability.NotNullable },
-                new FieldDefinition() { Name = "id2", Type = new SqlType( "varchar", 10 ), IsPrimaryKey = false, Nullability = Nullability.Nullable },
+                new FieldDefinition() { Name = "id2", Type = new SqlType( "varchar" ) { Length = 10 }, IsPrimaryKey = false, Nullability = Nullability.Nullable },
                 new FieldDefinition() { Name = "id3", Type = new SqlType( "varchar" ), IsPrimaryKey = false, Nullability = Nullability.NotNullable },
-                new FieldDefinition() { Name = "id4", Type = new SqlType( "decimal", 10,2) , IsPrimaryKey = false, Nullability = Nullability.NotNullable },
+                new FieldDefinition() { Name = "id4", Type = new SqlType( "decimal" ) { Length = 10, Scale = 2 }, IsPrimaryKey = false, Nullability = Nullability.NotNullable },
             };
 
             Assert.AreEqual( expected, statement.Fields );
@@ -229,7 +229,7 @@ namespace Laan.Sql.Parser.Test
                 },
                 new FieldDefinition() 
                 { 
-                    Name = "id2", Type = new SqlType( "varchar", 10 ), IsPrimaryKey = false, Nullability = Nullability.Nullable 
+                    Name = "id2", Type = new SqlType("varchar") { Length = 10 }, IsPrimaryKey = false, Nullability = Nullability.Nullable 
                 },
             };
 
@@ -265,7 +265,7 @@ namespace Laan.Sql.Parser.Test
                 },
                 new FieldDefinition() 
                 { 
-                    Name = "id2", Type = new SqlType( "varchar", 10 ), IsPrimaryKey = false, Nullability = Nullability.Nullable 
+                    Name = "id2", Type = new SqlType("varchar") { Length = 10 }, IsPrimaryKey = false, Nullability = Nullability.Nullable 
                 },
             };
 
@@ -295,7 +295,7 @@ namespace Laan.Sql.Parser.Test
                 new FieldDefinition() 
                 { 
                     Name = "id2", 
-                    Type = new SqlType( "varchar", 10 ) { Collation = "Latin1_General_CI_AS" } , 
+                    Type = new SqlType("varchar") { Length = 10, Collation = "Latin1_General_CI_AS" } , 
                     IsPrimaryKey = false, 
                     Nullability = Nullability.Nullable 
                 },
@@ -335,7 +335,7 @@ namespace Laan.Sql.Parser.Test
                 new FieldDefinition() 
                 { 
                     Name = "id3", 
-                    Type = new SqlType( "varchar", 10 ),
+                    Type = new SqlType("varchar") { Length = 10 },
                     IsPrimaryKey = false, 
                     Nullability = Nullability.NotNullable 
                 },
@@ -384,14 +384,14 @@ namespace Laan.Sql.Parser.Test
                 new FieldDefinition() 
                 { 
                     Name = "id4", 
-                    Type = new SqlType( "varchar", 10 ),
+                    Type = new SqlType("varchar") { Length = 10 },
                     IsPrimaryKey = false, 
                     Nullability = Nullability.NotNullable 
                 },
                 new FieldDefinition() 
                 { 
                     Name = "id5", 
-                    Type = new SqlType( "varchar", 10 ),
+                    Type = new SqlType("varchar") { Length = 10 },
                     IsPrimaryKey = false, 
                     Nullability = Nullability.NotNullable
                 },

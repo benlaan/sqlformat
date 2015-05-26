@@ -28,6 +28,5 @@ command 0:INSERT INTO dbo.[SimpleEntity] (Version, Name, UserName, Created, Modi
             Assert.IsNotEmpty(results);
             Assert.IsInstanceOf<InsertStatement>(results.First());
         }
-
     }
 }

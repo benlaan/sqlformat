@@ -14,6 +14,17 @@ namespace Laan.Sql.Parser
         {
         }
 
+        private List<VariableDefinition> GetParameters(string text)
+        {
+            using (var tokenizer = new SqlTokenizer(text))
+            {
+                tokenizer.ReadNextToken();
+                var declareStatementParser = new DeclareStatementParser(tokenizer);
+
+                return declareStatementParser.Execute().Definitions;
+            }
+        }
+
         private ExecStatement ParseExecuteSql(string functionName)
         {
             var statement = new ExecuteSqlStatement() { FunctionName = functionName };
@@ -28,13 +39,11 @@ namespace Laan.Sql.Parser
                 return statement;
 
             Tokenizer.ReadNextToken();
-
-            var parameters = parser.Execute<StringExpression>()
-                .Content.Split(',')
-                .Select(p => p.Split(' ').Last())
-                .ToList();
+            var text = parser.Execute<StringExpression>().Content;
+            var parameters = GetParameters(text);
 
             Tokenizer.ExpectToken(Constants.Comma);
+
             int parameterIndex = 0;
             do
             {
@@ -44,7 +53,7 @@ namespace Laan.Sql.Parser
                 { 
                     Name = argumentValue.Left.Value, 
                     Value = argumentValue.Right.Value,
-                    Type = parameters[parameterIndex]
+                    Type = parameters[parameterIndex].Type
                 });
                 parameterIndex++;
             }
