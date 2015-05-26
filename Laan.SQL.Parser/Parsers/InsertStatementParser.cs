@@ -1,8 +1,9 @@
 using System;
+using System.Collections.Generic;
 
-using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Exceptions;
+using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Parser.Parsers
 {
@@ -33,12 +34,19 @@ namespace Laan.Sql.Parser.Parsers
         {
             do
             {
-                using ( Tokenizer.ExpectBrackets() )
+                using (Tokenizer.ExpectBrackets())
                 {
-                    _statement.Values.Add( GetIdentifierList() );
+                    var identifiers = new List<Expression>();
+                    do
+                    {
+                        identifiers.Add(ProcessExpression());
+                    }
+                    while (Tokenizer.TokenEquals(Constants.Comma));
+                    
+                    _statement.Values.Add(identifiers);
                 }
             }
-            while ( Tokenizer.TokenEquals( Constants.Comma ) );
+            while (Tokenizer.TokenEquals(Constants.Comma));
         }
 
         private void ProcessSelect()

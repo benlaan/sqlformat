@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 using Laan.Sql.Parser;
 using Laan.Sql.Parser.Entities;
-using System.Collections.Generic;
+using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Formatter
 {
@@ -43,7 +44,7 @@ namespace Laan.Sql.Formatter
         {
             if ( _statement.Columns.Count > 0 )
             {
-                string text = String.Join( ", ", _statement.Columns.ToArray() );
+                string text = _statement.Columns.ToCsv();
                 List<string> lines = new List<string>();
                 if ( text.Length > WrapMarginColumn )
                 {
@@ -80,29 +81,60 @@ namespace Laan.Sql.Formatter
                 NewLine();
         }
 
+        private string GetValues(List<Expression> values)
+        {
+            StringBuilder result = new StringBuilder();
+            int size = 0;
+            var count = values.Count;
+
+            bool multiline = false;
+
+            foreach (var item in values)
+            {
+                var value = item.Value;
+                size += value.Length;
+
+                result.Append(value + (count > 1 ? ", " : String.Empty));
+                if (size > 120)
+                {
+                    result.Append(Environment.NewLine + Indent + Indent);
+                    size = 0;
+                    multiline = true;
+                }
+                count--;
+            }
+
+            if (multiline)
+                return string.Format("{0}{1}{1}{2}{0}{1}", Environment.NewLine, Indent, result);
+
+            return result.ToString();
+        }
+
         private void FormatInputData()
         {
-            if ( _statement.Values.Any() )
+            if (_statement.Values.Any())
             {
-                NewLine();
-                using ( new IndentScope( this ) )
+                using (new IndentScope(this))
                 {
-                    foreach ( var values in _statement.Values )
+                    var first = _statement.Values.First();
+                    var last = _statement.Values.Last();
+
+                    foreach (var values in _statement.Values)
                     {
                         IndentAppendFormat(
                             "{0} {1}{2}",
-                            values == _statement.Values.First() ? " " + Constants.Values : new string( ' ', Constants.Values.Length + 1 ),
-                            FormatBrackets( String.Join( ", ", values.ToArray() ) ),
-                            values == _statement.Values.Last() ? "" : ",\n"
+                            values == first ? Constants.Values : new string(' ', Constants.Values.Length),
+                            FormatBrackets(GetValues(values)),
+                            values == last ? String.Empty : ",\n"
                         );
                     }
                 }
             }
-            else if ( _statement.SourceStatement != null )
+            else if (_statement.SourceStatement != null)
             {
-                using ( new IndentScope( this ) )
+                using (new IndentScope(this))
                 {
-                    var formatter = new SelectStatementFormatter( this, _sql, _statement.SourceStatement );
+                    var formatter = new SelectStatementFormatter(this, _sql, _statement.SourceStatement);
                     formatter.Execute();
                 }
             }
