@@ -180,7 +180,8 @@ namespace Laan.AddIns.Core
             {
                 var actions = Assembly.GetExecutingAssembly().GetTypes()
                     .Where(type => !type.IsAbstract && typeof(Action).IsAssignableFrom(type))
-                    .Select(type => (Action)Activator.CreateInstance(type, this));
+                    .Select(type => (Action)Activator.CreateInstance(type, this))
+                    .ToList();
 
                 _actions.AddRange(actions);
             }

@@ -1,22 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Xml;
-using System.Xml.Serialization;
 
 using Laan.AddIns.Actions;
 using Laan.AddIns.Core;
-using System.Diagnostics;
 
 namespace Laan.AddIns.Ssms.Actions
 {
     [MenuBarToolsMenu]
     public class SqlTemplating : DropDownList
     {
-        public static List<Template> Templates { get; set; }
-
         public SqlTemplating(AddIn addIn) : base(addIn)
         {
             Templates = LoadTemplates();
@@ -39,11 +32,11 @@ namespace Laan.AddIns.Ssms.Actions
             }
             catch (Exception ex)
             {
-                AddIn.Error(ex); 
+                AddIn.Error(ex);
                 return new List<Template>();
             }
         }
-        
+
         private Cursor DetermineCursorFromBar(IList<string> lines)
         {
             int column = 0;
@@ -71,7 +64,7 @@ namespace Laan.AddIns.Ssms.Actions
             try
             {
                 return AddIn.IsCurrentDocumentExtension("sql")
-                    && AddIn.CurrentSelection == "";
+                    && AddIn.CurrentSelection == String.Empty;
             }
             catch (Exception ex)
             {
@@ -103,13 +96,13 @@ namespace Laan.AddIns.Ssms.Actions
                 var lines = new List<String>();
                 lines.Add(raw.FirstOrDefault());
                 for (int index = 1; index < raw.Count; index++)
-                    lines.Add((raw[index] == "" ? "" : offset) + raw[index]);
+                    lines.Add((raw[index] == String.Empty ? String.Empty : offset) + raw[index]);
 
                 Cursor cursor = DetermineCursorFromBar(raw);
                 if (cursor.Row < lines.Count)
                     lines[cursor.Row] = lines[cursor.Row].Replace("|", "");
 
-                AddIn.InsertText(String.Join("\n", lines.ToArray()));
+                AddIn.InsertText(String.Join(Environment.NewLine, lines.ToArray()));
                 AddIn.Cursor = cursor;
             }
             finally
@@ -133,5 +126,7 @@ namespace Laan.AddIns.Ssms.Actions
                     yield return new Item() { Code = template.Code, Name = template.Name };
             }
         }
+
+        public static List<Template> Templates { get; set; }
     }
 }

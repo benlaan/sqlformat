@@ -1,4 +1,5 @@
 using System;
+
 using Laan.AddIns.Actions;
 using Laan.AddIns.Core;
 using Laan.Sql.Formatter;
@@ -22,7 +23,7 @@ namespace Laan.AddIns.Ssms.Actions
         //    return index + textDocument.Selection.AnchorColumn;
         //}
 
-        public SqlFormatter( AddIn addIn ) : base( addIn )
+        public SqlFormatter(AddIn addIn) : base(addIn)
         {
             _engine = new FormattingEngine();
             _engine.IndentStep = 0; // experimental: GetStartIndent( textDocument ) / engine.TabSize;
@@ -31,27 +32,27 @@ namespace Laan.AddIns.Ssms.Actions
             DisplayName = "Format SQL";
             DescriptivePhrase = "Formatting SQL";
 
-            ButtonText = "Format S&QL"; 
-            ToolTip = "Formats the current file"; 
+            ButtonText = "Format S&QL";
+            ToolTip = "Formats the current file";
             ImageIndex = 59;
             KeyboardBinding = "Text Editor::Ctrl+`";
         }
 
         public override bool CanExecute()
         {
-            return ( AddIn.IsCurrentDocumentExtension( "sql" ) );
+            return (AddIn.IsCurrentDocumentExtension("sql"));
         }
 
         public override void Execute()
         {
             var textDocument = AddIn.TextDocument;
 
-            if ( textDocument.Selection.IsEmpty )
+            if (textDocument.Selection.IsEmpty)
                 textDocument.Selection.SelectAll();
 
             try
             {
-                AddIn.InsertText( _engine.Execute( textDocument.Selection.Text ) );
+                AddIn.InsertText(_engine.Execute(textDocument.Selection.Text + Environment.NewLine));
             }
             finally
             {
