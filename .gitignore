@@ -4,3 +4,5 @@ obj
 *.user
 *.PublishSettings
 PublishProfiles
+packages
+node_modules

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0BCF224A-F0ED-4D7D-ACE7-398C75888F0F}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Laan.Sql.Tools.Installer", "Laan.Tools.Sql.Installer\Laan.Sql.Tools.Installer.wixproj", "{6D9B793E-778B-49DA-BF2B-F90C4590AE10}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Options", "Options\Options.csproj", "{783BC160-5A11-4D4F-911C-084644A60FC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.Sql.Formatter.Web.Api", "Laan.Sql.Formatter.Web.Api\Laan.Sql.Formatter.Web.Api.csproj", "{65E58DDB-1B1D-4233-9DD8-CFE41569826F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -192,6 +194,24 @@ Global
 		{783BC160-5A11-4D4F-911C-084644A60FC1}.SsmsDeploy|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{783BC160-5A11-4D4F-911C-084644A60FC1}.SsmsDeploy|Mixed Platforms.Build.0 = Release|Any CPU
 		{783BC160-5A11-4D4F-911C-084644A60FC1}.SsmsDeploy|x86.ActiveCfg = Release|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.Debug|x86.Build.0 = Debug|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.Release|x86.ActiveCfg = Release|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.Release|x86.Build.0 = Release|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.SsmsDeploy|Any CPU.ActiveCfg = Release|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.SsmsDeploy|Any CPU.Build.0 = Release|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.SsmsDeploy|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.SsmsDeploy|Mixed Platforms.Build.0 = Release|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.SsmsDeploy|x86.ActiveCfg = Release|Any CPU
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F}.SsmsDeploy|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

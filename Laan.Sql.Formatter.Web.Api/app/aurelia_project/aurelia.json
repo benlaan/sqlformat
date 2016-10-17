@@ -1,0 +1,141 @@
+{
+  "name": "app",
+  "type": "project:application",
+  "platform": {
+    "id": "web",
+    "displayName": "Web",
+    "output": "output"
+  },
+  "transpiler": {
+    "id": "typescript",
+    "displayName": "TypeScript",
+    "fileExtension": ".ts",
+    "dtsSource": [
+      "./typings/**/*.d.ts",
+      "./custom_typings/**/*.d.ts"
+    ],
+    "source": "src\\**\\*.ts"
+  },
+  "markupProcessor": {
+    "id": "none",
+    "displayName": "None",
+    "fileExtension": ".html",
+    "source": "src\\**\\*.html"
+  },
+  "cssProcessor": {
+    "id": "none",
+    "displayName": "None",
+    "fileExtension": ".css",
+    "source": "src\\**\\*.css"
+  },
+  "editor": {
+    "id": "vscode",
+    "displayName": "Visual Studio Code"
+  },
+  "unitTestRunner": {
+    "id": "none",
+    "displayName": "None"
+  },
+  "paths": {
+    "root": "src",
+    "resources": "src\\resources",
+    "elements": "src\\resources\\elements",
+    "attributes": "src\\resources\\attributes",
+    "valueConverters": "src\\resources\\value-converters",
+    "bindingBehaviors": "src\\resources\\binding-behaviors"
+  },
+  "build": {
+    "targets": [
+      {
+        "id": "web",
+        "displayName": "Web",
+        "output": "output"
+      }
+    ],
+    "loader": {
+      "type": "require",
+      "configTarget": "vendor-bundle.js",
+      "includeBundleMetadataInConfig": "auto",
+      "plugins": [
+        {
+          "name": "text",
+          "extensions": [
+            ".html",
+            ".css"
+          ],
+          "stub": true
+        }
+      ]
+    },
+    "options": {
+      "minify": "stage & prod",
+      "sourcemaps": "dev & stage"
+    },
+    "bundles": [
+      {
+        "name": "app-bundle.js",
+        "source": [
+          "[**/*.js]",
+          "**/*.{css,html}"
+        ]
+      },
+      {
+        "name": "vendor-bundle.js",
+        "prepend": [
+          "node_modules/bluebird/js/browser/bluebird.core.js",
+          "libs/require.js"
+        ],
+        "dependencies": [
+          "aurelia-binding",
+          "aurelia-bootstrapper",
+          "aurelia-dependency-injection",
+          "aurelia-event-aggregator",
+          "aurelia-framework",
+          "aurelia-history",
+          "aurelia-history-browser",
+          "aurelia-loader",
+          "aurelia-loader-default",
+          "aurelia-logging",
+          "aurelia-logging-console",
+          "aurelia-metadata",
+          "aurelia-pal",
+          "aurelia-pal-browser",
+          "aurelia-path",
+          "aurelia-polyfills",
+          "aurelia-route-recognizer",
+          "aurelia-router",
+          "aurelia-task-queue",
+          "aurelia-templating",
+          "aurelia-templating-binding",
+          {
+            "name": "text",
+            "path": "../libs/text"
+          },
+          {
+            "name": "aurelia-http-client",
+            "path": "../node_modules/aurelia-http-client/dist/amd",
+            "main": "aurelia-http-client"
+          },
+          {
+            "name": "aurelia-templating-resources",
+            "path": "../node_modules/aurelia-templating-resources/dist/amd",
+            "main": "aurelia-templating-resources"
+          },
+          {
+            "name": "aurelia-templating-router",
+            "path": "../node_modules/aurelia-templating-router/dist/amd",
+            "main": "aurelia-templating-router"
+          },
+          {
+            "name": "google-code-prettify",
+            "path": "../node_modules/google-code-prettify/bin",
+            "main": "prettify.min",
+            "resources": [
+              "prettify.min.css"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

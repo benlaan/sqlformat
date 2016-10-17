@@ -1,0 +1,104 @@
+#centre {
+border:1px solid #202020;
+border-bottom:0;
+border-top:0;
+color:#000;
+padding:1.5em;
+}
+
+#container {
+background-color:#fafafa;
+margin:1em 10%;
+min-width:60em;
+position:absolute;
+width:80%;
+}
+
+#top {
+background-color:#202020;
+height:2.4em;
+max-height:2.4em;
+}
+
+#header {
+background-color:#3882C7;
+border:1px solid #fafafa;
+color:#fafafa;
+font-size:2em;
+height:2.5em;
+padding-left:2em;
+padding-top:1em;
+}
+
+#footer {
+border:1px solid #202020;
+border-top:0;
+padding:0.5em;
+text-align:right;
+}
+
+.menulist {
+font-size:1em;
+list-style-type:none;
+margin:0;
+padding:0;
+}
+
+.menulist a {
+color:#fafafa;
+margin:0 0.4em;
+text-decoration:none;
+}
+
+.menulist a:hover {
+color:#FF0;
+text-decoration:none;
+}
+
+.menulist li {
+border-right:1px solid #fff;
+display:inline;
+float:left;
+margin:0;
+padding:0.6em 10px;
+}
+
+a {
+color:#000;
+text-decoration:underline;
+}
+
+body {
+background-color:#CDCDCD;
+font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:0.75em;
+}
+
+h1 {
+font-size:1.6em;
+margin:0.5em 0.5em 1em 0;
+}
+
+h2 {
+font-size:1.2em;
+margin:0.8em 0.5em 0.3em 0.6em;
+}
+
+h3 {
+font-size:1.1em;
+margin:0.8em 0.5em 0.3em 0.8em;
+}
+
+h4 {
+font-size:1em;
+margin:0.7em 0.5em 0.3em 1em;
+}
+
+h5 {
+font-size:0.9em;
+margin:0.6em 0.5em 0.2em 1.5em;
+}
+
+p {
+margin:1px 0.5em 0.5em 1.5em;
+}
