@@ -12,7 +12,7 @@ define('app',["require", "exports", 'aurelia-framework', 'aurelia-http-client', 
     var App = (function () {
         function App(client) {
             this.client = client;
-            this.rawSql = "SELECT * FROM Table T JOIN Other O ON O.Id = T.OtherId";
+            this.rawSql = "";
         }
         App.prototype.convert = function () {
             var _this = this;
