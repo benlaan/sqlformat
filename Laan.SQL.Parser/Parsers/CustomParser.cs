@@ -9,23 +9,23 @@ namespace Laan.Sql.Parser.Parsers
 {
     public abstract class CustomParser
     {
-        public CustomParser( ITokenizer tokenizer )
+        public CustomParser(ITokenizer tokenizer)
         {
             Tokenizer = tokenizer;
         }
 
-        protected void ExpectToken( string token )
+        protected void ExpectToken(string token)
         {
-            if ( CurrentToken.ToLower() != token.ToLower() )
-                throw new ExpectedTokenNotFoundException( token, CurrentToken, Tokenizer.Position );
+            if (CurrentToken.ToLower() != token.ToLower())
+                throw new ExpectedTokenNotFoundException(token, CurrentToken, Tokenizer.Position);
             else
                 ReadNextToken();
         }
 
-        protected void ExpectTokens( params string[] tokens )
+        protected void ExpectTokens(params string[] tokens)
         {
-            foreach ( string token in tokens )
-                ExpectToken( token );
+            foreach (string token in tokens)
+                ExpectToken(token);
         }
 
         protected void ReadNextToken()
@@ -42,13 +42,15 @@ namespace Laan.Sql.Parser.Parsers
 
         protected Expression ProcessExpression()
         {
-            var parser = new ExpressionParser( Tokenizer );
+            var parser = new ExpressionParser(Tokenizer);
             return parser.Execute();
         }
 
         private string GetOperator()
         {
-            if ( Tokenizer.IsNextToken( "=", ">=", "<=", "!=", "<>", "IN", "ANY", "LIKE" ) )
+            var comparisonOperators = new[] { "=", ">=", "<=", "!=", "<>", "IN", "ANY", "LIKE" };
+
+            if (Tokenizer.IsNextToken(comparisonOperators))
             {
                 string token = Tokenizer.Current.Value;
                 ReadNextToken();
@@ -56,15 +58,15 @@ namespace Laan.Sql.Parser.Parsers
             }
             else
                 throw new ExpectedTokenNotFoundException(
-                    "'=', '>=', '<=', '!=', '<>', 'IN', 'ANY', 'LIKE'",
+                    comparisonOperators.Join(", "),
                     CurrentToken,
                     Tokenizer.Position
                 );
         }
 
-        protected CriteriaExpression ProcessCriteriaExpression( Expression parent )
+        protected CriteriaExpression ProcessCriteriaExpression(Expression parent)
         {
-            CriteriaExpression expression = new CriteriaExpression( parent );
+            var expression = new CriteriaExpression(parent);
             expression.Left = ProcessExpression();
             expression.Operator = GetOperator();
             expression.Right = ProcessExpression();
@@ -74,8 +76,8 @@ namespace Laan.Sql.Parser.Parsers
 
         protected string GetIdentifier()
         {
-            if ( !Tokenizer.HasMoreTokens )
-                throw new SyntaxException( "Identifier expected" );
+            if (!Tokenizer.HasMoreTokens)
+                throw new SyntaxException("Identifier expected");
 
             string identifier = String.Empty;
             switch (Tokenizer.Current.Type)
@@ -95,7 +97,7 @@ namespace Laan.Sql.Parser.Parsers
                     ReadNextToken();
                     break;
             }
-            
+
             return identifier;
         }
 
@@ -104,9 +106,9 @@ namespace Laan.Sql.Parser.Parsers
             List<string> identifiers = new List<string>();
             do
             {
-                identifiers.Add( GetIdentifier() );
+                identifiers.Add(GetIdentifier());
             }
-            while ( Tokenizer.TokenEquals( Constants.Comma ) );
+            while (Tokenizer.TokenEquals(Constants.Comma));
 
             return identifiers;
         }
@@ -118,16 +120,16 @@ namespace Laan.Sql.Parser.Parsers
 
             do
             {
-                token += ( token != "" ? Constants.Dot : "" ) + GetIdentifier();
+                token += (token != "" ? Constants.Dot : "") + GetIdentifier();
             }
-            while ( Tokenizer.TokenEquals( Constants.Dot ) );
+            while (Tokenizer.TokenEquals(Constants.Dot));
             return token;
         }
 
         protected bool HasTerminator()
         {
-            bool result = Tokenizer.IsNextToken( Constants.SemiColon );
-            if ( result )
+            bool result = Tokenizer.IsNextToken(Constants.SemiColon);
+            if (result)
                 Tokenizer.ReadNextToken();
             return result;
         }

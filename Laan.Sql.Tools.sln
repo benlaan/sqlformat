@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.Sql.Formatter.Test", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.Sql.Formatter", "Laan.SQL.Formatter\Laan.Sql.Formatter.csproj", "{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.Sql.Formatter.Web", "Laan.SQL.Formatter.WebForm\Laan.Sql.Formatter.Web.csproj", "{21C94801-B58A-49F3-8DA2-7A64B48632E0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.NHibernate.Appender", "Laan.NHibernate.Appender\Laan.NHibernate.Appender.csproj", "{1532F037-944F-4969-81BA-5A7C34E1D299}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.Sql.Parser", "Laan.SQL.Parser\Laan.Sql.Parser.csproj", "{E972B2B2-F549-418E-B830-FB5D97101168}"
@@ -29,7 +27,13 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Laan.Sql.Tools.Installer", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Options", "Options\Options.csproj", "{783BC160-5A11-4D4F-911C-084644A60FC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.Sql.Formatter.Web.Api", "Laan.Sql.Formatter.Web.Api\Laan.Sql.Formatter.Web.Api.csproj", "{65E58DDB-1B1D-4233-9DD8-CFE41569826F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laan.Sql.Formatter.Web", "Laan.Sql.Formatter.Web\Laan.Sql.Formatter.Web.csproj", "{65E58DDB-1B1D-4233-9DD8-CFE41569826F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{4411D8CD-4017-4161-A4C4-90654B1F3152}"
+	ProjectSection(SolutionItems) = preProject
+		Scripts\build-app.cmd = Scripts\build-app.cmd
+		Scripts\build.ps1 = Scripts\build.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,21 +78,6 @@ Global
 		{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}.SsmsDeploy|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}.SsmsDeploy|Mixed Platforms.Build.0 = Release|Any CPU
 		{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}.SsmsDeploy|x86.ActiveCfg = Release|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.Release|x86.ActiveCfg = Release|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.SsmsDeploy|Any CPU.ActiveCfg = Release|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.SsmsDeploy|Any CPU.Build.0 = Release|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.SsmsDeploy|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.SsmsDeploy|Mixed Platforms.Build.0 = Release|Any CPU
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0}.SsmsDeploy|x86.ActiveCfg = Release|Any CPU
 		{1532F037-944F-4969-81BA-5A7C34E1D299}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1532F037-944F-4969-81BA-5A7C34E1D299}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1532F037-944F-4969-81BA-5A7C34E1D299}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -219,7 +208,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0B133315-395D-46CC-8E50-513AB2E88A9E} = {0BCF224A-F0ED-4D7D-ACE7-398C75888F0F}
 		{5AF58723-F939-4955-9B29-2A6A0A4CFBA8} = {C76E8675-9290-4C7F-A3AC-2C9CA0C6F2E6}
-		{21C94801-B58A-49F3-8DA2-7A64B48632E0} = {8D8E06DF-2C58-4E98-97BD-5BB8089C51C0}
 		{1532F037-944F-4969-81BA-5A7C34E1D299} = {8D8E06DF-2C58-4E98-97BD-5BB8089C51C0}
 		{E972B2B2-F549-418E-B830-FB5D97101168} = {C76E8675-9290-4C7F-A3AC-2C9CA0C6F2E6}
 		{1D0DE8C1-0D05-433B-93E7-AAB7A34A93BC} = {0BCF224A-F0ED-4D7D-ACE7-398C75888F0F}
@@ -227,6 +215,7 @@ Global
 		{C307A6B0-E866-4685-9227-3D13A744EFFB} = {0BCF224A-F0ED-4D7D-ACE7-398C75888F0F}
 		{6D9B793E-778B-49DA-BF2B-F90C4590AE10} = {8D8E06DF-2C58-4E98-97BD-5BB8089C51C0}
 		{783BC160-5A11-4D4F-911C-084644A60FC1} = {8D8E06DF-2C58-4E98-97BD-5BB8089C51C0}
+		{65E58DDB-1B1D-4233-9DD8-CFE41569826F} = {8D8E06DF-2C58-4E98-97BD-5BB8089C51C0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = .

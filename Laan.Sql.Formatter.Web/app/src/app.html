@@ -1,0 +1,38 @@
+<template>
+    <require from="google-code-prettify/prettify.min.css"></require>
+    <div id="container">
+        <div id="header">Laan.Sql.Formatter (alpha)</div>
+        <div id="top">
+            <ul class="menulist">
+                <li><a href="/app">Home</a></li>
+                <li><a href="http://www.github.com">Source Hosting by GitHub</a></li>
+                <li><a href="http://github.com/benlaan/sqlformat">Want the code? have a look</a></li>
+                <li><a href="http://github.com/benlaan/sqlformat/issues">Found a bug? log it</a></li>
+                <li><a href="http://benlaan.com">by Ben Laan</a></li>
+            </ul>
+        </div>
+        <div id="centre">
+            <h4>Input Sql</h4>
+            <textarea class="code prettyprint lang-sql" style="width: 100%; height:180px" value.bind="rawSql" ></textarea>
+
+            <div style="padding-bottom: 15px">
+                Time Taken: ${timeTaken ? timeTaken : '0.0'}
+            </div>
+
+            <div style="text-align:right">
+                <button type="button" click.delegate="convert()">Convert</button>
+            </div>
+
+            <h4>Output Sql</h4>
+            <div style="text-align:right">
+                <button type="button" click.delegate="copy()">Copy</button>
+            </div>
+            <div style="height:270px;overflow-y: scroll; width: 100%">
+                <pre class="code prettyprint" ref="formattedCode">
+                <template repeat.for="line of formattedSql">${'\n' + line}</template>
+			</pre>
+            </div>
+        </div>
+        <div id="footer">Web design by <a href="http://nicolas.freezee.org">Nicolas Fafchamps</a></div>
+    </div>
+</template>

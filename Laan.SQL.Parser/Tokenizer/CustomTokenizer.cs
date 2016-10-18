@@ -1,6 +1,7 @@
 using System;
-using Laan.Sql.Parser.Exceptions;
 using System.Linq;
+
+using Laan.Sql.Parser.Exceptions;
 
 namespace Laan.Sql.Parser
 {
@@ -12,25 +13,25 @@ namespace Laan.Sql.Parser
         //{
         //    set { InternalSetSkipWhiteSpace(); }
         //}
-        
+
         public virtual bool IsNextToken(params string[] tokenSet)
         {
-            foreach ( var token in tokenSet )
-                if ( Current == token  )
+            foreach (var token in tokenSet)
+                if (Current == token)
                     return true;
 
             return false;
         }
 
-        public bool TokenEquals( string value )
+        public bool TokenEquals(string value)
         {
             bool areEqual = Current == value;
-            if ( areEqual )
+
+            if (areEqual)
                 ReadNextToken();
 
-            return areEqual;            
+            return areEqual;
         }
-
 
         public virtual void ReadNextToken()
         {
@@ -47,12 +48,12 @@ namespace Laan.Sql.Parser
         /// </summary>
         /// <param name="token">Expected token</param>
         /// <exception cref="ExpectedTokenNotFoundException">current token did not match</exception>
-        public void ExpectToken( string token )
+        public void ExpectToken(string token)
         {
-            if ( Current != token )
-                throw new ExpectedTokenNotFoundException( token, Current.Value, Position );
-            else
-                ReadNextToken();
+            if (Current == Token.Null || Current != token)
+                throw new ExpectedTokenNotFoundException(token, Current != Token.Null ? Current.Value : "", Position);
+
+            ReadNextToken();
         }
 
         /// <summary>
@@ -60,17 +61,17 @@ namespace Laan.Sql.Parser
         /// </summary>
         /// <param name="tokens">Expected tokens</param>
         /// <exception cref="ExpectedTokenNotFoundException">current token did not match</exception>
-        public void ExpectTokens( string[] tokens )
+        public void ExpectTokens(string[] tokens)
         {
-            foreach ( string token in tokens )
-                ExpectToken( token );
+            foreach (string token in tokens)
+                ExpectToken(token);
         }
 
         public Position Position { get; protected set; }
 
         public BracketStructure ExpectBrackets()
         {
-            return new BracketStructure( this as ITokenizer);
+            return new BracketStructure(this as ITokenizer);
         }
 
         public virtual bool HasMoreTokens

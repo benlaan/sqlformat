@@ -6,3 +6,5 @@ obj
 PublishProfiles
 packages
 node_modules
+*/publish/
+.cr

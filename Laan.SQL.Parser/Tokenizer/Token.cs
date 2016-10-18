@@ -4,8 +4,11 @@ using System.Linq;
 
 namespace Laan.Sql.Parser
 {
+    [DebuggerDisplay("{Value} : {Type}")]
     public class Token
     {
+        public static Token Null { get { return null; } }
+
         public string Value { get; set; }
         public TokenType Type { get; set; }
 
@@ -15,22 +18,22 @@ namespace Laan.Sql.Parser
             Value = "";
         }
 
-        public Token( string value, TokenType type )
+        public Token(string value, TokenType type)
         {
             Value = value;
             Type = type;
         }
 
-        public override bool Equals( object obj )
+        public override bool Equals(object obj)
         {
-            if ( ReferenceEquals( null, obj ) ) return false;
-            if ( ReferenceEquals( this, obj ) ) return true;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
 
             var casted = obj as Token;
-            if ( casted == (Token) null )
+            if (casted == Token.Null)
                 return false;
 
-            return Value.Equals( casted.Value ) && Type.Equals( casted.Type );
+            return Value.Equals(casted.Value) && Type.Equals(casted.Type);
         }
 
         public override int GetHashCode()
@@ -38,41 +41,36 @@ namespace Laan.Sql.Parser
             return Value.GetHashCode();
         }
 
-        //public static implicit operator string( Token token )
-        //{
-        //    return token != null ? token.Value : null;
-        //}
-
-        public static bool operator ==( Token one, string two )
+        public static bool operator ==(Token one, string two)
         {
-            if ( ReferenceEquals( one, null ) && ReferenceEquals( two, null ) )
+            if (ReferenceEquals(one, null) && ReferenceEquals(two, null))
                 return true;
 
-            if ( ReferenceEquals( one, null ) || ReferenceEquals( two, null ) )
+            if (ReferenceEquals(one, null) || ReferenceEquals(two, null))
                 return false;
 
             return one.Value != null && one.Value.ToLower() == two.ToLower();
         }
 
-        public static bool operator !=( Token one, string two )
+        public static bool operator !=(Token one, string two)
         {
-            return !( one == two );
+            return !(one == two);
         }
 
-        public static bool operator ==( Token one, Token two )
+        public static bool operator ==(Token one, Token two)
         {
-            if ( ReferenceEquals( one, null ) && ReferenceEquals( two, null ) )
+            if (ReferenceEquals(one, null) && ReferenceEquals(two, null))
                 return true;
 
-            if ( ReferenceEquals( one, null ) || ReferenceEquals( two, null ) )
+            if (ReferenceEquals(one, null) || ReferenceEquals(two, null))
                 return false;
 
             return one.Value.ToLower() == two.Value.ToLower();
         }
 
-        public static bool operator !=( Token one, Token two )
+        public static bool operator !=(Token one, Token two)
         {
-            return !( one == two );
+            return !(one == two);
         }
 
         private bool IsEmpty()
@@ -80,14 +78,14 @@ namespace Laan.Sql.Parser
             return Value.Length == 0;
         }
 
-        public bool IsTypeIn( params TokenType[] tokenTypes )
+        public bool IsTypeIn(params TokenType[] tokenTypes)
         {
-            return tokenTypes.Any( tt => tt == Type );
+            return tokenTypes.Any(tt => tt == Type);
         }
 
         public override string ToString()
         {
-            return String.Format( "{0} ({1})", Value, Type );
+            return String.Format("{0} ({1})", Value, Type);
         }
     }
 }
