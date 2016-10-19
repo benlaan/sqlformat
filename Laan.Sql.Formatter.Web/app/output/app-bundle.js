@@ -7,12 +7,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-define('app',["require", "exports", 'aurelia-framework', 'aurelia-http-client', 'google-code-prettify'], function (require, exports, aurelia_framework_1, aurelia_http_client_1, google_code_prettify_1) {
+define('app',["require", "exports", 'aurelia-framework', 'aurelia-http-client', 'google-code-prettify', './environment'], function (require, exports, aurelia_framework_1, aurelia_http_client_1, google_code_prettify_1, environment_1) {
     "use strict";
     var App = (function () {
         function App(client) {
             this.client = client;
-            this.rawSql = "";
+            this.rawSql = environment_1.default.debug ? "SELECT * FROM Table T JOIN Other O ON O.Id = T.OtherId" : "";
         }
         App.prototype.convert = function () {
             var _this = this;

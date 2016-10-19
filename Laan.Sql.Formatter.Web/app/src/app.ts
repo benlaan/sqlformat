@@ -1,6 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
 import { prettyPrintOne } from 'google-code-prettify';
+import environment from './environment';
 
 @autoinject
 export class App {
@@ -9,7 +10,7 @@ export class App {
 
   public constructor(private client: HttpClient) {
 
-      this.rawSql = ""; //"SELECT * FROM Table T JOIN Other O ON O.Id = T.OtherId";
+      this.rawSql = environment.debug ? "SELECT * FROM Table T JOIN Other O ON O.Id = T.OtherId" : "";
   }
 
   public convert(): Promise<void> {
