@@ -1,0 +1,9 @@
+.output-sql {
+    height:270px;
+    overflow-y: auto; 
+    width: 100%;
+}
+
+pre {
+    border: none !important;
+}

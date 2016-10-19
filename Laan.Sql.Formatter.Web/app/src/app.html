@@ -1,38 +1,48 @@
 <template>
+    <require from="bootstrap/css/bootstrap.css"></require>
     <require from="google-code-prettify/prettify.min.css"></require>
-    <div id="container">
-        <div id="header">Laan.Sql.Formatter (alpha)</div>
-        <div id="top">
-            <ul class="menulist">
-                <li><a href="/app">Home</a></li>
-                <li><a href="http://www.github.com">Source Hosting by GitHub</a></li>
-                <li><a href="http://github.com/benlaan/sqlformat">Want the code? have a look</a></li>
-                <li><a href="http://github.com/benlaan/sqlformat/issues">Found a bug? log it</a></li>
-                <li><a href="http://benlaan.com">by Ben Laan</a></li>
-            </ul>
-        </div>
-        <div id="centre">
-            <h4>Input Sql</h4>
-            <textarea class="code prettyprint lang-sql" style="width: 100%; height:180px" value.bind="rawSql" ></textarea>
+    <require from="app.css"></require>
 
-            <div style="padding-bottom: 15px">
-                Time Taken: ${timeTaken ? timeTaken : '0.0'}
-            </div>
+    <require from="./navBar.html"></require>
 
-            <div style="text-align:right">
-                <button type="button" click.delegate="convert()">Convert</button>
-            </div>
+    <bs-container fluid="true">
+        <navbar></navbar>
 
-            <h4>Output Sql</h4>
-            <div style="text-align:right">
-                <button type="button" click.delegate="copy()">Copy</button>
-            </div>
-            <div style="height:270px;overflow-y: scroll; width: 100%">
-                <pre class="code prettyprint" ref="formattedCode">
-                <template repeat.for="line of formattedSql">${'\n' + line}</template>
-			</pre>
-            </div>
-        </div>
-        <div id="footer">Web design by <a href="http://nicolas.freezee.org">Nicolas Fafchamps</a></div>
-    </div>
+        <bs-row>
+            <bs-column xs="12">
+                <bs-page-header>Input Sql</bs-page-header>
+
+                <textarea 
+                    class="code prettyprint lang-sql" style="width: 100%; height:180px" value.bind="rawSql"
+                    keydown.delegate="inputSqlKeyPress($event)">
+                </textarea>
+
+                <bs-button-group align="right">
+                    <bs-button glyph="random" title="convert" press.call="convert()">Convert</bs-button>
+                </bs-button-group>
+            </bs-column>
+        </bs-row>
+
+        <bs-row>
+            <bs-column xs="12">
+                <bs-col xs="12">Time Taken: ${timeTaken ? timeTaken : '0.0'}</bs-col>
+            </bs-column>
+        </bs-row>
+
+        <bs-row>
+            <bs-column xs="12">
+                <bs-page-header>Output Sql</bs-page-header>
+
+                <div class="output-sql">
+                    <pre class="code prettyprint" ref="formattedCode">
+                        <template repeat.for="line of formattedSql">${'\n' + line}</template>
+        			</pre>
+                </div>
+                <bs-button-group align="right">
+                    <bs-button glyph="copy" title="copy" press.call="copy()">Copy</bs-button>
+                </bs-button-group>
+            </bs-column>
+        </bs-row>
+
+    </bs-container>
 </template>

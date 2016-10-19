@@ -90,6 +90,8 @@
     <None Include="app\src\app.html" />
     <Content Include="app\output\app-bundle.js.map" />
     <None Include="dockerfile" />
+    <Content Include="app\src\app.css" />
+    <Content Include="app\src\navBar.html" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -173,6 +175,6 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
   <Target Name="AfterBuild">
-    <Exec Command="$(ProjectDir)..\Scripts\Build-App.cmd" />
+    <Exec Command="$(ProjectDir)..\Scripts\Build-App.cmd" IgnoreExitCode="true" />
   </Target>
 </Project>

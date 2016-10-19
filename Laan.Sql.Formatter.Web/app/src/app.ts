@@ -1,7 +1,7 @@
+import environment from './environment';
 import { autoinject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
 import { prettyPrintOne } from 'google-code-prettify';
-import environment from './environment';
 
 @autoinject
 export class App {
@@ -22,19 +22,29 @@ export class App {
           .withHeader('Content-Type', 'text/plain')
           .withContent(this.rawSql)
           .send()
-          .then(r =>
-          {
+          .then(r => {
 
               var result = JSON.parse(r.response);
               this.formattedSql = result.Sql;
               this.timeTaken = result.Duration;
           })
-          .catch(r =>
-          {
+          .catch(r => {
+
               console.log(r.response);
+              // TODO: toastr.show(r.response);
           });
   }
 
+  public inputSqlKeyPress(event: KeyboardEvent): boolean  {
+
+      if (event.keyCode == 13 && event.ctrlKey) {
+
+          this.convert();
+          return false;
+      }
+
+      return true;
+  }
   public copy(): void {
 
     if (!this.formattedCode)

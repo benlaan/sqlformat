@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "sqlformat.web",
   "type": "project:application",
   "platform": {
     "id": "web",
@@ -42,7 +42,8 @@
     "elements": "src\\resources\\elements",
     "attributes": "src\\resources\\attributes",
     "valueConverters": "src\\resources\\value-converters",
-    "bindingBehaviors": "src\\resources\\binding-behaviors"
+    "bindingBehaviors": "src\\resources\\binding-behaviors",
+    "plugin": "node_modules\\aurelia-bootstrap-plugin\\dist\\index.js"
   },
   "build": {
     "targets": [
@@ -125,6 +126,45 @@
             "name": "aurelia-templating-router",
             "path": "../node_modules/aurelia-templating-router/dist/amd",
             "main": "aurelia-templating-router"
+          },
+          {
+            "name": "aurelia-bootstrap-plugin",
+            "path": "../node_modules/aurelia-bootstrap-plugin/dist/amd",
+            "main": "index",
+            "resources" : [
+                "/alert/*.html",
+                "/badge/*.html",
+                "/breadcrumb/*.html",
+                "/button/*.html",
+                "/drop-down/*.html",
+                "/glyph/*.html",
+                "/grid/*.html",
+                "/input-controls/*.html",
+                "/input-group/*.html",
+                "/jumbotron/*.html",
+                "/label/*.html",
+                "/list-group/*.html",
+                "/media-object/*.html",
+                "/nav-bar/*.html",
+                "/page-header/*.html",
+                "/pagination/*.html",
+                "/panel/*.html",
+                "/pill/*.html",
+                "/progress-bar/*.html",
+                "/responsive-embed/*.html",
+                "/tab/*.html",
+                "/thumbnail/*.html",
+                "/toolbar/*.html",
+                "/well/*.html"
+            ]
+          },
+          {
+            "name": "bootstrap",
+            "path": "../node_modules/bootstrap/dist",
+            "resources" : [
+                "css/bootstrap.css",
+                "css/bootstrap-theme.min.css"
+            ]
           },
           {
             "name": "google-code-prettify",

@@ -1,4 +1,5 @@
-import {Aurelia} from 'aurelia-framework'
+import 'bootstrap';
+import {Aurelia} from 'aurelia-framework';
 import environment from './environment';
 
 //Configure Bluebird Promises.
@@ -10,12 +11,16 @@ import environment from './environment';
 });
 
 export function configure(aurelia: Aurelia) {
+
   aurelia.use
     .standardConfiguration();
 
   if (environment.debug) {
     aurelia.use.developmentLogging();
   }
+
+  aurelia.use
+    .plugin('aurelia-bootstrap-plugin');
 
   aurelia.start().then(() => aurelia.setRoot());
 }

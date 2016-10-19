@@ -2,27 +2,28 @@
   "name": "benlaan.sqlformat",
   "description": "Sql Formatter",
   "version": "0.1.0",
+  "author": "Ben Laan <benlaan@gmail.com> (http://benlaan.com/)",
   "repository": {
-    "type": "???",
-    "url": "???"
+    "type": "git",
+    "url": "http://github.com/benlaan/sqlformat"
   },
   "license": "MIT",
   "dependencies": {
+    "aurelia-bootstrap-plugin": "github:benlaan/aurelia-bootstrap-plugin",
     "aurelia-bootstrapper": "^1.0.0-rc.1.0.0",
-    "aurelia-fetch-client": "^1.0.0-rc.1.0.0",
+    "aurelia-http-client": "^1.0.0",
     "aurelia-animator-css": "^1.0.0-rc.1.0.0",
-    "bluebird": "^3.4.1"
+    "bluebird": "^3.4.1",
+    "google-code-prettify": "^1.0.5"
   },
   "peerDependencies": {},
   "devDependencies": {
     "aurelia-cli": "^0.17.0",
-    "aurelia-http-client": "^1.0.2",
     "aurelia-testing": "^1.0.0-beta.1.0.0",
     "aurelia-tools": "^0.2.2",
     "browser-sync": "^2.13.0",
     "connect-history-api-fallback": "^1.2.0",
     "event-stream": "^3.3.3",
-    "google-code-prettify": "^1.0.5",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-changed-in-place": "^2.0.3",
     "gulp-notify": "^2.2.0",
