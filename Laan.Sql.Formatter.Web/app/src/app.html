@@ -5,42 +5,52 @@
 
     <require from="./navBar.html"></require>
 
-    <bs-container fluid="true">
+    <bs-container>
+
         <navbar></navbar>
 
         <bs-row>
             <bs-column xs="12">
-                <bs-page-header>Input Sql</bs-page-header>
+                <bs-panel style="primary" header-text="Input Sql" show-title="true">
+                    <textarea
+                        class="code prettyprint lang-sql" value.bind="rawSql"
+                        keydown.delegate="inputSqlKeyPress($event)"></textarea>
 
-                <textarea 
-                    class="code prettyprint lang-sql" style="width: 100%; height:180px" value.bind="rawSql"
-                    keydown.delegate="inputSqlKeyPress($event)">
-                </textarea>
-
-                <bs-button-group align="right">
-                    <bs-button glyph="random" title="convert" press.call="convert()">Convert</bs-button>
-                </bs-button-group>
+                    <bs-button-group align="right">
+                        <bs-button
+                            class="${rawSql ? '' : 'disabled'}"
+                            glyph="random" title="Runs the sql formatter" press.call="convert()"></bs-button>
+                    </bs-button-group>
+                </bs-panel>
             </bs-column>
         </bs-row>
 
         <bs-row>
             <bs-column xs="12">
-                <bs-col xs="12">Time Taken: ${timeTaken ? timeTaken : '0.0'}</bs-col>
+                <bs-panel style="primary" header-text="Formatted Sql" show-title="true" footer-text="Time Taken: ${timeTaken ? timeTaken : '00:00.000'}">
+                    <div class="output-sql">
+                        <pre class="code prettyprint" ref="formattedCode">
+                            <template repeat.for="line of formattedSql">${'\n' + line}</template>
+                        </pre>
+                    </div>
+                    <bs-button-group align="right">
+                        <bs-button
+                            class="${hasFormattedSql ? '' : 'disabled'}"
+                            glyph="copy" title="copies the formatted sql to the clipboard" press.call="copy()">
+                        </bs-button>
+                    </bs-button-group>
+                </bs-panel>
             </bs-column>
         </bs-row>
 
         <bs-row>
-            <bs-column xs="12">
-                <bs-page-header>Output Sql</bs-page-header>
-
-                <div class="output-sql">
-                    <pre class="code prettyprint" ref="formattedCode">
-                        <template repeat.for="line of formattedSql">${'\n' + line}</template>
-        			</pre>
-                </div>
-                <bs-button-group align="right">
-                    <bs-button glyph="copy" title="copy" press.call="copy()">Copy</bs-button>
-                </bs-button-group>
+            <!-- TODO: This is a hack. Need to implement offset within bs-column-->
+            <bs-column xs="1"></bs-column>
+            <bs-column xs="10">
+                <bs-alert show.bind="message" type.bind="messageType" dismissible="true">
+                    <bs-glyph icon="${messageType}-sign"></bs-glyph>
+                    ${message}
+                </bs-alert>
             </bs-column>
         </bs-row>
 

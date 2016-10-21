@@ -3,6 +3,16 @@ import { autoinject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
 import { prettyPrintOne } from 'google-code-prettify';
 
+// TODO: Find a real promise type definition
+declare class Promise<T> {
+}
+
+class Notification {
+
+    public message: string;
+    public type: string;
+}
+
 @autoinject
 export class App {
 
@@ -14,6 +24,9 @@ export class App {
   }
 
   public convert(): Promise<void> {
+
+      if (!this.rawSql)
+          return;
 
       return this
           .client
@@ -31,7 +44,7 @@ export class App {
           .catch(r => {
 
               console.log(r.response);
-              // TODO: toastr.show(r.response);
+              this.showNotification({ message: r.response, type: "error" });
           });
   }
 
@@ -45,6 +58,7 @@ export class App {
 
       return true;
   }
+
   public copy(): void {
 
     if (!this.formattedCode)
@@ -53,8 +67,19 @@ export class App {
     var range = document.createRange();
     range.selectNode(this.formattedCode)
     window.getSelection().addRange(range);
-    document.execCommand("copy");
+    var success = document.execCommand("copy");
+
+    if (success)
+        this.showNotification({ message: "Formatted SQL was successfully copied to clipboard", type: "success" });
+
     window.getSelection().empty();
+  }
+
+  private showNotification(notification: Notification) {
+
+      this.message = notification.message;
+      this.messageType = notification.type;
+      setTimeout(() => this.message = "", 5000);
   }
 
   public get formattedSql(): Array<string> {
@@ -68,7 +93,16 @@ export class App {
       this.formattedCode.innerHTML = prettyPrintOne(value.join("\n"));
   }
 
+  public get hasFormattedSql(): boolean {
+
+      return this.formattedSql
+          && this.formattedSql.length > 0;
+  }
+
   public timeTaken: string;
   public rawSql: string;
   public formattedCode: Element;
+
+  public message: string;
+  public messageType: string;
 }
