@@ -875,5 +875,26 @@ namespace Laan.Sql.Formatter.Test
 
             Compare(actual, expected);
         }
-   }
+
+        [Test]
+        public void Can_Format_Select_Statement_With_Long_Aggregate_Column()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute(String.Format(@"
+                SELECT COUNT(HumanResources.DepartmentalEmployee.DepartmentalEmployeeID) FROM dbo.Table"
+            ));
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT COUNT(HumanResources.DepartmentalEmployee.DepartmentalEmployeeID)",
+                "FROM dbo.Table"
+            };
+
+            Compare(actual, expected);
+        }
+    }
 }
