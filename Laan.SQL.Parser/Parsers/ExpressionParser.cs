@@ -221,7 +221,14 @@ namespace Laan.Sql.Parser.Parsers
                 if (!Tokenizer.IsNextToken(Constants.CloseBracket))
                     do
                     {
+                        if (String.Compare(functionName, Constants.Count, true) == 0)
+                        {
+                            var distinct = Tokenizer.TokenEquals(Constants.Distinct);
+                            result = new CountExpression(parent, distinct);
+                        }
+
                         arguments.Add(ReadExpression(parent));
+
                         if (Tokenizer.TokenEquals(Constants.As))
                         {
                             if (!String.Equals(functionName, Constants.Cast, StringComparison.InvariantCultureIgnoreCase))

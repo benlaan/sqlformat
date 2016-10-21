@@ -725,6 +725,52 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
+        public void Select_Count_Star()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>(
+                "select count(*) from table"
+            ).First();
+
+            // Verify outcome
+            Assert.IsNotNull(statement);
+            Assert.IsInstanceOf<CountExpression>(statement.Fields.First().Expression);
+            Assert.AreEqual("COUNT(*)", statement.Fields.First().Expression.Value);
+            Assert.AreEqual("table", statement.From.First().Name);
+        }
+
+        [Test]
+        public void Select_Count_Field()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>(
+                "select count(id) from table"
+            ).First();
+
+            // Verify outcome
+            Assert.IsNotNull(statement);
+            Assert.IsInstanceOf<CountExpression>(statement.Fields.First().Expression);
+            Assert.AreEqual("COUNT(id)", statement.Fields.First().Expression.Value);
+            Assert.AreEqual("table", statement.From.First().Name);
+        }
+
+        [Test]
+        public void Select_Count_Distinct_Field()
+        {
+            // Exercise
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>(
+                "select count(distinct Name) from table"
+            ).First();
+
+            // Verify outcome
+            Assert.IsNotNull(statement);
+            Assert.IsInstanceOf<CountExpression>(statement.Fields.First().Expression);
+            Assert.IsTrue(((CountExpression)statement.Fields.First().Expression).Distinct);
+            Assert.AreEqual("COUNT(DISTINCT Name)", statement.Fields.First().Expression.Value);
+            Assert.AreEqual("table", statement.From.First().Name);
+        }
+
+        [Test]
         [TestCase("ROW_NUMBER()")]
         [TestCase("RANK()")]
         [TestCase("DENSE_RANK()")]

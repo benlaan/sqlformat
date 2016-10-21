@@ -26,6 +26,7 @@ namespace Laan.Sql.Parser
         public const string Comma = ",";
         public const string Commit = "COMMIT";
         public const string Constraint = "CONSTRAINT";
+        public const string Count = "COUNT";
         public const string Create = "CREATE";
         public const string DateFirst = "DATEFIRST";
         public const string DateFormat = "DATEFORMAT";

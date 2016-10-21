@@ -43,6 +43,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Expressions\CountExpression.cs" />
     <Compile Include="Expressions\RankingFunctionExpression.cs" />
     <Compile Include="Tokenizer\CandidateDefinition.cs" />
     <Compile Include="Tokenizer\TokenDefinition.cs" />
