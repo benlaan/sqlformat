@@ -20,8 +20,7 @@ command 0:INSERT INTO dbo.[Table] (Version, TypeID, Name, ShortName, Data, UserN
     Version, TypeID, Name, ShortName, Data, UserName, Created, Modified, IsDeleted, 
     Id
     )
-
-     VALUES (1, '0', 'Reference', NULL, 0, 'auser', '9/03/2012 11:39:50 AM', '9/03/2012 11:39:50 AM', False, 'D4A462AB-DA14-46D2-9118-A00F00C037C6')";
+    VALUES (1, '0', 'Reference', NULL, 0, 'auser', '9/03/2012 11:39:50 AM', '9/03/2012 11:39:50 AM', False, 'D4A462AB-DA14-46D2-9118-A00F00C037C6')";
         [Test]
         public void TestMethod()
         {

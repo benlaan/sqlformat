@@ -1,52 +1,53 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Laan.Sql.Parser.Parsers;
-using Laan.Sql.Parser.Exceptions;
 using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Parser
 {
     public class SqlTypeParser : CustomParser
     {
-        public SqlTypeParser( ITokenizer tokenizer ) : base( tokenizer )
+        public SqlTypeParser(ITokenizer tokenizer) : base(tokenizer)
         {
-            
         }
 
         public SqlType Execute()
         {
             string identifier = GetIdentifier();
-            SqlType result;
-            if ( String.Equals( identifier, Constants.As, StringComparison.InvariantCultureIgnoreCase ) )
+            if (String.Equals(identifier, Constants.As, StringComparison.InvariantCultureIgnoreCase))
+                return null;
+
+            var result = new SqlType(identifier);
+
+            if (Tokenizer.IsNextToken(Constants.Precision))
             {
-                result = null;
+                result.Name = String.Format("{0} {1}", result.Name, Constants.Precision);
+                ReadNextToken();
             }
-            else
+
+            if (!Tokenizer.IsNextToken(Constants.OpenBracket))
+                return result;
+
+            using (Tokenizer.ExpectBrackets())
             {
-                result = new SqlType( identifier );
+                string token = CurrentToken;
+                ReadNextToken();
+                result.Max = (String.Compare(token, Constants.Max, true) == 0);
 
-                if ( !Tokenizer.IsNextToken( Constants.OpenBracket ) )
-                    return result;
-
-                using ( Tokenizer.ExpectBrackets() )
+                if (!result.Max)
                 {
-                    string token = CurrentToken;
-                    ReadNextToken();
-                    result.Max = ( String.Compare( token, "MAX", true ) == 0 );
+                    result.Length = Int32.Parse(token);
 
-                    if ( !result.Max )
+                    if (Tokenizer.TokenEquals(Constants.Comma))
                     {
-                        result.Length = Int32.Parse( token );
-
-                        if ( Tokenizer.TokenEquals( Constants.Comma ) )
-                        {
-                            result.Scale = Int32.Parse( CurrentToken );
-                            ReadNextToken();
-                        }
+                        result.Scale = Int32.Parse(CurrentToken);
+                        ReadNextToken();
                     }
                 }
             }
+
             return result;
         }
     }

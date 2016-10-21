@@ -14,25 +14,29 @@ namespace Laan.Sql.Parser.Test
     public class TestIfStatements
     {
         [Test]
-        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "missing condition for IF" )]
         public void Declare_Statement_With_No_Variables_Should_Fail()
         {
             // Setup
             var sql = "IF";
 
             // Exercise
-            ParserFactory.Execute<IfStatement>( sql );
+            Assert.Catch<SyntaxException>(
+                () => ParserFactory.Execute<IfStatement>(sql),
+                "missing condition for IF"
+            );
         }
 
         [Test]
-        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "missing success block for IF" )]
         public void If_Statement_Without_Statement_Should_Fail()
         {
             // Setup
             var sql = "IF @A = 1";
 
             // Exercise
-            ParserFactory.Execute<IfStatement>( sql );
+            Assert.Catch<SyntaxException>(
+                () => ParserFactory.Execute<IfStatement>(sql),
+                "missing success block for IF"
+            );
         }
 
         [Test]
@@ -42,12 +46,12 @@ namespace Laan.Sql.Parser.Test
             var sql = "IF @A = 1 SELECT 1";
 
             // Exercise
-            var statement = ParserFactory.Execute<IfStatement>( sql ).First();
+            var statement = ParserFactory.Execute<IfStatement>(sql).First();
 
             // Verify outcome
-            Assert.IsNotNull( statement );
-            Assert.AreEqual( typeof( CriteriaExpression ), statement.Condition.GetType() );
-            Assert.AreEqual( typeof( SelectStatement ), statement.If.GetType() );
+            Assert.IsNotNull(statement);
+            Assert.AreEqual(typeof(CriteriaExpression), statement.Condition.GetType());
+            Assert.AreEqual(typeof(SelectStatement), statement.If.GetType());
         }
 
         [Test]
@@ -66,13 +70,13 @@ namespace Laan.Sql.Parser.Test
             ";
 
             // Exercise
-            var statement = ParserFactory.Execute<IfStatement>( sql ).First();
+            var statement = ParserFactory.Execute<IfStatement>(sql).First();
 
             // Verify outcome
-            Assert.IsNotNull( statement );
-            Assert.AreEqual( typeof( CriteriaExpression ), statement.Condition.GetType() );
-            Assert.AreEqual( typeof( SelectStatement ), statement.If.GetType() );
-            Assert.AreEqual( typeof( UpdateStatement ), statement.Else.GetType() );
+            Assert.IsNotNull(statement);
+            Assert.AreEqual(typeof(CriteriaExpression), statement.Condition.GetType());
+            Assert.AreEqual(typeof(SelectStatement), statement.If.GetType());
+            Assert.AreEqual(typeof(UpdateStatement), statement.Else.GetType());
         }
     }
 }

@@ -174,7 +174,7 @@ namespace Laan.Sql.Parser.Parsers
             return factor;
         }
 
-        private SqlType ProcessType()
+        private SqlType GetProcessType()
         {
             SqlTypeParser sqlTypeParser = new SqlTypeParser(Tokenizer);
             return sqlTypeParser.Execute();
@@ -227,7 +227,7 @@ namespace Laan.Sql.Parser.Parsers
                             if (!String.Equals(functionName, Constants.Cast, StringComparison.InvariantCultureIgnoreCase))
                                 throw new SyntaxException("AS is allowed only within a CAST expression");
 
-                            result = new CastExpression(parent, ProcessType());
+                            result = new CastExpression(parent, GetProcessType());
                             break;
                         }
                     }

@@ -135,13 +135,19 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "expected alpha, numeric, or variable, found )" )]
         public void Update_Statement_With_Top_N_Clause_With_Missing_Value()
         {
             // Exercise
-            UpdateStatement statement = ParserFactory.Execute<UpdateStatement>(
-                @"update top () t set field = 1 from dbo.table as t join dbo.other o on o.id = a.id where field <> 2"
-            ).First();
+            try
+            {
+                UpdateStatement statement = ParserFactory.Execute<UpdateStatement>(
+                    @"update top () t set field = 1 from dbo.table as t join dbo.other o on o.id = a.id where field <> 2"
+                ).First();
+            }
+            catch (SyntaxException ex)
+            {
+                Assert.AreEqual("expected alpha, numeric, or variable, found )", ex.Message);
+            }
         }
     }
 }

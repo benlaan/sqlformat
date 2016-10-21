@@ -68,6 +68,7 @@ namespace Laan.Sql.Parser
         public const string Key = "KEY";
         public const string Left = "LEFT";
         public const string Like = "LIKE";
+        public const string Max = "MAX";
         public const string NoCheck = "NOCHECK";
         public const string NoExpand = "NOEXPAND";
         public const string NoLock = "NOLOCK";
@@ -89,6 +90,7 @@ namespace Laan.Sql.Parser
         public const string Percent = "PERCENT";
         public const string Primary = "PRIMARY";
         public const string Print = "PRINT";
+        public const string Precision = "PRECISION";
         public const string Procedure = "PROCEDURE";
         public const string Profile = "PROFILE";
         public const string ReadCommitted = "READCOMMITTED";
@@ -128,6 +130,5 @@ namespace Laan.Sql.Parser
         public const string Work = "WORK";
         public const string XLock = "XLOCK";
         public const string Xml = "XML";
-
     }
 }

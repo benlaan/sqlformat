@@ -15,12 +15,18 @@ namespace Laan.Sql.Parser.Test
     public class TestCreateView
     {
         [Test]
-        [ExpectedException( typeof( ParserNotImplementedException ), ExpectedMessage = "No parser exists for statement type: merge" )]
         public void TestNoParserException()
         {
             //TODO: needs to be moved into a ParserFactory specific unit test
-            // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "merge from table" ).First(); ;
+            try
+            {
+                // Exercise
+                CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("merge from table").First(); ;
+            }
+            catch (ParserNotImplementedException ex)
+            {
+                Assert.AreEqual("No parser exists for statement type: merge", ex.Message);
+            }
         }
 
         [Test]
@@ -56,11 +62,18 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "Expected integer but found: '*'" )]
         public void Select_Top_Missing_Top_Param_StarField()
         {
-            // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>( "create view v1 as select top * from table" ).First();
+            try
+            {
+                // Exercise
+                CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view v1 as select top * from table").First();
+                Assert.Fail();
+            }
+            catch (SyntaxException ex)
+            {
+                Assert.AreEqual("Expected integer but found: '*'", ex.Message);
+            }
         }
 
         [Test]

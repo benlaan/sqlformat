@@ -13,25 +13,38 @@ namespace Laan.Sql.Parser.Test
     public class TestDeclareStatements
     {
         [Test]
-        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "DECLARE requires at least one variable declaration" )]
         public void Declare_Statement_With_No_Variables_Should_Fail()
         {
             // Setup
             var sql = "DECLARE";
 
-            // Exercise
-            ParserFactory.Execute<DeclareStatement>( sql );
+            try
+            {
+                // Exercise
+                ParserFactory.Execute<DeclareStatement>(sql);
+                Assert.Fail();
+            }
+            catch (SyntaxException ex)
+            {
+                Assert.AreEqual("DECLARE requires at least one variable declaration", ex.Message);
+            }
         }
 
         [Test]
-        [ExpectedException( typeof( SyntaxException ), ExpectedMessage = "type missing for declaration of variable '@Variable'" )]
         public void Declare_Statement_With_One_Variable_Without_Type_Should_Fail()
         {
             // Setup
             var sql = "DECLARE @Variable";
 
-            // Exercise
-            ParserFactory.Execute<DeclareStatement>( sql );
+            try
+            {
+                // Exercise
+                ParserFactory.Execute<DeclareStatement>(sql);
+            }
+            catch (SyntaxException ex)
+            {
+                Assert.AreEqual("type missing for declaration of variable '@Variable'", ex.Message);
+            }
         }
 
         [Test]
@@ -41,13 +54,13 @@ namespace Laan.Sql.Parser.Test
             var sql = "DECLARE @Variable INT";
 
             // Exercise
-            var statement = ParserFactory.Execute<DeclareStatement>( sql ).First();
+            var statement = ParserFactory.Execute<DeclareStatement>(sql).First();
 
             // Verify outcome
-            Assert.IsNotNull( statement );
-            Assert.AreEqual( 1, statement.Definitions.Count );
-            Assert.AreEqual( "@Variable", statement.Definitions.First().Name );
-            Assert.AreEqual( "INT", statement.Definitions.First().Type );
+            Assert.IsNotNull(statement);
+            Assert.AreEqual(1, statement.Definitions.Count);
+            Assert.AreEqual("@Variable", statement.Definitions.First().Name);
+            Assert.AreEqual("INT", statement.Definitions.First().Type);
         }
 
         [Test]
@@ -57,17 +70,17 @@ namespace Laan.Sql.Parser.Test
             var sql = "DECLARE @Variable INT = 20 * 2";
 
             // Exercise
-            var statement = ParserFactory.Execute<DeclareStatement>( sql ).First();
+            var statement = ParserFactory.Execute<DeclareStatement>(sql).First();
 
             // Verify outcome
-            Assert.IsNotNull( statement );
-            Assert.AreEqual( 1, statement.Definitions.Count );
+            Assert.IsNotNull(statement);
+            Assert.AreEqual(1, statement.Definitions.Count);
 
             VariableDefinition definition = statement.Definitions.First();
-            Assert.AreEqual( "@Variable", definition.Name );
-            Assert.AreEqual( "INT", definition.Type );
-            Assert.AreEqual( typeof( OperatorExpression ), definition.DefaultValue.GetType() );
-            Assert.AreEqual( "*", ( (OperatorExpression) definition.DefaultValue ).Operator );
+            Assert.AreEqual("@Variable", definition.Name);
+            Assert.AreEqual("INT", definition.Type);
+            Assert.AreEqual(typeof(OperatorExpression), definition.DefaultValue.GetType());
+            Assert.AreEqual("*", ((OperatorExpression)definition.DefaultValue).Operator);
         }
 
         [Test]
@@ -77,14 +90,14 @@ namespace Laan.Sql.Parser.Test
             var sql = "DECLARE @Variable NVARCHAR(MAX) = 'blah'";
 
             // Exercise
-            var statement = ParserFactory.Execute<DeclareStatement>( sql ).First();
+            var statement = ParserFactory.Execute<DeclareStatement>(sql).First();
 
             // Verify outcome
-            Assert.IsNotNull( statement );
-            Assert.AreEqual( 1, statement.Definitions.Count );
+            Assert.IsNotNull(statement);
+            Assert.AreEqual(1, statement.Definitions.Count);
 
             VariableDefinition definition = statement.Definitions.First();
-            Assert.AreEqual( "@Variable", definition.Name );
+            Assert.AreEqual("@Variable", definition.Name);
             //Assert.AreEqual( "INT", definition.Type );
             //Assert.AreEqual( typeof( OperatorExpression ), definition.DefaultValue.GetType() );
             //Assert.AreEqual( "*", ( (OperatorExpression) definition.DefaultValue ).Operator );
@@ -97,25 +110,25 @@ namespace Laan.Sql.Parser.Test
             var sql = "DECLARE @v1 INT, @v2 VARCHAR(50), @v3 DECIMAL(10,2)";
 
             // Exercise
-            var statement = ParserFactory.Execute<DeclareStatement>( sql ).First();
+            var statement = ParserFactory.Execute<DeclareStatement>(sql).First();
 
             // Verify outcome
-            Assert.IsNotNull( statement );
-            Assert.AreEqual( 3, statement.Definitions.Count );
+            Assert.IsNotNull(statement);
+            Assert.AreEqual(3, statement.Definitions.Count);
 
-            var variables = new[] 
-            { 
-                new { Name = "@v1", Type = "INT" }, 
+            var variables = new[]
+            {
+                new { Name = "@v1", Type = "INT" },
                 new { Name = "@v2", Type = "VARCHAR(50)" },
-                new { Name = "@v3", Type = "DECIMAL(10, 2)" } 
+                new { Name = "@v3", Type = "DECIMAL(10, 2)" }
             };
 
             int index = 0;
-            foreach ( var variable in variables )
+            foreach (var variable in variables)
             {
-                VariableDefinition definition = statement.Definitions[ index++ ];
-                Assert.AreEqual( variable.Name, definition.Name );
-                Assert.AreEqual( variable.Type, definition.Type );
+                VariableDefinition definition = statement.Definitions[index++];
+                Assert.AreEqual(variable.Name, definition.Name);
+                Assert.AreEqual(variable.Type, definition.Type);
             }
         }
 
@@ -126,26 +139,26 @@ namespace Laan.Sql.Parser.Test
             var sql = "DECLARE @v1 INT = 20, @v2 VARCHAR(50) = 'Hello', @v3 DECIMAL(10,2) = 12.5 * @v1";
 
             // Exercise
-            var statement = ParserFactory.Execute<DeclareStatement>( sql ).First();
+            var statement = ParserFactory.Execute<DeclareStatement>(sql).First();
 
             // Verify outcome
-            Assert.IsNotNull( statement );
-            Assert.AreEqual( 3, statement.Definitions.Count );
+            Assert.IsNotNull(statement);
+            Assert.AreEqual(3, statement.Definitions.Count);
 
-            var variables = new[] 
-            { 
-                new { Name = "@v1", Type = "INT",            DefaultValue = "20", ExpressionType = typeof(IdentifierExpression) }, 
+            var variables = new[]
+            {
+                new { Name = "@v1", Type = "INT",            DefaultValue = "20", ExpressionType = typeof(IdentifierExpression) },
                 new { Name = "@v2", Type = "VARCHAR(50)",    DefaultValue = "'Hello'", ExpressionType = typeof(StringExpression) },
-                new { Name = "@v3", Type = "DECIMAL(10, 2)", DefaultValue = "12.5 * @v1", ExpressionType = typeof(OperatorExpression) } 
+                new { Name = "@v3", Type = "DECIMAL(10, 2)", DefaultValue = "12.5 * @v1", ExpressionType = typeof(OperatorExpression) }
             };
 
             int index = 0;
-            foreach ( var variable in variables )
+            foreach (var variable in variables)
             {
-                VariableDefinition definition = statement.Definitions[ index++ ];
-                Assert.AreEqual( variable.Name, definition.Name );
-                Assert.AreEqual( variable.Type, definition.Type );
-                Assert.AreEqual( variable.ExpressionType, definition.DefaultValue.GetType() );
+                VariableDefinition definition = statement.Definitions[index++];
+                Assert.AreEqual(variable.Name, definition.Name);
+                Assert.AreEqual(variable.Type, definition.Type);
+                Assert.AreEqual(variable.ExpressionType, definition.DefaultValue.GetType());
             }
         }
     }
