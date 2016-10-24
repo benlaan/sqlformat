@@ -16,10 +16,15 @@ namespace Laan.Sql.Parser.Parsers
 
         protected void ExpectToken(string token)
         {
-            if (CurrentToken.ToLower() != token.ToLower())
-                throw new ExpectedTokenNotFoundException(token, CurrentToken, Tokenizer.Position);
-            else
-                ReadNextToken();
+            var current = Tokenizer.Current;
+            if (current == Token.Null || CurrentToken.ToLower() != token.ToLower())
+                throw new ExpectedTokenNotFoundException(
+                    token,
+                    current != Token.Null ? current.ToString() : "EOF", 
+                    Tokenizer.Position
+                );
+
+            ReadNextToken();
         }
 
         protected void ExpectTokens(params string[] tokens)

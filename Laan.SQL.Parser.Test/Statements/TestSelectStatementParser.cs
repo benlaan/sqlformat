@@ -300,9 +300,9 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda
+                select fielda 
 
-                from table1 t1
+                from table1 t1 
 
                 join table2 as t2
                   on t1.field1 = t2.field2
@@ -355,11 +355,11 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda
+                select fielda 
 
-                from table1 t1
+                from table1 t1 
 
-                join table2 as t2
+                join table2 as t2 
                   on (t1.field1 + 150) / 12 = ( t2.field2 + t1.fielda )
                 "
             ).First();
@@ -416,11 +416,11 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda
+                select fielda 
 
-                from table1 t1
+                from table1 t1 
 
-                join table2 as t2
+                join table2 as t2 
                   on (t1.field1 = t2.fielda )
                 "
             ).First();
@@ -456,12 +456,28 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
+        public void When_Join_Is_Missing_On_Clause_Throw_SyntaxError()
+        {
+            var sql = @"
+                select * from Table Outer
+                join (
+                    select * from Table
+                ) Inner --on inner.Value = Outer.Value
+            ";
+
+            Assert.Catch<ExpectedTokenNotFoundException>(
+                () => ParserFactory.Execute<SelectStatement>(sql),
+                "Expected: 'ON' but found: 'EOF' at Row: 6, Col: 13"
+            );
+        }
+
+        [Test]
         public void Select_With_Where_Condition()
         {
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda
+                select fielda 
                 from table1 t1
                 where t1.fieldb = (select top 1 Name from table)
                 "
@@ -485,7 +501,7 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda
+                select fielda 
                 from table1 t1
                 where t1.fieldb = t1.fieldc
                   and t1.fieldd = 0
@@ -515,7 +531,7 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda
+                select fielda 
                 from table1 t1
                 where ( t1.fieldd = 0 or t1.fieldc < 10 )
                 "
@@ -548,7 +564,7 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda
+                select fielda 
                 from table1 t1
                 where ( t1.fieldd = 0 or t1.fieldc < 10 )
                   and ( ( select top 1 field from table1 ) = ( select top 1 fieldb from table2 ) )
@@ -802,8 +818,8 @@ namespace Laan.Sql.Parser.Test
                     SELECT *
                     FROM (
 
-                        SELECT
-                            RowIndex = {0} OVER (ORDER BY SomeNumber, OtherNumber DESC),
+                        SELECT 
+                            RowIndex = {0} OVER (ORDER BY SomeNumber, OtherNumber DESC), 
                             *
                         FROM [PagedTable]
                     ) T
@@ -847,7 +863,7 @@ namespace Laan.Sql.Parser.Test
                     SELECT *
                     FROM (
 
-                        SELECT
+                        SELECT 
                             RowIndex = {0} OVER (PARTITION BY Code ORDER BY SomeNumber, OtherNumber DESC),
                             *
                         FROM [PagedTable]
