@@ -19,7 +19,7 @@ namespace Laan.Sql.Parser.Parsers
 
     public abstract class CriteriaStatementParser<T> : StatementParser<T> where T : CustomStatement
     {
-        protected string[] FieldTerminatorSet = { Constants.From, Constants.Comma, Constants.Having, Constants.Go, Constants.SemiColon, Constants.End, Constants.Into };
+        protected string[] FieldTerminatorSet = { Constants.From, Constants.Comma, Constants.Having, Constants.Go, Constants.SemiColon, Constants.End, Constants.Into, Constants.Union, Constants.Intersect, Constants.Except, Constants.CloseBracket };
         protected string[] FromTerminatorSet = { Constants.Inner, Constants.Join, Constants.Left, Constants.Right, Constants.Full, Constants.Comma, Constants.CloseBracket, Constants.Order, Constants.Group, Constants.Where };
 
         protected CriteriaStatementParser(ITokenizer tokenizer) : base(tokenizer) { }
@@ -260,6 +260,7 @@ namespace Laan.Sql.Parser.Parsers
                     alias.Type = AliasType.As;
                     Tokenizer.ReadNextToken();
                 }
+
                 if (alias.Type != AliasType.Implicit || !Tokenizer.IsNextToken(Constants.On))
                 {
                     alias.Name = GetIdentifier();

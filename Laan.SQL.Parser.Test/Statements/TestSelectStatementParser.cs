@@ -300,9 +300,9 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda 
+                select fielda
 
-                from table1 t1 
+                from table1 t1
 
                 join table2 as t2
                   on t1.field1 = t2.field2
@@ -355,11 +355,11 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda 
+                select fielda
 
-                from table1 t1 
+                from table1 t1
 
-                join table2 as t2 
+                join table2 as t2
                   on (t1.field1 + 150) / 12 = ( t2.field2 + t1.fielda )
                 "
             ).First();
@@ -416,11 +416,11 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda 
+                select fielda
 
-                from table1 t1 
+                from table1 t1
 
-                join table2 as t2 
+                join table2 as t2
                   on (t1.field1 = t2.fielda )
                 "
             ).First();
@@ -461,7 +461,7 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda 
+                select fielda
                 from table1 t1
                 where t1.fieldb = (select top 1 Name from table)
                 "
@@ -485,7 +485,7 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda 
+                select fielda
                 from table1 t1
                 where t1.fieldb = t1.fieldc
                   and t1.fieldd = 0
@@ -515,7 +515,7 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda 
+                select fielda
                 from table1 t1
                 where ( t1.fieldd = 0 or t1.fieldc < 10 )
                 "
@@ -548,7 +548,7 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda 
+                select fielda
                 from table1 t1
                 where ( t1.fieldd = 0 or t1.fieldc < 10 )
                   and ( ( select top 1 field from table1 ) = ( select top 1 fieldb from table2 ) )
@@ -685,6 +685,25 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
+        public void Derived_View_With_Select_Unions_Without_From()
+        {
+            var sql = @"
+
+                SELECT S.Field
+                FROM Source S
+                JOIN (
+                    SELECT Field = 'AA'
+                    UNION
+                    SELECT 'BB'
+                    UNION
+                    SELECT 'CC'
+                ) D ON D.Field = S.Field
+            ";
+
+            SelectStatement statement = ParserFactory.Execute<SelectStatement>(sql).First();
+        }
+
+        [Test]
         public void Select_With_Into_Clause()
         {
             // Exercise
@@ -783,8 +802,8 @@ namespace Laan.Sql.Parser.Test
                     SELECT *
                     FROM (
 
-                        SELECT 
-                            RowIndex = {0} OVER (ORDER BY SomeNumber, OtherNumber DESC), 
+                        SELECT
+                            RowIndex = {0} OVER (ORDER BY SomeNumber, OtherNumber DESC),
                             *
                         FROM [PagedTable]
                     ) T
@@ -828,7 +847,7 @@ namespace Laan.Sql.Parser.Test
                     SELECT *
                     FROM (
 
-                        SELECT 
+                        SELECT
                             RowIndex = {0} OVER (PARTITION BY Code ORDER BY SomeNumber, OtherNumber DESC),
                             *
                         FROM [PagedTable]
