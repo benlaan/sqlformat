@@ -33,9 +33,9 @@ namespace Laan.Sql.Parser.Test
             // Verify outcome
             Assert.IsNotNull(statement);
 
-            SelectStatement selectStatement = statement.InnerStatement as SelectStatement;
-            Assert.IsNotNull(selectStatement);
+            Assert.AreEqual(1, statement.InnerStatements.Count);
 
+            var selectStatement = statement.InnerStatements.OfType<SelectStatement>().First();
             Assert.AreEqual("[Transaction]", selectStatement.From.First().Name);
             Assert.AreEqual(3, statement.Arguments.Count);
             Assert.AreEqual(new string[] { "@p0", "@p1", "@p2" }, statement.Arguments.Select(a => a.Name).ToArray());
@@ -61,7 +61,7 @@ namespace Laan.Sql.Parser.Test
             // Verify outcome
             Assert.IsNotNull(statement);
 
-            SelectStatement selectStatement = statement.InnerStatement as SelectStatement;
+            var selectStatement = statement.InnerStatements.OfType<SelectStatement>().First();
             Assert.IsNotNull(selectStatement);
 
             Assert.AreEqual("[Transaction]", selectStatement.From.First().Name);
@@ -85,7 +85,7 @@ namespace Laan.Sql.Parser.Test
             // Verify outcome
             Assert.IsNotNull(statement);
 
-            SelectStatement selectStatement = statement.InnerStatement as SelectStatement;
+            var selectStatement = statement.InnerStatements.OfType<SelectStatement>().First();
             Assert.IsNotNull(selectStatement);
 
             Assert.AreEqual("[Transaction]", selectStatement.From.First().Name);
@@ -93,6 +93,24 @@ namespace Laan.Sql.Parser.Test
             Assert.AreEqual(new[] { "@p0" }, statement.Arguments.Select(a => a.Name).ToArray());
             Assert.AreEqual(new[] { "400.50" }, statement.Arguments.Select(a => a.Value).ToArray());
             Assert.AreEqual(new[] { "decimal(10, 4)" }, statement.Arguments.Select(a => a.Type).ToArray());
+        }
+
+        [Test]
+        public void Can_Parse_Execute_Sql_With_Multiple_Statements_Within_The_Content_Body()
+        {
+            var sql = @"exec sp_executesql N'select 1 FROM A; select 2 FROM B; select 3 FROM C'";
+
+            // Exercise
+            var statement = ParserFactory.Execute<ExecuteSqlStatement>(sql).First();
+
+            // Verify outcome
+            Assert.IsNotNull(statement);
+
+            var selectStatements = statement.InnerStatements.OfType<SelectStatement>().ToList();
+            Assert.AreEqual(3, statement.InnerStatements.Count);
+            Assert.AreEqual("A", selectStatements[0].From[0].Name);
+            Assert.AreEqual("B", selectStatements[1].From[0].Name);
+            Assert.AreEqual("C", selectStatements[2].From[0].Name);
         }
 
         /// <summary>
@@ -126,7 +144,7 @@ namespace Laan.Sql.Parser.Test
 
             foreach (var statement in statements.OfType<ExecuteSqlStatement>())
             {
-                SelectStatement selectStatement = statement.InnerStatement as SelectStatement;
+                var selectStatement = statement.InnerStatements.OfType<SelectStatement>().First();
                 Assert.IsNotNull(selectStatement);
 
                 Assert.AreEqual("[Transaction]", selectStatement.From.First().Name);

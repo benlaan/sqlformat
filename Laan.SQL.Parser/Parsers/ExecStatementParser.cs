@@ -1,10 +1,10 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 using Laan.Sql.Parser.Entities;
-using Laan.Sql.Parser.Parsers;
 using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Parsers;
 
 namespace Laan.Sql.Parser
 {
@@ -29,11 +29,11 @@ namespace Laan.Sql.Parser
         {
             var statement = new ExecuteSqlStatement() { FunctionName = functionName };
             var parts = new List<string>();
-            
+
             var parser = new ExpressionParser(Tokenizer);
 
             var sqlStringExpression = parser.Execute<StringExpression>();
-            statement.InnerStatement = ParserFactory.Execute(sqlStringExpression.Content).First();
+            statement.InnerStatements = ParserFactory.Execute(sqlStringExpression.Content).OfType<IStatement>().ToList();
 
             if (!Tokenizer.IsNextToken(Constants.Comma))
                 return statement;
@@ -49,9 +49,9 @@ namespace Laan.Sql.Parser
             {
                 var argumentValue = parser.Execute<CriteriaExpression>();
 
-                statement.Arguments.Add(new Argument 
-                { 
-                    Name = argumentValue.Left.Value, 
+                statement.Arguments.Add(new Argument
+                {
+                    Name = argumentValue.Left.Value,
                     Value = argumentValue.Right.Value,
                     Type = parameters[parameterIndex].Type
                 });

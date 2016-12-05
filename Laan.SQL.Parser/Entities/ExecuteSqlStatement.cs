@@ -25,8 +25,9 @@ namespace Laan.Sql.Parser.Entities
     {
         public ExecuteSqlStatement()
         {
+            InnerStatements = new List<IStatement>();
         }
 
-        public IStatement InnerStatement { get; set; }
+        public IList<IStatement> InnerStatements { get; set; }
     }
 }
