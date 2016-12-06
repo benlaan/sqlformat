@@ -29,7 +29,8 @@ namespace Laan.Sql.Formatter
                 { typeof( CommitTransactionStatement ), typeof( CommitTransactionStatementFormatter ) },
                 { typeof( BlockStatement ), typeof( BlockStatementFormatter ) },
                 { typeof( ExecuteSqlStatement ), typeof( ExecuteSqlStatementFormatter ) },
-                { typeof( ExecStatement ), typeof( ExecStatementFormatter ) }
+                { typeof( ExecStatement ), typeof( ExecStatementFormatter ) },
+                { typeof( CreateViewStatement ), typeof( CreateViewStatementFormatter ) }
             };
         }
 

@@ -54,6 +54,7 @@
     <Compile Include="StatementFormatters\BlockStatementFormatter.cs" />
     <Compile Include="StatementFormatters\CommitTransactionStatementFormatter.cs" />
     <Compile Include="StatementFormatters\CreateIndexStatementFormatter.cs" />
+    <Compile Include="StatementFormatters\CreateViewStatementFormatter.cs" />
     <Compile Include="StatementFormatters\CustomStatementFormatter.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Factories\ExpressionFormatterFactory.cs" />
