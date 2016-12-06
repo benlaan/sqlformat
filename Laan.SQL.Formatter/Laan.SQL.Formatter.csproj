@@ -62,6 +62,7 @@
     <Compile Include="ExpressionFormatters\FunctionExpressionFormatter.cs" />
     <Compile Include="ExpressionFormatters\NestedExpressionFormatter.cs" />
     <Compile Include="ExpressionFormatters\SelectExpressionFormatter.cs" />
+    <Compile Include="StatementFormatters\ExecStatementFormatter.cs" />
     <Compile Include="StatementFormatters\ExecuteSqlStatementFormatter.cs" />
     <Compile Include="StatementFormatters\IfStatementFormatter.cs" />
     <Compile Include="StatementFormatters\InsertStatementFormatter.cs" />
