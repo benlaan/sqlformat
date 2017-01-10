@@ -79,10 +79,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\content\bootstrap.css" />
     <Content Include="app\content\prettify.css" />
     <Content Include="app\content\styles.css" />
+    <Content Include="app\content\winstrap.css" />
     <Content Include="app\favicon.ico" />
+    <Content Include="app\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="app\index.html" />
+    <Content Include="app\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="app\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="app\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="app\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="app\libs\require.js" />
     <None Include="app\libs\text.js" />
     <Content Include="app\output\app-bundle.js" />
@@ -90,10 +97,10 @@
     <None Include="app\src\app.html" />
     <Content Include="app\output\app-bundle.js.map" />
     <None Include="dockerfile" />
-    <Content Include="app\src\app.css" />
-    <Content Include="app\src\navBar.html" />
+    <None Include="app\src\app.css" />
+    <None Include="app\src\navBar.html" />
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />

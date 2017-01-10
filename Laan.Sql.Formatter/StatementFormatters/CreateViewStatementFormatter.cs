@@ -18,9 +18,14 @@ namespace Laan.Sql.Formatter
             _sql.AppendFormat("CREATE VIEW {0}\n", _statement.Name);
             _sql.AppendLine("AS");
 
-            if (_statement.SelectBlock != null)
+            if (_statement.ScriptBlock is SelectStatement)
             {
-                var formatter = new SelectStatementFormatter(this, _sql, _statement.SelectBlock);
+                var formatter = new SelectStatementFormatter(this, _sql, (SelectStatement)_statement.ScriptBlock);
+                formatter.Execute();
+            }
+            else if (_statement.ScriptBlock is CommonTableExpressionStatement)
+            {
+                var formatter = new CommonTableExpressionStatementFormatter(this, _sql, (CommonTableExpressionStatement)_statement.ScriptBlock);
                 formatter.Execute();
             }
         }

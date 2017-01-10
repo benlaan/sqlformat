@@ -53,6 +53,7 @@
     <Compile Include="StatementFormatters\BeginTransactionStatementFormatter.cs" />
     <Compile Include="StatementFormatters\BlockStatementFormatter.cs" />
     <Compile Include="StatementFormatters\CommitTransactionStatementFormatter.cs" />
+    <Compile Include="StatementFormatters\CommonTableExpressionStatementFormatter.cs" />
     <Compile Include="StatementFormatters\CreateIndexStatementFormatter.cs" />
     <Compile Include="StatementFormatters\CreateViewStatementFormatter.cs" />
     <Compile Include="StatementFormatters\CustomStatementFormatter.cs" />

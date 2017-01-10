@@ -20,7 +20,7 @@ namespace Laan.Sql.Parser.Parsers
     public abstract class CriteriaStatementParser<T> : StatementParser<T> where T : CustomStatement
     {
         protected string[] FieldTerminatorSet = { Constants.From, Constants.Comma, Constants.Having, Constants.Go, Constants.SemiColon, Constants.End, Constants.Into, Constants.Union, Constants.Intersect, Constants.Except, Constants.CloseBracket };
-        protected string[] FromTerminatorSet = { Constants.Inner, Constants.Join, Constants.Left, Constants.Right, Constants.Full, Constants.Comma, Constants.CloseBracket, Constants.Order, Constants.Group, Constants.Where };
+        protected string[] FromTerminatorSet = { Constants.Inner, Constants.Join, Constants.Left, Constants.Right, Constants.Full, Constants.Comma, Constants.CloseBracket, Constants.Order, Constants.Group, Constants.Where, Constants.Cross };
 
         protected CriteriaStatementParser(ITokenizer tokenizer) : base(tokenizer) { }
 
@@ -155,8 +155,11 @@ namespace Laan.Sql.Parser.Parsers
                                 if (Tokenizer.TokenEquals(Constants.Outer))
                                     joinType = JoinType.RightOuterJoin;
                             }
+                            else
+                                if (Tokenizer.TokenEquals(Constants.Cross))
+                                    joinType = JoinType.CrossJoin;
 
-            return joinType;
+                return joinType;
         }
 
         private bool IsTerminatingFromExpression()
@@ -203,6 +206,7 @@ namespace Laan.Sql.Parser.Parsers
                     alias.Type = AliasType.As;
                     Tokenizer.ReadNextToken();
                 }
+
                 if (!Tokenizer.IsNextToken(Constants.OpenBracket) && (alias.Type != AliasType.Implicit || !Tokenizer.IsNextToken(FromTerminatorSet)))
                 {
                     if (Tokenizer.HasMoreTokens)
@@ -222,7 +226,6 @@ namespace Laan.Sql.Parser.Parsers
                 ProcessJoins(table);
             }
             while (Tokenizer.HasMoreTokens && Tokenizer.TokenEquals(Constants.Comma));
-
         }
 
         private void ProcessJoins(Table table)

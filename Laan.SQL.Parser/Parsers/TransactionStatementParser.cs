@@ -23,7 +23,7 @@ namespace Laan.Sql.Parser.Parsers
             else if ( Tokenizer.TokenEquals( Constants.Work ) )
                 statement.Descriptor = TransactionDescriptor.Work;
 }
-        
+
         public override T Execute()
         {
             _statement = new T();

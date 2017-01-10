@@ -165,6 +165,7 @@ namespace Laan.Sql.Formatter
                 return "";
             return String.Format(" WITH ({0})", String.Join(", ", hinting.TableHints.Select(t => t.Hint).ToArray()));
         }
+
         protected bool FitsOnRow(string text)
         {
             return text.Length <= (WrapMarginColumn - (IndentLevel * Indent.Length + CurrentColumn));

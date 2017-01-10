@@ -63,6 +63,7 @@
     <Compile Include="TestInsertStatementFormatting.cs" />
     <Compile Include="TestGoTerminatorStatementFormatting.cs" />
     <Compile Include="TestDeleteStatementFormatting.cs" />
+    <Compile Include="TestCteStatementFormatting.cs" />
     <Compile Include="TestTransactionsStatementFormatting.cs" />
     <Compile Include="TestUpdateStatementFormatting.cs" />
     <Compile Include="TestExpressionFormatting.cs" />

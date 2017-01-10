@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using Laan.Sql.Parser.Expressions;
+
 using Laan.Sql.Parser.Entities;
+
+using NUnit.Framework;
 
 namespace Laan.Sql.Parser.Test
 {
@@ -12,16 +11,16 @@ namespace Laan.Sql.Parser.Test
     public class TestBeginBlockStatementParser
     {
         [Test]
-        [TestCase( "begin select id from t end", 1 )]
-        [TestCase( "begin select id from t select id from x end", 2 )]
-        public void Begin_End_Block( string sql, int statementCount )
+        [TestCase("begin select id from t end", 1)]
+        [TestCase("begin select id from t select id from x end", 2)]
+        public void Begin_End_Block(string sql, int statementCount)
         {
             // Exercise
-            var statement = ParserFactory.Execute<BlockStatement>( sql ).First();
+            var statement = ParserFactory.Execute<BlockStatement>(sql).First();
 
             // Verify outcome
-            Assert.IsNotNull( statement );
-            Assert.AreEqual( statementCount, statement.Statements.Count );
+            Assert.IsNotNull(statement);
+            Assert.AreEqual(statementCount, statement.Statements.Count);
         }
     }
 }

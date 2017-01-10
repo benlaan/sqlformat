@@ -15,7 +15,6 @@ namespace Laan.Sql.Parser.Entities
         Except
     }
 
-
     public class SelectStatement : ProjectionStatement
     {
         private const int MaxInlineColumns = 1;

@@ -6,19 +6,30 @@ namespace Laan.Sql.Parser.Parsers
 {
     public class CreateViewStatementParser : StatementParser<CreateViewStatement>
     {
-        internal CreateViewStatementParser( ITokenizer tokenizer ) : base( tokenizer )
+        internal CreateViewStatementParser(ITokenizer tokenizer) : base(tokenizer)
         {
         }
 
         public override CreateViewStatement Execute()
         {
-            _statement = new CreateViewStatement();
-            _statement.Name = GetIdentifier();
+            _statement = new CreateViewStatement() { Name = GetDotNotationIdentifier() };
 
-            ExpectTokens( Constants.As, Constants.Select );
+            ExpectToken(Constants.As);
 
-            SelectStatementParser parser = new SelectStatementParser( Tokenizer );
-            _statement.SelectBlock = parser.Execute() as SelectStatement;
+            if (Tokenizer.IsNextToken(Constants.Select))
+            {
+                ReadNextToken();
+
+                var parser = new SelectStatementParser(Tokenizer);
+                _statement.ScriptBlock = parser.Execute();
+            }
+            else if (Tokenizer.IsNextToken(Constants.With))
+            {
+                ReadNextToken();
+
+                var parser = new CommonTableExpressionStatementParser(Tokenizer);
+                _statement.ScriptBlock = parser.Execute();
+            }
 
             return _statement;
         }
