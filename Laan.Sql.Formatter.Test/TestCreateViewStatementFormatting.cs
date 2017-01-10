@@ -9,18 +9,20 @@ namespace Laan.Sql.Formatter.Test
     public class TestCreateViewStatementFormatting : BaseFormattingTest
     {
         [Test]
-        public void Can_Format_Simple_Create_Index_Statement()
+        [TestCase("create")]
+        [TestCase("alter")]
+        public void Can_Format_Simple_Create_Index_Statement(string modificationType)
         {
             // Setup
             var sut = new FormattingEngine();
 
             // Exercise
-            var actual = sut.Execute(@"CREATE VIEW ben.MyView AS SELECT * FROM [Table]");
+            var actual = sut.Execute(string.Format(@"{0} VIEW ben.MyView AS SELECT * FROM [Table]", modificationType));
 
             // Verify outcome
             var expected = new[]
             {
-                "CREATE VIEW ben.MyView",
+                modificationType.ToUpper() + " VIEW ben.MyView",
                 "AS",
                 "SELECT *", 
                 "FROM [Table]"

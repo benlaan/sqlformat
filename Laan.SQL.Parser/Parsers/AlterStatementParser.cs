@@ -21,8 +21,8 @@ namespace Laan.Sql.Parser.Parsers
             if ( _tokenizer.TokenEquals( Constants.Table ) )
                 parser = new AlterTableStatementParser( _tokenizer );
 
-            //if ( _tokenizer.TokenEquals( Constants.View ) )
-            //    parser = new AlterViewStatementParser( _tokenizer );
+            if (_tokenizer.TokenEquals(Constants.View))
+                parser = new CreateViewStatementParser(_tokenizer) { IsAlter = true };
 
             //if ( _tokenizer.TokenEquals( Constants.Procedure ) )
             //    parser = new AlterProcedureStatementParser( _tokenizer );

@@ -12,7 +12,7 @@ namespace Laan.Sql.Parser.Parsers
 
         public override CreateViewStatement Execute()
         {
-            _statement = new CreateViewStatement() { Name = GetDotNotationIdentifier() };
+            _statement = new CreateViewStatement() { Name = GetDotNotationIdentifier(), IsAlter = IsAlter };
 
             ExpectToken(Constants.As);
 
@@ -33,5 +33,7 @@ namespace Laan.Sql.Parser.Parsers
 
             return _statement;
         }
+
+        public bool IsAlter { get; set; }
     }
 }

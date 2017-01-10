@@ -15,7 +15,7 @@ namespace Laan.Sql.Formatter
 
         public void Execute()
         {
-            _sql.AppendFormat("CREATE VIEW {0}\n", _statement.Name);
+            _sql.AppendFormat("{0} VIEW {1}\n", _statement.IsAlter ? "ALTER" : "CREATE", _statement.Name);
             _sql.AppendLine("AS");
 
             if (_statement.ScriptBlock is SelectStatement)

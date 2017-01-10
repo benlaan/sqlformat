@@ -21,7 +21,7 @@ namespace Laan.Sql.Parser.Test
             try
             {
                 // Exercise
-                CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("merge from table").First(); ;
+                CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("merge from table").First();
             }
             catch (ParserNotImplementedException ex)
             {
@@ -30,10 +30,12 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        public void Select_StarField_Only()
+        [TestCase("create")]
+        [TestCase("alter")]
+        public void Select_StarField_Only(string modificationType)
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view v1 as select * from table").First(); ;
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>(string.Format("{0} view v1 as select * from table", modificationType)).First();
             SelectStatement statement = (SelectStatement)sut.ScriptBlock;
 
             // Verify outcome
@@ -49,7 +51,7 @@ namespace Laan.Sql.Parser.Test
         public void Create_View_With_Schema()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view dbo.v1 as select * from table").First(); ;
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view dbo.v1 as select * from table").First();
             SelectStatement statement = (SelectStatement)sut.ScriptBlock;
 
             // Verify outcome
@@ -65,7 +67,7 @@ namespace Laan.Sql.Parser.Test
         public void Select_Top_10_StarField()
         {
             // Exercise
-            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view v1 as select top 10 * from table").First(); ;
+            CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view v1 as select top 10 * from table").First();
             SelectStatement statement = (SelectStatement)sut.ScriptBlock;
 
             // Verify outcome
