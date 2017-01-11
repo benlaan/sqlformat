@@ -8,3 +8,4 @@ packages
 node_modules
 */publish/
 .cr
+/.vs/config/applicationhost.config
