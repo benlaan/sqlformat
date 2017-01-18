@@ -49,6 +49,7 @@
     <Compile Include="Expressions\RankingFunctionExpression.cs" />
     <Compile Include="Parsers\CommonTableExpressionStatementParser.cs" />
     <Compile Include="Parsers\CreateProcedureStatementParser.cs" />
+    <Compile Include="Parsers\VariableDefinitionParser.cs" />
     <Compile Include="Tokenizer\CandidateDefinition.cs" />
     <Compile Include="Tokenizer\TokenDefinition.cs" />
     <Compile Include="Utilities\BracketStructure.cs" />
