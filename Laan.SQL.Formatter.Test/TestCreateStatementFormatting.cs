@@ -5,7 +5,6 @@ namespace Laan.Sql.Formatter.Test
     [TestFixture]
     public class TestCreateStatementFormatting : BaseFormattingTest
     {
-
         [Test]
         public void Can_Format_Simple_Create_Index_Statement()
         {
@@ -13,7 +12,7 @@ namespace Laan.Sql.Formatter.Test
             var sut = new FormattingEngine();
 
             // Exercise
-            var actual = sut.Execute( @"CREATE UNIQUE NONCLUSTERED INDEX [IX_Sites_Code] ON dbo.Sites (Code) WITH (IGNORE_DUP_KEY = ON )" );
+            var actual = sut.Execute(@"CREATE UNIQUE NONCLUSTERED INDEX [IX_Sites_Code] ON dbo.Sites (Code) WITH (IGNORE_DUP_KEY = ON )");
 
             // Verify outcome
             var expected = new[]
@@ -21,7 +20,7 @@ namespace Laan.Sql.Formatter.Test
                 "CREATE UNIQUE NONCLUSTERED INDEX [IX_Sites_Code] ON dbo.Sites ( Code ) WITH ( IGNORE_DUP_KEY = ON )"
             };
 
-            Compare( actual, expected );
+            Compare(actual, expected);
         }
 
         /*
@@ -45,7 +44,7 @@ WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGN
             var sut = new FormattingEngine();
 
             // Exercise
-            var actual = sut.Execute( @"CREATE UNIQUE NONCLUSTERED INDEX [IX_Address_AddressLine1_AddressLine2_City_StateProvinceID_PostalCode] ON [Person].[Address] ( [AddressLine1] ASC, [AddressLine2] DESC, [City] ASC, [StateProvinceID] DESC, [PostalCode] ASC) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]" );
+            var actual = sut.Execute(@"CREATE UNIQUE NONCLUSTERED INDEX [IX_Address_AddressLine1_AddressLine2_City_StateProvinceID_PostalCode] ON [Person].[Address] ( [AddressLine1] ASC, [AddressLine2] DESC, [City] ASC, [StateProvinceID] DESC, [PostalCode] ASC) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]");
 
             // Verify outcome
             var expected = new[]
@@ -61,25 +60,24 @@ WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGN
                 "WITH ( PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON ) ON [PRIMARY]"
             };
 
-            Compare( actual, expected );
-
+            Compare(actual, expected);
         }
 
         [Test]
-        [Ignore("CreateStatementFormatter not implemented yet")]
+        [Ignore("CreateTableStatementFormatter not implemented yet")]
         public void Can_Format_Simple_Create_Statement()
         {
             // Setup
             var sut = new FormattingEngine();
 
             // Exercise
-            var actual = sut.Execute( @"
+            var actual = sut.Execute(@"
 
                 create table Test 
                 ( 
                     id1 [int] NOT NULL IDENTITY(100, 1),
                     id2 varchar(10)
-                )" );
+                )");
 
             // Verify outcome
             var expected = new[]
@@ -91,7 +89,7 @@ WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGN
                 ")"
             };
 
-            Compare( actual, expected );
+            Compare(actual, expected);
         }
     }
 }

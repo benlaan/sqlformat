@@ -11,10 +11,8 @@ namespace Laan.Sql.Formatter
 {
     public class StatementFormatter<T> : BaseFormatter, IIndentable where T : Statement
     {
-        protected StringBuilder _sql;
-        protected T _statement;
         protected const int WrapMarginColumn = 80;
-        protected IIndentable _indentable;
+        protected T _statement;
 
         static StatementFormatter()
         {
@@ -25,50 +23,9 @@ namespace Laan.Sql.Formatter
             };
         }
 
-        public StatementFormatter(IIndentable indentable, StringBuilder sql, T statement)
+        public StatementFormatter(IIndentable indentable, StringBuilder sql, T statement) : base(indentable, sql)
         {
-            _sql = sql;
-            _indentable = indentable;
             _statement = statement;
-        }
-
-        protected void IndentAppend(string text)
-        {
-            for (int count = 0; count < IndentLevel; count++)
-                _sql.Append(Indent);
-            _sql.Append(text);
-        }
-
-        protected void IndentAppendFormat(string text, params object[] args)
-        {
-            IndentAppend(String.Format(text, args));
-        }
-
-        protected void IndentAppendLine(string text)
-        {
-            IndentAppend(text);
-            NewLine();
-        }
-
-        protected void IndentAppendLineFormat(string text, params object[] args)
-        {
-            IndentAppendLine(String.Format(text, args));
-        }
-
-        protected void Append(string text)
-        {
-            _sql.Append(text);
-        }
-
-        protected void NewLine(int times)
-        {
-            for (int index = 0; index < times; index++)
-                _sql.AppendLine();
-        }
-
-        protected void NewLine()
-        {
-            NewLine(1);
         }
 
         protected void FormatTop(Top top)
@@ -163,6 +120,7 @@ namespace Laan.Sql.Formatter
         {
             if (!hinting.TableHints.Any())
                 return "";
+
             return String.Format(" WITH ({0})", String.Join(", ", hinting.TableHints.Select(t => t.Hint).ToArray()));
         }
 
@@ -179,30 +137,12 @@ namespace Laan.Sql.Formatter
         protected bool IsExpressionOperatorAndOr(Expression expression)
         {
             CriteriaExpression where = expression as CriteriaExpression;
-            return where == null || (!String.Equals( where.Operator, Constants.And, StringComparison.InvariantCultureIgnoreCase ) && 
-                                     !String.Equals( where.Operator, Constants.Or, StringComparison.InvariantCultureIgnoreCase ) );
-        }
-
-        public string Indent
-        {
-            get { return _indentable.Indent; }
-            set { _indentable.Indent = value; }
-        }
-
-        public int IndentLevel
-        {
-            get { return _indentable.IndentLevel; }
-            set { _indentable.IndentLevel = value; }
-        }
-
-        public void IncreaseIndent()
-        {
-            IndentLevel++;
-        }
-
-        public void DecreaseIndent()
-        {
-            IndentLevel--;
+            return where == null
+                || (
+                       !String.Equals(where.Operator, Constants.And, StringComparison.InvariantCultureIgnoreCase)
+                       &&
+                       !String.Equals(where.Operator, Constants.Or, StringComparison.InvariantCultureIgnoreCase)
+                   );
         }
     }
 }

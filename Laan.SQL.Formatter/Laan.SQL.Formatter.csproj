@@ -55,6 +55,7 @@
     <Compile Include="StatementFormatters\CommitTransactionStatementFormatter.cs" />
     <Compile Include="StatementFormatters\CommonTableExpressionStatementFormatter.cs" />
     <Compile Include="StatementFormatters\CreateIndexStatementFormatter.cs" />
+    <Compile Include="StatementFormatters\CreateProcedureStatementFormatter.cs" />
     <Compile Include="StatementFormatters\CreateViewStatementFormatter.cs" />
     <Compile Include="StatementFormatters\CustomStatementFormatter.cs" />
     <Compile Include="Extensions.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="StatementFormatters\TransactionStatementFormatter.cs" />
     <Compile Include="StatementFormatters\UpdateStatementFormatter.cs" />
     <Compile Include="StatementFormatters\GoTerminatorFormatter.cs" />
+    <Compile Include="StatementFormatters\VariableDefinitionFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj">

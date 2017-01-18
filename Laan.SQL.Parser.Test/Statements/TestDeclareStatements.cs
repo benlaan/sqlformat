@@ -98,9 +98,6 @@ namespace Laan.Sql.Parser.Test
 
             VariableDefinition definition = statement.Definitions.First();
             Assert.AreEqual("@Variable", definition.Name);
-            //Assert.AreEqual( "INT", definition.Type );
-            //Assert.AreEqual( typeof( OperatorExpression ), definition.DefaultValue.GetType() );
-            //Assert.AreEqual( "*", ( (OperatorExpression) definition.DefaultValue ).Operator );
         }
 
         [Test]

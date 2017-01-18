@@ -11,7 +11,7 @@ namespace Laan.Sql.Formatter.Test
         [Test]
         [TestCase("create")]
         [TestCase("alter")]
-        public void Can_Format_Simple_Create_Index_Statement(string modificationType)
+        public void Can_Format_Simple_Create_View_Statement(string modificationType)
         {
             // Setup
             var sut = new FormattingEngine();

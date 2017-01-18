@@ -44,9 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\CommonTableExpressionStatement.cs" />
+    <Compile Include="Entities\CreateProcedureStatement.cs" />
     <Compile Include="Expressions\CountExpression.cs" />
     <Compile Include="Expressions\RankingFunctionExpression.cs" />
     <Compile Include="Parsers\CommonTableExpressionStatementParser.cs" />
+    <Compile Include="Parsers\CreateProcedureStatementParser.cs" />
     <Compile Include="Tokenizer\CandidateDefinition.cs" />
     <Compile Include="Tokenizer\TokenDefinition.cs" />
     <Compile Include="Utilities\BracketStructure.cs" />

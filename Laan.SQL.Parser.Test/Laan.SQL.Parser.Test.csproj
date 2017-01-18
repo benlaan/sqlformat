@@ -50,6 +50,7 @@
     <Compile Include="Entities\TestAlias.cs" />
     <Compile Include="Entities\TestStatement.cs" />
     <Compile Include="Statements\TestCommonTableExpressionStatementParser.cs" />
+    <Compile Include="Statements\TestCreateProcedureStatement.cs" />
     <Compile Include="Statements\TestStatementParsingWithComments.cs" />
     <Compile Include="Statements\TestBeginBlockStatementParser.cs" />
     <Compile Include="Statements\TestNHibernateLogParsing.cs" />
@@ -68,7 +69,7 @@
     <Compile Include="Statements\TestUpdateStatementParser.cs" />
     <Compile Include="TestExpressionParser.cs" />
     <Compile Include="Statements\TestCreateNonClusteredIndex.cs" />
-    <Compile Include="Statements\TestCreateView.cs" />
+    <Compile Include="Statements\TestCreateViewStatement.cs" />
     <Compile Include="Statements\TestAlterTable.cs" />
     <Compile Include="Statements\TestCreateTable.cs" />
     <Compile Include="Statements\TestGrantStatementParser.cs" />

@@ -134,7 +134,7 @@ namespace Laan.Sql.Parser.Test
             var createViewStatement = ParserFactory.Execute<CreateViewStatement>(sql).First();
             Assert.IsNotNull(createViewStatement);
 
-            var statement = createViewStatement.ScriptBlock as CommonTableExpressionStatement;
+            var statement = createViewStatement.Definition as CommonTableExpressionStatement;
 
             // Verify outcome
             Assert.IsNotNull(statement);

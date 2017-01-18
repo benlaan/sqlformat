@@ -93,6 +93,7 @@ namespace Laan.Sql.Parser
         public const string Primary = "PRIMARY";
         public const string Print = "PRINT";
         public const string Precision = "PRECISION";
+        public const string Proc = "PROC";
         public const string Procedure = "PROCEDURE";
         public const string Profile = "PROFILE";
         public const string ReadCommitted = "READCOMMITTED";

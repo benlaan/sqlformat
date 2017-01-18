@@ -21,14 +21,14 @@ namespace Laan.Sql.Parser.Parsers
                 ReadNextToken();
 
                 var parser = new SelectStatementParser(Tokenizer);
-                _statement.ScriptBlock = parser.Execute();
+                _statement.Definition = parser.Execute();
             }
             else if (Tokenizer.IsNextToken(Constants.With))
             {
                 ReadNextToken();
 
                 var parser = new CommonTableExpressionStatementParser(Tokenizer);
-                _statement.ScriptBlock = parser.Execute();
+                _statement.Definition = parser.Execute();
             }
 
             return _statement;

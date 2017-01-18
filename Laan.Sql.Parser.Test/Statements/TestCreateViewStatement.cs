@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
+using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser.Exceptions;
+using Laan.Sql.Parser.Expressions;
 
 using NUnit.Framework;
-
-using Laan.Sql.Parser.Expressions;
-using Laan.Sql.Parser.Exceptions;
-using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Parser.Test
 {
     [TestFixture]
-    public class TestCreateView
+    public class TestCreateViewStatement
     {
         [Test]
         public void TestNoParserException()
         {
-            //TODO: needs to be moved into a ParserFactory specific unit test
+            // TODO: needs to be moved into a ParserFactory specific unit test
             try
             {
                 // Exercise
@@ -36,7 +35,7 @@ namespace Laan.Sql.Parser.Test
         {
             // Exercise
             CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>(string.Format("{0} view v1 as select * from table", modificationType)).First();
-            SelectStatement statement = (SelectStatement)sut.ScriptBlock;
+            SelectStatement statement = (SelectStatement)sut.Definition;
 
             // Verify outcome
             Assert.IsNotNull(statement);
@@ -52,7 +51,7 @@ namespace Laan.Sql.Parser.Test
         {
             // Exercise
             CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view dbo.v1 as select * from table").First();
-            SelectStatement statement = (SelectStatement)sut.ScriptBlock;
+            SelectStatement statement = (SelectStatement)sut.Definition;
 
             // Verify outcome
             Assert.IsNotNull(statement);
@@ -68,7 +67,7 @@ namespace Laan.Sql.Parser.Test
         {
             // Exercise
             CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view v1 as select top 10 * from table").First();
-            SelectStatement statement = (SelectStatement)sut.ScriptBlock;
+            SelectStatement statement = (SelectStatement)sut.Definition;
 
             // Verify outcome
             Assert.IsNotNull(statement);
@@ -99,7 +98,7 @@ namespace Laan.Sql.Parser.Test
         {
             // Exercise
             CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view v1 as select distinct top 10 * from table").First();
-            SelectStatement statement = (SelectStatement)sut.ScriptBlock;
+            SelectStatement statement = (SelectStatement)sut.Definition;
 
             // Verify outcome
             Assert.IsNotNull(statement);
@@ -116,7 +115,7 @@ namespace Laan.Sql.Parser.Test
         {
             // Exercise
             CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view v1 as select fielda, field2, fie3ld from table").First();
-            SelectStatement statement = (SelectStatement)sut.ScriptBlock;
+            SelectStatement statement = (SelectStatement)sut.Definition;
 
             // Verify outcome
             Assert.IsNotNull(statement);
@@ -136,7 +135,7 @@ namespace Laan.Sql.Parser.Test
         {
             // Exercise
             CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view v1 as select * from table as t").First();
-            SelectStatement statement = (SelectStatement)sut.ScriptBlock;
+            SelectStatement statement = (SelectStatement)sut.Definition;
 
             // Verify outcome
             Assert.IsNotNull(statement);
@@ -151,7 +150,7 @@ namespace Laan.Sql.Parser.Test
         {
             // Exercise
             CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view v1 as select * from table t").First();
-            SelectStatement statement = (SelectStatement)sut.ScriptBlock;
+            SelectStatement statement = (SelectStatement)sut.Definition;
 
             // Verify outcome
             Assert.IsNotNull(statement);
@@ -166,7 +165,7 @@ namespace Laan.Sql.Parser.Test
         {
             // Exercise
             CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view v1 as select * from table1 as t1, table2 as t2").First();
-            SelectStatement statement = (SelectStatement)sut.ScriptBlock;
+            SelectStatement statement = (SelectStatement)sut.Definition;
 
             // Verify outcome
             Assert.IsNotNull(statement);
@@ -183,7 +182,7 @@ namespace Laan.Sql.Parser.Test
         {
             // Exercise
             CreateViewStatement sut = ParserFactory.Execute<CreateViewStatement>("create view v1 as select * from table1 t1, table2 t2 ").First();
-            SelectStatement statement = (SelectStatement)sut.ScriptBlock;
+            SelectStatement statement = (SelectStatement)sut.Definition;
 
             // Verify outcome
             Assert.IsNotNull(statement);
@@ -204,7 +203,7 @@ namespace Laan.Sql.Parser.Test
                 "create view v1 as select field, fielda a, field2 as b, alias = fie3ld from table"
             ).First();
 
-            SelectStatement statement = (SelectStatement)sut.ScriptBlock;
+            SelectStatement statement = (SelectStatement)sut.Definition;
 
             // Verify outcome
             Assert.IsNotNull(statement);
@@ -256,7 +255,7 @@ namespace Laan.Sql.Parser.Test
                     JOIN Table2 T2 
                       ON T1.Field1 = T2.Field2"
             ).First();
-            SelectStatement statement = (SelectStatement)sut.ScriptBlock;
+            SelectStatement statement = (SelectStatement)sut.Definition;
 
             // Verify outcome
             Assert.IsNotNull(statement);

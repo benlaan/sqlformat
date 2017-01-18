@@ -3,11 +3,8 @@ using System.Collections.Generic;
 
 namespace Laan.Sql.Parser.Entities
 {
-    public class DeclareStatement : CustomStatement
+    public class DeclareStatement : Statement
     {
-        /// <summary>
-        /// Initializes a new instance of the DeclareStatement class.
-        /// </summary>
         public DeclareStatement()
         {
             Definitions = new List<VariableDefinition>();

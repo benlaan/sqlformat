@@ -9,7 +9,7 @@ namespace Laan.Sql.Parser.Parsers
         /// <summary>
         /// Initializes a new instance of the CreateStatementParser class.
         /// </summary>
-        public AlterStatementParser( ITokenizer tokenizer )
+        public AlterStatementParser(ITokenizer tokenizer)
         {
             _tokenizer = tokenizer;
         }
@@ -18,14 +18,14 @@ namespace Laan.Sql.Parser.Parsers
         {
             IParser parser = null;
 
-            if ( _tokenizer.TokenEquals( Constants.Table ) )
-                parser = new AlterTableStatementParser( _tokenizer );
+            if (_tokenizer.TokenEquals(Constants.Table))
+                parser = new AlterTableStatementParser(_tokenizer);
 
             if (_tokenizer.TokenEquals(Constants.View))
                 parser = new CreateViewStatementParser(_tokenizer) { IsAlter = true };
 
-            //if ( _tokenizer.TokenEquals( Constants.Procedure ) )
-            //    parser = new AlterProcedureStatementParser( _tokenizer );
+            if (_tokenizer.TokenEquals(Constants.Procedure) || _tokenizer.TokenEquals(Constants.Proc))
+                parser = new CreateProcedureStatementParser(_tokenizer) { IsAlter = true };
 
             //if ( _tokenizer.TokenEquals( Constants.Trigger ) )
             //    parser = new AlterTriggerStatementParser( _tokenizer );

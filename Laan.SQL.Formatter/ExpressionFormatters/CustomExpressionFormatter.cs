@@ -2,55 +2,53 @@ using System;
 using System.Linq;
 using System.Text;
 
+using Laan.Sql.Formatter;
 using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Formatter
 {
-    public class CustomExpressionFormatter<T> : BaseFormatter, IExpressionFormatter, IIndentable where T : Expression
+    public class CustomExpressionFormatter<T> : IIndentable, IExpressionFormatter where T : Expression
     {
         private const int MaxColumnWidth = 80;
         private const int TabSize = 4;
 
         protected T _expression;
 
-        public CustomExpressionFormatter( T expression)
+        public CustomExpressionFormatter(T expression)
         {
             Indent = GetSpaces(TabSize);
             _expression = expression;
         }
 
-        protected bool CanInlineExpression( Expression expr, int offset )
+        protected bool CanInlineExpression(Expression expr, int offset)
         {
-            return
-                expr is IInlineFormattable &&
-                ( (IInlineFormattable) expr ).CanInline &&
-                expr.Value.Length < MaxColumnWidth - offset;
-        }
-        
-        protected int GetCurrentColumn( StringBuilder sql )
-        {
-            return sql.ToString().Split( '\n' ).Last().Length;
+            return expr is IInlineFormattable
+                && ((IInlineFormattable)expr).CanInline
+                && expr.Value.Length < MaxColumnWidth - offset;
         }
 
-        protected string GetIndent( bool includeNewLine )
+        protected int GetCurrentColumn(StringBuilder sql)
         {
-            var result = new StringBuilder( includeNewLine ? "\r\n" : "" );
+            return sql.ToString().Split('\n').Last().Length;
+        }
 
-            for ( int index = 0; index < IndentLevel; index++ )
-                result.Append( Indent );
-            
+        protected string GetIndent(bool includeNewLine)
+        {
+            var result = new StringBuilder(includeNewLine ? Environment.NewLine : String.Empty);
+
+            for (int index = 0; index < IndentLevel; index++)
+                result.Append(Indent);
+
             return result.ToString();
         }
 
-        protected static string GetSpaces( int offset )
+        protected static string GetSpaces(int offset)
         {
-            return new string( ' ', offset );
+            return new string(' ', offset);
         }
 
         protected T _statement;
 
-
-#region IExpressionFormatter Members
 
         public virtual string Execute()
         {
@@ -58,10 +56,6 @@ namespace Laan.Sql.Formatter
         }
 
         public int Offset { get; set; }
-
-        #endregion
-
-        #region IIndentable Members
 
         public string Indent { get; set; }
         public int IndentLevel { get; set; }
@@ -75,7 +69,5 @@ namespace Laan.Sql.Formatter
         {
             IndentLevel--;
         }
-
-        #endregion
     }
 }

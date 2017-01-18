@@ -9,28 +9,27 @@ namespace Laan.Sql.Formatter
 {
     public class FormattingEngine : IFormattingEngine
     {
-        /// <summary>
-        /// Initializes a new instance of the FormattingEngine class.
-        /// </summary>
         public FormattingEngine()
         {
             UseTabChar = false;
         }
 
-        public string Execute( string sql )
+        public string Execute(string sql)
         {
-            var outSql = new StringBuilder( (int)( sql.Length * 1.5 ) );
-            var statements = ParserFactory.Execute( sql );
+            var outSql = new StringBuilder(sql.Length * 2);
+            var statements = ParserFactory.Execute(sql);
 
             var indentation = new Indentation();
-            foreach ( var statement in statements )
+
+            foreach (var statement in statements)
             {
-                var formatter = StatementFormatterFactory.GetFormatter( indentation, outSql, statement );
+                var formatter = StatementFormatterFactory.GetFormatter(indentation, outSql, statement);
                 formatter.Execute();
 
-                if ( statement != statements.Last() )
-                    outSql.AppendLine( "\n" );
+                if (statement != statements.Last())
+                    outSql.AppendLine(Environment.NewLine);
             }
+
             return outSql.ToString();
         }
 

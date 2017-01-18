@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Laan.Sql.Parser;
 using Laan.Sql.Parser.Parsers;
 using Laan.Sql.Parser.Exceptions;
 
@@ -38,20 +37,20 @@ namespace Laan.Sql.Parser
             };
         }
 
-        internal static IParser GetParser( ITokenizer _tokenizer )
+        internal static IParser GetParser(ITokenizer _tokenizer)
         {
             // this is a quick and dirty service locator that maps tokens to parsers
             Type parserType;
-            if ( _parsers.TryGetValue( _tokenizer.Current.Value.ToUpper(), out parserType ) )
+            if (_parsers.TryGetValue(_tokenizer.Current.Value.ToUpper(), out parserType))
             {
                 _tokenizer.ReadNextToken();
 
-                object instance = Activator.CreateInstance( parserType, _tokenizer );
-                return (IParser) instance;
+                object instance = Activator.CreateInstance(parserType, _tokenizer);
+                return (IParser)instance;
             }
             return null;
         }
-        
+
         /// <summary>
         /// This method is used if you know what type will be returned from the parser
         /// - only use it if 100% confident, otherwise you will get a null reference
@@ -59,32 +58,33 @@ namespace Laan.Sql.Parser
         /// <typeparam name="T"></typeparam>
         /// <param name="sql"></param>
         /// <returns></returns>
-        public static List<T> Execute<T>( string sql ) where T : class, IStatement
+        public static List<T> Execute<T>(string sql) where T : class, IStatement
         {
-            List<IStatement> list = Execute( sql );
-            return list.Cast<T>().ToList<T>();
+            return Execute(sql)
+                .Cast<T>()
+                .ToList<T>();
         }
 
-        public static List<IStatement> Execute( ITokenizer tokenizer, bool ensureParserIsFound )
+        public static List<IStatement> Execute(ITokenizer tokenizer, bool ensureParserIsFound)
         {
             var result = new List<IStatement>();
 
-            if ( tokenizer.Current == (Token) null )
+            if (tokenizer.Current == (Token)null)
                 tokenizer.ReadNextToken();
 
-            while ( tokenizer.HasMoreTokens )
+            while (tokenizer.HasMoreTokens)
             {
-                IParser parser = GetParser( tokenizer );
+                IParser parser = GetParser(tokenizer);
 
-                if ( parser != null )
-                    result.Add( parser.Execute() );
+                if (parser != null)
+                    result.Add(parser.Execute());
                 else
-                    if ( ensureParserIsFound )
-                        throw new ParserNotImplementedException(
-                            "No parser exists for statement type: " + tokenizer.Current.Value
-                        );
-                    else
-                        break;
+                    if (ensureParserIsFound)
+                    throw new ParserNotImplementedException(
+                        "No parser exists for statement type: " + tokenizer.Current.Value
+                    );
+                else
+                    break;
             }
 
             return result;
@@ -95,13 +95,13 @@ namespace Laan.Sql.Parser
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        public static List<IStatement> Execute( string sql )
+        public static List<IStatement> Execute(string sql)
         {
             sql = TrimBatchMetadata(sql);
 
-            using ( var sqlTokenizer = new SqlTokenizer( sql ) )
+            using (var sqlTokenizer = new SqlTokenizer(sql))
             {
-                return Execute( sqlTokenizer, true );
+                return Execute(sqlTokenizer, true);
             }
         }
 

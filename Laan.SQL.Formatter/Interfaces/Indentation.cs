@@ -9,7 +9,7 @@ namespace Laan.Sql.Formatter
         public Indentation()
         {
             IndentLevel = 0;
-            Indent = new string( ' ', 4 );
+            Indent = new string(' ', 4);
         }
 
         public void IncreaseIndent()

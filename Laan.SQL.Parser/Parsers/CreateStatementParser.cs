@@ -26,8 +26,8 @@ namespace Laan.Sql.Parser.Parsers
             if (_tokenizer.TokenEquals(Constants.View))
                 parser = new CreateViewStatementParser(_tokenizer);
 
-            //if ( _tokenizer.TokenEquals( Constants.Procedure ) )
-            //    parser = new CreateProcedureStatementParser( _tokenizer );
+            if (_tokenizer.TokenEquals(Constants.Procedure) || _tokenizer.TokenEquals(Constants.Proc))
+                parser = new CreateProcedureStatementParser(_tokenizer) { IsShortForm = _tokenizer.Current == Constants.Proc };
 
             //if ( _tokenizer.TokenEquals( Constants.Trigger ) )
             //    parser = new CreateTriggerStatementParser( _tokenizer );

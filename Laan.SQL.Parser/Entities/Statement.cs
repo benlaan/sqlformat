@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Parser.Entities
 {
@@ -8,13 +7,9 @@ namespace Laan.Sql.Parser.Entities
     {
         public bool Terminated { get; set; }
 
-        #region IStatement Members
-
         public virtual string Identifier
         {
-            get { return ""; }
+            get { return String.Empty; }
         }
-
-        #endregion
     }
 }

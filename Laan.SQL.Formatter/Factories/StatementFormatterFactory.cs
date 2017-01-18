@@ -31,14 +31,15 @@ namespace Laan.Sql.Formatter
                 { typeof( ExecuteSqlStatement ), typeof( ExecuteSqlStatementFormatter ) },
                 { typeof( ExecStatement ), typeof( ExecStatementFormatter ) },
                 { typeof( CreateViewStatement ), typeof( CreateViewStatementFormatter ) },
+                { typeof( CreateProcedureStatement ), typeof( CreateProcedureStatementFormatter ) },
                 { typeof( CommonTableExpressionStatement ), typeof( CommonTableExpressionStatementFormatter ) }
             };
         }
 
-        public static IStatementFormatter GetFormatter( IIndentable indentable, StringBuilder outSql, IStatement statement )
+        public static IStatementFormatter GetFormatter(IIndentable indentable, StringBuilder outSql, IStatement statement)
         {
             Type formatterType;
-            if ( !_formatters.TryGetValue( statement.GetType(), out formatterType ) )
+            if (!_formatters.TryGetValue(statement.GetType(), out formatterType))
                 throw new FormatterNotImplementedException(
                     "Formatter not implemented for statement: " + statement.GetType().Name
                 );
@@ -50,8 +51,8 @@ namespace Laan.Sql.Formatter
                 statement
             ) as IStatementFormatter;
 
-            if ( formatter == null )
-                throw new ArgumentNullException( "Formatter not instantiated: " + formatterType.Name );
+            if (formatter == null)
+                throw new ArgumentNullException("Formatter not instantiated: " + formatterType.Name);
 
             return formatter;
         }
