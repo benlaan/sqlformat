@@ -5,43 +5,43 @@
 
     <require from="./navBar.html"></require>
 
-    <bs-container>
+    <bs-container class="container-main flex-parent">
 
         <navbar></navbar>
 
-        <bs-row>
-            <bs-column xs="12">
-                <bs-panel style="primary" header-text="Input Sql" show-title="true">
-                    <textarea
-                        class="code prettyprint lang-sql" value.bind="rawSql"
-                        keydown.delegate="inputSqlKeyPress($event)"></textarea>
+        <bs-row class="flex-parent flex-fill ${!showFormattedSql ? 'expand' : ''}">
+            <bs-panel 
+                style="primary" header-text="Input Sql" show-title="true"
+                class="flex-parent flex-fill" body-class="flex-parent flex-fill">
+                <textarea 
+                    class="text flex-fill" value.bind="rawSql"
+                    focus.trigger="inputFocused($event)"
+                    keydown.delegate="inputSqlKeyPress($event)"></textarea>
 
-                    <bs-button-group align="right">
-                        <bs-button
-                            class="${rawSql ? '' : 'disabled'}"
-                            glyph="random" title="Runs the sql formatter" press.call="convert()">
-                        </bs-button>
-                    </bs-button-group>
-                </bs-panel>
-            </bs-column>
+                <bs-button-group align="right">
+                    <bs-button class="${rawSql ? '' : 'disabled'}"
+                               glyph="random" title="Runs the sql formatter" press.call="convert()">
+                    </bs-button>
+                </bs-button-group>
+            </bs-panel>
         </bs-row>
 
-        <bs-row>
-            <bs-column xs="12">
-                <bs-panel style="primary" header-text="Formatted Sql" show-title="true" footer-text="Time Taken: ${timeTaken ? timeTaken : '00:00.000'}">
-                    <div class="output-sql">
-                        <pre class="code prettyprint" ref="formattedCode">
-                            <template repeat.for="line of formattedSql">${'\n' + line}</template>
-                        </pre>
-                    </div>
-                    <bs-button-group align="right">
-                        <bs-button
-                            class="${hasFormattedSql ? '' : 'disabled'}"
-                            glyph="copy" title="copies the formatted sql to the clipboard" press.call="copy()">
-                        </bs-button>
-                    </bs-button-group>
-                </bs-panel>
-            </bs-column>
+        <bs-row class="flex-parent flex-fill ${showFormattedSql ? 'expand' : ''}">
+            <bs-panel
+                style="primary" header-text="Formatted Sql" show-title="true" class="flex-parent flex-fill"
+                body-class="flex-parent flex-fill"
+                footer-text="Time Taken: ${timeTaken ? timeTaken : '00:00.000'}">
+                <div class="output-sql flex-parent flex-fill">
+                    <pre class="code prettyprint flex-fill" ref="formattedCode" click.trigger="formattedSqlFocused($event)">
+                    <template repeat.for="line of formattedSql">${'\n' + line}</template>
+                    </pre>
+                </div>
+                <bs-button-group align="right">
+                    <bs-button class="${hasFormattedSql ? '' : 'disabled'}"
+                                glyph="copy" title="copies the formatted sql to the clipboard" press.call="copy()">
+                    </bs-button>
+                </bs-button-group>
+            </bs-panel>
         </bs-row>
 
         <bs-row>

@@ -20,6 +20,7 @@ export class App {
 
   public constructor(private client: HttpClient) {
 
+      this.showFormattedSql = false;
       this.rawSql = environment.debug ? "SELECT * FROM Table T JOIN Other O ON O.Id = T.OtherId" : "";
   }
 
@@ -40,11 +41,13 @@ export class App {
               var result = JSON.parse(r.response);
               this.formattedSql = result.Sql;
               this.timeTaken = result.Duration;
+              this.showFormattedSql = true;
           })
           .catch(r => {
 
               console.log(r.response);
               this.showNotification({ message: r.response, type: "error" });
+              this.showFormattedSql = false;
           });
   }
 
@@ -57,6 +60,16 @@ export class App {
       }
 
       return true;
+  }
+
+  public inputFocused(event: Event): void {
+
+      this.showFormattedSql = false;
+  }
+
+  public formattedSqlFocused(event: Event): void {
+
+      this.showFormattedSql = true;
   }
 
   public copy(): void {
@@ -105,4 +118,6 @@ export class App {
 
   public message: string;
   public messageType: string;
+
+  public showFormattedSql: boolean;
 }

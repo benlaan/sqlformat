@@ -1,20 +1,43 @@
-.output-sql {
-    height:250px;
-    overflow-y: auto; 
-    width: 100%;
+html,
+body {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
 }
 
-pre {
-    border: none !important;
+.container-main {
+    height: 100vh;
+}
+
+.flex-parent {
+    display: flex;
+    flex-direction: column;
+    transition: all 0.5s;
+}
+
+.flex-fill {
+    flex: 1;
 }
 
 textarea {
-    background-color: transparent;
+    flex: 1;
+    box-sizing: border-box;
+    resize: none;
     color: black;
     border-width: 0;
     width: 100%;
-    height: 110px;
+    height: 75%;
 }
-pre {
-    background-color: white;
+
+button {
+    float: right;
+}
+
+.expand {
+    flex-grow: 3;
+}
+
+.panel-body {
+    padding: 0;
+    margin: 15px;
 }

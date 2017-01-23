@@ -1,3 +1,3 @@
 pushd .\app
-au build
+au build --env %1
 popd
