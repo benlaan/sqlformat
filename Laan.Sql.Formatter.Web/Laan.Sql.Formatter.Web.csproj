@@ -185,7 +185,7 @@
     <AureliaEnvironment Condition=" '$(Configuration)' == 'Debug'">dev</AureliaEnvironment>
     <AureliaEnvironment Condition=" '$(Configuration)' == 'Release'">prod</AureliaEnvironment>
   </PropertyGroup>
-  <Target Name="AfterBuild">
+  <Target Name="AfterBuild" Condition=" '$(EXECUTING_IN_KUDU)' == ''">
     <Exec Command="$(ProjectDir)..\Scripts\Build-App.cmd $(AureliaEnvironment)" IgnoreExitCode="true" />
   </Target>
 </Project>
