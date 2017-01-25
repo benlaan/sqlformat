@@ -7,7 +7,7 @@ namespace Laan.AddIns.Actions
         public string CommandBar { get; set; }
         public string Menu { get; set; }
 
-        public MenuAttribute( string commandBar, string menu )
+        public MenuAttribute(string commandBar, string menu)
         {
             CommandBar = commandBar;
             Menu = menu;
@@ -16,15 +16,7 @@ namespace Laan.AddIns.Actions
 
     public class MenuBarToolsMenuAttribute : MenuAttribute
     {
-        public MenuBarToolsMenuAttribute( ) : base( "MenuBar", "Tools" )
-        {
-        }
-    }
-
-    public class ResultsMenuAttribute : MenuAttribute
-    {
-        public ResultsMenuAttribute()
-            : base( "SQL Results Messages Tab Context", null )
+        public MenuBarToolsMenuAttribute() : base("MenuBar", "Tools")
         {
         }
     }

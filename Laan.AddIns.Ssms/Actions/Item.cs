@@ -13,12 +13,8 @@ namespace Laan.AddIns.Ssms.Actions
             {
                 return String.Join(
                     "\n",
-                    Name.Split(
-                        new[] { "\n" },
-                        StringSplitOptions.RemoveEmptyEntries
-                        )
-                    );
-
+                    Name.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries)
+                );
             }
         }
 

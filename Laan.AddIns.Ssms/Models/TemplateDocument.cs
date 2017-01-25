@@ -41,7 +41,7 @@ namespace Laan.AddIns.Ssms.Actions
 
                 if (!File.Exists(_templatePath))
                 {
-                    var xml = LoadDefaultResourceFile(@"Laan.AddIns.Templates.default.xml");
+                    var xml = LoadDefaultResourceFile(@"Laan.AddIns.Ssms.Templates.default.xml");
                     File.WriteAllText(_templatePath, xml);
                 }
             }

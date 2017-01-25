@@ -9,8 +9,11 @@ using System.Resources;
 
 using EnvDTE;
 using EnvDTE80;
+
 using Extensibility;
+
 using Laan.AddIns.Actions;
+
 using Microsoft.VisualStudio.CommandBars;
 
 namespace Laan.AddIns.Core
@@ -288,8 +291,6 @@ namespace Laan.AddIns.Core
                     {
                         var contextGUIDS = new object[] { };
 
-                        //_commands.AddNamedCommand( _addInInstance, "MyCommand", "My Command", "blah", true, 0, ref contextGuids, (int) vsCommandStatus.vsCommandStatusEnabled + (int) vsCommandStatus.vsCommandStatusSupported );
-
                         var command = _commands.AddNamedCommand2(
                             _addIn,
                             action.KeyName,
@@ -302,7 +303,7 @@ namespace Laan.AddIns.Core
                             (int)vsCommandStatus.vsCommandStatusEnabled,
                             (int)vsCommandStyle.vsCommandStylePictAndText,
                             vsCommandControlType.vsCommandControlTypeButton
-                            );
+                        );
 
                         if (command != null)
                         {

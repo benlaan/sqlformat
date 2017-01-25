@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <MSBuildCommunityTasksPath>$(SolutionDir)packages\MSBuildTasks.1.5.0.235\tools\</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildCommunityTasksPath)MSBuild.Community.Tasks.targets"/>
+
+  <!-- Default Properties shared by All Projects, for both Debug and Release Configurations -->
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <StyleCopTreatErrorsAsWarnings>true</StyleCopTreatErrorsAsWarnings>
+    <WarningLevel>4</WarningLevel>
+    <ErrorReport>prompt</ErrorReport>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+
+  <!-- Properties shared by All Projects, for Debug Configuration -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+
+  <!-- Properties shared by All Projects, for Release Configuration -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <DefineConstants>CODE_ANALYSIS;TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <!--RunCodeAnalysis>true</RunCodeAnalysis-->
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Major>0</Major>
+    <Minor>2</Minor>
+    <Build>1</Build>
+    <Revision>$(BUILD_NUMBER)</Revision>
+  </PropertyGroup>
+
+  <Target Name="GenerateVersionAssemblyInfo">
+    <Message Text="Generating Assembly Version: $(Major).$(Minor).$(Build).$(Revision)"/>
+    <AssemblyInfo
+        CodeLanguage="CS"
+        OutputFile="$(SolutionDir)Build\VersionAssemblyInfo.cs"
+        AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
+        AssemblyConfiguration="$(Configuration)"
+        Condition="$(Revision) != '' " />
+    <AssemblyInfo
+        CodeLanguage="CS"
+        OutputFile="$(SolutionDir)Build\VersionAssemblyInfo.cs"
+        AssemblyVersion="$(Major).$(Minor).*"
+        AssemblyConfiguration="$(Configuration)"
+        Condition="$(Revision) == '' " />
+  </Target>
+
+  <Target Name="BeforeBuild">
+    <CallTarget Targets="GenerateVersionAssemblyInfo" />
+  </Target>
+</Project>

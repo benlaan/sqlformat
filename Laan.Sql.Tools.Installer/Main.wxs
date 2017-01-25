@@ -72,6 +72,21 @@
               <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
             </RegistryKey>
 
+            <!-- 2012 -->
+            <RegistryKey Key="110\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
+              <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
+            </RegistryKey>
+
+            <!-- 2014 -->
+            <RegistryKey Key="120\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
+              <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
+            </RegistryKey>
+
+            <!-- 2016 -->
+            <RegistryKey Key="130\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
+              <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
+            </RegistryKey>
+
           </RegistryKey>
 
           <RegistryKey Key="Classes\CLSID\{CC5866B2-5695-4557-AA26-A7AFB5072533}">

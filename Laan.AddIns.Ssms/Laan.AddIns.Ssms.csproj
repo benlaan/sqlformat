@@ -3,17 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30424</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{54C786E5-FD14-4036-92AE-E9F25B71534B}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <StartupObject>
-    </StartupObject>
     <NoStandardLibraries>false</NoStandardLibraries>
     <AssemblyName>Laan.AddIns.Ssms</AssemblyName>
     <DeploymentDirectory>.\bin\</DeploymentDirectory>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -72,6 +67,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Build\VersionAssemblyInfo.cs">
+      <Link>VersionAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Action.cs" />
     <Compile Include="Actions\DropDownList.cs" />
     <Compile Include="Actions\Item.cs" />
@@ -167,7 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Laan.SQL.Formatter\Laan.Sql.Formatter.csproj">
-      <Project>{5af58723-f939-4955-9b29-2a6a0a4cfba8}</Project>
+      <Project>{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}</Project>
       <Name>Laan.Sql.Formatter</Name>
     </ProjectReference>
   </ItemGroup>
@@ -183,14 +181,10 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <ProjectExtensions />
+  <Import Project="$(SolutionDir)Build\Common.targets" />
+
   <Target Name="AfterBuild">
     <ItemGroup>
       <AllOutputFiles Include="$(OutputPath)*.*" />
@@ -198,5 +192,6 @@
     <Copy SourceFiles="@(AllOutputFiles)" DestinationFiles="@(AllOutputFiles->'$(DeploymentDirectory)\%(Filename)%(Extension)')">
       <Output TaskParameter="DestinationFiles" ItemName="FileWrites" />
     </Copy>
+    <Exec Command="powershell -NoLogo -noProfile -File $(ProjectDir)copy.ps1 -source .\bin\$(Configuration)"></Exec>
   </Target>
 </Project>

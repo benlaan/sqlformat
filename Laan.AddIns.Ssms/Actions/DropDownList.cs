@@ -78,8 +78,6 @@ namespace Laan.AddIns.Ssms.Actions
             _editor.SetFocus();
         }
 
-        #region ListBox Events
-
         private void ListBoxLostFocus(object sender, EventArgs e)
         {
             Done();
@@ -124,9 +122,10 @@ namespace Laan.AddIns.Ssms.Actions
             }
             else
             {
-                var selected = (e.State & System.Windows.Forms.DrawItemState.Selected) > 0;
-                SolidBrush backBrush = new SolidBrush(selected ? Color.CornflowerBlue : e.BackColor);
-                e.Graphics.FillRectangle(backBrush, e.Bounds);
+                var selected = (e.State & Form.DrawItemState.Selected) > 0;
+
+                using (SolidBrush backBrush = new SolidBrush(selected ? Color.CornflowerBlue : e.BackColor))
+                    e.Graphics.FillRectangle(backBrush, e.Bounds);
 
                 var item = _listBox.Items[e.Index] as Item;
 
@@ -146,20 +145,14 @@ namespace Laan.AddIns.Ssms.Actions
             }
         }
 
-        #endregion
-
         protected abstract void ExecuteItem(Item item);
         protected abstract IEnumerable<Item> GetItems();
 
         public override bool CanExecute()
         {
-            return (
-                AddIn.IsCurrentDocumentExtension("sql")
-                &&
-                AddIn.CurrentSelection == String.Empty
-                &&
-                AddIn.CurrentWord != String.Empty
-            );
+            return AddIn.IsCurrentDocumentExtension("sql")
+                && AddIn.CurrentSelection == String.Empty
+                && AddIn.CurrentWord != String.Empty;
         }
 
         public override void Execute()
