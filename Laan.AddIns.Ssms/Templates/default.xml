@@ -545,6 +545,18 @@ BEGIN
 
 END
 ]]></body>
-    </template>
+  </template>
+  <template>
+    <name>count(*)</name>
+    <code>cs</code>
+    <description>cs</description>
+    <body><![CDATA[COUNT(*)]]></body>
+  </template>
+  <template>
+    <name>Foreach Table</name>
+    <code>fet</code>
+    <description>Foreach Table run a piece of sql</description>
+    <body><![CDATA[sp_msforeachtable '| ?']]></body>
+  </template> 
 </templates>
 </templateDocument>
