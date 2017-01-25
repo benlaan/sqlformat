@@ -31,6 +31,31 @@ namespace Laan.Sql.Formatter.Test
         }
 
         [Test]
+        public void Can_Format_Cte_With_Specified_Columns()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute("WITH A (Num,Name) AS( SELECT Num  =1,    Name = 'Ben')  SELECT * FROM A");
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"WITH A (Num, Name) AS (",
+                "",
+                "    SELECT",
+                "        Num = 1,",
+                "        Name = 'Ben'",
+                ")",
+                "SELECT *",
+                "FROM A",
+            };
+
+            Compare(actual, expected);
+        }
+
+        [Test]
         public void Can_Format_Muliple_Ctes()
         {
             // Setup

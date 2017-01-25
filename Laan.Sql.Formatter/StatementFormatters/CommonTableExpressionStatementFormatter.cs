@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 
+using Laan.Sql.Parser;
 using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Formatter
@@ -19,7 +20,13 @@ namespace Laan.Sql.Formatter
 
             foreach (var commonTableExpression in _statement.CommonTableExpressions)
             {
-                _sql.AppendFormat("{0} AS ({1}{1}", commonTableExpression.Name, Environment.NewLine);
+                if (commonTableExpression.ColumnNames.Any())
+                {
+                    var fields = commonTableExpression.ColumnNames.ToCsv();
+                    _sql.AppendFormat("{0} ({1}) AS ({2}{2}", commonTableExpression.Name, fields, Environment.NewLine);
+                }
+                else
+                    _sql.AppendFormat("{0} AS ({1}{1}", commonTableExpression.Name, Environment.NewLine);
 
                 using (new IndentScope(this))
                 {
