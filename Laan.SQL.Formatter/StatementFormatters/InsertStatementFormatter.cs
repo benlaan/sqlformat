@@ -123,7 +123,7 @@ namespace Laan.Sql.Formatter
                     {
                         IndentAppendFormat(
                             "{0} {1}{2}",
-                            values == first ? Constants.Values : new string(' ', Constants.Values.Length),
+                            values == first ? (" " + Constants.Values) : new string(' ', Constants.Values.Length),
                             FormatBrackets(GetValues(values)),
                             values == last ? String.Empty : ",\n"
                         );
