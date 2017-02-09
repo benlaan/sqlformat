@@ -108,9 +108,10 @@ namespace Laan.AddIns.Ssms.Actions
         private void Output(Window window, int indent)
         {
             int index = 0;
-            foreach (var win in FindAllChildWindows())
+
+            foreach (var win in window.FindAllChildWindows())
             {
-                Trace.WriteLine(
+                Debug.WriteLine(
                     String.Format(
                         "{0}[{1}] - {2}",
                         new string(' ', indent * 4),
@@ -118,14 +119,19 @@ namespace Laan.AddIns.Ssms.Actions
                         win.ClassName
                     )
                 );
-                foreach (var child in win.FindAllChildWindows())
-                    Output(child, indent + 1);
+
+                Output(win, indent + 1);
             }
         }
 
         public Window(IntPtr handle)
         {
             Handle = handle;
+        }
+
+        public void DumpWindows()
+        {
+            Output(this, 0);
         }
 
         public void SetFocus()
@@ -138,38 +144,9 @@ namespace Laan.AddIns.Ssms.Actions
             SetParent(child, Handle);
         }
 
-        public Point GetScreenPoint(Window parent)
-        {
-            var result = new Point();
-            var window = Handle;
-            do
-            {
-                var location = GetLocation(window);
-                result = new Point() { X = result.X + location.Left, Y = result.Y + location.Top };
-                window = GetParent(window);
-            }
-            while (window != parent.Handle);
-            return result;
-        }
-
         public IEnumerable<Window> FindAllChildWindows()
         {
             return FindChildWindows(w => true);
-        }
-
-        private Window FindByClassName(string className)
-        {
-            return FindChildWindows(h => h.ClassName == className).FirstOrDefault();
-        }
-
-        public Window FindWindow()
-        {
-            // SSMS 2012 looks for 'GenericPane'.. earlier versions expect 'DockingView'
-            var window = FindByClassName("DockingView") ?? FindByClassName("GenericPane");
-            if (window == null)
-                throw new InvalidOperationException("Can't find window with name DockingView or GenericPane");
-
-            return window;
         }
 
         public string ClassName { get { return GetClassName(Handle); } }

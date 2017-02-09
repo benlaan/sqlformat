@@ -18,7 +18,6 @@ namespace Laan.AddIns.Ssms.Actions
         private Font _font;
         private SizeF _fontSize;
         private Form.ListBox _listBox;
-        private Window _editor;
         private Window _window;
         private bool _showLineNumbers;
 
@@ -44,7 +43,8 @@ namespace Laan.AddIns.Ssms.Actions
             _listBox.LostFocus += ListBoxLostFocus;
             _listBox.Hide();
 
-            _window = new Window((IntPtr)AddIn.TextDocument.DTE.MainWindow.HWnd);
+            _window = new Window((IntPtr)AddIn.TextDocument.DTE.ActiveDocument.ActiveWindow.HWnd);
+            _window.DumpWindows();
 
             _fontSize = TextRenderer.MeasureText("W", _font);
             _fontSize.Width = TextRenderer.MeasureText("WW", _font).Width - _fontSize.Width;
@@ -75,7 +75,7 @@ namespace Laan.AddIns.Ssms.Actions
         private void Done()
         {
             _listBox.Hide();
-            _editor.SetFocus();
+            _window.SetFocus();
         }
 
         private void ListBoxLostFocus(object sender, EventArgs e)
@@ -157,8 +157,12 @@ namespace Laan.AddIns.Ssms.Actions
 
         public override void Execute()
         {
-            if (_window == null)
-                Initialise();
+            _window = null;
+            if (_listBox != null)
+                _listBox.Dispose();
+            _listBox = null;
+
+            Initialise();
 
             if (PageExists("TextEditor", "SQL"))
                 _showLineNumbers = ReadProperty<bool>("TextEditor", "SQL", "ShowLineNumbers", false);
@@ -169,13 +173,12 @@ namespace Laan.AddIns.Ssms.Actions
             _listBox.Items.AddRange(GetItems().ToArray());
             _listBox.Height = Math.Min(300, Math.Max(150, _listBox.Items.Count * 20));
 
-            _editor = _window.FindWindow();
-            var point = _editor.GetScreenPoint(_window);
+            var point = new Point(0, 0);
             var cursor = AddIn.VirtualCursor;
 
             int lineNumberWidth = _showLineNumbers ? LineNumber_Width : 25;
             point.X += lineNumberWidth + Border_Width + (int)(cursor.Column * Math.Ceiling(_fontSize.Width));
-            point.Y += Border_Width + (int)(cursor.Row * Math.Ceiling(_fontSize.Height));
+            point.Y += Border_Width + (int)(cursor.Row * Math.Ceiling(_fontSize.Height + 2));
 
             _listBox.Location = new Point(point.X, point.Y);
             InternalExecute();
