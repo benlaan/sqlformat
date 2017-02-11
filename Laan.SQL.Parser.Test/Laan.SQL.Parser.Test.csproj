@@ -44,7 +44,6 @@
     <Compile Include="Entities\TestAlias.cs" />
     <Compile Include="Entities\TestStatement.cs" />
     <Compile Include="Statements\TestCommonTableExpressionStatementParser.cs" />
-    <Compile Include="Statements\TestCreateTriggerStatement.cs" />
     <Compile Include="Statements\TestCreateProcedureStatement.cs" />
     <Compile Include="Statements\TestStatementParsingWithComments.cs" />
     <Compile Include="Statements\TestBeginBlockStatementParser.cs" />
