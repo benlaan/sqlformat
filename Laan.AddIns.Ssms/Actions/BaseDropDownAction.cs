@@ -10,8 +10,30 @@ using Form = System.Windows.Forms;
 
 namespace Laan.AddIns.Ssms.Actions
 {
-    public abstract class DropDownList : Core.Action
+    public abstract class BaseDropDownAction : Core.BaseAction
     {
+        public class Item
+        {
+            public string Code { get; set; }
+            public string Name { get; set; }
+
+            public string TightDescription
+            {
+                get
+                {
+                    return String.Join(
+                        "\n",
+                        Name.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries)
+                    );
+                }
+            }
+
+            public override string ToString()
+            {
+                return Code;
+            }
+        }
+
         private const int LineNumber_Width = 70;
         private const int Border_Width = 4;
 
@@ -21,7 +43,7 @@ namespace Laan.AddIns.Ssms.Actions
         private Window _window;
         private bool _showLineNumbers;
 
-        public DropDownList(AddIn addIn) : base(addIn)
+        public BaseDropDownAction(AddIn addIn) : base(addIn)
         {
         }
 
@@ -98,11 +120,11 @@ namespace Laan.AddIns.Ssms.Actions
                 Done();
             else
                 if (e.KeyCode == Form.Keys.Enter)
-                {
-                    ExecuteItem((Item)lb.Items[lb.SelectedIndex]);
-                    AddIn.CancelSelection();
-                    Done();
-                }
+            {
+                ExecuteItem((Item)lb.Items[lb.SelectedIndex]);
+                AddIn.CancelSelection();
+                Done();
+            }
         }
 
         private void ListBoxMeasureItem(object sender, Form.MeasureItemEventArgs e)

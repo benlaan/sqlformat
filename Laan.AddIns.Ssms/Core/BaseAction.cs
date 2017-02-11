@@ -4,19 +4,22 @@ using Microsoft.Win32;
 
 namespace Laan.AddIns.Core
 {
-    public abstract class Action
+    public abstract class BaseAction
     {
         protected internal AddIn AddIn { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the Action class.
         /// </summary>
-        public Action(AddIn addIn)
+        public BaseAction(AddIn addIn)
         {
             AddIn = addIn;
+            ImageIndex = AddIn.DefaultImageIndex;
+            ShowWaitCursor = false;
         }
 
-        public object ImageIndex { get; set; }
+        public bool ShowWaitCursor { get; set; }
+        public int ImageIndex { get; set; }
 
         /// <summary>
         /// Globally Unique Name

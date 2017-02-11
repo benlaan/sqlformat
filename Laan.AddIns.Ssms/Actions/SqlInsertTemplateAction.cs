@@ -7,21 +7,21 @@ using Laan.AddIns.Core;
 
 namespace Laan.AddIns.Ssms.Actions
 {
-    [MenuBarToolsMenu]
-    public class SqlTemplating : DropDownList
+    [Menu("Laan")]
+    public class SqlInsertTemplateAction : BaseDropDownAction
     {
-        public SqlTemplating(AddIn addIn) : base(addIn)
+        public SqlInsertTemplateAction(AddIn addIn) : base(addIn)
         {
             Templates = LoadTemplates();
 
-            KeyName = "LaanSqlTemplating";
+            KeyName = "LaanSqlInsertTemplate";
             DisplayName = "Insert Template";
             DescriptivePhrase = "Inserting Template";
 
             ButtonText = "Insert &Template";
             ToolTip = "Inserts a template at the cursor";
-            ImageIndex = 59;
             KeyboardBinding = "Text Editor::`";
+            ShowWaitCursor = true;
         }
 
         public List<Template> LoadTemplates()
@@ -61,16 +61,8 @@ namespace Laan.AddIns.Ssms.Actions
 
         public override bool CanExecute()
         {
-            try
-            {
-                return AddIn.IsCurrentDocumentExtension("sql")
-                    && AddIn.CurrentSelection == String.Empty;
-            }
-            catch (Exception ex)
-            {
-                AddIn.Error(ex);
-                return false;
-            }
+            return AddIn.IsCurrentDocumentExtension("sql")
+                && AddIn.CurrentSelection == String.Empty;
         }
 
         public void Expand(string word)

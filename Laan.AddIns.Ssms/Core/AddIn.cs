@@ -22,17 +22,19 @@ namespace Laan.AddIns.Core
     /// <seealso class='IDTExtensibility2' />
     public class AddIn : IDTExtensibility2, IDTCommandTarget
     {
+        public const int DefaultImageIndex = 59;
+
         private Commands2 _commands;
         private string _uniqueKey;
         private EnvDTE.AddIn _addIn;
-        private List<Action> _actions;
+        private List<BaseAction> _actions;
         public DTE Application { get; private set; }
 
         /// <summary>Implements the constructor for the Add-in object. Place your initialization code within this method.</summary>
         public AddIn()
         {
             _uniqueKey = GetType().FullName;
-            _actions = new List<Action>();
+            _actions = new List<BaseAction>();
             BuildActions();
         }
 
@@ -157,7 +159,9 @@ namespace Laan.AddIns.Core
                 if (text == updatedText)
                     return;
 
-                var attr = (MenuAttribute)action.GetType().GetCustomAttributes(typeof(MenuAttribute), false).FirstOrDefault();
+                var attr = (MenuAttribute)action.GetType()
+                    .GetCustomAttributes(typeof(MenuAttribute), false)
+                    .FirstOrDefault();
 
                 if (attr != null)
                 {
@@ -182,8 +186,8 @@ namespace Laan.AddIns.Core
             try
             {
                 var actions = Assembly.GetExecutingAssembly().GetTypes()
-                    .Where(type => !type.IsAbstract && typeof(Action).IsAssignableFrom(type))
-                    .Select(type => (Action)Activator.CreateInstance(type, this))
+                    .Where(type => !type.IsAbstract && typeof(BaseAction).IsAssignableFrom(type))
+                    .Select(type => (BaseAction)Activator.CreateInstance(type, this))
                     .ToList();
 
                 _actions.AddRange(actions);
@@ -201,7 +205,7 @@ namespace Laan.AddIns.Core
             _commands = (Commands2)Application.Commands;
         }
 
-        private bool CommandIsInstalled(Action action)
+        private bool CommandIsInstalled(BaseAction action)
         {
             bool found = true;
             try
@@ -250,9 +254,21 @@ namespace Laan.AddIns.Core
             return localisedMenuName;
         }
 
-        private Action FindAction(string commandName)
+        private BaseAction FindAction(string commandName)
         {
-            return _actions.Single(c => (_uniqueKey + "." + c.KeyName).Equals(commandName, StringComparison.CurrentCultureIgnoreCase));
+            return _actions
+                .Where(c => (_uniqueKey + "." + c.KeyName).Equals(commandName, StringComparison.CurrentCultureIgnoreCase))
+                .Single();
+        }
+
+        private CommandBarPopup GetCommandBarPopup(CommandBar parent, string menuName)
+        {
+            return parent.Controls
+                .OfType<CommandBarControl>()
+                .Where(c => c.Type == MsoControlType.msoControlPopup)
+                .OfType<CommandBarPopup>()
+                .Where(c => c.CommandBar.Name == menuName)
+                .FirstOrDefault();
         }
 
         private void PlaceCommandsOnMenus()
@@ -268,55 +284,55 @@ namespace Laan.AddIns.Core
                 if (CommandIsInstalled(action))
                     continue;
 
-                var attr = (MenuAttribute)action.GetType().GetCustomAttributes(typeof(MenuAttribute), false).FirstOrDefault();
+                CommandBarPopup toolsPopup = null;
+
+                var attr = (MenuAttribute)action.GetType()
+                    .GetCustomAttributes(typeof(MenuAttribute), false)
+                    .FirstOrDefault();
 
                 if (attr != null)
                 {
                     string commandBarName = attr.CommandBar;
-                    string menuName = attr.Menu;
-
 
                     var commandBar = ((CommandBars)Application.CommandBars)[commandBarName];
+                    toolsPopup = GetCommandBarPopup(commandBar, attr.Menu) as CommandBarPopup;
 
-
-                    CommandBarPopup toolsPopup = null;
-
-                    if (menuName != null)
+                    if (toolsPopup == null)
                     {
-                        CommandBarControl toolsControl = commandBar.Controls[GetMenuName(menuName)];
-                        toolsPopup = (CommandBarPopup)toolsControl;
+                        toolsPopup = (CommandBarPopup)commandBar.Controls.Add(MsoControlType.msoControlPopup);
+                        toolsPopup.Caption = attr.Menu;
                     }
+                }
 
-                    try
+                try
+                {
+                    var contextGUIDS = new object[0];
+
+                    var command = _commands.AddNamedCommand2(
+                        _addIn,
+                        action.KeyName,
+                        action.ButtonText,
+                        action.ToolTip,
+                        action.ImageIndex == DefaultImageIndex, // set to false to use custom bitmap - add a resource called 1.bmp, 2.bmp, etc.
+                        action.ImageIndex,
+                        ref contextGUIDS,
+                        (int)vsCommandStatus.vsCommandStatusSupported + (int)vsCommandStatus.vsCommandStatusEnabled,
+                        (int)vsCommandStyle.vsCommandStylePictAndText,
+                        vsCommandControlType.vsCommandControlTypeButton
+                    );
+
+                    if (command != null)
                     {
-                        var contextGUIDS = new object[] { };
+                        if (toolsPopup != null)
+                            command.AddControl(toolsPopup.CommandBar);
 
-                        var command = _commands.AddNamedCommand2(
-                            _addIn,
-                            action.KeyName,
-                            action.ButtonText,
-                            action.ToolTip,
-                            true,
-                            action.ImageIndex,
-                            ref contextGUIDS,
-                            (int)vsCommandStatus.vsCommandStatusSupported +
-                            (int)vsCommandStatus.vsCommandStatusEnabled,
-                            (int)vsCommandStyle.vsCommandStylePictAndText,
-                            vsCommandControlType.vsCommandControlTypeButton
-                        );
-
-                        if (command != null)
-                        {
-                            command.AddControl(toolsPopup != null ? toolsPopup.CommandBar : commandBar, 1);
-
-                            if (action.KeyboardBinding != null)
-                                command.Bindings = action.KeyboardBinding;
-                        }
+                        if (action.KeyboardBinding != null)
+                            command.Bindings = action.KeyboardBinding;
                     }
-                    catch (System.ArgumentException ex)
-                    {
-                        Error(String.Format("PlaceCommandsOnMenus({0})", action.DisplayName), ex);
-                    }
+                }
+                catch (ArgumentException ex)
+                {
+                    Error(String.Format("PlaceCommandsOnMenus({0})", action.DisplayName), ex);
                 }
             }
         }
@@ -337,18 +353,29 @@ namespace Laan.AddIns.Core
             }
         }
 
-        private void Execute(Action action)
+        private void Execute(BaseAction action)
         {
-            Stopwatch timer = Stopwatch.StartNew();
+            if (!action.ShowWaitCursor)
+            {
+                try
+                {
+                    InvokeAction(action);
+                }
+                catch (Exception ex)
+                {
+                    Error(ex);
+                    SetStatus("Error {0}: {1}", action.DescriptivePhrase, ex.Message);
+                }
 
+                return;
+            }
+
+            var timer = Stopwatch.StartNew();
             System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
             try
             {
                 SetStatus("{0}...", action.DescriptivePhrase);
-                using (new ScopedUndoContext(this, action.KeyName))
-                {
-                    action.Execute();
-                }
+                InvokeAction(action);
                 SetStatus("{0} completed in {1} seconds", action.DescriptivePhrase, timer.Elapsed.TotalSeconds);
             }
             catch (Exception ex)
@@ -360,6 +387,14 @@ namespace Laan.AddIns.Core
             {
                 timer.Stop();
                 System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
+            }
+        }
+
+        private void InvokeAction(BaseAction action)
+        {
+            using (new ScopedUndoContext(this, action.KeyName))
+            {
+                action.Execute();
             }
         }
 
@@ -460,9 +495,11 @@ namespace Laan.AddIns.Core
             get
             {
                 var cursor = TextDocument.Selection.ActivePoint;
-                var point = cursor.CreateEditPoint();
-                point.StartOfLine();
-                return point.GetText(cursor);
+                var startPoint = cursor.CreateEditPoint();
+                var endPoint = cursor.CreateEditPoint();
+                startPoint.StartOfLine();
+                endPoint.EndOfLine();
+                return startPoint.GetText(endPoint);
             }
         }
 

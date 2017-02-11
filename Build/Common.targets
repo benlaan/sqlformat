@@ -34,7 +34,7 @@
 
   <PropertyGroup>
     <Major>0</Major>
-    <Minor>2</Minor>
+    <Minor>3</Minor>
     <Build>1</Build>
     <Revision>$(BUILD_NUMBER)</Revision>
   </PropertyGroup>

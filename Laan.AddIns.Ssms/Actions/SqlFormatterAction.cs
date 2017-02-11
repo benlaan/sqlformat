@@ -6,8 +6,8 @@ using Laan.Sql.Formatter;
 
 namespace Laan.AddIns.Ssms.Actions
 {
-    [MenuBarToolsMenu]
-    public class SqlFormatter : Core.Action
+    [Menu("Laan")]
+    public class SqlFormatterAction : Core.BaseAction
     {
         private FormattingEngine _engine;
 
@@ -22,24 +22,26 @@ namespace Laan.AddIns.Ssms.Actions
         //    return index + textDocument.Selection.AnchorColumn;
         //}
 
-        public SqlFormatter(AddIn addIn) : base(addIn)
+        public SqlFormatterAction(AddIn addIn) : base(addIn)
         {
             _engine = new FormattingEngine();
             _engine.IndentStep = 0; // experimental: GetStartIndent( textDocument ) / engine.TabSize;
 
             KeyName = "LaanSqlFormat";
-            DisplayName = "Format SQL";
+            DisplayName = "Format Sql";
             DescriptivePhrase = "Formatting SQL";
 
-            ButtonText = "Format S&QL";
+            ButtonText = "Format S&ql";
             ToolTip = "Formats the current file";
-            ImageIndex = 59;
+            ImageIndex = 1;
             KeyboardBinding = "Text Editor::Ctrl+`";
+            ShowWaitCursor = true;
         }
 
         public override bool CanExecute()
         {
-            return (AddIn.IsCurrentDocumentExtension("sql"));
+            return AddIn.IsCurrentDocumentExtension("sql")
+                && AddIn.AllText.Length > 0;
         }
 
         public override void Execute()

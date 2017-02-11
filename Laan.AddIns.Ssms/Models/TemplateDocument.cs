@@ -85,7 +85,7 @@ namespace Laan.AddIns.Ssms.Actions
                 doc.Templates.AddRange(templates);
                 File.WriteAllText(_templatePath, doc.ToXml());
 
-                SqlTemplating.Templates = templates;
+                SqlInsertTemplateAction.Templates = templates;
             }
             catch (Exception ex)
             {

@@ -9,8 +9,8 @@ using Laan.AddIns.Forms;
 
 namespace Laan.AddIns.Ssms.Actions
 {
-    [MenuBarToolsMenu]
-    public class SqlTemplateOptionAction : Core.Action
+    [Menu("Laan")]
+    public class SqlTemplateOptionAction : Core.BaseAction
     {
         /// <summary>
         /// Initializes a new instance of the SqlTemplateOptionAction class.
@@ -19,18 +19,17 @@ namespace Laan.AddIns.Ssms.Actions
             : base(addIn)
         {
             KeyName = "LaanSqlTemplateOptionView";
-            DisplayName = "View Laan Sql Templates";
-            DescriptivePhrase = "Viewing Laan Sql Templates";
+            DisplayName = "Edit Sql Templates";
+            DescriptivePhrase = "Editing Sql Templates";
 
             ButtonText = "Sql Template Designer";
-            ToolTip = "View Laan Sql Templates";
-            ImageIndex = 59;
-            KeyboardBinding = "Text Editor::Ctrl+Alt+O";
+            ToolTip = "Edit Sql Templates";
+            KeyboardBinding = "Global::Ctrl+Alt+O";
         }
 
         public override void Execute()
         {
-            DialogHost dialogHost = new DialogHost();
+            var dialogHost = new DialogHost();
 
             var templates = TemplateDocument.Load();
             var viewModel = new SqlTemplateOptionViewModel(templates);

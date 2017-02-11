@@ -70,21 +70,35 @@
     <Compile Include="..\Build\VersionAssemblyInfo.cs">
       <Link>VersionAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Action.cs" />
-    <Compile Include="Actions\DropDownList.cs" />
-    <Compile Include="Actions\Item.cs" />
-    <Compile Include="Actions\MenuAttribute.cs" />
-    <Compile Include="Actions\SqlFormatter.cs" />
+    <Compile Include="Actions\BaseCursorAction.cs" />
+    <Compile Include="Actions\BaseRightCusorAction.cs" />
+    <Compile Include="Actions\BaseLeftCusorAction.cs" />
+    <Compile Include="Actions\SelectCursorRightWordAction.cs" />
+    <Compile Include="Actions\SelectCursorLeftWordAction.cs" />
+    <Compile Include="Actions\MoveCursorRightWordAction.cs" />
+    <Compile Include="Actions\MoveCursorLeftWordAction.cs" />
+    <Compile Include="Core\BaseAction.cs" />
+    <Compile Include="Actions\BaseDropDownAction.cs" />
+    <Compile Include="Actions\MoveLineDownAction.cs" />
+    <Compile Include="Actions\MoveLineUpAction.cs" />
+    <Compile Include="Core\MenuAttribute.cs" />
+    <Compile Include="Actions\SqlFormatterAction.cs" />
+    <Compile Include="Actions\DuplicateLineAction.cs" />
     <Compile Include="Actions\SqlTemplateOptionAction.cs" />
-    <Compile Include="Actions\SqlTemplating.cs" />
+    <Compile Include="Actions\SqlInsertTemplateAction.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AddIn.cs">
+    <Compile Include="Core\AddIn.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\Template.cs" />
     <Compile Include="Models\TemplateDocument.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SqlTemplateOption\DelegateCommand.cs" />
     <Compile Include="SqlTemplateOption\DialogHost.cs">
       <SubType>Form</SubType>
@@ -159,6 +173,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Laan.AddIns.Core.AddIn" />
+    <None Include="copy.ps1" />
+    <None Include="Resources\4.bmp" />
+    <None Include="Resources\3.bmp" />
+    <None Include="Resources\2.bmp" />
+    <None Include="Resources\1.bmp" />
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Templates\default.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -181,10 +204,8 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
   <Import Project="$(SolutionDir)Build\Common.targets" />
-
   <Target Name="AfterBuild">
     <ItemGroup>
       <AllOutputFiles Include="$(OutputPath)*.*" />
@@ -192,6 +213,7 @@
     <Copy SourceFiles="@(AllOutputFiles)" DestinationFiles="@(AllOutputFiles->'$(DeploymentDirectory)\%(Filename)%(Extension)')">
       <Output TaskParameter="DestinationFiles" ItemName="FileWrites" />
     </Copy>
-    <Exec Command="powershell -NoLogo -noProfile -File $(ProjectDir)copy.ps1 -source .\bin\$(Configuration)"></Exec>
+    <Exec Command="powershell -NoLogo -noProfile -File $(ProjectDir)copy.ps1 -source .\bin\$(Configuration)">
+    </Exec>
   </Target>
 </Project>
