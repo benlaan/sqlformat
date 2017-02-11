@@ -37,11 +37,9 @@
     </Compile>
     <Compile Include="Entities\CommonTableExpressionStatement.cs" />
     <Compile Include="Entities\CreateProcedureStatement.cs" />
-    <Compile Include="Entities\CreateTriggerStatement.cs" />
     <Compile Include="Expressions\CountExpression.cs" />
     <Compile Include="Expressions\RankingFunctionExpression.cs" />
     <Compile Include="Parsers\CommonTableExpressionStatementParser.cs" />
-    <Compile Include="Parsers\CreateTriggerStatementParser.cs" />
     <Compile Include="Parsers\CreateProcedureStatementParser.cs" />
     <Compile Include="Parsers\VariableDefinitionParser.cs" />
     <Compile Include="Tokenizer\CandidateDefinition.cs" />
