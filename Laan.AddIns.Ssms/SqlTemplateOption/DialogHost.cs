@@ -26,11 +26,10 @@ namespace Laan.AddIns.Forms
         {
             var element = new T() { DataContext = model };
             
-            wpfElementHost.AutoSize = true;
             wpfElementHost.HostContainer.Children.Add(element);
 
-            Width = (int)element.MinWidth + 50;
-            Height = (int)element.MinHeight + 50;
+            Width = (int)element.MinWidth + 250;
+            Height = (int)element.MinHeight + 200;
             KeyPreview = true;
 
             _dialog = (IDialog)model;

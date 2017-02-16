@@ -35,18 +35,20 @@
             // 
             this.wpfElementHost.Dock = System.Windows.Forms.DockStyle.Fill;
             this.wpfElementHost.Location = new System.Drawing.Point(0, 0);
+            this.wpfElementHost.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.wpfElementHost.Name = "wpfElementHost";
-            this.wpfElementHost.Size = new System.Drawing.Size(554, 550);
+            this.wpfElementHost.Size = new System.Drawing.Size(982, 553);
             this.wpfElementHost.TabIndex = 0;
             this.wpfElementHost.Text = "elementHost1";
             this.wpfElementHost.Child = null;
             // 
             // DialogHost
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(554, 550);
+            this.ClientSize = new System.Drawing.Size(982, 553);
             this.Controls.Add(this.wpfElementHost);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DialogHost";

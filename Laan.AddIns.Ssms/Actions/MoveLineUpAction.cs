@@ -36,8 +36,6 @@ namespace Laan.AddIns.Ssms.Actions
             AddIn.InsertText(line + Environment.NewLine, true);
 
             textDocument.Selection.Cancel();
-            var y = textDocument.Selection.Text;
-
             textDocument.Selection.LineDown();
             textDocument.Selection.SelectLine();
             AddIn.InsertText(otherLine + Environment.NewLine, true);

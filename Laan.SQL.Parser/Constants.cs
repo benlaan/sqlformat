@@ -117,6 +117,7 @@ namespace Laan.Sql.Parser
         public const string TabLockx = "TABLOCKX";
         public const string Tran = "TRAN";
         public const string Transaction = "TRANSACTION";
+        public const string Trigger = "TRIGGER";
         public const string Then = "THEN";
         public const string Time = "TIME";
         public const string To = "TO";

@@ -73,6 +73,11 @@
     <Compile Include="Actions\BaseCursorAction.cs" />
     <Compile Include="Actions\BaseRightCusorAction.cs" />
     <Compile Include="Actions\BaseLeftCusorAction.cs" />
+    <Compile Include="Actions\SurroundWithBlockBracket.cs" />
+    <Compile Include="Actions\SurroundWithLineCommentAction.cs" />
+    <Compile Include="Actions\SurroundWithParenthesis.cs" />
+    <Compile Include="Actions\SurroundWithBlockCommentAction.cs" />
+    <Compile Include="Actions\SurroundWithQuoteAction.cs" />
     <Compile Include="Actions\SelectCursorRightWordAction.cs" />
     <Compile Include="Actions\SelectCursorLeftWordAction.cs" />
     <Compile Include="Actions\MoveCursorRightWordAction.cs" />

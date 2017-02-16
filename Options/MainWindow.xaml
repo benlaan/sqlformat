@@ -2,10 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Forms="clr-namespace:Laan.AddIns.Forms;assembly=Laan.AddIns.Ssms" x:Class="Options.MainWindow"
-        Title="MainWindow" Height="640.244" Width="1532.317">
+        Title="MainWindow" Height="600" Width="1000">
     <Grid>
 
-        <Forms:SqlTemplateOptionView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Forms:SqlTemplateOptionView Height="Auto" Width="Auto"/>
 
     </Grid>
 </Window>
