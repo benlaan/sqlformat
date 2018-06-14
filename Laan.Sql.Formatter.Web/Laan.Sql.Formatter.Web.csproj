@@ -6,8 +6,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{65E58DDB-1B1D-4233-9DD8-CFE41569826F}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -185,7 +183,7 @@
     <AureliaEnvironment Condition=" '$(Configuration)' == 'Debug'">dev</AureliaEnvironment>
     <AureliaEnvironment Condition=" '$(Configuration)' == 'Release'">prod</AureliaEnvironment>
   </PropertyGroup>
-  <Target Name="AfterBuild" Condition=" '$(EXECUTING_IN_KUDU)' == ''">
+  <Target Name="AfterBuild" Condition=" '$(EXECUTING_IN_KUDU)|$(AGENT_BUILDDIRECTORY)' == '|'">
     <Exec Command="$(ProjectDir)..\Scripts\Build-App.cmd $(AureliaEnvironment)" IgnoreExitCode="true" />
   </Target>
 </Project>
