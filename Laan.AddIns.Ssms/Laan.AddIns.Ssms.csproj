@@ -73,6 +73,10 @@
     <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\Microsoft.VisualStudio.CommandBars.8.0.0.0\lib\Microsoft.VisualStudio.CommandBars.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -141,15 +145,6 @@
     <Compile Include="Utils\Window.cs" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="Microsoft.VisualStudio.CommandBars">
-      <Guid>{1CBA492E-7263-47BB-87FE-639000619B15}</Guid>
-      <VersionMajor>8</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </COMReference>
     <COMReference Include="stdole">
       <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
       <VersionMajor>2</VersionMajor>
@@ -163,6 +158,7 @@
   <ItemGroup>
     <Content Include="Laan.AddIns.Core.AddIn" />
     <None Include="copy.ps1" />
+    <None Include="packages.config" />
     <None Include="Resources\4.bmp" />
     <None Include="Resources\3.bmp" />
     <None Include="Resources\2.bmp" />
@@ -180,6 +176,10 @@
       <Project>{5AF58723-F939-4955-9B29-2A6A0A4CFBA8}</Project>
       <Name>Laan.Sql.Formatter</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj">
+      <Project>{e972b2b2-f549-418e-b830-fb5d97101168}</Project>
+      <Name>Laan.Sql.Parser</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CommandBar.resx" />
@@ -193,7 +193,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <Import Project="$(SolutionDir)Build\Common.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>
