@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 
-  
-  <?define ProductVersion="!(bind.FileVersion.Laan.AddIns.Ssms.dll)" ?>
+<?define ProductVersion="!(bind.FileVersion.Laan.AddIns.Ssms.dll)" ?>
   <Product
       Id="*"
       Name="Laan Sql Add-In for SSMS"
@@ -117,30 +116,23 @@
         <Class Id="{CC5866B2-5695-4557-AA26-A7AFB5072533}" SafeForScripting="yes" Advertise="no" Context="InprocServer32" Description="Laan Sql Formatter SSMS AddIn" ThreadingModel="both" ForeignServer="mscoree.dll" Control="yes">
           <ProgId Id="Laan.AddIns.Core.AddIn" Description="Laan Sql Formatter SSMS AddIn" />
         </Class>
-
       </Component>
+
       <Component Id="Formatter" Guid="{1CA04D29-A6BE-4F68-940D-3B2285C8B3BD}">
         <File Id="Laan.SQL.Formatter.dll" Source="$(var.Laan.Sql.Formatter.TargetDir)Laan.SQL.Formatter.dll" DiskId="1"/>
         <File Source="$(var.Laan.Sql.Formatter.TargetDir)Laan.SQL.Formatter.pdb" />
       </Component>
+
       <Component Id="Parser" Guid="{D668D5B7-0EC5-40A1-8148-6DBCA6E6FFA6}">
         <File Id="Laan.SQL.Parser.dll" Source="$(var.Laan.Sql.Parser.TargetDir)Laan.SQL.Parser.dll" DiskId="1"/>
         <File Source="$(var.Laan.Sql.Parser.TargetDir)Laan.SQL.Parser.pdb" />
       </Component>
     </DirectoryRef>
 
-    <!--<DirectoryRef Id="TARGETDIR">
-      <Component Id="RegistryEntries" Guid="{04D2B77F-D05E-494C-A675-25FC7D6F1559}">
-
-
-      </Component>
-    </DirectoryRef>-->
-
     <Feature Id="Main" Title="Main AddIn" Level="1">
       <ComponentRef Id="SSms.AddIn"/>
       <ComponentRef Id="Formatter"/>
       <ComponentRef Id="Parser"/>
-      <!--<ComponentRef Id="RegistryEntries"/>-->
       <ComponentRef Id="AddinFile"/>
     </Feature>
 
