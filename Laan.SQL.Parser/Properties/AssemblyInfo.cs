@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Laan Sql Parser")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Library for generating an AST for the SQL language")]
 [assembly: AssemblyCompany("Laan Software")]
 [assembly: AssemblyProduct("Sql Parser")]
 [assembly: AssemblyCopyright("Copyright © Laan Software 2017")]

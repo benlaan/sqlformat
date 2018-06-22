@@ -86,6 +86,9 @@
       <Name>Laan.Sql.Parser</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Laan.Sql.Formatter.nuspec" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)Build\Common.targets" />
 </Project>

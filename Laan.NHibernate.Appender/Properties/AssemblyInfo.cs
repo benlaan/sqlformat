@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Laan.NHibernate.Appender")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Library for formatting NHibernate SQL statements generated from a log4net appender")]
 [assembly: AssemblyCompany("Laan Software")]
 [assembly: AssemblyProduct("Laan.NHibernate.Appender")]
 [assembly: AssemblyCopyright("Copyright © Laan Software 2017")]

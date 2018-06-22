@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Laan.Sql.Formatter")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Library for formatting SQL Statements")]
 [assembly: AssemblyCompany("Laan Software")]
 [assembly: AssemblyProduct("Laan.Sql.Formatter")]
 [assembly: AssemblyCopyright("Copyright © Laan Software 2017")]
