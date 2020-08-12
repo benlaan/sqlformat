@@ -6,19 +6,15 @@ namespace Laan.Sql.Parser
     {
         private ITokenizer _tokenizer;
 
-        public BracketStructure( ITokenizer tokenizer )
+        public BracketStructure(ITokenizer tokenizer)
         {
             _tokenizer = tokenizer;
-            _tokenizer.ExpectToken( Constants.OpenBracket );
+            _tokenizer.ExpectToken(Constants.OpenBracket);
         }
-
-        #region IDisposable Members
 
         public void Dispose()
         {
-            _tokenizer.ExpectToken( Constants.CloseBracket );
+            _tokenizer.ExpectToken(Constants.CloseBracket);
         }
-
-        #endregion
     }
 }

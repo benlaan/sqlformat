@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -18,7 +17,7 @@ namespace Laan.Sql.Parser
 
         public override string ToString()
         {
-            return String.Format("{{ Position = {0}, Match = {1}, Definition = {2} }}", Position, Match, Definition);
+            return $"{{ Position = {Position}, Match = {Match}, Definition = {Definition} }}";
         }
 
         public int Position { get; private set; }

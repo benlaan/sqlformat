@@ -34,10 +34,7 @@ namespace Laan.Sql.Parser.Parsers
 
             if (Tokenizer.IsNextToken("AND", "OR"))
             {
-                CriteriaExpression result = new CriteriaExpression(parent);
-                result.Left = expression;
-
-                result.Operator = CurrentToken;
+                var result = new CriteriaExpression(parent) { Left = expression, Operator = CurrentToken };
                 ReadNextToken();
 
                 result.Right = ReadCriteriaList(result);
@@ -50,8 +47,7 @@ namespace Laan.Sql.Parser.Parsers
 
         private BetweenExpression ProcessBetween(Expression parent, Expression expression)
         {
-            BetweenExpression betweenExpression = new BetweenExpression(parent);
-            betweenExpression.Expression = expression;
+            var betweenExpression = new BetweenExpression(parent) { Expression = expression };
             betweenExpression.From = ReadCriteria(betweenExpression);
 
             ExpectToken(Constants.And);
@@ -62,10 +58,7 @@ namespace Laan.Sql.Parser.Parsers
 
         private CriteriaExpression ProcessCriteria(Expression parent, Expression expression)
         {
-            CriteriaExpression result = new CriteriaExpression(parent);
-            result.Left = expression;
-
-            result.Operator = CurrentToken;
+            var result = new CriteriaExpression(parent) { Left = expression, Operator = CurrentToken };
             ReadNextToken();
 
             result.Right = ReadExpression(parent);
@@ -115,10 +108,7 @@ namespace Laan.Sql.Parser.Parsers
 
             if (Tokenizer.IsNextToken("+", "-"))
             {
-                OperatorExpression result = new OperatorExpression(parent);
-                result.Left = term;
-
-                result.Operator = CurrentToken;
+                var result = new OperatorExpression(parent) { Left = term, Operator = CurrentToken };
                 ReadNextToken();
 
                 result.Right = ReadExpression(parent);
@@ -135,9 +125,9 @@ namespace Laan.Sql.Parser.Parsers
 
             if (Tokenizer.IsNextToken(Constants.Over))
             {
-                var rankingFunctionExpression = new RankingFunctionExpression(parent);
-                rankingFunctionExpression.Name = factor.Value;
+                var rankingFunctionExpression = new RankingFunctionExpression(parent) { Name = factor.Value };
                 ReadNextToken();
+
                 using (Tokenizer.ExpectBrackets())
                 {
                     if (Tokenizer.TokenEquals(Constants.Partition))
@@ -160,10 +150,7 @@ namespace Laan.Sql.Parser.Parsers
             }
             else if (Tokenizer.IsNextToken("*", "/", "%", "^"))
             {
-                OperatorExpression result = new OperatorExpression(parent);
-                result.Left = factor;
-
-                result.Operator = CurrentToken;
+                var result = new OperatorExpression(parent) { Left = factor, Operator = CurrentToken };
                 ReadNextToken();
 
                 result.Right = ReadExpression(parent);
@@ -231,7 +218,7 @@ namespace Laan.Sql.Parser.Parsers
 
                         if (Tokenizer.TokenEquals(Constants.As))
                         {
-                            if (!String.Equals(functionName, Constants.Cast, StringComparison.InvariantCultureIgnoreCase))
+                            if (!String.Equals(functionName, Constants.Cast, StringComparison.CurrentCultureIgnoreCase))
                                 throw new SyntaxException("AS is allowed only within a CAST expression");
 
                             result = new CastExpression(parent, GetProcessType());
@@ -251,7 +238,7 @@ namespace Laan.Sql.Parser.Parsers
             ReadNextToken();
             if (Tokenizer.IsNextToken(Constants.When))
                 return GetCaseWhenExpression(parent);
-            
+
             return GetCaseSwitchExpression(parent);
         }
 
@@ -329,8 +316,7 @@ namespace Laan.Sql.Parser.Parsers
             while (Tokenizer.IsNextToken(Constants.When))
             {
                 ReadNextToken();
-                CaseSwitch caseSwitch = new CaseSwitch(caseExpression);
-                caseSwitch.When = ReadCriteriaList(caseExpression);
+                var caseSwitch = new CaseSwitch(caseExpression) { When = ReadCriteriaList(caseExpression) };
 
                 Tokenizer.ExpectToken(Constants.Then);
                 caseSwitch.Then = ReadExpression(caseExpression);

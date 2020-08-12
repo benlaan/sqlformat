@@ -20,7 +20,7 @@ namespace Laan.Sql.Formatter.Test
             var expected = new[]
             {
                "INSERT INTO dbo.Table",
-               "     VALUES (1, 'Hello World')"
+               "    VALUES (1, 'Hello World')"
             };
 
             Compare(actual, expected);
@@ -39,7 +39,7 @@ namespace Laan.Sql.Formatter.Test
             var expected = new[]
             {
                "INSERT INTO dbo.Table (ID, Greeting)",
-               "     VALUES (1, 'Hello World')"
+               "    VALUES (1, 'Hello World')"
             };
 
             Compare(actual, expected);
@@ -61,7 +61,7 @@ namespace Laan.Sql.Formatter.Test
             var expected = new[]
             {
                "INSERT INTO dbo.Table",
-               "     VALUES (1, 'Hello World', 500, 'A Long Text Description Goes Here', 250, '01/01/2000', '01/01/2009')"
+               "    VALUES (1, 'Hello World', 500, 'A Long Text Description Goes Here', 250, '01/01/2000', '01/01/2009')"
             };
 
             Compare(actual, expected);
@@ -87,7 +87,7 @@ namespace Laan.Sql.Formatter.Test
                "    ID, Greeting, MaxiumumDaysBetweenEvents, Description, EffectiveFromDate, ",
                "    EffectiveToDate",
                "    )",
-               "     VALUES (1, 'Hello World', 500, 'A Long Text Description Goes Here', 250, '01/01/2000', '01/01/2009')"
+               "    VALUES (1, 'Hello World', 500, 'A Long Text Description Goes Here', 250, '01/01/2000', '01/01/2009')"
             };
 
             Compare(actual, expected);

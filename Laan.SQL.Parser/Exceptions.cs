@@ -17,7 +17,6 @@ namespace Laan.Sql.Parser.Exceptions
         }
     }
 
-    [Serializable]
     public class ExpectedTokenNotFoundException : ParserException
     {
         internal ExpectedTokenNotFoundException(string token, string foundToken, Position position)
@@ -30,7 +29,6 @@ namespace Laan.Sql.Parser.Exceptions
         public ExpectedTokenNotFoundException(string message, Exception innerException) : base(message, innerException) { }
     }
 
-    [Serializable]
     public class SyntaxException : ParserException
     {
         public SyntaxException() : base() { }
@@ -39,7 +37,6 @@ namespace Laan.Sql.Parser.Exceptions
 
     }
 
-    [Serializable]
     public class UnknownTokenException : ParserException
     {
         public UnknownTokenException() : base() { }
@@ -47,7 +44,6 @@ namespace Laan.Sql.Parser.Exceptions
         public UnknownTokenException(string message, Exception innerException) : base(message, innerException) { }
     }
 
-    [Serializable]
     public class ParserNotImplementedException : ParserException
     {
         public ParserNotImplementedException() : base() { }
@@ -55,7 +51,6 @@ namespace Laan.Sql.Parser.Exceptions
         public ParserNotImplementedException(string message, Exception innerException) : base(message, innerException) { }
     }
 
-    [Serializable]
     public class FormatterNotImplementedException : ParserException
     {
         public FormatterNotImplementedException() : base() { }

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Laan.Sql.Formatter;
 
 using log4net.Appender;
 using log4net.Core;
-
-using Laan.Sql.Formatter;
 
 namespace Laan.NHibernate.Appender
 {
@@ -15,19 +15,18 @@ namespace Laan.NHibernate.Appender
     {
         private object _latch;
         private bool _done = false;
-        private BackgroundWorker _worker;
+        private Task _worker;
         private Queue<LoggingEvent> _queue;
         private ParamBuilderFormatter _formatter;
+        private CancellationTokenSource _cancellationToken;
 
         public NHibernateAppender()
         {
             _latch = new object();
-            _formatter = new ParamBuilderFormatter( new FormattingEngine() );
+            _formatter = new ParamBuilderFormatter(new FormattingEngine());
             _queue = new Queue<LoggingEvent>();
-
-            _worker = new BackgroundWorker();
-            _worker.DoWork += ProcessQueue;
-            _worker.RunWorkerAsync();
+            _cancellationToken = new CancellationTokenSource();
+            _worker = Task.Factory.StartNew(() => ProcessQueue(200), _cancellationToken.Token);
         }
 
         public override void ActivateOptions()
@@ -36,46 +35,48 @@ namespace Laan.NHibernate.Appender
             base.ActivateOptions();
         }
 
-        private void ProcessQueue( object sender, DoWorkEventArgs e )
+        private void ProcessQueue(int delay)
         {
-            while ( !_done )
+            while (!_done)
             {
                 LoggingEvent loggingEvent = null;
-                lock ( _latch )
-                    if ( _queue.Count > 0 )
+                lock (_latch)
+                    if (_queue.Count > 0)
                         loggingEvent = _queue.Dequeue();
 
-                if ( loggingEvent != null )
+                if (loggingEvent != null)
                 {
                     var timer = Stopwatch.StartNew();
-                    string formattedStatement = _formatter.Execute( loggingEvent.RenderedMessage );
+                    string formattedStatement = _formatter.Execute(loggingEvent.RenderedMessage);
                     timer.Stop();
-                    
-                    string message = String.Format(
-                        "{0}\n-- Duration: {1:0:00:0000}", formattedStatement, timer.ElapsedMilliseconds
-                    );
+
+                    string message = $"{formattedStatement}\n-- Duration: {timer.ElapsedMilliseconds:0:00:0000}";
 
                     var data = new LoggingEventData
                     {
-                        Message     = message,
-                        TimeStamp   = loggingEvent.TimeStamp,
-                        Level       = loggingEvent.Level,
-                        LoggerName  = loggingEvent.LoggerName,
-                        ThreadName  = loggingEvent.ThreadName,
-                        UserName    = loggingEvent.UserName,
-                        Identity    = loggingEvent.Identity,
-                        Domain      = loggingEvent.Domain
+                        Message = message,
+                        TimeStampUtc = loggingEvent.TimeStamp,
+                        Level = loggingEvent.Level,
+                        LoggerName = loggingEvent.LoggerName,
+                        ThreadName = loggingEvent.ThreadName,
+                        UserName = loggingEvent.UserName,
+                        Identity = loggingEvent.Identity,
+                        Domain = loggingEvent.Domain
                     };
-                    base.Append( new LoggingEvent( data ) );
+                    base.Append(new LoggingEvent(data));
                 }
-                Thread.Sleep( 200 );
+
+                if (_cancellationToken.IsCancellationRequested)
+                    break;
+
+                Thread.Sleep(delay);
             }
         }
 
-        protected override void Append( LoggingEvent loggingEvent )
+        protected override void Append(LoggingEvent loggingEvent)
         {
-            lock ( _latch )
-                _queue.Enqueue( loggingEvent );
+            lock (_latch)
+                _queue.Enqueue(loggingEvent);
         }
 
         protected override void OnClose()
@@ -84,19 +85,13 @@ namespace Laan.NHibernate.Appender
             base.OnClose();
         }
 
-        #region IDisposable Members
-
         public void Dispose()
         {
-            if ( _worker.IsBusy && _queue.Count > 0 )
+            if (!_worker.IsCompleted && _queue.Count > 0)
             {
-                _worker.CancelAsync();
-                ProcessQueue( this, new DoWorkEventArgs( this ) );
+                ProcessQueue(0);
+                _cancellationToken.Cancel();
             }
-
-            _worker.Dispose();
         }
-
-        #endregion
     }
 }

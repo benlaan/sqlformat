@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 
 using NUnit.Framework;
+
 using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Parser.Test
@@ -13,7 +15,7 @@ namespace Laan.Sql.Parser.Test
         public void Statements_With_Semicolon_Terminators()
         {
             // Exercise
-            var statements = ParserFactory.Execute( @"
+            var statements = ParserFactory.Execute(@"
 
                SELECT 1;
                UPDATE dbo.Table SET Fields = 1;
@@ -23,15 +25,15 @@ namespace Laan.Sql.Parser.Test
             );
 
             // Verify outcome
-            Assert.IsNotNull( statements );
-            Assert.AreEqual( 4, statements.Count );
+            Assert.IsNotNull(statements);
+            Assert.AreEqual(4, statements.Count);
         }
 
         [Test]
         public void Statements_With_Go_Terminators()
         {
             // Exercise
-            var statements = ParserFactory.Execute( @"
+            var statements = ParserFactory.Execute(@"
 
                SELECT 1
                GO
@@ -41,10 +43,9 @@ namespace Laan.Sql.Parser.Test
             );
 
             // Verify outcome
-            Assert.IsNotNull( statements );
-            Assert.AreEqual( 4, statements.Count );
-            Assert.AreEqual( 2, statements.Count( st => typeof( GoTerminator ).IsAssignableFrom( st.GetType() ) ) );
+            Assert.IsNotNull(statements);
+            Assert.AreEqual(4, statements.Count);
+            Assert.AreEqual(2, statements.Count(st => typeof(GoTerminator).IsAssignableFrom(st.GetType())));
         }
-
     }
 }

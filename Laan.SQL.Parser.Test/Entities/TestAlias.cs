@@ -7,13 +7,12 @@ namespace Laan.Sql.Parser.Test.Entities
     [TestFixture]
     public class TestAlias
     {
-
         [Test]
         [TestCase("test name")]
-        public void Implicit_Value( string name )
+        public void Implicit_Value(string name)
         {
             // Arrange
-            var sut = new Alias( null );
+            var sut = new Alias(null);
             sut.Name = name;
             sut.Type = AliasType.Implicit;
 
@@ -21,15 +20,15 @@ namespace Laan.Sql.Parser.Test.Entities
             var result = sut.Value;
 
             // Assert
-            Assert.AreEqual( " " + name, result );
+            Assert.AreEqual(" " + name, result);
         }
 
         [Test]
         [TestCase("test name")]
-        public void Equals_Value( string name )
+        public void Equals_Value(string name)
         {
             // Arrange
-            var sut = new Alias( null );
+            var sut = new Alias(null);
             sut.Name = name;
             sut.Type = AliasType.Equals;
 
@@ -37,15 +36,15 @@ namespace Laan.Sql.Parser.Test.Entities
             var result = sut.Value;
 
             // Assert
-            Assert.AreEqual( name + " = ", result );
+            Assert.AreEqual(name + " = ", result);
         }
 
         [Test]
         [TestCase("test name")]
-        public void As_Value( string name )
+        public void As_Value(string name)
         {
             // Arrange
-            var sut = new Alias( null );
+            var sut = new Alias(null);
             sut.Name = name;
             sut.Type = AliasType.As;
 
@@ -53,7 +52,7 @@ namespace Laan.Sql.Parser.Test.Entities
             var result = sut.Value;
 
             // Assert
-            Assert.AreEqual( " AS " + name, result );
+            Assert.AreEqual(" AS " + name, result);
         }
     }
 }

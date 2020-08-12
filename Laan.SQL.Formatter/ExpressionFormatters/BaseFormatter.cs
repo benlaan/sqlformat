@@ -6,8 +6,8 @@ namespace Laan.Sql.Formatter
 {
     public class BaseFormatter : IIndentable
     {
+        private static BracketFormatOption bracketSpaceOption = BracketFormatOption.NoSpaces;
         protected static Dictionary<BracketFormatOption, string> _bracketFormats;
-        public static BracketFormatOption bracketSpaceOption = BracketFormatOption.NoSpaces;
 
         protected StringBuilder _sql;
         protected IIndentable _indentable;
@@ -88,6 +88,5 @@ namespace Laan.Sql.Formatter
         {
             get { return false; }
         }
-
     }
 }

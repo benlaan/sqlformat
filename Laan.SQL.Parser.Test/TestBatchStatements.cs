@@ -4,7 +4,6 @@ using System.Linq;
 
 using NUnit.Framework;
 
-using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Parser.Test
@@ -23,7 +22,6 @@ namespace Laan.Sql.Parser.Test
 
             // Verify outcome
             Assert.AreEqual( 2, statements.Count );
-
         }
     }
 }

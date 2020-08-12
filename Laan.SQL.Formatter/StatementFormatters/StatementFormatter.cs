@@ -139,10 +139,10 @@ namespace Laan.Sql.Formatter
             CriteriaExpression where = expression as CriteriaExpression;
             return where == null
                 || (
-                       !String.Equals(where.Operator, Constants.And, StringComparison.InvariantCultureIgnoreCase)
-                       &&
-                       !String.Equals(where.Operator, Constants.Or, StringComparison.InvariantCultureIgnoreCase)
-                   );
+                    !String.Equals(where.Operator, Constants.And, StringComparison.CurrentCultureIgnoreCase)
+                    &&
+                    !String.Equals(where.Operator, Constants.Or, StringComparison.CurrentCultureIgnoreCase)
+                );
         }
     }
 }

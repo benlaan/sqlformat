@@ -16,7 +16,7 @@ namespace Laan.Sql.Parser
         public SqlType Execute()
         {
             string identifier = GetIdentifier();
-            if (String.Equals(identifier, Constants.As, StringComparison.InvariantCultureIgnoreCase))
+            if (String.Equals(identifier, Constants.As, StringComparison.CurrentCultureIgnoreCase))
                 return null;
 
             var result = new SqlType(identifier);

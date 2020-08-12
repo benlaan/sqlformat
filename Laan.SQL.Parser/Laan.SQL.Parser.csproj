@@ -1,145 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E972B2B2-F549-418E-B830-FB5D97101168}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laan.Sql.Parser</RootNamespace>
-    <AssemblyName>Laan.Sql.Parser</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+      <Description>SQL Parser component</Description>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp1.1|AnyCPU'">
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\Build\VersionAssemblyInfo.cs">
-      <Link>VersionAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Entities\CommonTableExpressionStatement.cs" />
-    <Compile Include="Entities\CreateProcedureStatement.cs" />
-    <Compile Include="Expressions\CountExpression.cs" />
-    <Compile Include="Expressions\RankingFunctionExpression.cs" />
-    <Compile Include="Parsers\CommonTableExpressionStatementParser.cs" />
-    <Compile Include="Parsers\CreateProcedureStatementParser.cs" />
-    <Compile Include="Parsers\VariableDefinitionParser.cs" />
-    <Compile Include="Tokenizer\CandidateDefinition.cs" />
-    <Compile Include="Tokenizer\TokenDefinition.cs" />
-    <Compile Include="Utilities\BracketStructure.cs" />
-    <Compile Include="Entities\ExecuteSqlStatement.cs" />
-    <Compile Include="Entities\InsertDeleteStatementBase.cs" />
-    <Compile Include="Entities\ITableHints.cs" />
-    <Compile Include="Entities\SetDateFirstStatement.cs" />
-    <Compile Include="Entities\SetDeadlockPriorityStatement.cs" />
-    <Compile Include="Entities\SetOperation.cs" />
-    <Compile Include="Entities\SetOptionStatement.cs" />
-    <Compile Include="Entities\SetStatement.cs" />
-    <Compile Include="Entities\SetVariableStatement.cs" />
-    <Compile Include="Entities\TableHint.cs" />
-    <Compile Include="Expressions\CastExpression.cs" />
-    <Compile Include="Utilities\EnumerableExtensions.cs" />
-    <Compile Include="Utilities\ParameterSubstituter.cs" />
-    <Compile Include="Parsers\ExecStatementParser.cs" />
-    <Compile Include="Parsers\SetStatementParser.cs" />
-    <Compile Include="Utilities\SqlTypeParser.cs" />
-    <Compile Include="Tokenizer\CustomTokenizer.cs" />
-    <Compile Include="Entities\AliasedEntities.cs" />
-    <Compile Include="Entities\AlterTableStatement.cs" />
-    <Compile Include="Entities\BlockStatement.cs" />
-    <Compile Include="Entities\CustomStatement.cs" />
-    <Compile Include="Entities\DeclareStatement.cs" />
-    <Compile Include="Entities\DeleteStatement.cs" />
-    <Compile Include="Entities\IfStatement.cs" />
-    <Compile Include="Entities\ProjectionStatement.cs" />
-    <Compile Include="Entities\Statement.cs" />
-    <Compile Include="Entities\Top.cs" />
-    <Compile Include="Entities\TransactionStatement.cs" />
-    <Compile Include="Entities\VariableDefinition.cs" />
-    <Compile Include="Expressions\BetweenExpression.cs" />
-    <Compile Include="Expressions\CaseExpression.cs" />
-    <Compile Include="Expressions\CriteriaExpression.cs" />
-    <Compile Include="Expressions\FunctionExpression.cs" />
-    <Compile Include="Entities\GrantStatement.cs" />
-    <Compile Include="Expressions\IdentifierExpression.cs" />
-    <Compile Include="Entities\IndexedColumn.cs" />
-    <Compile Include="Entities\GoTerminator.cs" />
-    <Compile Include="Interfaces\IInlineFormattable.cs" />
-    <Compile Include="Interfaces\IProjection.cs" />
-    <Compile Include="Interfaces\IStatement.cs" />
-    <Compile Include="Entities\Join.cs" />
-    <Compile Include="Expressions\ExpressionList.cs" />
-    <Compile Include="Expressions\NegationExpression.cs" />
-    <Compile Include="Expressions\NestedExpression.cs" />
-    <Compile Include="Expressions\OperatorExpression.cs" />
-    <Compile Include="Expressions\SelectExpression.cs" />
-    <Compile Include="Entities\SortedField.cs" />
-    <Compile Include="Expressions\StringExpression.cs" />
-    <Compile Include="Entities\UpdateStatement.cs" />
-    <Compile Include="Interfaces\ITokenizer.cs" />
-    <Compile Include="Parsers\AlterStatementParser.cs" />
-    <Compile Include="Parsers\AlterTableStatementParser.cs" />
-    <Compile Include="Entities\CreateIndexStatement.cs" />
-    <Compile Include="Parsers\BeginStatementParser.cs" />
-    <Compile Include="Parsers\TransactionStatementParser.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Parsers\CreateStatementParser.cs" />
-    <Compile Include="Parsers\DeclareStatementParser.cs" />
-    <Compile Include="Parsers\DeleteStatementParser.cs" />
-    <Compile Include="Parsers\CreateNonClusteredIndexParser.cs" />
-    <Compile Include="Entities\CreateTableStatement.cs" />
-    <Compile Include="Parsers\CreateTableStatementParser.cs" />
-    <Compile Include="Entities\CreateViewStatement.cs" />
-    <Compile Include="Parsers\CreateViewStatementParser.cs" />
-    <Compile Include="Parsers\CriteriaStatementParser.cs" />
-    <Compile Include="Parsers\CustomParser.cs" />
-    <Compile Include="Exceptions.cs" />
-    <Compile Include="Expressions\Expression.cs" />
-    <Compile Include="Parsers\ExpressionParser.cs" />
-    <Compile Include="Entities\Extensions.cs" />
-    <Compile Include="Entities\Field.cs" />
-    <Compile Include="Entities\FieldDefinition.cs" />
-    <Compile Include="Entities\Identity.cs" />
-    <Compile Include="Entities\InsertStatement.cs" />
-    <Compile Include="Parsers\GoTerminatorParser.cs" />
-    <Compile Include="Parsers\GrantStatementParser.cs" />
-    <Compile Include="Parsers\IfStatementParser.cs" />
-    <Compile Include="Parsers\InsertStatementParser.cs" />
-    <Compile Include="ParserFactory.cs" />
-    <Compile Include="Parsers\UpdateStatementParser.cs" />
-    <Compile Include="Tokenizer\Position.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Parsers\SelectStatementParser.cs" />
-    <Compile Include="Entities\SqlType.cs" />
-    <Compile Include="Entities\SelectStatement.cs" />
-    <Compile Include="Parsers\StatementParser.cs" />
-    <Compile Include="Entities\Table.cs" />
-    <Compile Include="Parsers\TableStatementParser.cs" />
-    <Compile Include="Tokenizer\RegexTokenizer.cs" />
-    <Compile Include="Tokenizer\SqlTokenizer.cs" />
-    <Compile Include="Tokenizer\Token.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
   <Import Project="$(SolutionDir)Build\Common.targets" />
+  <Import Project="$(SolutionDir)Build\Nuget.targets" />
+
 </Project>
