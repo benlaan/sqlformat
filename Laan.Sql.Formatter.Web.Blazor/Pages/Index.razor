@@ -1,0 +1,138 @@
+﻿@page "/"
+@inject IJSRuntime JSRuntime;
+
+<Container class="container-main flex-parent">
+
+    <NavBar />
+
+    <Row Class="@((ExpandedPane == ExpandedMode.Raw ? "expand " : "") + "flex-parent flex-fill")" @onclick="e => ToggleExpandedPane(ExpandedMode.Raw)">
+        <Card Background="Background.None">
+            <CardHeader>Input Sql</CardHeader>
+
+            <CardBody>
+                <MemoEdit Class="flex-fill" @bind-Text="@RawSql"></MemoEdit>
+            </CardBody>
+
+            <CardFooter>
+                <Buttons Orientation="Orientation.Horizontal" Float="Float.Right">
+                    <Button class="@(!String.IsNullOrEmpty(RawSql) ? "" : "disabled")" Clicked="e => Convert()">
+                        <Icon Name="IconName.Random"  />
+                        <Tooltip Text="Runs the sql formatter" />
+                    </Button>
+                </Buttons>
+            </CardFooter>
+        </Card>
+    </Row>
+
+    <Row Class="@((ExpandedPane == ExpandedMode.Formatted ? "expand " : "") + "flex-parent flex-fill")" Style="padding-bottom:20px">
+        <Card Background="Background.None" @onclick="e => ToggleExpandedPane(ExpandedMode.Formatted)">
+
+            <CardHeader>Formatted Sql</CardHeader>
+            <CardBody>
+            <div class="output-sql flex-parent flex-fill">
+                <pre class="code prettyprint flex-fill" id="formattedCode">
+                @foreach (var line in FormattedSql)
+                {
+@line
+                }
+                </pre>
+            </div>
+            </CardBody>
+            <CardFooter>
+                <Buttons Orientation="Orientation.Horizontal" Float="Float.Right">
+                    <Button class="@(FormattedSql.Count > 0 ? "" : "disabled")" Clicked="e => Copy()">
+                        <Icon Name="IconName.Edit"  />
+                        <Tooltip Text="copies the formatted sql to the clipboard" />
+                    </Button>
+                </Buttons>
+                @("Time Taken: " + TimeTaken)
+            </CardFooter>
+        </Card>
+    </Row>
+
+    <Row>
+        <Column ColumnSize="ColumnSize.Is10" Padding="Padding.Is1">
+            <Alert Visible="@(!String.IsNullOrEmpty(Message))" Color="@(MessageType == IconName.ExclamationCircle ? Color.Danger : Color.Info)" Dismisable="true">
+                <Icon Name="@("fa" + MessageType)"></Icon>
+                <AlertMessage>@Message</AlertMessage>
+                <CloseButton />
+            </Alert>
+        </Column>
+    </Row>
+</Container>
+
+@code {
+
+    enum ExpandedMode { Raw, Formatted }
+
+    private ExpandedMode ExpandedPane = ExpandedMode.Raw;
+
+    private bool HasFormattedSql = false;
+    private bool ShowFormattedSql = false;
+    private string Message;
+    private IconName MessageType;
+    private string RawSql = "SELECT * FROM dbo.[SomeTable]";
+    private IList<string> FormattedSql = new List<string>();
+    private TimeSpan TimeTaken = TimeSpan.Zero;
+    private ElementReference FormattedCode;
+
+    private void ToggleExpandedPane(ExpandedMode mode)
+    {
+        ExpandedPane = mode;
+        StateHasChanged();
+
+        System.Console.WriteLine(mode);
+    }
+
+    private async void Convert()
+    {
+        var engine = new FormattingEngine();
+        var timer = new System.Diagnostics.Stopwatch();
+
+        var output = "";
+        timer.Start();
+        try
+        {
+            output = engine.Execute(RawSql);
+
+            FormattedSql = output.TrimEnd().Split(new[] { "\r\n" }, StringSplitOptions.None);
+            TimeTaken = timer.Elapsed;
+            StateHasChanged();
+
+            await Task.Delay(500);
+            StateHasChanged();
+
+            await JSRuntime.InvokeAsync<bool>("prettify", Array.Empty<object>());
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine(ex);
+
+            await ShowNotification("ERROR" + Environment.NewLine + ex.ToString(), IconName.ExclamationCircle);
+        }
+        finally
+        {
+            timer.Stop();
+        }
+    }
+
+    private async void Copy()
+    {
+        var success = await JSRuntime.InvokeAsync<bool>("copyFormatted", Array.Empty<object>());
+        if (success)
+            await ShowNotification("Formatted SQL was successfully copied to clipboard", IconName.Info);
+    }
+
+    private async Task ShowNotification(string message, IconName type) {
+
+        Message = message;
+        MessageType = type;
+        StateHasChanged();
+
+        await Task.Delay(5000);
+
+        Message = "";
+        StateHasChanged();
+    }
+
+}

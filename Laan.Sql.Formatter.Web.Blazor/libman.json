@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "twitter-bootstrap@4.5.2",
+      "destination": "wwwroot/lib/bootstrap",
+      "files": [
+        "css/bootstrap.min.css"
+      ]
+    },
+    {
+      "library": "prettify@r298",
+      "destination": "wwwroot/lib/prettify",
+      "files": [
+        "prettify.min.js",
+        "lang-sql.min.js",
+        "prettify.min.css"
+      ]
+    }
+  ]
+}

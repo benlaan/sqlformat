@@ -1,0 +1,8 @@
+{
+  "name": "Laan.Sql.Formatter.Web.Blazor",
+  "short_name": "Laan.Sql.Formatter.Web.Blazor",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#03173d"
+}
