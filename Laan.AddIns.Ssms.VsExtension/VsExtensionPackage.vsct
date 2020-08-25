@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <Extern href="stdidcmd.h" />
+    <Extern href="vsshlids.h" />
+
+    <Commands package="guidVsExtensionPackage">
+        <Groups>
+            <Group guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+                <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
+            </Group>
+        </Groups>
+
+        <Buttons>
+            <Button guid="guidVsExtensionPackageCmdSet" id="DuplicateLineId" priority="0x0100" type="Button">
+                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Icon guid="guidImages" id="bmpPic1" />
+                <Strings>
+                    <ButtonText>Duplicate Line</ButtonText>
+                </Strings>
+            </Button>
+            <Button guid="guidVsExtensionPackageCmdSet" id="MoveCursorLeftWordId" priority="0x0100" type="Button">
+                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Icon guid="guidImages" id="bmpPic1" />
+                <Strings>
+                    <ButtonText>Move Cursor Left Word</ButtonText>
+                </Strings>
+            </Button>
+            <Button guid="guidVsExtensionPackageCmdSet" id="MoveCursorRightWordId" priority="0x0100" type="Button">
+                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Icon guid="guidImages" id="bmpPic1" />
+                <Strings>
+                    <ButtonText>Move Cursor Right Word</ButtonText>
+                </Strings>
+            </Button>
+            <Button guid="guidVsExtensionPackageCmdSet" id="SelectCursorLeftWordId" priority="0x0100" type="Button">
+                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Icon guid="guidImages" id="bmpPic1" />
+                <Strings>
+                    <ButtonText>Select Cursor Left Word</ButtonText>
+                </Strings>
+            </Button>
+            <Button guid="guidVsExtensionPackageCmdSet" id="SelectCursorRightWordId" priority="0x0100" type="Button">
+                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Icon guid="guidImages" id="bmpPic1" />
+                <Strings>
+                    <ButtonText>Select Cursor Right Word</ButtonText>
+                </Strings>
+            </Button>
+            <Button guid="guidVsExtensionPackageCmdSet" id="SqlInsertTemplateId" priority="0x0100" type="Button">
+                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Icon guid="guidImages" id="bmpPic1" />
+                <Strings>
+                    <ButtonText>Insert Sql Template</ButtonText>
+                </Strings>
+            </Button>
+            <Button guid="guidVsExtensionPackageCmdSet" id="SqlTemplateOptionId" priority="0x0100" type="Button">
+                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Icon guid="guidImages" id="bmpPic1" />
+                <Strings>
+                    <ButtonText>Manage Sql Templates</ButtonText>
+                </Strings>
+            </Button>
+            <Button guid="guidVsExtensionPackageCmdSet" id="SqlFormatterId" priority="0x0100" type="Button">
+                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Icon guid="guidImages" id="bmpPic1" />
+                <Strings>
+                    <ButtonText>Format Sql</ButtonText>
+                </Strings>
+            </Button>
+        </Buttons>
+
+        <Bitmaps>
+            <Bitmap guid="guidImages" href="Resources\SqlFormatCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
+        </Bitmaps>
+    </Commands>
+
+    <KeyBindings>
+        <KeyBinding id="SqlFormatterId" guid="guidVsExtensionPackageCmdSet" key1="F" mod1="CONTROL" mod2="ALT" editor="guidSourceCodeTextEditor" />
+        <KeyBinding id="SqlInsertTemplateId" guid="guidVsExtensionPackageCmdSet" key1="VK_SPACE" mod1="CONTROL" mod2="ALT" editor="guidSourceCodeTextEditor" />
+        <KeyBinding id="SqlTemplateOptionId" guid="guidVsExtensionPackageCmdSet" key1="O" mod1="CONTROL" mod2="ALT" editor="guidVSStd97" />
+        <KeyBinding id="DuplicateLineId" guid="guidVsExtensionPackageCmdSet"  key1="D" mod1="CONTROL" editor="guidSourceCodeTextEditor" />
+        <KeyBinding id="MoveCursorLeftWordId" guid="guidVsExtensionPackageCmdSet"  key1="VK_LEFT" mod1="ALT" editor="guidSourceCodeTextEditor" />
+        <KeyBinding id="MoveCursorRightWordId" guid="guidVsExtensionPackageCmdSet"  key1="VK_RIGHT" mod1="ALT" editor="guidSourceCodeTextEditor" />
+        <KeyBinding id="SelectCursorLeftWordId" guid="guidVsExtensionPackageCmdSet"  key1="VK_LEFT" mod1="CONTROL" mod2="ALT" editor="guidSourceCodeTextEditor" />
+        <KeyBinding id="SelectCursorRightWordId" guid="guidVsExtensionPackageCmdSet"  key1="VK_RIGHT" mod1="CONTROL" mod2="ALT" editor="guidSourceCodeTextEditor" />
+    </KeyBindings>
+
+    <Symbols>
+        <GuidSymbol name="guidSourceCodeTextEditor" value="{8b382828-6202-11d1-8870-0000f87579d2}" />
+        
+        <GuidSymbol name="guidVsExtensionPackage" value="{74f80447-ad39-44f8-aa0a-a62f2b5fcc8e}" />
+
+        <GuidSymbol name="guidVsExtensionPackageCmdSet" value="{29b2dad0-1acd-4668-b3e4-ff788e7a4701}">
+            <IDSymbol name="MyMenuGroup" value="0x1020" />
+            <IDSymbol name="DuplicateLineId" value="4005" />
+            <IDSymbol name="MoveCursorLeftWordId" value="4006" />
+            <IDSymbol name="MoveCursorRightWordId" value="4007" />
+            <IDSymbol name="SelectCursorLeftWordId" value="4008" />
+            <IDSymbol name="SelectCursorRightWordId" value="4009" />
+            <IDSymbol name="SqlInsertTemplateId" value="4000" />
+            <IDSymbol name="SqlTemplateOptionId" value="4002" />
+            <IDSymbol name="SqlFormatterId" value="4001" />
+        </GuidSymbol>
+
+        <GuidSymbol name="guidImages" value="{f762930e-3f22-4808-8a40-4b49a6d2c0d2}">
+            <IDSymbol name="bmpPic1" value="1" />
+            <IDSymbol name="bmpPic2" value="2" />
+            <IDSymbol name="bmpPicSearch" value="3" />
+            <IDSymbol name="bmpPicX" value="4" />
+            <IDSymbol name="bmpPicArrows" value="5" />
+            <IDSymbol name="bmpPicStrikethrough" value="6" />
+        </GuidSymbol>
+    </Symbols>
+</CommandTable>

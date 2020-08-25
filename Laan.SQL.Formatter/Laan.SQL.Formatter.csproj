@@ -10,4 +10,5 @@
 
   <Import Project="$(SolutionDir)Build\Common.targets" />
   <Import Project="$(SolutionDir)Build\Nuget.targets" />
+
 </Project>

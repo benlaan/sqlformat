@@ -67,14 +67,11 @@
 
     private ExpandedMode ExpandedPane = ExpandedMode.Raw;
 
-    private bool HasFormattedSql = false;
-    private bool ShowFormattedSql = false;
     private string Message;
     private IconName MessageType;
     private string RawSql = "SELECT * FROM dbo.[SomeTable]";
     private IList<string> FormattedSql = new List<string>();
     private TimeSpan TimeTaken = TimeSpan.Zero;
-    private ElementReference FormattedCode;
 
     private void ToggleExpandedPane(ExpandedMode mode)
     {

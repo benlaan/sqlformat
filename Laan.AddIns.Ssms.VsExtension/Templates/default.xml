@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templateDocument>
+    <templates>
+        <template>
+            <name>Begin Transaction Scope with Rollback</name>
+            <code>br</code>
+            <description>br</description>
+            <body>
+                <![CDATA[BEGIN TRAN
+
+  |
+
+ROLLBACK
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Begin Transaction Scope with Commit</name>
+            <code>bc</code>
+            <description>bc</description>
+            <body>
+                <![CDATA[BEGIN TRAN
+
+  |
+
+COMMIT
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Begin Transaction Scope with Rollback (Commit commented out)</name>
+            <code>btr</code>
+            <description>btr</description>
+            <body>
+                <![CDATA[BEGIN TRAN
+
+  |
+
+ROLLBACK
+--COMMIT
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Begin Transaction Scope with Commit (Rollback commented out)</name>
+            <code>btc</code>
+            <description>btc</description>
+            <body>
+                <![CDATA[BEGIN TRAN
+
+  |
+
+COMMIT
+--ROLLBACK
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Begin / End scope block</name>
+            <code>be</code>
+            <description>be</description>
+            <body>
+                <![CDATA[BEGIN
+
+  |
+
+END
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Begin Transaction</name>
+            <code>bt</code>
+            <description>bt</description>
+            <body>
+                <![CDATA[BEGIN TRAN
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Rollback Transaction</name>
+            <code>rt</code>
+            <description>rt</description>
+            <body>
+                <![CDATA[ROLLBACK
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Commit</name>
+            <code>ct</code>
+            <description>ct</description>
+            <body>
+                <![CDATA[COMMIT
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Select * from table</name>
+            <code>ssf</code>
+            <description>ssf</description>
+            <body><![CDATA[SELECT * FROM |]]></body>
+        </template>
+        <template>
+            <name>Select</name>
+            <code>s</code>
+            <description>s</description>
+            <body><![CDATA[SELECT |]]></body>
+        </template>
+        <template>
+            <name>Select count(*) from table</name>
+            <code>sct</code>
+            <description>sct</description>
+            <body><![CDATA[SELECT COUNT(*) FROM |]]></body>
+        </template>
+        <template>
+            <name>Select count(*) from table where ...</name>
+            <code>scw</code>
+            <description>scw</description>
+            <body><![CDATA[SELECT COUNT(*) FROM | WHERE ]]></body>
+        </template>
+        <template>
+            <name>Select * from table where ...</name>
+            <code>sfw</code>
+            <description>sfw</description>
+            <body>
+                <![CDATA[SELECT *
+FROM |
+WHERE 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Update from table where ...</name>
+            <code>ufw</code>
+            <description>ufw</description>
+            <body>
+                <![CDATA[UPDATE T
+   SET 
+FROM | T
+WHERE 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Insert into table with values</name>
+            <code>iv</code>
+            <description>iv</description>
+            <body>
+                <![CDATA[INSERT INTO | ()
+VALUES ()
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Insert into table with select statement</name>
+            <code>is</code>
+            <description>is</description>
+            <body>
+                <![CDATA[INSERT INTO | ()
+  SELECT * FROM
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Insert into table with select statement where ...</name>
+            <code>isw</code>
+            <description>isw</description>
+            <body>
+                <![CDATA[INSERT INTO | ()
+  SELECT * 
+  FROM 
+  WHERE 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>From ...</name>
+            <code>ft</code>
+            <description>ft</description>
+            <body><![CDATA[FROM |]]></body>
+        </template>
+        <template>
+            <name>Where ...</name>
+            <code>wh</code>
+            <description>wh</description>
+            <body><![CDATA[WHERE | = ]]></body>
+        </template>
+        <template>
+            <name>Where Id ...</name>
+            <code>wi</code>
+            <description>wi</description>
+            <body><![CDATA[WHERE |Id = ]]></body>
+        </template>
+        <template>
+            <name>Join ...</name>
+            <code>j</code>
+            <description>j</description>
+            <body>
+                <![CDATA[JOIN |
+  ON 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Left join ...</name>
+            <code>lj</code>
+            <description>lj</description>
+            <body>
+                <![CDATA[LEFT JOIN |
+       ON 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Right join ...</name>
+            <code>rj</code>
+            <description>rj</description>
+            <body>
+                <![CDATA[RIGHT JOIN |
+        ON 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Full join</name>
+            <code>fj</code>
+            <description>fj</description>
+            <body>
+                <![CDATA[FULL JOIN |
+       ON 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Cross Join</name>
+            <code>cj</code>
+            <description>cj</description>
+            <body>
+                <![CDATA[CROSS JOIN |
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Order by</name>
+            <code>ob</code>
+            <description>ob</description>
+            <body><![CDATA[ORDER BY |]]></body>
+        </template>
+        <template>
+            <name>Group by</name>
+            <code>gb</code>
+            <description>gb</description>
+            <body><![CDATA[GROUP BY |]]></body>
+        </template>
+        <template>
+            <name>Having ...</name>
+            <code>hv</code>
+            <description>hv</description>
+            <body><![CDATA[HAVING |]]></body>
+        </template>
+        <template>
+            <name>Is null test</name>
+            <code>isn</code>
+            <description>isn</description>
+            <body><![CDATA[IS NULL]]></body>
+        </template>
+        <template>
+            <name>Is not null test</name>
+            <code>isnn</code>
+            <description>isnn</description>
+            <body><![CDATA[IS NOT NULL]]></body>
+        </template>
+        <template>
+            <name>Execute ...</name>
+            <code>ex</code>
+            <description>ex</description>
+            <body><![CDATA[EXEC |]]></body>
+        </template>
+        <template>
+            <name>Exists</name>
+            <code>exi</code>
+            <description>exi</description>
+            <body><![CDATA[EXISTS(|)]]></body>
+        </template>
+        <template>
+            <name>Not Exists</name>
+            <code>nex</code>
+            <description>nex</description>
+            <body><![CDATA[NOT EXISTS(|)]]></body>
+        </template>
+        <template>
+            <name>Print statement</name>
+            <code>pr</code>
+            <description>pr</description>
+            <body>
+                <![CDATA[PRINT '|'
+]]>
+            </body>
+        </template>
+        <template>
+            <name>dbo prefix</name>
+            <code>d</code>
+            <description>d</description>
+            <body><![CDATA[dbo.|]]></body>
+        </template>
+        <template>
+            <name>Multi-line comment</name>
+            <code>--</code>
+            <description>--</description>
+            <body>
+                <![CDATA[--------------------------------------------------------------------------------
+-- |
+--------------------------------------------------------------------------------]]>
+            </body>
+        </template>
+        <template>
+            <name>declare uniqueidentifier</name>
+            <code>du</code>
+            <description>du</description>
+            <body>
+                <![CDATA[DECLARE @| UNIQUEIDENTIFIER
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare integer</name>
+            <code>di</code>
+            <description>di</description>
+            <body>
+                <![CDATA[DECLARE @| INT
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare varchar max</name>
+            <code>dv</code>
+            <description>dv</description>
+            <body>
+                <![CDATA[DECLARE @| VARCHAR(MAX)
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare numeric</name>
+            <code>dn</code>
+            <description>dn</description>
+            <body>
+                <![CDATA[DECLARE @| NUMERIC(12,4)
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare money</name>
+            <code>dm</code>
+            <description>dm</description>
+            <body>
+                <![CDATA[DECLARE @| MONEY
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare datetime</name>
+            <code>ddt</code>
+            <description>ddt</description>
+            <body>
+                <![CDATA[DECLARE @| DATETIME
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare time</name>
+            <code>dt</code>
+            <description>dt</description>
+            <body>
+                <![CDATA[DECLARE @| TIME
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare date</name>
+            <code>dd</code>
+            <description>dd</description>
+            <body>
+                <![CDATA[DECLARE @| DATE
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare xml</name>
+            <code>dx</code>
+            <description>dx</description>
+            <body>
+                <![CDATA[DECLARE @| XML
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare integer with assignment</name>
+            <code>die</code>
+            <description>die</description>
+            <body>
+                <![CDATA[DECLARE @| INT = 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare varchar max with assignment</name>
+            <code>dve</code>
+            <description>dve</description>
+            <body>
+                <![CDATA[DECLARE @| VARCHAR(MAX) = ''
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare numeric with assignment</name>
+            <code>dne</code>
+            <description>dne</description>
+            <body>
+                <![CDATA[DECLARE @| NUMERIC(12,4) = 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare uniqueidentifier with assignment</name>
+            <code>due</code>
+            <description>due</description>
+            <body>
+                <![CDATA[DECLARE @| UNIQUEIDENTIFIER = 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare money with assignment</name>
+            <code>dme</code>
+            <description>dme</description>
+            <body>
+                <![CDATA[DECLARE @| MONEY = 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare datetime with assignment</name>
+            <code>ddte</code>
+            <description>ddte</description>
+            <body>
+                <![CDATA[DECLARE @| DATETIME = 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare time with assignment</name>
+            <code>dte</code>
+            <description>dte</description>
+            <body>
+                <![CDATA[DECLARE @| TIME = 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare date with assignment</name>
+            <code>dde</code>
+            <description>dde</description>
+            <body>
+                <![CDATA[DECLARE @| DATE = 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>declare xml with assignment</name>
+            <code>dxe</code>
+            <description>dxe</description>
+            <body>
+                <![CDATA[DECLARE @| XML = CONVERT(XML, '')
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Case when statement</name>
+            <code>cw</code>
+            <description>cw</description>
+            <body>
+                <![CDATA[CASE WHEN | THEN  END
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Case when/else statement</name>
+            <code>cwe</code>
+            <description>cwe</description>
+            <body>
+                <![CDATA[CASE WHEN | THEN  ELSE  END
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Case when/then fragment</name>
+            <code>wt</code>
+            <description>wt</description>
+            <body>
+                <![CDATA[WHEN | THEN 
+]]>
+            </body>
+        </template>
+        <template>
+            <name>If block</name>
+            <code>ib</code>
+            <description>ib</description>
+            <body>
+                <![CDATA[IF |
+BEGIN
+
+  
+
+END
+]]>
+            </body>
+        </template>
+        <template>
+            <name>If block with else</name>
+            <code>ibe</code>
+            <description>ibe</description>
+            <body>
+                <![CDATA[IF |
+BEGIN
+
+  
+
+END
+ELSE
+BEGIN
+
+  
+
+END
+]]>
+            </body>
+        </template>
+        <template>
+            <name>Count Star</name>
+            <code>cs</code>
+            <description>cs</description>
+            <body><![CDATA[COUNT(*)]]></body>
+        </template>
+        <template>
+            <name>Foreach Table</name>
+            <code>fet</code>
+            <description>Foreach Table run a piece of sql</description>
+            <body><![CDATA[sp_msforeachtable '| ?']]></body>
+        </template>
+        <template>
+            <name>Order by descending</name>
+            <code>obd</code>
+            <description>Order By Descending</description>
+            <body><![CDATA[ORDER BY | DESC]]></body>
+        </template>
+        <template>
+            <name>sp_HelpText</name>
+            <code>sph</code>
+            <description>sp_HelpText</description>
+            <body><![CDATA[sp_helptext '|']]></body>
+        </template>
+        <template>
+            <name>UNIQUEIDENTIFIER</name>
+            <code>uid</code>
+            <description>UNIQUEIDENTIFIER</description>
+            <body><![CDATA[UNIQUEIDENTIFIER]]></body>
+        </template>
+        <template>
+            <name>Group By Having</name>
+            <code>gbh</code>
+            <description>Group By Having</description>
+            <body><![CDATA[GROUP BY | HAVING ]]></body>
+        </template>
+        <template>
+            <name>Select Duplicates</name>
+            <code>sd</code>
+            <description>finds duplicates by Id</description>
+            <body><![CDATA[SELECT Id, COUNT(*) FROM | GROUP BY Id HAVING COUNT(*) > 1]]></body>
+        </template>
+        <template>
+            <name>Set Isolation Level</name>
+            <code>sil</code>
+            <description>Set Transaction Isolation Level</description>
+            <body><![CDATA[SET TRANSACTION ISOLATION LEVEL |READ UNCOMMITTED /* READ COMMITTED / REPEATABLE READ / SNAPSHOT / SERIALIZABLE */]]></body>
+        </template>
+    </templates>
+</templateDocument>
