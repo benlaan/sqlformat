@@ -129,5 +129,26 @@ namespace Laan.Sql.Formatter.Test
 
             Compare(actual, expected);
         }
+
+        [Test]
+        public void Can_Format_More_Columns_Than_MaxOneLineColumnCount_But_Fitting_Up_To_WrapMarginColumn()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute("INSERT INTO Product (Name, Price, ExpiryDate, Aisle, Shelf) VALUES ('Bread', 1.29, NULL, NULL, NULL)");
+
+            // Verify outcome
+            var expected = new[]
+            {
+               "INSERT INTO Product (",
+               "    Name, Price, ExpiryDate, Aisle, Shelf",
+               "    )",
+               "     VALUES ('Bread', 1.29, NULL, NULL, NULL)",
+            };
+
+            Compare(actual, expected);
+        }
     }
 }

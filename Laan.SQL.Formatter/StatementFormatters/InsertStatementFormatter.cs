@@ -46,20 +46,17 @@ namespace Laan.Sql.Formatter
             {
                 string text = _statement.Columns.ToCsv();
                 List<string> lines = new List<string>();
-                if ( text.Length > WrapMarginColumn )
+                string line = "";
+                for ( int index = 0; index < _statement.Columns.Count; index++ )
                 {
-                    string line = "";
-                    for ( int index = 0; index < _statement.Columns.Count; index++ )
+                    if ( line.Length + _statement.Columns[ index ].Length >= WrapMarginColumn )
                     {
-                        if ( line.Length + _statement.Columns[ index ].Length >= WrapMarginColumn )
-                        {
-                            lines.Add( line );
-                            line = "";
-                        }
-                        line += FormatColumnWithSeparator( index );
+                        lines.Add( line );
+                        line = "";
                     }
-                    lines.Add( line );
+                    line += FormatColumnWithSeparator( index );
                 }
+                lines.Add( line );
 
                 if ( _statement.Columns.Count <= MaxOneLineColumnCount && FitsOnRow( text ) )
                     _sql.AppendFormat( " {0}\n", FormatBrackets( text ) );
@@ -70,8 +67,8 @@ namespace Laan.Sql.Formatter
 
                     using ( new IndentScope( this ) )
                     {
-                        foreach ( string line in lines )
-                            IndentAppendLine( line );
+                        foreach ( string sqlLine in lines )
+                            IndentAppendLine( sqlLine );
                         
                         IndentAppendLine( ")" );
                     }
