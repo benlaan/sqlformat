@@ -142,9 +142,7 @@ namespace Laan.Sql.Formatter.Test
             // Verify outcome
             var expected = new[]
             {
-               "INSERT INTO Product (",
-               "    Name, Price, ExpiryDate, Aisle, Shelf",
-               "    )",
+               "INSERT INTO Product (Name, Price, ExpiryDate, Aisle, Shelf)",
                "     VALUES ('Bread', 1.29, NULL, NULL, NULL)",
             };
 
