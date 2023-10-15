@@ -3,4 +3,4 @@ param(
     [string]$build = ""
 )
 
-& msbuild.exe .\Laan.Sql.Tools.sln /p:configuration=$config /v:minimal
+dotnet build .\Laan.Sql.Tools.sln -c $config -v minimal --interactive

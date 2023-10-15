@@ -8,7 +8,7 @@ packages
 node_modules
 */publish/
 .cr
-/.vs
+/.vs*
 /Build/VersionAssemblyInfo.cs
 /dist
 /.test-results

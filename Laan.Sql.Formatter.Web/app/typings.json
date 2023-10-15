@@ -1,7 +1,0 @@
-{
-  "name": "app",
-  "dependencies": {},
-  "globalDevDependencies": {
-    "node": "registry:dt/node"
-  }
-}

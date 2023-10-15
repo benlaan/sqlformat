@@ -1,11 +1,12 @@
 ﻿@page "/"
+@using Laan.Sql.Formatter;
 @inject IJSRuntime JSRuntime;
 
 <Container class="container-main flex-parent">
 
     <NavBar />
 
-    <Row Class="@((ExpandedPane == ExpandedMode.Raw ? "expand " : "") + "flex-parent flex-fill")" @onclick="e => ToggleExpandedPane(ExpandedMode.Raw)">
+    <Row Class="@((ExpandedPane == ExpandedMode.Raw ? "expand " : "shrink ") + "flex-parent flex-fill")" @onclick="e => ToggleExpandedPane(ExpandedMode.Raw)">
         <Card Background="Background.None">
             <CardHeader>Input Sql</CardHeader>
 
@@ -24,7 +25,7 @@
         </Card>
     </Row>
 
-    <Row Class="@((ExpandedPane == ExpandedMode.Formatted ? "expand " : "") + "flex-parent flex-fill")" Style="padding-bottom:20px">
+    <Row Class="@((ExpandedPane == ExpandedMode.Formatted ? "expand " : "shrink ") + "flex-parent flex-fill")" Style="padding-bottom:20px">
         <Card Background="Background.None" @onclick="e => ToggleExpandedPane(ExpandedMode.Formatted)">
 
             <CardHeader>Formatted Sql</CardHeader>
@@ -67,9 +68,9 @@
 
     private ExpandedMode ExpandedPane = ExpandedMode.Raw;
 
-    private string Message;
+    private string? Message;
     private IconName MessageType;
-    private string RawSql = "SELECT * FROM dbo.[SomeTable]";
+    private string RawSql = "SELECT * FROM dbo.[SomeTable] WHERE Name = Value";
     private IList<string> FormattedSql = new List<string>();
     private TimeSpan TimeTaken = TimeSpan.Zero;
 
@@ -99,7 +100,7 @@
             await Task.Delay(500);
             StateHasChanged();
 
-            await JSRuntime.InvokeAsync<bool>("prettify", Array.Empty<object>());
+            // await JSRuntime.InvokeAsync<bool>("prettify", Array.Empty<object>());
         }
         catch (Exception ex)
         {

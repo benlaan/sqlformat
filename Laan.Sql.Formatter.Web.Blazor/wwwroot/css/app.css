@@ -33,6 +33,11 @@ textarea {
     flex-grow: 3 !important;
 }
 
+.shrink {
+    max-height: 100px;
+    min-height: 100px;
+}
+
 .panel-body {
     padding: 0;
     margin: 15px;
