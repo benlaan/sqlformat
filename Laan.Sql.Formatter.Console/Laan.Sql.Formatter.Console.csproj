@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <StartupObject>Program</StartupObject>
+        <AssemblyName>sqlformat</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Laan.SQL.Formatter\Laan.Sql.Formatter.csproj" />
+    </ItemGroup>
+
+    <Import Project="$(SolutionDir)Build\Common.targets" />
+</Project>
