@@ -97,7 +97,7 @@ namespace Laan.AddIns.Ssms.VsExtension.Commands
         private void Done()
         {
             _listBox.Hide();
-            _window.SetFocus();
+            _window?.SetFocus();
         }
 
         private void ListBoxLostFocus(object sender, EventArgs e)

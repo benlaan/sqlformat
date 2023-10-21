@@ -61,8 +61,23 @@ namespace Laan.AddIns.Ssms.VsExtension
 
         private void Execute(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (CanExecute())
-                Execute();
+            {
+                SetStatus("Formatting..", true);
+                try
+                {
+                    var start = DateTime.Now;
+                    Execute();
+                    SetStatus(string.Format("Completed in {0}", DateTime.Now - start), false);
+                }
+                catch (Exception ex)
+                {
+                    SetStatus(String.Format("Error: {0}", ex.Message), false);
+                    Debug.WriteLine(ex);
+                }
+            }
         }
 
         protected abstract void Execute();
@@ -92,11 +107,12 @@ namespace Laan.AddIns.Ssms.VsExtension
             );
         }
 
-        internal void SetStatus(string message, params object[] args)
+        internal void SetStatus(string message, bool animate)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            Application.StatusBar.Text = String.Format(message, args);
+            Application.StatusBar.Animate(animate, vsStatusAnimation.vsStatusAnimationBuild);
+            Application.StatusBar.Text = message;
         }
 
         private string GetDumpFile()
