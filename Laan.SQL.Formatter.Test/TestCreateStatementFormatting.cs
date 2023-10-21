@@ -74,18 +74,18 @@ WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGN
             var actual = sut.Execute(@"
 
                 create table Test 
-                ( 
-                    id1 [int] NOT NULL IDENTITY(100, 1),
+                (
+                    id1 [int] NOT NULL IDENTITY(100,1),
                     id2 varchar(10)
                 )");
 
             // Verify outcome
             var expected = new[]
             {
-                "CREATE TABLE [dbo].[Clients]",
+                "CREATE TABLE Test",
                 "(",
-                "    [ClientID] [int] IDENTITY(1,1) NOT NULL,",
-                "    [Name] [nvarchar](255) NOT NULL",
+                "    id1 [INT] NOT NULL IDENTITY(100, 1),",
+                "    id2 VARCHAR(10)",
                 ")"
             };
 
