@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using Laan.Sql.Parser.Entities;
+
 using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Parser.Entities
@@ -71,6 +71,7 @@ namespace Laan.Sql.Parser.Entities
 
         public int Length { get { return _joinMap[ Type ].Length; } }
         public List<TableHint> TableHints { get; set; }
+        public bool ExplicitWith { get; set; }
     }
 
     public class DerivedJoin : Join

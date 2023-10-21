@@ -82,5 +82,30 @@ AND (d.OrderQty > 5 OR d.LineTotal < 1000.00);";
             Assert.IsTrue(statement.From[0].TableHints.Where(x => x.Hint == "TABLOCK").Count() == 1, "Should be one hint - TABLOCK");
         }
 
+        [Test]
+        public void Select_With_Multiple_Hints()
+        {
+            // Arrange
+            const string sql = "SELECT * FROM t WITH (TABLOCK,UPDLOCK,HOLDLOCK)";
+
+            // Act
+            var statement = ParserFactory.Execute<SelectStatement>(sql).First();
+
+            // Assert
+            Assert.IsTrue(statement.From[0].TableHints.Count() == 3, "Should be three hints - TABLOCK, UPdLOCK, HOLDLOCK");
+        }
+
+        [Test]
+        public void Select_Without_With_Clause_And_Multiple_Hints()
+        {
+            // Arrange
+            const string sql = "SELECT * FROM T (TABLOCK,UPDLOCK,HOLDLOCK)";
+
+            // Act
+            var statement = ParserFactory.Execute<SelectStatement>(sql).First();
+
+            // Assert
+            Assert.IsTrue(statement.From[0].TableHints.Count() == 3, "Should be three hints - TABLOCK, UPDLOCK, HOLDLOCK");
+        }
     }
 }

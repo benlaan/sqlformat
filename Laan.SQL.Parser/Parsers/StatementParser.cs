@@ -17,7 +17,7 @@ namespace Laan.Sql.Parser.Parsers
     {
         protected T _statement;
 
-        private readonly string[] _tableHints = 
+        private readonly string[] _tableHints =
         {
             Constants.NoExpand,
             Constants.FastFirstrow,
@@ -93,37 +93,43 @@ namespace Laan.Sql.Parser.Parsers
             Required
         }
 
-        protected void ProcessTableHints(ITableHints hintable, With with = With.Optional)
+        protected void ProcessTableHints(ITableHints tableHints, With with = With.Optional)
         {
+            var explicitWith = false;
+
             if (with == With.Optional && Tokenizer.Current == Constants.OpenBracket)
             {
-                using (Tokenizer.ExpectBrackets())
-                {
-                    ProcessHint(hintable);
-                }
+                ProcessHints(tableHints);
             }
             else if (Tokenizer.TokenEquals(Constants.With))
             {
+                explicitWith = true;
                 if (Tokenizer.IsNextToken(Constants.OpenBracket))
+                    ProcessHints(tableHints);
+            }
+
+            if (tableHints.TableHints.Any())
+                tableHints.ExplicitWith = explicitWith;
+        }
+
+        private void ProcessHints(ITableHints hintable)
+        {
+            using (Tokenizer.ExpectBrackets())
+            {
+                do
                 {
-                    using (Tokenizer.ExpectBrackets())
-                    {
-                        do
-                        {
-                            ProcessHint(hintable);
-                        }
-                        while (Tokenizer.TokenEquals(Constants.Comma));
-                    }
+                    ProcessHint(hintable);
                 }
+                while (Tokenizer.TokenEquals(Constants.Comma));
             }
         }
 
-        private void ProcessHint(ITableHints hintable)
+        private void ProcessHint(ITableHints tableHints)
         {
             if (Tokenizer.IsNextToken(_tableHints))
             {
                 var hint = new TableHint { Hint = Tokenizer.Current.Value };
-                hintable.TableHints.Add(hint);
+                tableHints.TableHints.Add(hint);
                 Tokenizer.ReadNextToken();
             }
         }

@@ -9,6 +9,7 @@ namespace Laan.Sql.Parser.Entities
         public Top Top { get; set; }
         public string TableName { get; set; }
         public List<TableHint> TableHints { get; set; }
+        public bool ExplicitWith { get; set; }
 
         public UpdateStatement()
         {

@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 
-using Laan.Sql.Parser.Entities;
-
 namespace Laan.Sql.Parser.Entities
 {
     public class InsertDeleteStatementBase : CustomStatement, ITableHints
@@ -11,8 +9,7 @@ namespace Laan.Sql.Parser.Entities
             TableHints = new List<TableHint>();
         }
 
-        public List<TableHint> TableHints
-        {
-            get; set; }
+        public List<TableHint> TableHints { get; set; }
+        public bool ExplicitWith { get; set; }
     }
 }

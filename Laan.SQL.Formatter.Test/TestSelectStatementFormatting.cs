@@ -789,6 +789,25 @@ namespace Laan.Sql.Formatter.Test
         }
 
         [Test]
+        public void Can_Format_Select_Statement_With_Table_Hint_On_Primary_Table_No_Joins()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute("SELECT Id FROM [dbo].[Instance] WITH (TABLOCK,UPDLOCK,HOLDLOCK)");
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT Id",
+                "FROM [dbo].[Instance] WITH (TABLOCK, UPDLOCK, HOLDLOCK)"
+            };
+
+            Compare(actual, expected);
+        }
+
+        [Test]
         public void Can_Format_Select_Statement_With_Table_Hint_On_Joined_Table()
         {
             // Setup

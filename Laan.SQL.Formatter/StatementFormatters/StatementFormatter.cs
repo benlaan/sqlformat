@@ -121,7 +121,8 @@ namespace Laan.Sql.Formatter
             if (!hinting.TableHints.Any())
                 return "";
 
-            return String.Format(" WITH ({0})", String.Join(", ", hinting.TableHints.Select(t => t.Hint).ToArray()));
+            var withPrefix = hinting.ExplicitWith ? " WITH" : String.Empty;
+            return String.Format("{0} ({1})", withPrefix, String.Join(", ", hinting.TableHints.Select(t => t.Hint).ToArray()));
         }
 
         protected bool FitsOnRow(string text)

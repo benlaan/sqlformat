@@ -9,5 +9,6 @@ namespace Laan.Sql.Parser.Entities
     public interface ITableHints
     {
         List<TableHint> TableHints { get; set; }
+        bool ExplicitWith { get; set; }
     }
 }

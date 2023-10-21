@@ -1,9 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-
-using Laan.Sql.Parser.Entities;
-using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Parser.Entities
 {
@@ -26,18 +22,13 @@ namespace Laan.Sql.Parser.Entities
             get { return Alias != null ? Name : String.Format( "{0} ({1})", Name, Alias.Name ); }
         }
         public List<TableHint> TableHints { get; set; }
+        public bool ExplicitWith { get; set; }
     }
 
     public class DerivedTable : Table
     {
         public SelectStatement SelectStatement { get; set; }
 
-        public override string Value
-        {
-            get
-            {
-                return "(" + SelectStatement.ToString() + ")";
-            }
-        }
+        public override string Value => String.Format("({0})", SelectStatement);
     }
 }
