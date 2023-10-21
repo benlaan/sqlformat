@@ -50,8 +50,12 @@ namespace Laan.Sql.Parser
         private void AdvanceCurrentToken(Match match, TokenType type)
         {
             _current = new Token(match.Value, type);
-            _line = _line.Remove(match.Captures[0].Index, match.Captures[0].Length);
-            Position.Column += match.Value.Length;
+
+            if (match.Success)
+            {
+                _line = _line.Remove(match.Captures[0].Index, match.Captures[0].Length);
+                Position.Column += match.Value.Length;
+            }
         }
 
         private CandidateDefinition GetCandidateDefinition(IList<CandidateDefinition> definitions)
@@ -95,7 +99,7 @@ namespace Laan.Sql.Parser
             while (HasMoreTokens && continuation != null && continuation.Value.Length > 0);
 
             Match terminationMatch = matchingToken.Definition.MultiLineTerminator.Match(_line);
-            if (terminationMatch.Value.Length < 0)
+            if (terminationMatch.Value.Length == 0)
                 throw new SyntaxException(String.Format("Failed to find terminal for {0}", matchingToken.Definition.Type));
 
             AdvanceCurrentToken(terminationMatch, matchingToken.Definition.Type);

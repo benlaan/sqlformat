@@ -26,18 +26,18 @@ namespace Laan.Sql.Formatter
             };
         }
 
-        public static IExpressionFormatter GetFormatter( IIndentable indentable, Expression expression )
+        public static IExpressionFormatter GetFormatter(IIndentable indentable, Expression expression)
         {
             Type formatterType;
-            if ( !_formatters.TryGetValue( expression.GetType(), out formatterType ) )
-                return new DefaultExpressionFormatter( expression );
+            if (!_formatters.TryGetValue(expression.GetType(), out formatterType))
+                return new DefaultExpressionFormatter(expression);
 
-            var formatter = Activator.CreateInstance( formatterType, expression ) as IExpressionFormatter;
-            ( formatter as IIndentable ).IndentLevel = indentable.IndentLevel;
-            ( formatter as IIndentable ).Indent = indentable.Indent;
+            var formatter = Activator.CreateInstance(formatterType, expression) as IExpressionFormatter;
+            (formatter as IIndentable).IndentLevel = indentable.IndentLevel;
+            (formatter as IIndentable).Indent = indentable.Indent;
 
-            if ( formatter == null )
-                throw new ArgumentNullException( "Formatter not instantiated: " + formatterType.Name );
+            if (formatter == null)
+                throw new ArgumentNullException("Formatter not instantiated: " + formatterType.Name);
 
             return formatter;
         }

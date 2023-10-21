@@ -7,7 +7,7 @@ using Laan.Sql.Parser.Exceptions;
 
 namespace Laan.Sql.Parser
 {
-    public class ParserFactory
+    public static class ParserFactory
     {
         private static Dictionary<string, Type> _parsers;
 
@@ -80,9 +80,7 @@ namespace Laan.Sql.Parser
                     result.Add(parser.Execute());
                 else
                     if (ensureParserIsFound)
-                    throw new ParserNotImplementedException(
-                        "No parser exists for statement type: " + tokenizer.Current.Value
-                    );
+                    throw new ParserNotImplementedException("No parser exists for statement type: " + tokenizer.Current.Value);
                 else
                     break;
             }
@@ -123,6 +121,7 @@ namespace Laan.Sql.Parser
                         sql = sql.Remove(0, colonPos + 1);
                 }
             }
+
             return sql;
         }
     }
