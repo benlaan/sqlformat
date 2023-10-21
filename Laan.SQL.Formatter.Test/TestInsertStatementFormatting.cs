@@ -129,5 +129,25 @@ namespace Laan.Sql.Formatter.Test
 
             Compare(actual, expected);
         }
+
+        [Test]
+        public void Can_Format_Few_Column_Insert_Statement_With_Multiple_Value_Sets()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute("Insert into dbo.Table (ID, Greeting) VALUES (1, 'Hello World'), (2, 'Goodbye Universe')");
+
+            // Verify outcome
+            var expected = new[]
+            {
+               "INSERT INTO dbo.Table (ID, Greeting)",
+               "    VALUES (1, 'Hello World'),",
+               "           (2, 'Goodbye Universe')"
+            };
+
+            Compare(actual, expected);
+        }
     }
 }

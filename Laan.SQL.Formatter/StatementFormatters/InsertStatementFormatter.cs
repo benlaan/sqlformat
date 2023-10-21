@@ -13,8 +13,8 @@ namespace Laan.Sql.Formatter
     {
         private const int MaxOneLineColumnCount = 4;
 
-        public InsertStatementFormatter( IIndentable indentable, StringBuilder sql, InsertStatement statement )
-            : base( indentable, sql, statement )
+        public InsertStatementFormatter(IIndentable indentable, StringBuilder sql, InsertStatement statement)
+            : base(indentable, sql, statement)
         {
         }
 
@@ -32,53 +32,57 @@ namespace Laan.Sql.Formatter
 
         private void FormatInsert()
         {
-            IndentAppendFormat( "{0} {1} {2}", Constants.Insert, Constants.Into, _statement.TableName );
+            IndentAppendFormat("{0} {1} {2}", Constants.Insert, Constants.Into, _statement.TableName);
         }
 
-        private string FormatColumnWithSeparator( int index )
+        private string FormatColumnWithSeparator(int index)
         {
-            return _statement.Columns[ index ] + ( index < _statement.Columns.Count - 1 ? ", " : "" );
+            return _statement.Columns[index] + (index < _statement.Columns.Count - 1 ? ", " : "");
         }
 
         private void FormatColumns()
         {
-            if ( _statement.Columns.Count > 0 )
+            if (_statement.Columns.Count == 0)
+                NewLine();
+            else
             {
                 string text = _statement.Columns.ToCsv();
-                List<string> lines = new List<string>();
-                if ( text.Length > WrapMarginColumn )
-                {
-                    string line = "";
-                    for ( int index = 0; index < _statement.Columns.Count; index++ )
-                    {
-                        if ( line.Length + _statement.Columns[ index ].Length >= WrapMarginColumn )
-                        {
-                            lines.Add( line );
-                            line = "";
-                        }
-                        line += FormatColumnWithSeparator( index );
-                    }
-                    lines.Add( line );
-                }
-
-                if ( _statement.Columns.Count <= MaxOneLineColumnCount && FitsOnRow( text ) )
-                    _sql.AppendFormat( " {0}\n", FormatBrackets( text ) );
+                var lines = new List<string>();
+                if (_statement.Columns.Count <= MaxOneLineColumnCount && FitsOnRow(text))
+                    _sql.AppendFormat(" {0}\n", FormatBrackets(text));
                 else
                 {
-                    _sql.Append( " (" );
+                    if (text.Length > WrapMarginColumn)
+                    {
+                        string line = "";
+                        for (int index = 0; index < _statement.Columns.Count; index++)
+                        {
+                            if (line.Length + _statement.Columns[index].Length >= WrapMarginColumn)
+                            {
+                                lines.Add(line);
+                                line = "";
+                            }
+                            line += FormatColumnWithSeparator(index);
+                        }
+                        lines.Add(line);
+                    }
+                    else
+                    {
+                        lines.Add(String.Join(", ", _statement.Columns));
+                    }
+
+                    _sql.Append(" (");
                     NewLine();
 
-                    using ( new IndentScope( this ) )
+                    using (new IndentScope(this))
                     {
-                        foreach ( string line in lines )
-                            IndentAppendLine( line );
-                        
-                        IndentAppendLine( ")" );
+                        foreach (string line in lines)
+                            IndentAppendLine(line);
+
+                        IndentAppendLine(")");
                     }
                 }
             }
-            else
-                NewLine();
         }
 
         private string GetValues(List<Expression> values)
