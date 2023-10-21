@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+      <Description>SQL Parser component</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" />
+  </ItemGroup>
+
+  <Import Project="$(SolutionDir)Build\Common.targets" />
+  <Import Project="$(SolutionDir)Build\Nuget.targets" />
+
+</Project>
