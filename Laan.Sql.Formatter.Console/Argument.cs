@@ -50,5 +50,4 @@ public class Argument
     public string File { get; set; }
     public string Output { get; set; }
     public string Sql { get; set; }
-
 }
