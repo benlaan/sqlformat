@@ -1,5 +1,6 @@
 ﻿using System;
 
+using Laan.AddIns.Ssms.VsExtension.Utils;
 using Laan.Sql.Formatter;
 
 using Microsoft.VisualStudio.Shell;
@@ -14,19 +15,22 @@ namespace Laan.AddIns.Ssms.VsExtension.Commands
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            var textDocument = TextDocument;
-
-            if (textDocument.Selection.IsEmpty)
-                textDocument.Selection.SelectAll();
-
-            try
+            using (var undo = new ScopedUndoContext(this, "SqlFormatter"))
             {
-                var engine = new FormattingEngine();
-                InsertText(engine.Execute(textDocument.Selection.Text + Environment.NewLine));
-            }
-            finally
-            {
-                textDocument.Selection.Cancel();
+                var textDocument = TextDocument;
+
+                if (textDocument.Selection.IsEmpty)
+                    textDocument.Selection.SelectAll();
+
+                try
+                {
+                    var engine = new FormattingEngine();
+                    InsertText(engine.Execute(textDocument.Selection.Text) + Environment.NewLine);
+                }
+                finally
+                {
+                    textDocument.Selection.Cancel();
+                }
             }
         }
     }

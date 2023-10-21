@@ -6,66 +6,80 @@
 
     <Commands package="guidVsExtensionPackage">
         <Groups>
-            <Group guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+            <Group guid="guidVsExtensionPackageCmdSet" id="ToolsGroup" priority="0x0600">
                 <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
             </Group>
         </Groups>
 
         <Buttons>
             <Button guid="guidVsExtensionPackageCmdSet" id="DuplicateLineId" priority="0x0100" type="Button">
-                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Parent guid="guidVsExtensionPackageCmdSet" id="ToolsGroup" />
                 <Icon guid="guidImages" id="bmpPic1" />
                 <Strings>
                     <ButtonText>Duplicate Line</ButtonText>
                 </Strings>
             </Button>
             <Button guid="guidVsExtensionPackageCmdSet" id="MoveCursorLeftWordId" priority="0x0100" type="Button">
-                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Parent guid="guidVsExtensionPackageCmdSet" id="ToolsGroup" />
                 <Icon guid="guidImages" id="bmpPic1" />
                 <Strings>
                     <ButtonText>Move Cursor Left Word</ButtonText>
                 </Strings>
             </Button>
             <Button guid="guidVsExtensionPackageCmdSet" id="MoveCursorRightWordId" priority="0x0100" type="Button">
-                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Parent guid="guidVsExtensionPackageCmdSet" id="ToolsGroup" />
                 <Icon guid="guidImages" id="bmpPic1" />
                 <Strings>
                     <ButtonText>Move Cursor Right Word</ButtonText>
                 </Strings>
             </Button>
             <Button guid="guidVsExtensionPackageCmdSet" id="SelectCursorLeftWordId" priority="0x0100" type="Button">
-                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Parent guid="guidVsExtensionPackageCmdSet" id="ToolsGroup" />
                 <Icon guid="guidImages" id="bmpPic1" />
                 <Strings>
                     <ButtonText>Select Cursor Left Word</ButtonText>
                 </Strings>
             </Button>
             <Button guid="guidVsExtensionPackageCmdSet" id="SelectCursorRightWordId" priority="0x0100" type="Button">
-                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Parent guid="guidVsExtensionPackageCmdSet" id="ToolsGroup" />
                 <Icon guid="guidImages" id="bmpPic1" />
                 <Strings>
                     <ButtonText>Select Cursor Right Word</ButtonText>
                 </Strings>
             </Button>
             <Button guid="guidVsExtensionPackageCmdSet" id="SqlInsertTemplateId" priority="0x0100" type="Button">
-                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Parent guid="guidVsExtensionPackageCmdSet" id="ToolsGroup" />
                 <Icon guid="guidImages" id="bmpPic1" />
                 <Strings>
                     <ButtonText>Insert Sql Template</ButtonText>
                 </Strings>
             </Button>
             <Button guid="guidVsExtensionPackageCmdSet" id="SqlTemplateOptionId" priority="0x0100" type="Button">
-                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Parent guid="guidVsExtensionPackageCmdSet" id="ToolsGroup" />
                 <Icon guid="guidImages" id="bmpPic1" />
                 <Strings>
                     <ButtonText>Manage Sql Templates</ButtonText>
                 </Strings>
             </Button>
             <Button guid="guidVsExtensionPackageCmdSet" id="SqlFormatterId" priority="0x0100" type="Button">
-                <Parent guid="guidVsExtensionPackageCmdSet" id="MyMenuGroup" />
+                <Parent guid="guidVsExtensionPackageCmdSet" id="ToolsGroup" />
                 <Icon guid="guidImages" id="bmpPic1" />
                 <Strings>
                     <ButtonText>Format Sql</ButtonText>
+                </Strings>
+            </Button>
+            <Button guid="guidVsExtensionPackageCmdSet" id="WrapBracketId" priority="0x0100" type="Button">
+                <Parent guid="guidVsExtensionPackageCmdSet" id="ToolsGroup" />
+                <Icon guid="guidImages" id="bmpPic1" />
+                <Strings>
+                    <ButtonText>Wrap Selection with Parenthesis</ButtonText>
+                </Strings>
+            </Button>
+            <Button guid="guidVsExtensionPackageCmdSet" id="WrapSquareBraceId" priority="0x0100" type="Button">
+                <Parent guid="guidVsExtensionPackageCmdSet" id="ToolsGroup" />
+                <Icon guid="guidImages" id="bmpPic1" />
+                <Strings>
+                    <ButtonText>Wrap Selection with Square Brackets</ButtonText>
                 </Strings>
             </Button>
         </Buttons>
@@ -84,23 +98,27 @@
         <KeyBinding id="MoveCursorRightWordId" guid="guidVsExtensionPackageCmdSet"  key1="VK_RIGHT" mod1="ALT" editor="guidSourceCodeTextEditor" />
         <KeyBinding id="SelectCursorLeftWordId" guid="guidVsExtensionPackageCmdSet"  key1="VK_LEFT" mod1="CONTROL" mod2="ALT" editor="guidSourceCodeTextEditor" />
         <KeyBinding id="SelectCursorRightWordId" guid="guidVsExtensionPackageCmdSet"  key1="VK_RIGHT" mod1="CONTROL" mod2="ALT" editor="guidSourceCodeTextEditor" />
+        <!--<KeyBinding id="WrapSquareBraceId" guid="guidVsExtensionPackageCmdSet"  key1="" editor="guidSourceCodeTextEditor" />
+        <KeyBinding id="WrapBracketId" guid="guidVsExtensionPackageCmdSet"  key1="" editor="guidSourceCodeTextEditor" />-->
     </KeyBindings>
 
     <Symbols>
         <GuidSymbol name="guidSourceCodeTextEditor" value="{8b382828-6202-11d1-8870-0000f87579d2}" />
-        
+
         <GuidSymbol name="guidVsExtensionPackage" value="{74f80447-ad39-44f8-aa0a-a62f2b5fcc8e}" />
 
         <GuidSymbol name="guidVsExtensionPackageCmdSet" value="{29b2dad0-1acd-4668-b3e4-ff788e7a4701}">
-            <IDSymbol name="MyMenuGroup" value="0x1020" />
+            <IDSymbol name="ToolsGroup" value="0x1020" />
+            <IDSymbol name="SqlInsertTemplateId" value="4000" />
+            <IDSymbol name="SqlFormatterId" value="4001" />
+            <IDSymbol name="SqlTemplateOptionId" value="4002" />
+            <IDSymbol name="WrapSquareBraceId" value="4003" />
+            <IDSymbol name="WrapBracketId" value="4004" />
             <IDSymbol name="DuplicateLineId" value="4005" />
             <IDSymbol name="MoveCursorLeftWordId" value="4006" />
             <IDSymbol name="MoveCursorRightWordId" value="4007" />
             <IDSymbol name="SelectCursorLeftWordId" value="4008" />
             <IDSymbol name="SelectCursorRightWordId" value="4009" />
-            <IDSymbol name="SqlInsertTemplateId" value="4000" />
-            <IDSymbol name="SqlTemplateOptionId" value="4002" />
-            <IDSymbol name="SqlFormatterId" value="4001" />
         </GuidSymbol>
 
         <GuidSymbol name="guidImages" value="{f762930e-3f22-4808-8a40-4b49a6d2c0d2}">

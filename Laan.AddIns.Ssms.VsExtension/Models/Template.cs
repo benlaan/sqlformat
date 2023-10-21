@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -17,86 +18,55 @@ namespace Laan.AddIns.Ssms.VsExtension.Models
         [XmlElement("name")]
         public string Name
         {
-            get { return _name; }
-            set
-            {
-                if (_name == value)
-                    return;
-                
-                _name = value;
-
-                Notify("Name");
-            }
+            get => _name;
+            set { Notify(ref _name, value); }
         }
 
         [XmlElement("code")]
         public string Code
         {
-            get { return _code; }
-            set
-            {
-                if (_code == value)
-                    return;
-
-                _code = value;
-
-                Notify("Code");
-            }
+            get => _code;
+            set { Notify(ref _code, value); }
         }
 
         [XmlElement("description")]
         public string Description
         {
-            get { return _description; }
-            set
-            {
-                if (_description == value)
-                    return;
-
-                _description = value;
-                
-                Notify("Description");
-            }
+            get => _description;
+            set { Notify(ref _description, value); }
         }
 
         [XmlElement("body")]
         public XmlCDataSection CDataBody
         {
-            get
-            {
-                XmlDocument doc = new XmlDocument();
-                return doc.CreateCDataSection(Body);
-            }
-            set
-            {
-                Body = value.Value.TrimStart();
-            }
+            get => new XmlDocument().CreateCDataSection(Body);
+            set => Body = value.Value.TrimStart();
         }
 
         [XmlIgnore]
         public string Body
         {
-            get
-            {
-                return _body;
-            }
-            set
-            {
-                if (_body == value)
-                    return;
-
-                _body = value;
-
-                Notify("Body");
-            }
+            get => _body;
+            set => Notify(ref _body, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void Notify(string propertyName)
+        private void Notify<T>(ref T field, T value, [CallerMemberName]string propertyName = "")
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            if (field != null && field.Equals(value))
+                return;
+
+            field = value;
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public Template Clone()
+        {
+            var clone = (Template)MemberwiseClone();
+            clone.Name += " (Copy)";
+            return clone;
         }
     }
 }

@@ -19,10 +19,6 @@ namespace Laan.AddIns.Ssms.VsExtension.SqlTemplateOption
         private Template _selectedTemplate;
         private readonly List<Template> _originalTemplates;
 
-        /// <summary>
-        /// Initializes a new instance of the SqlTemplateOptionViewModel class.
-        /// </summary>
-        /// <param name="templates"></param>
         public SqlTemplateOptionViewModel(List<Template> templates)
         {
             _filterText = string.Empty;
@@ -33,6 +29,7 @@ namespace Laan.AddIns.Ssms.VsExtension.SqlTemplateOption
             Save = new DelegateCommand(ExecuteSave, IsDirty);
             Cancel = new DelegateCommand(ExecuteCancel);
             Add = new DelegateCommand(ExecuteAdd);
+            Duplicate = new DelegateCommand(ExecuteDuplicate);
             Remove = new DelegateCommand(ExecuteRemove, () => SelectedTemplate != null);
 
             Templates.CollectionChanged += CollectionChanged;
@@ -74,17 +71,17 @@ namespace Laan.AddIns.Ssms.VsExtension.SqlTemplateOption
 
         private void ExecuteSave()
         {
-            FilterText = "";
+            FilterText = String.Empty;
             _isDirty = false;
-            if (OnSave != null)
-                OnSave(this, EventArgs.Empty);
+
+            OnSave?.Invoke(this, EventArgs.Empty);
         }
 
         private void ExecuteCancel()
         {
             if (_isDirty)
             {
-                var confirmCancel = "There are unsaved changes - are you sure you wish to cancel?";
+                var confirmCancel = "There are unsaved changes - do you want to continue?";
 
                 if (MessageBox.Show(confirmCancel, "Confirm Cancel changes", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                     return;
@@ -92,19 +89,30 @@ namespace Laan.AddIns.Ssms.VsExtension.SqlTemplateOption
                 _isDirty = false;
             }
 
-            if (OnCancel != null)
-                OnCancel(this, EventArgs.Empty);
+            OnCancel?.Invoke(this, EventArgs.Empty);
         }
 
-        private void ExecuteAdd()
+        private void AddNew(Template newTemplate)
         {
-            var newTemplate = new Template() { Name = "New Template" };
             _originalTemplates.Add(newTemplate);
             Templates.Add(newTemplate);
             AssignPropertyChangedHandler(new[] { newTemplate });
 
             SelectedTemplate = newTemplate;
             MarkAsDirty();
+        }
+
+        private void ExecuteAdd()
+        {
+            AddNew(new Template { Name = "New Template" });
+        }
+
+        private void ExecuteDuplicate()
+        {
+            if (SelectedTemplate == null)
+                return;
+
+            AddNew(SelectedTemplate.Clone());
         }
 
         private void ExecuteRemove()
@@ -158,8 +166,7 @@ namespace Laan.AddIns.Ssms.VsExtension.SqlTemplateOption
 
         private void NotifyPropertyChanged(string memberName)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(memberName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
         }
 
         public ObservableCollection<Template> Templates { get; set; }
@@ -214,6 +221,7 @@ namespace Laan.AddIns.Ssms.VsExtension.SqlTemplateOption
         public DelegateCommand Cancel { get; set; }
         public DelegateCommand Add { get; set; }
         public DelegateCommand Remove { get; set; }
+        public DelegateCommand Duplicate { get; set; }
 
         public bool CanCancel
         {
