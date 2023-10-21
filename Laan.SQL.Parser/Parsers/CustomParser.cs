@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Exceptions;
+using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Parser.Parsers
 {
@@ -17,19 +17,22 @@ namespace Laan.Sql.Parser.Parsers
         protected void ExpectToken(string token)
         {
             var current = Tokenizer.Current;
-            if (current == Token.Null || CurrentToken.ToLower() != token.ToLower())
+
+            if (current == Token.Null || !String.Equals(CurrentToken, token, StringComparison.OrdinalIgnoreCase))
+            {
                 throw new ExpectedTokenNotFoundException(
                     token,
-                    current != Token.Null ? current.ToString() : "EOF", 
+                    current != Token.Null ? current.ToString() : "EOF",
                     Tokenizer.Position
                 );
+            }
 
             ReadNextToken();
         }
 
         protected void ExpectTokens(params string[] tokens)
         {
-            foreach (string token in tokens)
+            foreach (var token in tokens)
                 ExpectToken(token);
         }
 
@@ -43,7 +46,7 @@ namespace Laan.Sql.Parser.Parsers
             get { return Tokenizer.Current.Value; }
         }
 
-        protected ITokenizer Tokenizer { get; private set; }
+        protected ITokenizer Tokenizer { get; }
 
         protected Expression ProcessExpression()
         {
@@ -53,20 +56,14 @@ namespace Laan.Sql.Parser.Parsers
 
         private string GetOperator()
         {
-            var comparisonOperators = new[] { "=", ">=", "<=", "!=", "<>", "IN", "ANY", "LIKE" };
+            var comparisonOperators = new[] { "=", ">=", "<=", "!=", "<>", Constants.In, Constants.Any, Constants.Like };
 
-            if (Tokenizer.IsNextToken(comparisonOperators))
-            {
-                string token = Tokenizer.Current.Value;
-                ReadNextToken();
-                return token;
-            }
-            else
-                throw new ExpectedTokenNotFoundException(
-                    comparisonOperators.Join(", "),
-                    CurrentToken,
-                    Tokenizer.Position
-                );
+            if (!Tokenizer.IsNextToken(comparisonOperators))
+                throw new ExpectedTokenNotFoundException(comparisonOperators.ToCsv(), CurrentToken, Tokenizer.Position);
+
+            var token = Tokenizer.Current.Value;
+            ReadNextToken();
+            return token;
         }
 
         protected CriteriaExpression ProcessCriteriaExpression(Expression parent)
@@ -84,7 +81,8 @@ namespace Laan.Sql.Parser.Parsers
             if (!Tokenizer.HasMoreTokens)
                 throw new SyntaxException("Identifier expected");
 
-            string identifier = String.Empty;
+            var identifier = String.Empty;
+
             switch (Tokenizer.Current.Type)
             {
                 case TokenType.SingleQuote:
@@ -108,7 +106,7 @@ namespace Laan.Sql.Parser.Parsers
 
         protected List<string> GetIdentifierList()
         {
-            List<string> identifiers = new List<string>();
+            var identifiers = new List<string>();
             do
             {
                 identifiers.Add(GetIdentifier());
@@ -121,11 +119,11 @@ namespace Laan.Sql.Parser.Parsers
         protected string GetDotNotationIdentifier()
         {
             string token;
-            token = "";
+            token = String.Empty;
 
             do
             {
-                token += (token != "" ? Constants.Dot : "") + GetIdentifier();
+                token += (token != String.Empty ? Constants.Dot : String.Empty) + GetIdentifier();
             }
             while (Tokenizer.TokenEquals(Constants.Dot));
             return token;
@@ -133,7 +131,7 @@ namespace Laan.Sql.Parser.Parsers
 
         protected bool HasTerminator()
         {
-            bool result = Tokenizer.IsNextToken(Constants.SemiColon);
+            var result = Tokenizer.IsNextToken(Constants.SemiColon);
             if (result)
                 Tokenizer.ReadNextToken();
             return result;

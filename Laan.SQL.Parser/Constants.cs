@@ -2,7 +2,7 @@ using System;
 
 namespace Laan.Sql.Parser
 {
-    public class Constants
+    public static class Constants
     {
         public const string Assignment = "=";
         public const string OpenBracket = "(";
@@ -14,6 +14,7 @@ namespace Laan.Sql.Parser
         public const string AllowPageLocks = "ALLOW_PAGE_LOCKS";
         public const string Alter = "ALTER";
         public const string And = "AND";
+        public const string Any = "ANY";
         public const string As = "AS";
         public const string Ascending = "ASC";
         public const string Begin = "BEGIN";
@@ -59,6 +60,7 @@ namespace Laan.Sql.Parser
         public const string If = "IF";
         public const string IgnoreDupKey = "IGNORE_DUP_KEY";
         public const string In = "IN";
+        public const string Is = "IS";
         public const string Inserted = "INSERTED";
         public const string Io = "IO";
         public const string Index = "INDEX";

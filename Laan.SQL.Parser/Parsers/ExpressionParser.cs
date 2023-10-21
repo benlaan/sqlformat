@@ -28,6 +28,11 @@ namespace Laan.Sql.Parser.Parsers
             return (T)Execute();
         }
 
+        public Expression ReadSingleExpression()
+        {
+            return ReadExpression(null);
+        }
+
         private Expression ReadCriteriaList(Expression parent)
         {
             Expression expression = ReadCriteria(parent);
@@ -96,7 +101,7 @@ namespace Laan.Sql.Parser.Parsers
             if (Tokenizer.TokenEquals(Constants.Between))
                 return ProcessBetween(parent, expression);
 
-            if (Tokenizer.IsNextToken("=", "<>", "!=", ">=", "<=", ">", "<", "IS", "IN", "ANY", "LIKE"))
+            if (Tokenizer.IsNextToken("=", "<>", "!=", ">=", "<=", ">", "<", Constants.Is, Constants.In, Constants.Any, Constants.Like))
                 return ProcessCriteria(parent, expression);
 
             return expression;
@@ -260,7 +265,7 @@ namespace Laan.Sql.Parser.Parsers
             {
                 value += Tokenizer.Current.Value;
                 ReadNextToken();
-            };
+            }
 
             return new StringExpression(value, parent);
         }
