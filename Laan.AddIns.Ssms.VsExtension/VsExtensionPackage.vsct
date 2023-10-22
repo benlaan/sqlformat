@@ -93,11 +93,11 @@
         <KeyBinding id="SqlFormatterId" guid="guidVsExtensionPackageCmdSet" key1="F" mod1="CONTROL" mod2="ALT" editor="guidSourceCodeTextEditor" />
         <KeyBinding id="SqlInsertTemplateId" guid="guidVsExtensionPackageCmdSet" key1="VK_SPACE" mod1="CONTROL" mod2="ALT" editor="guidSourceCodeTextEditor" />
         <KeyBinding id="SqlTemplateOptionId" guid="guidVsExtensionPackageCmdSet" key1="O" mod1="CONTROL" mod2="ALT" editor="guidVSStd97" />
-        <KeyBinding id="DuplicateLineId" guid="guidVsExtensionPackageCmdSet"  key1="D" mod1="CONTROL" editor="guidSourceCodeTextEditor" />
-        <KeyBinding id="MoveCursorLeftWordId" guid="guidVsExtensionPackageCmdSet"  key1="VK_LEFT" mod1="ALT" editor="guidSourceCodeTextEditor" />
-        <KeyBinding id="MoveCursorRightWordId" guid="guidVsExtensionPackageCmdSet"  key1="VK_RIGHT" mod1="ALT" editor="guidSourceCodeTextEditor" />
-        <KeyBinding id="SelectCursorLeftWordId" guid="guidVsExtensionPackageCmdSet"  key1="VK_LEFT" mod1="CONTROL" mod2="ALT" editor="guidSourceCodeTextEditor" />
-        <KeyBinding id="SelectCursorRightWordId" guid="guidVsExtensionPackageCmdSet"  key1="VK_RIGHT" mod1="CONTROL" mod2="ALT" editor="guidSourceCodeTextEditor" />
+        <KeyBinding id="DuplicateLineId" guid="guidVsExtensionPackageCmdSet" key1="D" mod1="CONTROL" editor="guidSourceCodeTextEditor" />
+        <KeyBinding id="MoveCursorLeftWordId" guid="guidVsExtensionPackageCmdSet" key1="VK_LEFT" mod1="ALT" editor="guidSourceCodeTextEditor" />
+        <KeyBinding id="MoveCursorRightWordId" guid="guidVsExtensionPackageCmdSet" key1="VK_RIGHT" mod1="ALT" editor="guidSourceCodeTextEditor" />
+        <KeyBinding id="SelectCursorLeftWordId" guid="guidVsExtensionPackageCmdSet" key1="VK_LEFT" mod1="CONTROL" mod2="ALT" editor="guidSourceCodeTextEditor" />
+        <KeyBinding id="SelectCursorRightWordId" guid="guidVsExtensionPackageCmdSet" key1="VK_RIGHT" mod1="CONTROL" mod2="ALT" editor="guidSourceCodeTextEditor" />
         <!--<KeyBinding id="WrapSquareBraceId" guid="guidVsExtensionPackageCmdSet"  key1="" editor="guidSourceCodeTextEditor" />
         <KeyBinding id="WrapBracketId" guid="guidVsExtensionPackageCmdSet"  key1="" editor="guidSourceCodeTextEditor" />-->
     </KeyBindings>
