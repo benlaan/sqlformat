@@ -5,7 +5,7 @@
      <MSBuildCommunityTasksPath>$(USERPROFILE)\.nuget\packages\MSBuildTasks\1.5.0.235\tools\</MSBuildCommunityTasksPath> 
   </PropertyGroup>
 
-   <Import Project="$(MSBuildCommunityTasksPath)MSBuild.Community.Tasks.targets"/> 
+  <Import Project="$(MSBuildCommunityTasksPath)MSBuild.Community.Tasks.targets"/> 
 
   <!-- Default Properties shared by All Projects, for both Debug and Release Configurations -->
   <PropertyGroup>
