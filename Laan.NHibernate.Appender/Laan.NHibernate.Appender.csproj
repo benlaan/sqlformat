@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <Description>SQL Formatter for NHibernate via the Log4net Appender infrastructure</Description>
   </PropertyGroup>
 
