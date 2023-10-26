@@ -24,9 +24,11 @@ namespace Laan.Sql.Parser.Parsers
                         ProcessPrimaryKeyConstraint();
                     else
                         ProcessFieldDefinition();
-
-                } while (Tokenizer.TokenEquals(Constants.Comma));
+                }
+                while (Tokenizer.TokenEquals(Constants.Comma));
             }
+
+            ProcessTerminator();
             return _statement;
         }
 
