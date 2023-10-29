@@ -6,12 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="readme.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Laan.SQL.Formatter\Laan.Sql.Formatter.csproj" />
-    <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj" />
   </ItemGroup>
 
   <Import Project="$(SolutionDir)Build\Common.targets" />
