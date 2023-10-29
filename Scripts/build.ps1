@@ -1,6 +1,6 @@
 param(
     [string]$config = "debug",
-    [string]$build = ""
+    [switch]$restore
 )
 
-dotnet build .\Laan.Sql.Tools.sln -c $config -v minimal --interactive
+dotnet build .\Laan.Sql.Tools.sln -c $config -v minimal --interactive $(if ($restore.IsPresent) { "" } else { "--no-restore" } )

@@ -1,1 +1,1 @@
-powershell .\Scripts\build.ps1
+powershell -NoProfile .\Scripts\build.ps1
