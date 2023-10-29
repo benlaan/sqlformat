@@ -49,6 +49,7 @@ namespace Laan.Sql.Parser
         public const string Exists = "EXISTS";
         public const string FastFirstrow = "FASTFIRSTROW";
         public const string ForceSeek = "FORCESEEK";
+        public const string For = "FOR";
         public const string Foreign = "FOREIGN";
         public const string From = "FROM";
         public const string Full = "FULL";
@@ -93,6 +94,7 @@ namespace Laan.Sql.Parser
         public const string PagLock = "PAGLOCK";
         public const string Partition = "PARTITION";
         public const string Percent = "PERCENT";
+        public const string Pivot = "PIVOT";
         public const string Primary = "PRIMARY";
         public const string Print = "PRINT";
         public const string Precision = "PRECISION";

@@ -1002,5 +1002,36 @@ namespace Laan.Sql.Parser.Test
             Assert.AreEqual(1, rankingFunctionExpression.PartitionBy.Count);
             Assert.AreEqual("Code", rankingFunctionExpression.PartitionBy[0].Expression.Value);
         }
+
+        [Test]
+        public void Can_Parse_Select_With_Pivot()
+        {
+            // Exercise
+            var statement = ParserFactory.Execute<SelectStatement>(@"
+                SELECT 'AverageCost' AS Cost_Sorted_By_Production_Days, [0], [1], [2], [3], [4] 
+                FROM Production.Product T
+                PIVOT (
+                    AVG(StandardCost)
+                    FOR DaysToManufacture IN ([0], [1], [2], [3], [4])  
+                ) AS PT
+
+                WHERE T.Data BETWEEN 2 AND 3
+
+            ").First();
+
+            // Verify outcome
+            Assert.IsNotNull(statement);
+            Assert.AreEqual(6, statement.Fields.Count);
+            Assert.AreEqual(1, statement.From.Count);
+            Assert.AreEqual("Production.Product", statement.From[0].Name);
+            Assert.AreEqual("T", statement.From[0].Alias.Name);
+
+            Assert.IsNotNull(statement.Pivot);
+            Assert.IsNotNull(statement.Pivot.Alias);
+            Assert.AreEqual("PT", statement.Pivot.Alias.Name);
+            Assert.AreEqual(1, statement.Pivot.Fields.Count);
+            Assert.AreEqual("DaysToManufacture", statement.Pivot.For);
+            Assert.AreEqual(5, statement.Pivot.In.Count);
+        }
     }
 }

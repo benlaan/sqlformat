@@ -25,6 +25,24 @@ namespace Laan.Sql.Parser.Entities
         public bool ExplicitWith { get; set; }
     }
 
+    public class Pivot : AliasedEntity
+    {
+        public Pivot()
+        {
+            In = new List<string>();
+            Fields = new List<Field>();
+        }
+
+        public List<Field> Fields { get; set; }
+        public string For { get; set; }
+        public List<string> In { get; set; }
+
+        public override string Value
+        {
+            get { return String.Format("FOR {0} IN ({1})", For, In.ToCsv()); }
+        }
+    }
+
     public class DerivedTable : Table
     {
         public SelectStatement SelectStatement { get; set; }

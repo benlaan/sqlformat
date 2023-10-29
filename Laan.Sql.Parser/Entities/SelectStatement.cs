@@ -17,7 +17,7 @@ namespace Laan.Sql.Parser.Entities
 
     public class SelectStatement : ProjectionStatement
     {
-        private const int MaxInlineColumns = 1;
+        private const int _maxInlineColumns = 1;
 
         public SelectStatement() : base()
         {
@@ -37,7 +37,7 @@ namespace Laan.Sql.Parser.Entities
 
         public bool CanInLine()
         {
-            return Fields.Count <= MaxInlineColumns
+            return Fields.Count <= _maxInlineColumns
                 &&
                 From.Count == 1 && 
                     !From.First().Joins.Any() 

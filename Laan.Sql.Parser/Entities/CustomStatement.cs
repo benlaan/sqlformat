@@ -15,6 +15,8 @@ namespace Laan.Sql.Parser.Entities
         }
 
         public List<Table> From { get; set; }
+        public Pivot Pivot { get; set; }
+
         public Expression Where { get; set; }
 
     }

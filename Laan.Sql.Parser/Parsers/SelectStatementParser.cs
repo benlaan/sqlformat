@@ -39,7 +39,7 @@ namespace Laan.Sql.Parser.Parsers
             if ( Tokenizer.TokenEquals( Constants.Group ) )
             {
                 ExpectToken( Constants.By );
-                ProcessFields( FieldType.GroupBy, _statement.GroupBy );
+                ProcessFields( FieldType.WithoutAlias, _statement.GroupBy );
 
                 if ( Tokenizer.TokenEquals( Constants.Having ) )
                     _statement.Having = ProcessExpression();

@@ -13,7 +13,7 @@ namespace Laan.Sql.Parser.Parsers
         Select,
         Update,
         OrderBy,
-        GroupBy
+        WithoutAlias
     }
 
     public abstract class CriteriaStatementParser<T> : StatementParser<T> where T : CustomStatement
@@ -105,7 +105,7 @@ namespace Laan.Sql.Parser.Parsers
                 case FieldType.OrderBy:
                     field = GetOrderByField(token);
                     break;
-                case FieldType.GroupBy:
+                case FieldType.WithoutAlias:
                     field = new Field { Expression = token };
                     break;
             }
@@ -128,7 +128,13 @@ namespace Laan.Sql.Parser.Parsers
 
         private JoinType? GetJoinType()
         {
-            JoinType? joinType = null;
+            JoinType? GetOuterType(JoinType explicitType, JoinType implicitType)
+            {
+                var joinType = Tokenizer.TokenEquals(Constants.Outer) ? explicitType : implicitType;
+                ExpectToken(Constants.Join);
+                return joinType;
+            }
+
             if (Tokenizer.TokenEquals(Constants.Inner))
             {
                 ExpectToken(Constants.Join);
@@ -143,35 +149,17 @@ namespace Laan.Sql.Parser.Parsers
 
             if (Tokenizer.TokenEquals(Constants.Full))
             {
-                if (Tokenizer.TokenEquals(Constants.Outer))
-                    joinType = JoinType.FullOuterJoin;
-                else
-                    joinType = JoinType.FullJoin;
-
-                ExpectToken(Constants.Join);
-                return joinType;
+                return GetOuterType(JoinType.FullOuterJoin, JoinType.FullJoin);
             }
 
             if (Tokenizer.TokenEquals(Constants.Left))
             {
-                if (Tokenizer.TokenEquals(Constants.Outer))
-                    joinType = JoinType.LeftOuterJoin;
-                else
-                    joinType = JoinType.LeftJoin;
-
-                ExpectToken(Constants.Join);
-                return joinType;
+                return GetOuterType(JoinType.LeftOuterJoin, JoinType.LeftJoin);
             }
 
             if (Tokenizer.TokenEquals(Constants.Right))
             {
-                if (Tokenizer.TokenEquals(Constants.Outer))
-                    joinType = JoinType.RightOuterJoin;
-                else
-                    joinType = JoinType.RightJoin;
-
-                ExpectToken(Constants.Join);
-                return joinType;
+                return GetOuterType(JoinType.RightOuterJoin, JoinType.RightJoin);
             }
 
             if (Tokenizer.TokenEquals(Constants.Cross))
@@ -189,7 +177,7 @@ namespace Laan.Sql.Parser.Parsers
                 return JoinType.OuterApply;
             }
 
-            return joinType;
+            return null;
         }
 
         private bool IsTerminatingFromExpression()
@@ -241,7 +229,7 @@ namespace Laan.Sql.Parser.Parsers
                 {
                     if (Tokenizer.HasMoreTokens)
                     {
-                        if (!Tokenizer.Current.IsTypeIn(TokenType.AlphaNumeric, TokenType.AlphaNumeric, TokenType.BlockedText, TokenType.SingleQuote))
+                        if (!Tokenizer.Current.IsTypeIn(TokenType.AlphaNumeric, TokenType.BlockedText, TokenType.SingleQuote))
                             throw new SyntaxException(String.Format("Incorrect syntax near '{0}'", CurrentToken));
 
                         alias.Name = CurrentToken;
@@ -252,6 +240,7 @@ namespace Laan.Sql.Parser.Parsers
 
                 ProcessTableHints(table);
                 ProcessJoins(table);
+                ProcessPivot();
             }
             while (Tokenizer.HasMoreTokens && Tokenizer.TokenEquals(Constants.Comma));
         }
@@ -260,6 +249,7 @@ namespace Laan.Sql.Parser.Parsers
         {
             if (!Tokenizer.HasMoreTokens)
                 return;
+
             do
             {
                 var joinType = GetJoinType();
@@ -273,10 +263,13 @@ namespace Laan.Sql.Parser.Parsers
                     {
                         using (Tokenizer.ExpectBrackets())
                         {
-                            join = new ApplyJoin { Type = joinType.Value };
+                            var applyJoin = new ApplyJoin { Type = joinType.Value };
+
                             Tokenizer.ExpectToken(Constants.Select);
                             var parser = new SelectStatementParser(Tokenizer);
-                            ((ApplyJoin)join).Expression = new SelectExpression { Statement = parser.Execute() };
+                            applyJoin.Expression = new SelectExpression { Statement = parser.Execute() };
+
+                            join = applyJoin;
                         }
                     }
                     else
@@ -294,34 +287,23 @@ namespace Laan.Sql.Parser.Parsers
                     {
                         using (Tokenizer.ExpectBrackets())
                         {
-                            join = new DerivedJoin { Type = joinType.Value };
+                            var derivedJoin = new DerivedJoin { Type = joinType.Value };
+
                             Tokenizer.ExpectToken(Constants.Select);
                             var parser = new SelectStatementParser(Tokenizer);
-                            ((DerivedJoin)join).SelectStatement = parser.Execute();
+                            derivedJoin.SelectStatement = parser.Execute();
+
+                            join = derivedJoin;
                         }
                     }
                     else
                     {
-                        join = new Join { Type = joinType.Value };
-                        join.Name = GetTableName();
+                        join = new Join { Type = joinType.Value, Name = GetTableName() };
                     }
                 }
 
                 Debug.Assert(join != null);
-
-                Alias alias = new Alias(null);
-                if (Tokenizer.IsNextToken(Constants.As))
-                {
-                    alias.Type = AliasType.As;
-                    Tokenizer.ReadNextToken();
-                }
-
-                if (alias.Type != AliasType.Implicit || !Tokenizer.IsNextToken(Constants.On))
-                {
-                    alias.Name = GetIdentifier();
-                    join.Alias = alias;
-                }
-
+                ProcessAlias(join);
                 ProcessTableHints(join);
 
                 if (!(join is ApplyJoin) && join.Type != JoinType.CrossJoin)
@@ -338,6 +320,49 @@ namespace Laan.Sql.Parser.Parsers
                 table.Joins.Add(join);
             }
             while (Tokenizer.HasMoreTokens && !Tokenizer.IsNextToken(Constants.Order, Constants.Group));
+        }
+
+        private void ProcessAlias(AliasedEntity entity)
+        {
+            var alias = new Alias(null);
+            if (Tokenizer.IsNextToken(Constants.As))
+            {
+                alias.Type = AliasType.As;
+                Tokenizer.ReadNextToken();
+            }
+
+            if (alias.Type != AliasType.Implicit || !Tokenizer.IsNextToken(Constants.On))
+            {
+                alias.Name = GetIdentifier();
+                entity.Alias = alias;
+            }
+        }
+
+        private void ProcessPivot()
+        {
+            if (!Tokenizer.IsNextToken(Constants.Pivot))
+                return;
+
+            var pivot = new Pivot();
+            _statement.Pivot = pivot;
+
+            Tokenizer.ReadNextToken();
+
+            using (Tokenizer.ExpectBrackets())
+            {
+                ProcessFields(FieldType.WithoutAlias, pivot.Fields);
+
+                Tokenizer.ExpectToken(Constants.For);
+                pivot.For = GetIdentifier();
+
+                Tokenizer.ExpectToken(Constants.In);
+                using (Tokenizer.ExpectBrackets())
+                {
+                    pivot.In.AddRange(GetIdentifierList());
+                }
+            }
+
+            ProcessAlias(pivot);
         }
 
         protected void ProcessWhere()
