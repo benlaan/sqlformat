@@ -12,14 +12,20 @@ namespace Laan.Sql.Formatter
         public FormattingEngine()
         {
             UseTabChar = false;
+            TabSize = 4;
         }
 
         public string Execute(string sql)
         {
-            var outSql = new StringBuilder(sql.Length * 2);
             var statements = ParserFactory.Execute(sql);
+            return Execute(statements.ToArray());
+        }
 
-            var indentation = new Indentation();
+        private string Execute(params IStatement[] statements)
+        {
+            var outSql = new StringBuilder(1024);
+
+            var indentation = new Indentation(TabSize, UseTabChar);
 
             foreach (var statement in statements)
             {

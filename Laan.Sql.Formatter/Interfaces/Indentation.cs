@@ -6,10 +6,10 @@ namespace Laan.Sql.Formatter
 {
     public class Indentation : IIndentable
     {
-        public Indentation()
+        public Indentation(int indentSize = 4, bool useTabs = false)
         {
             IndentLevel = 0;
-            Indent = new string(' ', 4);
+            Indent = useTabs ? "\t" : new string(' ', indentSize);
         }
 
         public void IncreaseIndent()
