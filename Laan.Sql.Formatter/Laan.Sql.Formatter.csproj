@@ -1,15 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <PackageReadmeFile>readme.md</PackageReadmeFile>
-    <Description>SQL Formatter component</Description>
-  </PropertyGroup>
+    <PropertyGroup>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
+        <Description>SQL Formatter component</Description>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="readme.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
 
-  <Import Project="$(SolutionDir)Build\Common.targets" />
-  <Import Project="$(SolutionDir)Build\Nuget.targets" />
+    <ItemGroup>
+        <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj" />
+    </ItemGroup>
+
+    <Import Project="$(SolutionDir)Build\Common.targets" />
+    <Import Project="$(SolutionDir)Build\Nuget.targets" />
 
 </Project>
