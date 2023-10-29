@@ -58,14 +58,14 @@ namespace Laan.Sql.Parser
         /// <typeparam name="T"></typeparam>
         /// <param name="sql"></param>
         /// <returns></returns>
-        public static List<T> Execute<T>(string sql) where T : class, IStatement
+        public static IList<T> Execute<T>(string sql) where T : class, IStatement
         {
             return Execute(sql)
                 .Cast<T>()
                 .ToList<T>();
         }
 
-        public static List<IStatement> Execute(ITokenizer tokenizer, bool ensureParserIsFound)
+        public static IList<IStatement> Execute(ITokenizer tokenizer, bool ensureParserIsFound)
         {
             var result = new List<IStatement>();
 
@@ -93,7 +93,7 @@ namespace Laan.Sql.Parser
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        public static List<IStatement> Execute(string sql)
+        public static IList<IStatement> Execute(string sql)
         {
             sql = TrimBatchMetadata(sql);
 

@@ -1,6 +1,6 @@
-using System.Linq;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using Laan.Sql.Parser.Entities;
 
@@ -11,18 +11,15 @@ namespace Laan.Sql.Parser.Test
     [TestFixture]
     public class TestNHibernateStatements
     {
-        private const string sample =
-    @"Batch commands:
-command 0:INSERT INTO dbo.[SimpleEntity] (Version, Name, UserName, Created, Modified, IsDeleted, Id) VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6)";
-
         [Test]
         public void Test_ParserFactory_Correctly_Strips_Batch_Commands_Preamble()
         {
             // Arrange
+            string _sql = @"Batch commands:
+command 0:INSERT INTO dbo.[SimpleEntity] (Version, Name, UserName, Created, Modified, IsDeleted, Id) VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6)";
 
             // Act
-            List<IStatement> results = ParserFactory.Execute(sample);
-
+            var results = ParserFactory.Execute(_sql);
 
             // Assert
             Assert.IsNotEmpty(results);
