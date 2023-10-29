@@ -5,10 +5,9 @@ using System.Diagnostics;
 
 namespace Laan.Sql.Parser.Entities
 {
-    [ DebuggerDisplay("{Value}") ]
-    public class CreateTableStatement : IStatement
+    [DebuggerDisplay("{Value}")]
+    public class CreateTableStatement : Statement
     {
-        public bool Terminated { get; set; }
         public CreateTableStatement()
         {
             Fields = new FieldDefinitions();
@@ -17,20 +16,16 @@ namespace Laan.Sql.Parser.Entities
         public string TableName { get; set; }
         public FieldDefinitions Fields { get; set; }
 
-        #region IStatement Members
-
-        public string Identifier
+        public override string Identifier
         {
             get
             {
                 return String.Format(
                     "CREATE TABLE {0}\n(\n{1}\n)",
                     TableName,
-                    String.Join( ",\n", Fields.Select( fld => "\t" + fld.ToString() ).ToArray() )
+                    Fields.Select(fld => String.Format("\t{0}", fld)).Join(",\n")
                 );
             }
         }
-
-        #endregion
     }
 }

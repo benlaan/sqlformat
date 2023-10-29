@@ -60,12 +60,6 @@ namespace Laan.Sql.Parser.Parsers
             return sqlTypeParser.Execute();
         }
 
-        private Expression ProcessSimpleExpression()
-        {
-            var parser = new ExpressionParser(Tokenizer);
-            return parser.ReadSingleExpression();
-        }
-
         private void ProcessFieldDefinition()
         {
             var nullability = Nullability.Nullable;
