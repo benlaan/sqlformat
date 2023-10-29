@@ -30,6 +30,7 @@ namespace Laan.Sql.Parser
         public const string Count = "COUNT";
         public const string Create = "CREATE";
         public const string Cross = "CROSS";
+        public const string Apply = "APPLY";
         public const string DateFirst = "DATEFIRST";
         public const string DateFormat = "DATEFORMAT";
         public const string DeadlockPriority = "DEADLOCK_PRIORITY";

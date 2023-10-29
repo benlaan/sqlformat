@@ -300,9 +300,9 @@ namespace Laan.Sql.Parser.Test
             // Exercise
             SelectStatement statement = ParserFactory.Execute<SelectStatement>(@"
 
-                select fielda 
+                select fielda
 
-                from table1 t1 
+                from table1 t1
 
                 join table2 as t2
                   on t1.field1 = t2.field2
@@ -453,6 +453,110 @@ namespace Laan.Sql.Parser.Test
             Assert.AreEqual("t1.field1", nestedExpression.Left.Value);
             Assert.IsTrue(nestedExpression.Right is IdentifierExpression);
             Assert.AreEqual("t2.fielda", nestedExpression.Right.Value);
+        }
+
+        [Test]
+        [TestCase("JOIN", JoinType.Join)]
+        [TestCase("INNER JOIN", JoinType.InnerJoin)]
+        [TestCase("LEFT JOIN", JoinType.LeftJoin)]
+        [TestCase("LEFT OUTER JOIN", JoinType.LeftOuterJoin)]
+        [TestCase("RIGHT JOIN", JoinType.RightJoin)]
+        [TestCase("RIGHT OUTER JOIN", JoinType.RightOuterJoin)]
+        [TestCase("FULL JOIN", JoinType.FullJoin)]
+        [TestCase("FULL OUTER JOIN", JoinType.FullOuterJoin)]
+        [TestCase("CROSS JOIN", JoinType.CrossJoin, false)]
+        public void Can_Parse_All_Join_Types(string joinText, JoinType type, bool includeCriteria = true)
+        {
+            var sql = String.Format("select * from table1 t1 {0} table2 as t2 {1}", joinText, includeCriteria ? "on t1.field1 = t2.fielda" : String.Empty);
+            var statement = ParserFactory.Execute<SelectStatement>(sql).First();
+
+            // Verify outcome
+            Assert.IsNotNull(statement);
+
+            // Test From
+            Assert.AreEqual(1, statement.From.Count);
+            Assert.AreEqual("table1", statement.From[0].Name);
+            Assert.AreEqual("t1", statement.From[0].Alias.Name);
+
+            // Test Join
+            Assert.AreEqual(1, statement.From[0].Joins.Count);
+
+            var join = statement.From[0].Joins[0];
+            Assert.AreEqual("table2", join.Name);
+            Assert.AreEqual("t2", join.Alias.Name);
+
+            Assert.AreEqual(type, join.Type);
+        }
+
+        [Test]
+        [TestCase("CROSS", JoinType.CrossApply)]
+        [TestCase("OUTER", JoinType.OuterApply)]
+        public void Can_Parse_Apply_Joins(string joinText, JoinType type)
+        {
+            var sql = String.Format("SELECT P.ProductId, P.Name, SP.TotalSales FROM Production.Product P {0} APPLY Sales.GetSalesByProduct (P.ProductId) AS SP", joinText);
+            var statement = ParserFactory.Execute<SelectStatement>(sql).First();
+
+            // Verify outcome
+            Assert.IsNotNull(statement);
+
+            // Test From
+            Assert.AreEqual(1, statement.From.Count);
+            Assert.AreEqual("Production.Product", statement.From[0].Name);
+            Assert.AreEqual("P", statement.From[0].Alias.Name);
+
+            // Test Join
+            Assert.AreEqual(1, statement.From[0].Joins.Count);
+
+            var join = statement.From[0].Joins[0] as ApplyJoin;
+            var expression = (FunctionExpression)join.Expression;
+
+            Assert.AreEqual(type, join.Type);
+            Assert.AreEqual("Sales.GetSalesByProduct", expression.Name);
+            Assert.AreEqual(1, expression.Arguments.Count);
+            Assert.AreEqual("P.ProductId", expression.Arguments[0].Value);
+            Assert.AreEqual("SP", join.Alias.Name);
+        }
+
+        [Test]
+        [TestCase("CROSS", JoinType.CrossApply)]
+        [TestCase("OUTER", JoinType.OuterApply)]
+        public void Can_Apply_Derived_Apply_Joins(string joinText, JoinType type)
+        {
+            var sql = String.Format(@"
+
+                SELECT soh.SalesOrderID, soh.OrderDate, sub.*
+                FROM Sales.SalesOrderHeader soh {0} APPLY (
+
+                    SELECT
+                        SUM (sod.UnitPrice) AS UnitPrice,
+                        SUM (sod.OrderQty) AS Quantity
+                    FROM Sales.SalesOrderDetail sod
+                    WHERE sod.SalesOrderID = soh.SalesOrderId
+
+                ) AS sub",
+                joinText
+            );
+
+            var statement = ParserFactory.Execute<SelectStatement>(sql).First();
+
+            // Verify outcome
+            Assert.IsNotNull(statement);
+
+            // Test From
+            Assert.AreEqual(1, statement.From.Count);
+            Assert.AreEqual("Sales.SalesOrderHeader", statement.From[0].Name);
+            Assert.AreEqual("soh", statement.From[0].Alias.Name);
+
+            // Test Join
+            Assert.AreEqual(1, statement.From[0].Joins.Count);
+
+            var join = statement.From[0].Joins[0] as ApplyJoin;
+            var expression = (SelectExpression)join.Expression;
+
+            Assert.AreEqual(type, join.Type);
+            Assert.AreEqual("Sales.SalesOrderDetail", expression.Statement.From[0].Name);
+            Assert.AreEqual(2, expression.Statement.Fields.Count);
+            Assert.AreEqual("sub", join.Alias.Name);
         }
 
         [Test]
@@ -608,8 +712,8 @@ namespace Laan.Sql.Parser.Test
             Assert.AreEqual(1, statement.From.Count);
             Assert.AreEqual("table", statement.From[0].Name);
             Assert.AreEqual(2, statement.OrderBy.Count);
-            Assert.AreEqual(Laan.Sql.Parser.Entities.SortOrder.Descending, (statement.OrderBy[0] as SortedField).SortOrder);
-            Assert.AreEqual(Laan.Sql.Parser.Entities.SortOrder.Ascending, (statement.OrderBy[1] as SortedField).SortOrder);
+            Assert.AreEqual(SortOrder.Descending, (statement.OrderBy[0] as SortedField).SortOrder);
+            Assert.AreEqual(SortOrder.Ascending, (statement.OrderBy[1] as SortedField).SortOrder);
         }
 
         [Test]

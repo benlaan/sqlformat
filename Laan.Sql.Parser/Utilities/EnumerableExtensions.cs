@@ -8,7 +8,7 @@ namespace Laan.Sql.Parser
     {
         public static string Join<T>(this IEnumerable<T> enumerable, string separator)
         {
-            return String.Join(separator, enumerable.Select(e => e.ToString()).ToArray());
+            return String.Join(separator, enumerable.Select(e => e.ToString()));
         }
 
         public static string ToCsv<T>(this IEnumerable<T> enumerable)

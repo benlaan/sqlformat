@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 
 using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Parser.Parsers
 {
@@ -39,7 +40,7 @@ namespace Laan.Sql.Parser.Parsers
             Constants.XLock,
         };
 
-        private readonly string[] _tableHintsSingle = 
+        private readonly string[] _tableHintsSingle =
         {
             Constants.NoLock,
             Constants.ReadUncommitted,
@@ -76,17 +77,14 @@ namespace Laan.Sql.Parser.Parsers
         /// <returns></returns>
         public virtual T Execute()
         {
-            return default(T);
+            return default;
         }
-
-        #region IParser Members
 
         IStatement IParser.Execute()
         {
-            return this.Execute() as IStatement;
+            return Execute();
         }
 
-        #endregion
         public enum With
         {
             Optional,
@@ -132,6 +130,12 @@ namespace Laan.Sql.Parser.Parsers
                 tableHints.TableHints.Add(hint);
                 Tokenizer.ReadNextToken();
             }
+        }
+
+        protected Expression ProcessSimpleExpression()
+        {
+            var parser = new ExpressionParser(Tokenizer);
+            return parser.ReadSingleExpression();
         }
     }
 }

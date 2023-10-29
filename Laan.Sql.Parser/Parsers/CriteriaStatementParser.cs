@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
-using System.Collections;
 
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
@@ -36,12 +35,13 @@ namespace Laan.Sql.Parser.Parsers
 
         private Field GetSelectField(Expression token)
         {
-            Expression expression = null;
-            Alias alias = new Alias(token);
+            Expression expression;
+            var alias = new Alias(token);
+
             if (token is CriteriaExpression)
             {
                 // this handles the non-standard syntax of: Alias = Expression
-                CriteriaExpression criteriaExpression = (CriteriaExpression)token;
+                var criteriaExpression = (CriteriaExpression)token;
                 alias.Name = criteriaExpression.Left.Value;
                 alias.Type = AliasType.Equals;
                 expression = criteriaExpression.Right;
@@ -74,12 +74,12 @@ namespace Laan.Sql.Parser.Parsers
 
         private Field GetUpdateField(Expression token)
         {
-            Alias alias = new Alias(token);
-            Expression expression = null;
+            var alias = new Alias(token);
+            Expression expression;
 
             if (token is CriteriaExpression)
             {
-                CriteriaExpression criteriaExpression = (CriteriaExpression)token;
+                var criteriaExpression = (CriteriaExpression)token;
                 alias.Name = criteriaExpression.Left.Value;
                 alias.Type = AliasType.Equals;
                 expression = criteriaExpression.Right;
@@ -87,7 +87,7 @@ namespace Laan.Sql.Parser.Parsers
             else
                 throw new SyntaxException(String.Format("Expected field assignment at {0}", Tokenizer.Position.ToString()));
 
-            return new Field() { Expression = expression, Alias = alias };
+            return new Field { Expression = expression, Alias = alias };
         }
 
         private void ProcessField(FieldType fieldType, List<Field> fieldList)
@@ -109,6 +109,7 @@ namespace Laan.Sql.Parser.Parsers
                     field = new Field { Expression = token };
                     break;
             }
+
             if (field != null)
                 fieldList.Add(field);
         }
@@ -129,37 +130,66 @@ namespace Laan.Sql.Parser.Parsers
         {
             JoinType? joinType = null;
             if (Tokenizer.TokenEquals(Constants.Inner))
-                joinType = JoinType.InnerJoin;
-            else
-                if (Tokenizer.IsNextToken(Constants.Join))
-                    // don't consume - it is checked after here
-                    joinType = JoinType.Join;
-                else
-                    if (Tokenizer.TokenEquals(Constants.Full))
-                    {
-                        joinType = JoinType.FullJoin;
-                        if (Tokenizer.TokenEquals(Constants.Outer))
-                            joinType = JoinType.FullOuterJoin;
-                    }
-                    else
-                        if (Tokenizer.TokenEquals(Constants.Left))
-                        {
-                            joinType = JoinType.LeftJoin;
-                            if (Tokenizer.TokenEquals(Constants.Outer))
-                                joinType = JoinType.LeftOuterJoin;
-                        }
-                        else
-                            if (Tokenizer.TokenEquals(Constants.Right))
-                            {
-                                joinType = JoinType.RightJoin;
-                                if (Tokenizer.TokenEquals(Constants.Outer))
-                                    joinType = JoinType.RightOuterJoin;
-                            }
-                            else
-                                if (Tokenizer.TokenEquals(Constants.Cross))
-                                    joinType = JoinType.CrossJoin;
+            {
+                ExpectToken(Constants.Join);
+                return JoinType.InnerJoin;
+            }
 
+            if (Tokenizer.IsNextToken(Constants.Join))
+            {
+                ExpectToken(Constants.Join);
+                return JoinType.Join;
+            }
+
+            if (Tokenizer.TokenEquals(Constants.Full))
+            {
+                if (Tokenizer.TokenEquals(Constants.Outer))
+                    joinType = JoinType.FullOuterJoin;
+                else
+                    joinType = JoinType.FullJoin;
+
+                ExpectToken(Constants.Join);
                 return joinType;
+            }
+
+            if (Tokenizer.TokenEquals(Constants.Left))
+            {
+                if (Tokenizer.TokenEquals(Constants.Outer))
+                    joinType = JoinType.LeftOuterJoin;
+                else
+                    joinType = JoinType.LeftJoin;
+
+                ExpectToken(Constants.Join);
+                return joinType;
+            }
+
+            if (Tokenizer.TokenEquals(Constants.Right))
+            {
+                if (Tokenizer.TokenEquals(Constants.Outer))
+                    joinType = JoinType.RightOuterJoin;
+                else
+                    joinType = JoinType.RightJoin;
+
+                ExpectToken(Constants.Join);
+                return joinType;
+            }
+
+            if (Tokenizer.TokenEquals(Constants.Cross))
+            {
+                if (Tokenizer.TokenEquals(Constants.Apply))
+                    return JoinType.CrossApply;
+
+                ExpectToken(Constants.Join);
+                return JoinType.CrossJoin;
+            }
+
+            if (Tokenizer.TokenEquals(Constants.Outer))
+            {
+                ExpectToken(Constants.Apply);
+                return JoinType.OuterApply;
+            }
+
+            return joinType;
         }
 
         private bool IsTerminatingFromExpression()
@@ -211,10 +241,7 @@ namespace Laan.Sql.Parser.Parsers
                 {
                     if (Tokenizer.HasMoreTokens)
                     {
-                        if (!Tokenizer.Current.IsTypeIn(
-                                TokenType.AlphaNumeric, TokenType.AlphaNumeric, TokenType.BlockedText, TokenType.SingleQuote
-                            )
-                        )
+                        if (!Tokenizer.Current.IsTypeIn(TokenType.AlphaNumeric, TokenType.AlphaNumeric, TokenType.BlockedText, TokenType.SingleQuote))
                             throw new SyntaxException(String.Format("Incorrect syntax near '{0}'", CurrentToken));
 
                         alias.Name = CurrentToken;
@@ -222,6 +249,7 @@ namespace Laan.Sql.Parser.Parsers
                         ReadNextToken();
                     }
                 }
+
                 ProcessTableHints(table);
                 ProcessJoins(table);
             }
@@ -234,25 +262,49 @@ namespace Laan.Sql.Parser.Parsers
                 return;
             do
             {
-                JoinType? joinType = GetJoinType();
+                var joinType = GetJoinType();
                 if (joinType == null)
                     return;
 
-                ExpectToken(Constants.Join);
-
                 Join join = null;
-                if (Tokenizer.IsNextToken(Constants.OpenBracket))
-                    using (Tokenizer.ExpectBrackets())
+                if (joinType == JoinType.CrossApply || joinType == JoinType.OuterApply)
+                {
+                    if (Tokenizer.IsNextToken(Constants.OpenBracket))
                     {
-                        join = new DerivedJoin { Type = joinType.Value };
-                        Tokenizer.ExpectToken(Constants.Select);
-                        var parser = new SelectStatementParser(Tokenizer);
-                        ((DerivedJoin)join).SelectStatement = (SelectStatement)parser.Execute();
+                        using (Tokenizer.ExpectBrackets())
+                        {
+                            join = new ApplyJoin { Type = joinType.Value };
+                            Tokenizer.ExpectToken(Constants.Select);
+                            var parser = new SelectStatementParser(Tokenizer);
+                            ((ApplyJoin)join).Expression = new SelectExpression { Statement = parser.Execute() };
+                        }
                     }
+                    else
+                    {
+                        var functionExpression = ProcessSimpleExpression() as FunctionExpression;
+                        if (functionExpression == null)
+                            throw new SyntaxException("Syntax error in Apply expression");
+
+                        join = new ApplyJoin { Type = joinType.Value, Expression = functionExpression };
+                    }
+                }
                 else
                 {
-                    join = new Join { Type = joinType.Value };
-                    join.Name = GetTableName();
+                    if (Tokenizer.IsNextToken(Constants.OpenBracket))
+                    {
+                        using (Tokenizer.ExpectBrackets())
+                        {
+                            join = new DerivedJoin { Type = joinType.Value };
+                            Tokenizer.ExpectToken(Constants.Select);
+                            var parser = new SelectStatementParser(Tokenizer);
+                            ((DerivedJoin)join).SelectStatement = parser.Execute();
+                        }
+                    }
+                    else
+                    {
+                        join = new Join { Type = joinType.Value };
+                        join.Name = GetTableName();
+                    }
                 }
 
                 Debug.Assert(join != null);
@@ -271,13 +323,17 @@ namespace Laan.Sql.Parser.Parsers
                 }
 
                 ProcessTableHints(join);
-                ExpectToken(Constants.On);
-                Expression expr = ProcessExpression();
 
-                if (!(expr is CriteriaExpression) && !(expr is NestedExpression && (expr as NestedExpression).Expression is CriteriaExpression))
-                    throw new SyntaxException("Expected Criteria Expression");
+                if (!(join is ApplyJoin) && join.Type != JoinType.CrossJoin)
+                {
+                    ExpectToken(Constants.On);
+                    Expression expr = ProcessExpression();
 
-                join.Condition = expr;
+                    if (!(expr is CriteriaExpression) && !(expr is NestedExpression && (expr as NestedExpression).Expression is CriteriaExpression))
+                        throw new SyntaxException("Expected Criteria Expression");
+
+                    join.Condition = expr;
+                }
 
                 table.Joins.Add(join);
             }
