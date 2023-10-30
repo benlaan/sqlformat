@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Exceptions;
+using System.Linq;
 
 namespace Laan.Sql.Parser.Parsers
 {
@@ -350,7 +351,9 @@ namespace Laan.Sql.Parser.Parsers
 
             using (Tokenizer.ExpectBrackets())
             {
-                ProcessFields(FieldType.WithoutAlias, pivot.Fields);
+                var fields = new List<Field>();
+                ProcessField(FieldType.WithoutAlias, fields);
+                pivot.Field = fields.Single();
 
                 Tokenizer.ExpectToken(Constants.For);
                 pivot.For = GetIdentifier();

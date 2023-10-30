@@ -7,9 +7,9 @@ namespace Laan.Sql.Parser.Entities
 {
     public class AliasedEntity : Expression
     {
-        public AliasedEntity() : base ( null )
+        public AliasedEntity() : base(null)
         {
-            Alias = new Alias( this );
+            Alias = new Alias(this);
         }
 
         public Alias Alias { get; set; }
@@ -19,7 +19,7 @@ namespace Laan.Sql.Parser.Entities
 
     public class Alias : Expression
     {
-        public Alias( Expression parent ) : base ( parent )
+        public Alias(Expression parent) : base(parent)
         {
             Type = AliasType.Implicit;
         }
@@ -31,22 +31,20 @@ namespace Laan.Sql.Parser.Entities
         {
             get
             {
-                string format = "";
-                switch ( Type )
+                switch (Type)
                 {
                     case AliasType.Implicit:
-                        format = !String.IsNullOrEmpty( Name ) ? String.Format( " {0}", Name ) : "";
-                        break;
+                        return !String.IsNullOrEmpty(Name) ? String.Format(" {0}", Name) : String.Empty;
 
                     case AliasType.Equals:
-                        format = !String.IsNullOrEmpty( Name ) ? String.Format( "{0} = ", Name ) : "";
-                        break;
+                        return !String.IsNullOrEmpty(Name) ? String.Format("{0} = ", Name) : String.Empty;
 
                     case AliasType.As:
-                        format = String.Format( " AS {0}", Name );
-                        break;
+                        return String.Format(" AS {0}", Name);
+
+                    default:
+                        return String.Empty;
                 }
-                return format;
             }
             protected set { base.Value = value; }
         }

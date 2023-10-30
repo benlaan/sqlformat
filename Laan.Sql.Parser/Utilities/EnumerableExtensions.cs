@@ -15,5 +15,10 @@ namespace Laan.Sql.Parser
         {
             return enumerable.Join(", ");
         }
+
+        public static string ToCsv<T>(this IEnumerable<T> enumerable, Func<T, string> selector)
+        {
+            return enumerable.Select(selector).ToCsv();
+        }
     }
 }

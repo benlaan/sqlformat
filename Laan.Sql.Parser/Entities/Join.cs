@@ -72,13 +72,16 @@ namespace Laan.Sql.Parser.Entities
         public JoinType Type { get; set; }
         public Expression Condition { get; set; }
 
+        public string GetJoinType() => _joinMap[Type];
+
         public override string Value
         {
-            get { return String.Format("{0} {1}{2}", _joinMap[Type], Name, Alias.Value); }
+            get { return String.Format("{0} {1}{2}", GetJoinType(), Name, Alias.Value); }
             protected set { base.Value = value; }
         }
 
-        public int Length { get { return _joinMap[Type].Length; } }
+        public int Length => GetJoinType().Length;
+
         public List<TableHint> TableHints { get; set; }
         public bool ExplicitWith { get; set; }
     }
@@ -89,7 +92,7 @@ namespace Laan.Sql.Parser.Entities
 
         public override string Value
         {
-            get { return String.Format("{0} (", _joinMap[Type]); }
+            get { return String.Format("{0} (", GetJoinType()); }
             protected set { base.Value = value; }
         }
     }
@@ -97,11 +100,5 @@ namespace Laan.Sql.Parser.Entities
     public class ApplyJoin : Join
     {
         public Expression Expression { get; set; }
-
-        public override string Value
-        {
-            get { return String.Format("{0} {1}", _joinMap[Type], Expression.Value); }
-            protected set { base.Value = value; }
-        }
     }
 }

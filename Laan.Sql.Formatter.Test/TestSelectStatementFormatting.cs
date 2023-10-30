@@ -915,5 +915,115 @@ namespace Laan.Sql.Formatter.Test
 
             Compare(actual, expected);
         }
+
+        [Test]
+        public void Can_Format_Select_Statement_With_Cross_Apply_Select()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute(@"
+                SELECT A.ID, COUNT(*) FROM dbo.Table T CROSS APPLY ( SELECT Name FROM Server.db.owner.Tables Y
+                JOIN OtherTable O ON O.ID = Y.ID WHERE T.ID = 'ben' ) AS X WHERE X.ID <> T.ID"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT",
+                "    A.ID,",
+                "    COUNT(*)",
+                "",
+                "FROM dbo.Table T",
+                "",
+                "CROSS APPLY (",
+                "",
+                "    SELECT Name",
+                "",
+                "    FROM Server.db.owner.Tables Y",
+                "",
+                "    JOIN OtherTable O",
+                "      ON O.ID = Y.ID",
+                "",
+                "    WHERE T.ID = 'ben'",
+                "",
+                ") AS X",
+                "",
+                "WHERE X.ID <> T.ID"
+            };
+
+            Compare(actual, expected);
+        }
+
+        [Test]
+        public void Can_Format_Select_Statement_With_Cross_Apply_Function()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute(@"
+                SELECT T.ID, T.Name FROM dbo.Table T CROSS APPLY dbo.Calculate(T.Id,
+                T.BirthDay
+                ) AS X WHERE X.TotalSales > T.ExpectedSales"
+            );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT",
+                "    T.ID,",
+                "    T.Name",
+                "",
+                "FROM dbo.Table T",
+                "",
+                "CROSS APPLY dbo.Calculate(T.Id, T.BirthDay) AS X",
+                "",
+                "WHERE X.TotalSales > T.ExpectedSales"
+            };
+
+            Compare(actual, expected);
+        }
+
+        [Test]
+        public void Can_Format_Select_Statement_With_Pivot()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute(@"
+                SELECT AverageCost AS Cost, [0], [1], [2], [3], [4] 
+                FROM Production.Product P
+                PIVOT (AVG(StandardCost) FOR DaysToManufacture IN ([0], [1], [2], [3], [4])) AS PT
+                WHERE P.Data BETWEEN 2 AND 3
+            ");
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT",
+                "    AverageCost AS Cost,",
+                "    [0],",
+                "    [1],",
+                "    [2],",
+                "    [3],",
+                "    [4]",
+                "",
+                "FROM Production.Product P",
+                "",
+                "PIVOT (",
+                "",
+                "    AVG(StandardCost)",
+                "    FOR DaysToManufacture IN ([0], [1], [2], [3], [4])",
+                "",
+                ") AS PT",
+                "",
+                "WHERE P.Data BETWEEN 2 AND 3",
+            };
+
+            Compare(actual, expected);
+        }
     }
 }

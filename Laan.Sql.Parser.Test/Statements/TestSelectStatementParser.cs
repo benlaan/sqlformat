@@ -1029,7 +1029,6 @@ namespace Laan.Sql.Parser.Test
             Assert.IsNotNull(statement.Pivot);
             Assert.IsNotNull(statement.Pivot.Alias);
             Assert.AreEqual("PT", statement.Pivot.Alias.Name);
-            Assert.AreEqual(1, statement.Pivot.Fields.Count);
             Assert.AreEqual("DaysToManufacture", statement.Pivot.For);
             Assert.AreEqual(5, statement.Pivot.In.Count);
         }

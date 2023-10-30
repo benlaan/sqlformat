@@ -6,7 +6,7 @@ namespace Laan.Sql.Formatter
 {
     public class BaseFormatter : IIndentable
     {
-        private static BracketFormatOption bracketSpaceOption = BracketFormatOption.NoSpaces;
+        private static BracketFormatOption _bracketSpaceOption = BracketFormatOption.NoSpaces;
         protected static Dictionary<BracketFormatOption, string> _bracketFormats;
 
         protected StringBuilder _sql;
@@ -20,7 +20,12 @@ namespace Laan.Sql.Formatter
 
         public static string FormatBrackets(string text)
         {
-            return String.Format(_bracketFormats[bracketSpaceOption], text);
+            return String.Format(_bracketFormats[_bracketSpaceOption], text);
+        }
+
+        protected void AppendFormat(string text, params object[] args)
+        {
+            Append(String.Format(text, args));
         }
 
         protected void IndentAppend(string text)

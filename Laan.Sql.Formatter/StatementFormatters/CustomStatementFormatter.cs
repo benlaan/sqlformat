@@ -1,10 +1,9 @@
 using System;
-using System.Text;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 using Laan.Sql.Parser;
-using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Formatter
@@ -17,51 +16,49 @@ namespace Laan.Sql.Formatter
 
     public class CustomStatementFormatter<T> : StatementFormatter<T> where T : CustomStatement
     {
-        private const int WhereLength = 5;
+        private const int _whereLength = 5;
 
-        public CustomStatementFormatter(IIndentable indentable, StringBuilder sql, T statement) 
+        public CustomStatementFormatter(IIndentable indentable, StringBuilder sql, T statement)
             : base(indentable, sql, statement)
         {
-            
         }
 
         protected virtual bool CanCompactFormat()
         {
-            return IsExpressionOperatorAndOr( _statement.Where );
+            return IsExpressionOperatorAndOr(_statement.Where);
         }
 
         protected void FormatWhere()
         {
-            if ( _statement.Where == null )
+            if (_statement.Where == null)
                 return;
 
-            NewLine( CanCompactFormat() ? 1 : 2 );
+            NewLine(CanCompactFormat() ? 1 : 2);
             IndentAppendFormat(
                 "{0} {1}",
                 Constants.Where,
-                _statement.Where.FormattedValue( WhereLength, this )
+                _statement.Where.FormattedValue(_whereLength, this)
             );
         }
 
         protected void FormatFrom()
         {
-            bool multipleFroms = _statement.From.Count > 1;
+            var multipleFroms = _statement.From.Count > 1;
             if (_statement.From == null || !_statement.From.Any())
                 return;
 
-            bool canCompactFormat = CanCompactFormat();
-
+            var canCompactFormat = CanCompactFormat();
             NewLine(canCompactFormat ? 0 : 1);
-            int fromIndex = 0;
+
+            var fromIndex = 0;
             foreach (var from in _statement.From)
             {
-                string fromText = !multipleFroms || from == _statement.From.First() ? "FROM " : "";
+                var fromText = !multipleFroms || from == _statement.From.First() ? "FROM " : String.Empty;
 
-                DerivedTable derivedTable = from as DerivedTable;
-                if (derivedTable != null)
+                if (from is DerivedTable derivedTable)
                 {
                     NewLine();
-                    IndentAppend(String.Format("{0}(", fromText));
+                    IndentAppendFormat("{0}(", fromText);
                     NewLine(canCompactFormat ? 1 : 2);
 
                     using (new IndentScope(this))
@@ -69,25 +66,48 @@ namespace Laan.Sql.Formatter
                         var formatter = new SelectStatementFormatter(this, _sql, derivedTable.SelectStatement);
                         formatter.Execute();
                     }
+
                     NewLine(canCompactFormat ? 1 : 2);
-                    IndentAppend(String.Format("){0}", from.Alias.Value));
+                    IndentAppendFormat("){0}", from.Alias.Value);
                 }
                 else
                 {
-                    bool isLast = from == _statement.From.Last();
+                    var isLast = from == _statement.From.Last();
+
                     NewLine(1);
                     IndentAppend(String.Concat(
-                        fromIndex > 0 ? Indent + " " : "", fromText,
+                        fromIndex > 0 ? Indent + " " : String.Empty, fromText,
                         from.Name,
                         from.Alias.Value,
                         FormatHints(from),
                         !isLast && !from.Joins.Any() ? Constants.Comma + "\n" : String.Empty
                     ));
                 }
+
                 FormatJoins(from, multipleFroms, from == _statement.From.Last());
                 fromIndex++;
             }
 
+            FormatPivot();
+        }
+
+        private void FormatPivot()
+        {
+            if (_statement.Pivot == null)
+                return;
+
+            NewLine(2);
+            IndentAppendLine("PIVOT (");
+            NewLine(1);
+
+            using (new IndentScope(this))
+            {
+                IndentAppendLine(_statement.Pivot.Field.Expression.FormattedValue(0, _indentable));
+                IndentAppendFormat("FOR {0} IN ({1})", _statement.Pivot.For, _statement.Pivot.In.ToCsv());
+            }
+
+            NewLine(2);
+            IndentAppendFormat("){0}", _statement.Pivot.Alias.Value);
         }
     }
 }

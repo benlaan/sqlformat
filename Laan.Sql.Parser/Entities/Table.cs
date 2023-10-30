@@ -30,10 +30,9 @@ namespace Laan.Sql.Parser.Entities
         public Pivot()
         {
             In = new List<string>();
-            Fields = new List<Field>();
         }
 
-        public List<Field> Fields { get; set; }
+        public Field Field { get; set; }
         public string For { get; set; }
         public List<string> In { get; set; }
 
