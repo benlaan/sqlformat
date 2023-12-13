@@ -118,11 +118,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Laan.SQL.Formatter\Laan.Sql.Formatter.csproj">
+    <ProjectReference Include="..\Laan.Sql.Formatter\Laan.Sql.Formatter.csproj">
       <Project>{a88ebec7-a9ee-46d3-8bc2-8362468edb56}</Project>
       <Name>Laan.Sql.Formatter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj">
+    <ProjectReference Include="..\Laan.Sql.Parser\Laan.Sql.Parser.csproj">
       <Project>{71ce5c72-a642-482c-937f-04e059f2b619}</Project>
       <Name>Laan.Sql.Parser</Name>
     </ProjectReference>

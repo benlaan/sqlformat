@@ -19,15 +19,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{DB4A5566
 		Build\Nuget.targets = Build\Nuget.targets
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Laan.Sql.Parser", "Laan.SQL.Parser\Laan.Sql.Parser.csproj", "{71CE5C72-A642-482C-937F-04E059F2B619}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Laan.Sql.Parser", "Laan.Sql.Parser\Laan.Sql.Parser.csproj", "{71CE5C72-A642-482C-937F-04E059F2B619}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Laan.Sql.Formatter", "Laan.SQL.Formatter\Laan.Sql.Formatter.csproj", "{A88EBEC7-A9EE-46D3-8BC2-8362468EDB56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Laan.Sql.Formatter", "Laan.Sql.Formatter\Laan.Sql.Formatter.csproj", "{A88EBEC7-A9EE-46D3-8BC2-8362468EDB56}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Laan.NHibernate.Appender", "Laan.NHibernate.Appender\Laan.NHibernate.Appender.csproj", "{56C0725F-673E-4F92-9A4F-C741470A81FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Laan.Sql.Parser.Test", "Laan.SQL.Parser.Test\Laan.Sql.Parser.Test.csproj", "{78DC646F-60B7-40AB-84C7-3F03AC87A6F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Laan.Sql.Parser.Test", "Laan.Sql.Parser.Test\Laan.Sql.Parser.Test.csproj", "{78DC646F-60B7-40AB-84C7-3F03AC87A6F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Laan.Sql.Formatter.Test", "Laan.SQL.Formatter.Test\Laan.Sql.Formatter.Test.csproj", "{BAF694EB-1947-4EB8-81BB-26B89F51485E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Laan.Sql.Formatter.Test", "Laan.Sql.Formatter.Test\Laan.Sql.Formatter.Test.csproj", "{BAF694EB-1947-4EB8-81BB-26B89F51485E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Laan.NHibernate.Appender.Test", "Laan.NHibernate.Appender.Test\Laan.NHibernate.Appender.Test.csproj", "{1AA1A244-ABD7-4293-B1B5-9E31D300FC2D}"
 EndProject

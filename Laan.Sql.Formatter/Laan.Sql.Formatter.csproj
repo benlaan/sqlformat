@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <Description>SQL Formatter component</Description>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj" />
+    <ProjectReference Include="..\Laan.Sql.Parser\Laan.Sql.Parser.csproj" />
   </ItemGroup>
 
   <Import Project="$(SolutionDir)Build\Common.targets" />

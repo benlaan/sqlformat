@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+      <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.0" />
     <PackageReference Include="NUnit" Version="3.6.1" />
@@ -8,7 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj" />
+    <ProjectReference Include="..\Laan.NHibernate.Appender\Laan.NHibernate.Appender.csproj" />
+    <ProjectReference Include="..\Laan.Sql.Formatter\Laan.Sql.Formatter.csproj" />
+    <ProjectReference Include="..\Laan.Sql.Parser\Laan.Sql.Parser.csproj" />
   </ItemGroup>
 
   <Import Project="$(SolutionDir)Build\Common.targets" />

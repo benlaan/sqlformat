@@ -3,10 +3,11 @@
         <OutputType>Exe</OutputType>
         <StartupObject>Program</StartupObject>
         <AssemblyName>sqlformat</AssemblyName>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Laan.SQL.Formatter\Laan.Sql.Formatter.csproj" />
+        <ProjectReference Include="..\Laan.Sql.Formatter\Laan.Sql.Formatter.csproj" />
     </ItemGroup>
 
     <Import Project="$(SolutionDir)Build\Common.targets" />

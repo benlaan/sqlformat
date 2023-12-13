@@ -120,12 +120,12 @@
 
       </Component>
       <Component Id="Formatter" Guid="{1CA04D29-A6BE-4F68-940D-3B2285C8B3BD}">
-        <File Id="Laan.SQL.Formatter.dll" Source="$(var.Laan.Sql.Formatter.TargetDir)Laan.SQL.Formatter.dll" DiskId="1"/>
-        <File Source="$(var.Laan.Sql.Formatter.TargetDir)Laan.SQL.Formatter.pdb" />
+        <File Id="Laan.Sql.Formatter.dll" Source="$(var.Laan.Sql.Formatter.TargetDir)Laan.Sql.Formatter.dll" DiskId="1"/>
+        <File Source="$(var.Laan.Sql.Formatter.TargetDir)Laan.Sql.Formatter.pdb" />
       </Component>
       <Component Id="Parser" Guid="{D668D5B7-0EC5-40A1-8148-6DBCA6E6FFA6}">
-        <File Id="Laan.SQL.Parser.dll" Source="$(var.Laan.Sql.Parser.TargetDir)Laan.SQL.Parser.dll" DiskId="1"/>
-        <File Source="$(var.Laan.Sql.Parser.TargetDir)Laan.SQL.Parser.pdb" />
+        <File Id="Laan.Sql.Parser.dll" Source="$(var.Laan.Sql.Parser.TargetDir)Laan.Sql.Parser.dll" DiskId="1"/>
+        <File Source="$(var.Laan.Sql.Parser.TargetDir)Laan.Sql.Parser.pdb" />
       </Component>
     </DirectoryRef>
 

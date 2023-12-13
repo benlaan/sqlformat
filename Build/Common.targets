@@ -2,10 +2,11 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-     <MSBuildCommunityTasksPath>$(USERPROFILE)\.nuget\packages\MSBuildTasks\1.5.0.235\tools\</MSBuildCommunityTasksPath> 
+     <NugetPath>$(HOME)\.nuget\packages</NugetPath>
+     <MSBuildCommunityTasksPath>$(NugetPath)\msbuildtasks\1.5.0.235\tools\</MSBuildCommunityTasksPath> 
   </PropertyGroup>
 
-   <Import Project="$(MSBuildCommunityTasksPath)MSBuild.Community.Tasks.targets"/> 
+  <Import Project="$(MSBuildCommunityTasksPath)MSBuild.Community.Tasks.Targets"/> 
 
   <!-- Default Properties shared by All Projects, for both Debug and Release Configurations -->
   <PropertyGroup>
@@ -13,7 +14,6 @@
     <StyleCopTreatErrorsAsWarnings>true</StyleCopTreatErrorsAsWarnings>
     <WarningLevel>4</WarningLevel>
     <ErrorReport>prompt</ErrorReport>
-    <TargetFrameworks>net452;net462;net472;net48;net6.0;net7.0</TargetFrameworks>
     <Platform>AnyCPU</Platform>
     <Configuration>Debug</Configuration>
   </PropertyGroup>
