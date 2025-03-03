@@ -35,7 +35,7 @@ namespace Laan.Sql.Formatter
 
                     _sql.AppendFormat(
                         "{1}){0}{1}", 
-                        (commonTableExpression != _statement.CommonTableExpressions.Last() ? "," : String.Empty), 
+                        commonTableExpression != _statement.CommonTableExpressions.Last() ? "," : String.Empty,
                         Environment.NewLine
                     );
                 }

@@ -47,6 +47,7 @@ namespace Laan.Sql.Parser.Parsers
                     commonTableExpression.Having = statement.Having;
                     commonTableExpression.Where = statement.Where;
                     commonTableExpression.SetOperation = statement.SetOperation;
+                    commonTableExpression.Pivot = statement.Pivot;
                 }
 
                 _statement.CommonTableExpressions.Add(commonTableExpression);
