@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>SQL Formatter for NHibernate via the Log4net Appender infrastructure</Description>
-    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,10 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Laan.Sql.Formatter\Laan.Sql.Formatter.csproj" />
-    <ProjectReference Include="..\Laan.Sql.Parser\Laan.Sql.Parser.csproj" />
+    <ProjectReference Include="$(SolutionDir)Laan.Sql.Formatter\Laan.Sql.Formatter.csproj" />
+    <ProjectReference Include="$(SolutionDir)Laan.Sql.Parser\Laan.Sql.Parser.csproj" />
   </ItemGroup>
 
-  <Import Project="$(SolutionDir)Build\Common.targets" />
+  <Import Project="$(SolutionDir)Build\Version.targets" />
   <Import Project="$(SolutionDir)Build\Nuget.targets" />
 </Project>

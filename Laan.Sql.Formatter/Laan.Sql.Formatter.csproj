@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <Description>SQL Formatter component</Description>
-    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Laan.Sql.Parser\Laan.Sql.Parser.csproj" />
+    <ProjectReference Include="$(SolutionDir)Laan.Sql.Parser\Laan.Sql.Parser.csproj" />
   </ItemGroup>
 
-  <Import Project="$(SolutionDir)Build\Common.targets" />
+  <Import Project="$(SolutionDir)Build\Version.targets" />
   <Import Project="$(SolutionDir)Build\Nuget.targets" />
 
 </Project>

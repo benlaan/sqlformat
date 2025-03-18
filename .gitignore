@@ -12,3 +12,4 @@ node_modules
 /Build/VersionAssemblyInfo.cs
 /dist
 /.test-results
+Generated

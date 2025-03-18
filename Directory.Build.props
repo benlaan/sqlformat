@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <Major>0</Major>
+    <Minor>3</Minor>
+    <Build>2</Build>
+    <Revision>0</Revision>
+  </PropertyGroup>
+
+  <!-- Default Properties shared by All Projects, for both Debug and Release Configurations -->
+  <PropertyGroup>
+    <TargetFrameworks>net472;net481;net8.0;net9.0</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <StyleCopTreatErrorsAsWarnings>true</StyleCopTreatErrorsAsWarnings>
+    <WarningLevel>4</WarningLevel>
+    <ErrorReport>prompt</ErrorReport>
+    <Platform>AnyCPU</Platform>
+    <Configuration>Debug</Configuration>
+    <NoWarn>1701;1702;NU1301</NoWarn>
+  </PropertyGroup>
+
+  <!-- Properties shared by All Projects, for Debug Configuration -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+
+  <!-- Properties shared by All Projects, for Release Configuration -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DefineConstants>CODE_ANALYSIS;TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <!--RunCodeAnalysis>true</RunCodeAnalysis-->
+  </PropertyGroup>
+
+</Project>

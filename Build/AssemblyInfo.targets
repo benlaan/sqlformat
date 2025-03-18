@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <Target Name="WriteSharedAssemblyInfoFile">
+        <Message Text="Generating AssemblyInfo: '$(AssemblyInfoFile)'" />
+          <ItemGroup>
+              <AssemblyInfoLines Include="// This file is auto-generated. Do not edit - see Build\AssemblyInfo.targets
+using System%3B
+using System.Reflection%3B
+using System.Runtime.InteropServices%3B
+
+// Assembly Info
+[assembly: AssemblyCompany(&quot;Laan Software - benlaan.com&quot;)]
+[assembly: AssemblyProduct(&quot;Laan.Sql.Tools&quot;)]
+[assembly: ComVisible(false)]
+[assembly: CLSCompliantAttribute(false)]
+
+// Version Info
+[assembly:AssemblyFileVersion(&quot;$(FullBuildVersion)&quot;)]
+[assembly:AssemblyVersion(&quot;$(FullBuildVersion)&quot;)]
+[assembly:AssemblyInformationalVersion(&quot;$(InformationalVersion)&quot;)]"
+            />
+          </ItemGroup>
+
+          <WriteLinesToFile Overwrite="true" File="$(AssemblyInfoFile)" Lines="@(AssemblyInfoLines)" Encoding="" />
+    </Target>
+
+    <Target Name="CreateSharedOutputDirectory" Condition="!(Exists($(OutputDirectory)))">
+        <MakeDir Directories="$(OutputDirectory)"/>
+    </Target>
+
+    <Target Name="BuildAssemblyInfo" BeforeTargets="BeforeBuild" Condition="!(Exists($(AssemblyInfoFile)))">
+        <CallTarget Targets="CreateSharedOutputDirectory; CalculateRepoInfo; WriteSharedAssemblyInfoFile" />
+    </Target>
+</Project>

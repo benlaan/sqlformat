@@ -1,0 +1,1 @@
+dotnet test --no-restore --no-build
