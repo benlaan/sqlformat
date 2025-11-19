@@ -11,4 +11,5 @@ node_modules
 /.vs*
 /Build/VersionAssemblyInfo.cs
 /dist
-/.test-results
+TestResults
+*.binlog

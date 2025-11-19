@@ -13,7 +13,7 @@
     <StyleCopTreatErrorsAsWarnings>true</StyleCopTreatErrorsAsWarnings>
     <WarningLevel>4</WarningLevel>
     <ErrorReport>prompt</ErrorReport>
-    <TargetFrameworks>net452;net462;net472;net48;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net462;net472;net48;net8.0;net9.0;net10.0</TargetFrameworks>
     <Platform>AnyCPU</Platform>
     <Configuration>Debug</Configuration>
   </PropertyGroup>
@@ -37,7 +37,7 @@
   <PropertyGroup>
     <Major>0</Major>
     <Minor>3</Minor>
-    <Build>1</Build>
+    <Build>2</Build>
     <Revision>$(BUILD_NUMBER)</Revision>
   </PropertyGroup>
 
