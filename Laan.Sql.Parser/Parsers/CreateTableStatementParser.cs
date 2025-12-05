@@ -1,7 +1,8 @@
 using System;
 
-using Laan.Sql.Parser.Entities;
 using Laan.Sql.Parser.Expressions;
+using Laan.Sql.Parser.Entities;
+using Laan.Sql.Parser;
 
 namespace Laan.Sql.Parser.Parsers
 {

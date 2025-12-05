@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -16,7 +16,6 @@
     <RootNamespace>Laan.AddIns.Ssms.VsExtension</RootNamespace>
     <AssemblyName>Laan.AddIns.Ssms</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <UseCodebase>true</UseCodebase>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
@@ -24,23 +23,29 @@
     <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
     <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
     <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <SsmsVersion>18</SsmsVersion>
-    <CopyVsixExtensionFiles>True</CopyVsixExtensionFiles>
-    <CopyVsixExtensionLocation>C:\Program Files %28x86%29\Microsoft SQL Server Management Studio $(SsmsVersion)\Common7\IDE\Extensions\Laan.AddIns.Ssms.VsExtension\</CopyVsixExtensionLocation>
-    <OutputPath>bin\$(Configuration)\$(SsmsVersion)\</OutputPath>
+    <StartAction>Program</StartAction>
+    <StartProgram Condition="'$(DevEnvDir)' != ''">$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootsuffix Exp</StartArguments>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CopyVsixExtensionFiles>True</CopyVsixExtensionFiles>
+    <CopyVsixExtensionLocation>C:\Program Files %28x86%29\Microsoft SQL Server Management Studio 18\Common7\IDE\Extensions\Laan.AddIns.Ssms.VsExtension</CopyVsixExtensionLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\BaseAction.cs" />
@@ -51,8 +56,6 @@
     <Compile Include="Commands\DuplicateLineAction.cs" />
     <Compile Include="Commands\MoveCursorLeftWordAction.cs" />
     <Compile Include="Commands\MoveCursorRightWordAction.cs" />
-    <Compile Include="Commands\WrapSquareBraceAction.cs" />
-    <Compile Include="Commands\WrapBracketAction.cs" />
     <Compile Include="Commands\SelectCursorLeftWordAction.cs" />
     <Compile Include="Commands\SelectCursorRightWordAction.cs" />
     <Compile Include="Commands\SqlInsertTemplateAction.cs" />
@@ -98,21 +101,8 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.SqlServer.RegSvrEnum">
-      <HintPath>C:\Program Files (x86)\Microsoft SQL Server Management Studio $(SsmsVersion)\Common7\IDE\Microsoft.SqlServer.RegSvrEnum.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SqlWorkbench.Interfaces">
-      <HintPath>C:\Program Files (x86)\Microsoft SQL Server Management Studio $(SsmsVersion)\Common7\IDE\SqlWorkbench.Interfaces.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.35" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.0.1" ExcludeAssets="runtime">
-      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.7.2196" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.0.0" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.7.3065" />
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="VsExtensionPackage.vsct">
@@ -129,11 +119,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Laan.SQL.Formatter\Laan.Sql.Formatter.csproj">
+    <ProjectReference Include="..\Laan.Sql.Formatter\Laan.Sql.Formatter.csproj">
       <Project>{a88ebec7-a9ee-46d3-8bc2-8362468edb56}</Project>
       <Name>Laan.Sql.Formatter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj">
+    <ProjectReference Include="..\Laan.Sql.Parser\Laan.Sql.Parser.csproj">
       <Project>{71ce5c72-a642-482c-937f-04e059f2b619}</Project>
       <Name>Laan.Sql.Parser</Name>
     </ProjectReference>
@@ -146,9 +136,4 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
-  <PropertyGroup>
-    <StartProgram>C:\Program Files %28x86%29\Microsoft SQL Server Management Studio $(SsmsVersion)\Common7\IDE\Ssms.exe</StartProgram>
-    <DeployTargetInstanceId />
-    <StartArguments>/log</StartArguments>
-  </PropertyGroup>
 </Project>

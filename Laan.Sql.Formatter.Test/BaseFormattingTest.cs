@@ -10,9 +10,9 @@ namespace Laan.Sql.Formatter.Test
     {
         private static string DisplayText( string text )
         {
-            var dot = '·';
-            var cr = '¶';
-            var lf = '§';
+            var dot = 'Â·';
+            var cr = 'Â¶';
+            var lf = 'Â§';
 
             return text.Replace( ' ', dot ).Replace( '\n', cr ).Replace( '\r', lf );
         }

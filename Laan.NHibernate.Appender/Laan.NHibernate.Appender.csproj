@@ -2,17 +2,18 @@
 
   <PropertyGroup>
     <Description>SQL Formatter for NHibernate via the Log4net Appender infrastructure</Description>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="log4net" Version="3.2.0" />
+    <PackageReference Include="log4net" Version="2.0.15" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Laan.SQL.Formatter\Laan.Sql.Formatter.csproj" />
-    <ProjectReference Include="..\Laan.SQL.Parser\Laan.Sql.Parser.csproj" />
+    <ProjectReference Include="$(SolutionDir)Laan.Sql.Formatter\Laan.Sql.Formatter.csproj" />
+    <ProjectReference Include="$(SolutionDir)Laan.Sql.Parser\Laan.Sql.Parser.csproj" />
   </ItemGroup>
 
-  <Import Project="$(SolutionDir)Build\Common.targets" />
+  <Import Project="$(SolutionDir)Build\Version.targets" />
   <Import Project="$(SolutionDir)Build\Nuget.targets" />
 </Project>

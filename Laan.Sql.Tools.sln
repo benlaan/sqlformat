@@ -15,7 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{4411
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{DB4A5566-9C4F-4FA7-A8B2-F2DDB73CE457}"
 	ProjectSection(SolutionItems) = preProject
-		Build\Common.targets = Build\Common.targets
+		Directory.Build.targets = Directory.Build.targets
+		Directory.Build.props = Directory.Build.props
 		Build\Nuget.targets = Build\Nuget.targets
 	EndProjectSection
 EndProject

@@ -1,11 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Laan.NHibernate.Appender\Laan.NHibernate.Appender.csproj" />
-    <ProjectReference Include="..\Laan.SQL.Formatter\Laan.Sql.Formatter.csproj" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.0" />
+    <PackageReference Include="NUnit" Version="3.6.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" />
   </ItemGroup>
 
-  <Import Project="$(SolutionDir)Build\Common.targets" />
-  <Import Project="$(SolutionDir)Build\Tests.targets" />
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)Laan.NHibernate.Appender\Laan.NHibernate.Appender.csproj" />
+    <ProjectReference Include="$(SolutionDir)Laan.Sql.Formatter\Laan.Sql.Formatter.csproj" />
+  </ItemGroup>
 
 </Project>

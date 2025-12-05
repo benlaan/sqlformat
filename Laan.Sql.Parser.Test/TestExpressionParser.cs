@@ -3,6 +3,7 @@ using System.Linq;
 
 using NUnit.Framework;
 
+using Laan.Sql.Parser;
 using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Parsers;
 
