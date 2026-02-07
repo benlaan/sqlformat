@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 
+using Laan.Sql.Parser;
 using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Formatter
@@ -15,8 +16,15 @@ namespace Laan.Sql.Formatter
 
         public void Execute()
         {
-            _sql.AppendFormat("{0} VIEW {1}\n", _statement.IsAlter ? "ALTER" : "CREATE", _statement.Name);
-            _sql.AppendLine("AS");
+            _sql.AppendFormat(
+                "{0} {1} {2}{3}",
+                _statement.IsAlter ? Keyword(Constants.Alter) : Keyword(Constants.Create),
+                Keyword(Constants.View),
+                _statement.Name,
+                Environment.NewLine
+            );
+            _sql.Append(Keyword(Constants.As));
+            _sql.AppendLine();
 
             if (_statement.Definition is SelectStatement)
             {

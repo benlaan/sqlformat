@@ -17,20 +17,26 @@ namespace Laan.Sql.Formatter
 
         public void Execute()
         {
-            _sql.AppendFormat("CREATE ");
+            AppendKeyword(Constants.Create);
+            _sql.Append(" ");
             
             if (_statement.Unique)
-                _sql.Append("UNIQUE ");
+            {
+                AppendKeyword(Constants.Unique);
+                _sql.Append(" ");
+            }
 
             if (!_statement.Clustered)
-                _sql.Append(Constants.NonClustered);
+            {
+                AppendKeyword(Constants.NonClustered);
+                _sql.Append(" ");
+            }
 
-            _sql.Append( " " );
-            _sql.Append( Constants.Index );
+            AppendKeyword(Constants.Index);
             _sql.Append( " " );
             _sql.Append( _statement.IndexName );
             _sql.Append( " " );
-            _sql.Append(Constants.On);
+            AppendKeyword(Constants.On);
             _sql.Append( " " );
             _sql.Append( _statement.TableName );
 
@@ -70,7 +76,7 @@ namespace Laan.Sql.Formatter
                 if ( optionsCount == 1 )
                     _sql.Append( " " );
 
-                _sql.Append( Constants.With );
+                AppendKeyword(Constants.With);
 
                 _sql.AppendFormat( " ( {0} )", string.Join( ", ", _statement.RelationalIndexOptions.Select( x => FormatIndexOptions( x ) ).ToArray() ) );
             }

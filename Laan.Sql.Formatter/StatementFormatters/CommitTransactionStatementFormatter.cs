@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-using Laan.Sql.Parser;
 using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Formatter
@@ -13,10 +12,7 @@ namespace Laan.Sql.Formatter
         public CommitTransactionStatementFormatter( IIndentable indentable, StringBuilder sql, CommitTransactionStatement statement )
             : base( indentable, sql, statement )
         {
-
         }
-
-        #region IStatementFormatter Members
 
         public void Execute()
         {
@@ -32,7 +28,5 @@ namespace Laan.Sql.Formatter
         {
             get { return false; }
         }
-
-        #endregion
     }
 }

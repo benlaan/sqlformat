@@ -14,5 +14,6 @@ namespace Laan.Sql.Formatter
         void DecreaseIndent();
         string Indent { get; set; }
         int IndentLevel { get; set; }
+        FormattingOptions Options { get; }
     }
 }

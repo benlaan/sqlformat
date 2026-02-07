@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 
+using Laan.Sql.Parser;
 using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Formatter
@@ -12,9 +13,14 @@ namespace Laan.Sql.Formatter
         {
         }
 
+        public CaseExpressionFormatter( T expression, IIndentable parent )
+            : base( expression, parent )
+        {
+        }
+
         protected string FormatCaseElseExpression( int offset, CaseExpression caseSwitch )
         {
-            StringBuilder sql = new StringBuilder( GetIndent( true ) + "ELSE" );
+            StringBuilder sql = new StringBuilder( GetIndent( true ) + Keyword(Constants.Else) );
             using ( new IndentScope( this ) )
             {
                 sql.Append( GetIndent( true ) + caseSwitch.Else.FormattedValue( offset, this ) );
@@ -31,6 +37,11 @@ namespace Laan.Sql.Formatter
         {
         }
 
+        public CaseSwitchExpressionFormatter( CaseSwitchExpression expression, IIndentable parent )
+            : base( expression, parent )
+        {
+        }
+
         #region IExpressionFormatter Members
 
         public override string Execute()
@@ -43,8 +54,9 @@ namespace Laan.Sql.Formatter
 
             var sql = new StringBuilder(
                 String.Format(
-                    "{0}CASE {1}",
+                    "{0}{1} {2}",
                     isNested ? GetIndent( true ) : "",
+                    Keyword(Constants.Case),
                     caseSwitch.Switch.FormattedValue( Offset, this )
                 )
             );
@@ -54,9 +66,11 @@ namespace Laan.Sql.Formatter
                 foreach ( var caseItem in caseSwitch.Cases )
                 {
                     sql.AppendFormat(
-                        "{0}WHEN {1} THEN ",
+                        "{0}{1} {2} {3} ",
                         GetIndent( true ),
-                        caseItem.When.FormattedValue( Offset, this )
+                        Keyword(Constants.When),
+                        caseItem.When.FormattedValue( Offset, this ),
+                        Keyword(Constants.Then)
                     );
                     using ( new IndentScope( this ) )
                         sql.Append( caseItem.Then.FormattedValue( Offset, this ) );
@@ -66,7 +80,7 @@ namespace Laan.Sql.Formatter
             if ( caseSwitch.Else != null )
                 sql.Append( FormatCaseElseExpression( Offset, caseSwitch ) );
 
-            sql.Append( GetIndent( true ) + "END" );
+            sql.Append( GetIndent( true ) + Keyword(Constants.End) );
 
             return sql.ToString();
         }

@@ -11,6 +11,10 @@ namespace Laan.Sql.Formatter
         {
         }
 
+        public SelectExpressionFormatter(SelectExpression expression, IIndentable parent) : base(expression, parent)
+        {
+        }
+
         public override string Execute()
         {
             var sql = new StringBuilder();

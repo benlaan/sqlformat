@@ -12,16 +12,16 @@
 
 }
 
-window.prettify = function () {
-
-    var formattedCode = document.getElementById("formattedCode");
-    var value = formattedCode.textContent;
-    if (value) {
-
-        pretty = prettyPrintOne(value)
-        this.formattedCode.innerHTML = pretty;
-        return true;
+window.getPrettifiedHtml = function (sqlCode) {
+    if (sqlCode) {
+        return prettyPrintOne(sqlCode, 'lang-sql', true);
     }
+    return "";
+}
 
-    return false;
+window.scrollToOutput = function () {
+    var outputContainer = document.getElementById("outputContainer");
+    if (outputContainer) {
+        outputContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }

@@ -4,15 +4,12 @@ using System.Linq;
 using System.Text;
 
 using Laan.Sql.Parser;
-using Laan.Sql.Parser.Expressions;
 using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Formatter
 {
     public class SelectStatementFormatter : CustomStatementFormatter<SelectStatement>, IStatementFormatter
     {
-        private const int MaxInlineColumns = 1;
-
         public SelectStatementFormatter( IIndentable indentable, StringBuilder sql, SelectStatement statement )
             : base( indentable, sql, statement )
         {
@@ -20,9 +17,13 @@ namespace Laan.Sql.Formatter
 
         private void FormatSelect()
         {
-            IndentAppend( Constants.Select );
+            IndentAppendKeyword(Constants.Select);
             if ( _statement.Distinct )
-                _sql.Append( " DISTINCT " );
+            {
+                _sql.Append(" ");
+                AppendKeyword(Constants.Distinct);
+                _sql.Append(" ");
+            }
 
             FormatTop( _statement.Top );
             FormatFields( _statement.Fields, CanInline );
@@ -120,8 +121,8 @@ namespace Laan.Sql.Formatter
 
         private void FormatFields( List<Field> fields, bool canCompact )
         {
-            if ( fields.Count <= MaxInlineColumns && fields.Take( MaxInlineColumns ).All( f => f.Expression.CanInline && FitsOnRow( f.Expression.Value ) ) )
-                _sql.Append( " " + String.Join( ", ", fields.Take( MaxInlineColumns ).Select( f => FormatField( f ) ).ToArray() ) );
+            if ( fields.Count <= Options.MaxInlineSelectColumns && fields.Take( Options.MaxInlineSelectColumns ).All( f => f.Expression.CanInline && FitsOnRow( f.Expression.Value ) ) )
+                _sql.Append( " " + String.Join( ", ", fields.Take( Options.MaxInlineSelectColumns ).Select( f => FormatField( f ) ).ToArray() ) );
             else
                 using ( new IndentScope( this ) )
                 {
@@ -138,7 +139,8 @@ namespace Laan.Sql.Formatter
             if (_statement.Into != null )
             {
                 NewLine( 2 );
-                IndentAppend( "INTO " + _statement.Into );
+                IndentAppendKeyword(Constants.Into);
+                _sql.Append(" " + _statement.Into);
             }
         }
 
@@ -148,14 +150,15 @@ namespace Laan.Sql.Formatter
             {
                 bool canCompact = CanCompactFormat();
                 NewLine( canCompact ? 1 : 2 );
-                IndentAppend( "GROUP BY" );
+                IndentAppendKeyword(Constants.Group + " " + Constants.By);
                 FormatFields( _statement.GroupBy, canCompact );
 
                 if ( _statement.Having != null )
                 {
                     NewLine( canCompact && IsExpressionOperatorAndOr( _statement.Having ) ? 1 : 2 );
                     IndentAppendFormat(
-                        "HAVING {0}",
+                        "{0} {1}",
+                        Keyword(Constants.Having),
                         _statement.Having.FormattedValue( Constants.Having.Length, this )
                     );
                 }
@@ -168,7 +171,7 @@ namespace Laan.Sql.Formatter
             {
                 bool canCompact = CanCompactFormat();
                 NewLine( canCompact ? 1 : 2 );
-                IndentAppend( "ORDER BY" );
+                IndentAppendKeyword(Constants.Order + " " + Constants.By);
                 FormatFields( _statement.OrderBy, canCompact );
             }
         }
@@ -176,10 +179,10 @@ namespace Laan.Sql.Formatter
         private void FormatSetOperation()
         {
             var map = new Dictionary<SetType, string> {
-                { SetType.Union,     "UNION" },
-                { SetType.UnionAll,  "UNION ALL" },
-                { SetType.Intersect, "INTERSECT" },
-                { SetType.Except,    "EXCEPT" },
+                { SetType.Union,     Keyword(Constants.Union) },
+                { SetType.UnionAll,  Keyword(Constants.Union + " " + Constants.All) },
+                { SetType.Intersect, Keyword(Constants.Intersect) },
+                { SetType.Except,    Keyword(Constants.Except) },
             };
 
             NewLine( 2 );
@@ -193,8 +196,8 @@ namespace Laan.Sql.Formatter
             return
                 _statement.Fields.Count == 1 &&
                 !_statement.From.SelectMany( fr => fr.Joins ).Any() && 
-                _statement.OrderBy.Count <= MaxInlineColumns && 
-                _statement.GroupBy.Count <= MaxInlineColumns && 
+                _statement.OrderBy.Count <= Options.MaxInlineSelectColumns && 
+                _statement.GroupBy.Count <= Options.MaxInlineSelectColumns && 
                 base.CanCompactFormat();
         }
 

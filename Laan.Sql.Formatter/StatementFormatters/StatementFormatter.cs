@@ -11,7 +11,6 @@ namespace Laan.Sql.Formatter
 {
     public class StatementFormatter<T> : BaseFormatter, IIndentable where T : Statement
     {
-        protected const int WrapMarginColumn = 80;
         protected T _statement;
 
         static StatementFormatter()
@@ -33,13 +32,14 @@ namespace Laan.Sql.Formatter
             if (top == null)
                 return;
 
-            string format = " TOP {0}{1}";
+            string format = " {0} {1}{2}";
 
             Append(
                 String.Format(
                     format,
+                    Keyword(Constants.Top),
                     top.Expression.FormattedValue(0, this),
-                    top.Percent ? " PERCENT" : ""
+                    top.Percent ? " " + Keyword(Constants.Percent) : ""
                 )
             );
         }
@@ -58,7 +58,8 @@ namespace Laan.Sql.Formatter
             IndentAppend(String.Format("){0}", derivedJoin.Alias.Value));
             NewLine();
             IndentAppendFormat(
-                "  ON {0}",
+                "  {0} {1}",
+                Keyword(Constants.On),
                 derivedJoin.Condition.FormattedValue(4, this)
             );
         }
@@ -77,14 +78,21 @@ namespace Laan.Sql.Formatter
                     using (new IndentScope(this, multipleFroms))
                     {
                         NewLine(2);
-                        IndentAppend(join.Value + FormatHints(join));
+                        IndentAppendFormat(
+                            "{0} {1}{2}{3}",
+                            Keyword(join.Type.GetDescription()),
+                            join.Name,
+                            join.Alias.Value,
+                            FormatHints(join)
+                        );
                         NewLine();
 
-                        bool isLastJoin = join == table.Joins.Last();
+                        var isLastJoin = join == table.Joins.Last();
 
                         IndentAppendFormat(
-                            "{0}ON {1}{2}",
+                            "{0}{1} {2}{3}",
                             new string(' ', join.Length - Constants.On.Length),
+                            Keyword(Constants.On),
                             join.Condition.FormattedValue(join.Length, this),
                             (!isLastFrom && isLastJoin) ? Constants.Comma + "\n" : ""
                         );
@@ -127,7 +135,7 @@ namespace Laan.Sql.Formatter
 
         protected bool FitsOnRow(string text)
         {
-            return text.Length <= (WrapMarginColumn - (IndentLevel * Indent.Length + CurrentColumn));
+            return text.Length <= (Options.MaxLineLength - (IndentLevel * Indent.Length + CurrentColumn));
         }
 
         protected int CurrentColumn

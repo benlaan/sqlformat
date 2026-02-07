@@ -5,8 +5,52 @@ body {
     height: 100vh;
 }
 
+#app {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .container-main {
     height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Make navbar not flex-grow */
+.container-main > .navbar {
+    flex: 0 0 auto;
+}
+
+/* Tab navigation pills should not grow */
+.container-main > .nav-pills {
+    flex: 0 0 auto;
+}
+
+/* Tab content should fill remaining space */
+.container-main > .tab-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* Only active tab pane should be displayed as flex and fill space */
+.container-main > .tab-content > .tab-pane.active {
+    flex: 1;
+    display: flex !important;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* Inactive tab panes should remain hidden */
+.container-main > .tab-content > .tab-pane:not(.active) {
+    display: none;
+}
+
+/* Alert row at bottom should not grow */
+.container-main > .row:last-child {
+    flex: 0 0 auto;
 }
 
 .flex-parent {
@@ -17,6 +61,44 @@ body {
 
 .flex-fill {
     flex: 1 !important;
+    min-height: 0;
+}
+
+.spinner-container {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f5f5;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+}
+
+    .spinner circle {
+        fill: none;
+        stroke: #3498db;
+        stroke-width: 6;
+        stroke-linecap: round;
+        stroke-dasharray: 150;
+        stroke-dashoffset: 0;
+        transform-origin: center;
+        animation: spin 1.2s linear infinite;
+    }
+
+@keyframes spin {
+    0% {
+        stroke-dashoffset: 150;
+        transform: rotate(0deg);
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        transform: rotate(360deg);
+    }
 }
 
 textarea {
@@ -26,16 +108,21 @@ textarea {
     border-width: 0 !important;
     width: 100%;
     height: 100% !important;
-    font-family: monospace
+    font-family: monospace;
+    overflow: auto;
 }
 
 .expand {
-    flex-grow: 3 !important;
+    flex: 2 !important;
 }
 
 .shrink {
-    max-height: 100px;
-    min-height: 100px;
+    flex: 1 !important;
+}
+
+.collapsed-input-row {
+    flex: 0 0 auto !important;
+    padding: 5px 15px !important;
 }
 
 .panel-body {
@@ -46,13 +133,42 @@ textarea {
 .card {
     flex: 1 !important;
     width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0;
+}
+
+.card-body {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .row {
     padding: 15px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.row.shrink,
+.row.expand {
+    flex: 1;
+}
+
+.output-sql {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
 }
 
 pre {
-
     overflow: auto !important;
+    margin: 0;
+    flex: 1;
+    min-height: 0;
 }

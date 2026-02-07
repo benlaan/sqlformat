@@ -12,12 +12,12 @@ namespace Laan.Sql.Formatter
         public BlockStatementFormatter(IIndentable indentable, StringBuilder sql, BlockStatement statement)
             : base(indentable, sql, statement)
         {
-
         }
 
         public void Execute()
         {
-            IndentAppendLine("BEGIN");
+            IndentAppend(Keyword(Constants.Begin));
+            NewLine();
             IndentAppendLine("");
             using (new IndentScope(this))
             {
@@ -27,7 +27,7 @@ namespace Laan.Sql.Formatter
                     NewLine(2);
                 }
             }
-            IndentAppend("END");
+            IndentAppendKeyword(Constants.End);
         }
     }
 }

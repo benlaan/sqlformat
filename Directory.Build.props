@@ -4,12 +4,15 @@
   <PropertyGroup>
     <Major>0</Major>
     <Minor>3</Minor>
-    <Build>2</Build>
+    <Build>3</Build>
     <Revision>0</Revision>
   </PropertyGroup>
 
+
   <!-- Default Properties shared by All Projects, for both Debug and Release Configurations -->
   <PropertyGroup>
+    <!-- Ensure SolutionDir is set even when building individual projects -->
+    <SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)</SolutionDir>
     <TargetFrameworks>net472;net481;net9.0;net10.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

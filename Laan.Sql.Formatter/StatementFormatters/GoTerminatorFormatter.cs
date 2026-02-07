@@ -13,6 +13,7 @@ namespace Laan.Sql.Formatter
         protected StringBuilder _sql;
         protected GoTerminator _statement;
         protected string Indent;
+        protected IIndentable _indentable;
 
         public GoTerminatorFormatter( IIndentable indentable, StringBuilder sql, GoTerminator statement )
         {
@@ -20,13 +21,14 @@ namespace Laan.Sql.Formatter
             IndentStep = indentable.IndentLevel;
             _sql = sql;
             _statement = statement;
+            _indentable = indentable;
         }
 
         #region IStatementFormatter Members
 
         public void Execute()
         {
-            _sql.Append( Constants.Go );
+            _sql.Append(KeywordTransform.Apply(Constants.Go, _indentable.Options.KeywordCasing));
         }
 
         public bool CanInline

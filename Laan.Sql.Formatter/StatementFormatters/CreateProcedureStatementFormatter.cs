@@ -18,8 +18,8 @@ namespace Laan.Sql.Formatter
         {
             _sql.AppendFormat(
                 "{0} {1} {2}{3}",
-                _statement.IsAlter ? "ALTER" : Constants.Create,
-                _statement.IsShortForm ? "PROC" : "PROCEDURE",
+                _statement.IsAlter ? Keyword(Constants.Alter) : Keyword(Constants.Create),
+                _statement.IsShortForm ? Keyword(Constants.Proc) : Keyword(Constants.Procedure),
                 _statement.Name,
                 _statement.HasBracketedArguments ? " (" : String.Empty
             );
@@ -35,7 +35,8 @@ namespace Laan.Sql.Formatter
             if (_statement.HasBracketedArguments)
                 _sql.AppendLine(")");
 
-            _sql.AppendLine("AS");
+            _sql.Append(Keyword(Constants.As));
+            _sql.AppendLine();
 
             FormatStatement(_statement.Definition);
         }

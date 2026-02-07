@@ -26,7 +26,7 @@ namespace Laan.Sql.Formatter
 
         private void FormatDelete()
         {
-            IndentAppend( Constants.Delete );
+            IndentAppendKeyword(Constants.Delete);
             FormatTop( _statement.Top );
             Append( _statement.TableName != null ? " " + _statement.TableName : "" );
         }

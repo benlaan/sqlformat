@@ -16,7 +16,8 @@ namespace Laan.Sql.Formatter
 
         public void Execute()
         {
-            _sql.Append("WITH ");
+            AppendKeyword(Constants.With);
+            _sql.Append(" ");
 
             foreach (var commonTableExpression in _statement.CommonTableExpressions)
             {
@@ -34,8 +35,8 @@ namespace Laan.Sql.Formatter
                     cteFormatter.Execute();
 
                     _sql.AppendFormat(
-                        "{1}){0}{1}", 
-                        (commonTableExpression != _statement.CommonTableExpressions.Last() ? "," : String.Empty), 
+                        "{1}){0}{1}",
+                        commonTableExpression != _statement.CommonTableExpressions.Last() ? "," : String.Empty,
                         Environment.NewLine
                     );
                 }

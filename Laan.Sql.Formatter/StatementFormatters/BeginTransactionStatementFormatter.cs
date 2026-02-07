@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Laan.Sql.Parser;
+
 using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Formatter

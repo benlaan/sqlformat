@@ -6,7 +6,6 @@ namespace Laan.Sql.Formatter
 {
     public class BaseFormatter : IIndentable
     {
-        private static BracketFormatOption bracketSpaceOption = BracketFormatOption.NoSpaces;
         protected static Dictionary<BracketFormatOption, string> _bracketFormats;
 
         protected StringBuilder _sql;
@@ -18,9 +17,21 @@ namespace Laan.Sql.Formatter
             _indentable = indentable;
         }
 
-        public static string FormatBrackets(string text)
+        protected string FormatBrackets(string text)
         {
-            return String.Format(_bracketFormats[bracketSpaceOption], text);
+            var bracketOption = Options.BracketSpacing == BracketSpacing.WithSpaces 
+                ? BracketFormatOption.SpacesWithinBrackets 
+                : BracketFormatOption.NoSpaces;
+            return String.Format(_bracketFormats[bracketOption], text);
+        }
+
+        // Keep static version for backward compatibility
+        public static string FormatBrackets(string text, BracketSpacing spacing)
+        {
+            var bracketOption = spacing == BracketSpacing.WithSpaces 
+                ? BracketFormatOption.SpacesWithinBrackets 
+                : BracketFormatOption.NoSpaces;
+            return String.Format(_bracketFormats[bracketOption], text);
         }
 
         protected void IndentAppend(string text)
@@ -33,6 +44,11 @@ namespace Laan.Sql.Formatter
         protected void IndentAppendFormat(string text, params object[] args)
         {
             IndentAppend(String.Format(text, args));
+        }
+
+        protected void IndentAppendKeyword(string keyword)
+        {
+            IndentAppend(Keyword(keyword));
         }
 
         protected void IndentAppendLine(string text)
@@ -51,15 +67,20 @@ namespace Laan.Sql.Formatter
             _sql.Append(text);
         }
 
-        protected void NewLine(int times)
+        protected void AppendKeyword(string keyword)
+        {
+            _sql.Append(Keyword(keyword));
+        }
+
+        protected string Keyword(string keyword)
+        {
+            return KeywordTransform.Apply(keyword, Options.KeywordCasing);
+        }
+
+        protected void NewLine(int times = 1)
         {
             for (int index = 0; index < times; index++)
                 _sql.AppendLine();
-        }
-
-        protected void NewLine()
-        {
-            NewLine(1);
         }
 
         public string Indent
@@ -82,6 +103,11 @@ namespace Laan.Sql.Formatter
         public void DecreaseIndent()
         {
             IndentLevel--;
+        }
+
+        public FormattingOptions Options
+        {
+            get { return _indentable.Options; }
         }
 
         public virtual bool CanInline

@@ -1,0 +1,142 @@
+{
+  "name": "sqlformat",
+  "displayName": "SQL Format",
+  "description": "Format SQL using sqlformat command-line tool",
+  "version": "0.3.3",
+  "publisher": "benlaan",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/laan/sqlformat"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Formatters",
+    "Snippets"
+  ],
+  "activationEvents": [
+    "onLanguage:sql"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "laan.sqlformat.formatSelection",
+        "title": "SQL Format: Format Selection"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "laan.sqlformat.formatSelection",
+        "key": "ctrl+alt+f",
+        "mac": "cmd+alt+f",
+        "when": "editorTextFocus"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "sql",
+        "path": "./snippets/sql.json"
+      }
+    ],
+    "configuration": {
+      "title": "SQL Format",
+      "properties": {
+        "sqlformat.indentSize": {
+          "type": "number",
+          "default": 4,
+          "minimum": 0,
+          "maximum": 16,
+          "description": "Number of spaces or tabs per indent level"
+        },
+        "sqlformat.useSpaces": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use spaces for indentation (true) or tabs (false)"
+        },
+        "sqlformat.maxLineLength": {
+          "type": "number",
+          "default": 80,
+          "minimum": 20,
+          "maximum": 1000,
+          "description": "Maximum line length before wrapping"
+        },
+        "sqlformat.keywordCasing": {
+          "type": "string",
+          "default": "Upper",
+          "enum": [
+            "Upper",
+            "Lower",
+            "Pascal"
+          ],
+          "enumDescriptions": [
+            "UPPERCASE keywords",
+            "lowercase keywords",
+            "PascalCase keywords"
+          ],
+          "description": "Casing style for SQL keywords"
+        },
+        "sqlformat.bracketSpacing": {
+          "type": "string",
+          "default": "NoSpaces",
+          "enum": [
+            "NoSpaces",
+            "WithSpaces"
+          ],
+          "enumDescriptions": [
+            "No spaces within brackets: (value)",
+            "Spaces within brackets: ( value )"
+          ],
+          "description": "Spacing style for brackets/parentheses"
+        },
+        "sqlformat.blankLinesBetweenClauses": {
+          "type": "number",
+          "default": 1,
+          "minimum": 0,
+          "maximum": 5,
+          "description": "Number of blank lines between major SQL clauses"
+        },
+        "sqlformat.maxInlineSelectColumns": {
+          "type": "number",
+          "default": 1,
+          "minimum": 0,
+          "description": "Maximum number of SELECT columns to display inline before wrapping"
+        },
+        "sqlformat.maxInlineInsertColumns": {
+          "type": "number",
+          "default": 4,
+          "minimum": 0,
+          "description": "Maximum number of INSERT columns to display inline before wrapping"
+        },
+        "sqlformat.configFile": {
+          "type": "string",
+          "default": "",
+          "description": "Path to .sqlformat.json config file (leave empty to auto-discover in workspace)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && node esbuild.js --production",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src --ext ts",
+    "pretest": "npm run compile && npm run lint"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
+    "@typescript-eslint/parser": "^7.11.0",
+    "@vscode/vsce": "^2.22.0",
+    "eslint": "^8.57.0",
+    "esbuild": "^0.21.5",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.4.5"
+  }
+}

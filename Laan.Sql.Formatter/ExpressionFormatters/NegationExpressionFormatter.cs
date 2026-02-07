@@ -11,6 +11,10 @@ namespace Laan.Sql.Formatter
         {
         }
 
+        public NegationExpressionFormatter( NegationExpression expression, IIndentable parent ) : base( expression, parent )
+        {
+        }
+
         #region IExpressionFormatter Members
 
         public override string Execute()

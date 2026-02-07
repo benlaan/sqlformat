@@ -38,7 +38,7 @@ namespace Laan.Sql.Formatter
             NewLine( CanCompactFormat() ? 1 : 2 );
             IndentAppendFormat(
                 "{0} {1}",
-                Constants.Where,
+                Keyword(Constants.Where),
                 _statement.Where.FormattedValue( WhereLength, this )
             );
         }
@@ -55,7 +55,8 @@ namespace Laan.Sql.Formatter
             int fromIndex = 0;
             foreach (var from in _statement.From)
             {
-                string fromText = !multipleFroms || from == _statement.From.First() ? "FROM " : "";
+                string fromText = !multipleFroms || from == _statement.From.First() 
+                    ? Keyword(Constants.From) + " " : "";
 
                 DerivedTable derivedTable = from as DerivedTable;
                 if (derivedTable != null)
@@ -81,7 +82,7 @@ namespace Laan.Sql.Formatter
                         from.Name,
                         from.Alias.Value,
                         FormatHints(from),
-                        !isLast && !from.Joins.Any() ? Constants.Comma + "\n" : String.Empty
+                        !isLast && !from.Joins.Any() ? Constants.Comma + Environment.NewLine : String.Empty
                     ));
                 }
                 FormatJoins(from, multipleFroms, from == _statement.From.Last());

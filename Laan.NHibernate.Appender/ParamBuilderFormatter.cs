@@ -35,7 +35,7 @@ namespace Laan.NHibernate.Appender
             }
             catch (Exception ex)
             {
-                return String.Format("-- Error: {0}\n{1}", ex.Message, originalSql);
+                return String.Format("-- Error: {0}{1}{2}", ex.Message, Environment.NewLine, originalSql);
             }
         }
     }

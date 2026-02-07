@@ -13,6 +13,10 @@ namespace Laan.Sql.Formatter
         {
         }
 
+        public FunctionExpressionFormatter( FunctionExpression expression, IIndentable parent ) : base( expression, parent )
+        {
+        }
+
         #region IExpressionFormatter Members
 
         public override string Execute()

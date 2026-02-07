@@ -50,7 +50,7 @@ namespace Laan.NHibernate.Appender
                     string formattedStatement = _formatter.Execute(loggingEvent.RenderedMessage);
                     timer.Stop();
 
-                    string message = $"{formattedStatement}\n-- Duration: {timer.ElapsedMilliseconds:0:00:0000}";
+                    string message = $"{formattedStatement}{Environment.NewLine}-- Duration: {timer.ElapsedMilliseconds:0:00:0000}";
 
                     var data = new LoggingEventData
                     {

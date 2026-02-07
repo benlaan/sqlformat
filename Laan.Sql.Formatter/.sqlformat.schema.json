@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SQL Formatter Configuration",
+  "description": "Configuration options for Laan SQL Formatter",
+  "type": "object",
+  "properties": {
+    "indentSize": {
+      "type": "integer",
+      "default": 4,
+      "minimum": 0,
+      "maximum": 16,
+      "description": "Number of spaces or tabs per indent level"
+    },
+    "useSpaces": {
+      "type": "boolean",
+      "default": true,
+      "description": "Use spaces (true) or tabs (false) for indentation"
+    },
+    "maxLineLength": {
+      "type": "integer",
+      "default": 80,
+      "minimum": 20,
+      "maximum": 1000,
+      "description": "Maximum line length before wrapping"
+    },
+    "keywordCasing": {
+      "type": "string",
+      "enum": ["Upper", "Lower", "Pascal"],
+      "default": "Upper",
+      "description": "Casing style for SQL keywords (Upper, Lower, or Pascal)"
+    },
+    "bracketSpacing": {
+      "type": "string",
+      "enum": ["NoSpaces", "WithSpaces"],
+      "default": "NoSpaces",
+      "description": "Spacing style for brackets/parentheses"
+    },
+    "blankLinesBetweenClauses": {
+      "type": "integer",
+      "default": 1,
+      "minimum": 0,
+      "maximum": 5,
+      "description": "Number of blank lines between major SQL clauses"
+    },
+    "maxInlineSelectColumns": {
+      "type": "integer",
+      "default": 1,
+      "minimum": 0,
+      "description": "Maximum number of SELECT columns to display inline before wrapping"
+    },
+    "maxInlineInsertColumns": {
+      "type": "integer",
+      "default": 4,
+      "minimum": 0,
+      "description": "Maximum number of INSERT columns to display inline before wrapping"
+    }
+  },
+  "additionalProperties": false
+}

@@ -17,20 +17,17 @@ namespace Laan.Sql.Parser.Entities
         public string TableName { get; set; }
         public FieldDefinitions Fields { get; set; }
 
-        #region IStatement Members
-
         public string Identifier
         {
             get
             {
                 return String.Format(
-                    "CREATE TABLE {0}\n(\n{1}\n)",
+                    "CREATE TABLE {0}{2}}({2}{1}{2})",
                     TableName,
-                    String.Join( ",\n", Fields.Select( fld => "\t" + fld.ToString() ).ToArray() )
+                    String.Join( "," + Environment.NewLine, Fields.Select( fld => "\t" + fld.ToString() ).ToArray() ),
+                    Environment.NewLine
                 );
             }
         }
-
-        #endregion
     }
 }

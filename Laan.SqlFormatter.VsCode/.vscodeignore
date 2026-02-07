@@ -1,0 +1,11 @@
+node_modules
+out
+*.vsix
+.vscode-test
+src/
+tsconfig.json
+esbuild.js
+.eslintrc.js
+.github/
+publish/
+# bin/ is included - contains the sqlformat binaries

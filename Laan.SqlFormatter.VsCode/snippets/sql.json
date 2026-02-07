@@ -1,0 +1,970 @@
+{
+  "Begin Transaction Scope with Rollback": {
+    "prefix": "br",
+    "body": [
+      "BEGIN TRAN",
+      "",
+      "    $0",
+      "",
+      "ROLLBACK"
+    ],
+    "description": "Begin Transaction Scope with Rollback"
+  },
+  "Begin Transaction Scope with Commit": {
+    "prefix": "bc",
+    "body": [
+      "BEGIN TRAN",
+      "",
+      "    $0",
+      "",
+      "COMMIT"
+    ],
+    "description": "Begin Transaction Scope with Commit"
+  },
+  "Begin Transaction Scope with Rollback (Commit commented out)": {
+    "prefix": "btr",
+    "body": [
+      "BEGIN TRAN",
+      "",
+      "    $0",
+      "",
+      "ROLLBACK",
+      "--COMMIT"
+    ],
+    "description": "Begin Transaction Scope with Rollback (Commit commented out)"
+  },
+  "Begin Transaction Scope with Commit (Rollback commented out)": {
+    "prefix": "btc",
+    "body": [
+      "BEGIN TRAN",
+      "",
+      "    $0",
+      "",
+      "COMMIT",
+      "--ROLLBACK"
+    ],
+    "description": "Begin Transaction Scope with Commit (Rollback commented out)"
+  },
+  "Begin / End scope block": {
+    "prefix": "be",
+    "body": [
+      "BEGIN",
+      "",
+      "    $0",
+      "",
+      "END"
+    ],
+    "description": "Begin / End scope block"
+  },
+  "Begin Transaction": {
+    "prefix": "bt",
+    "body": [
+      "BEGIN TRAN"
+    ],
+    "description": "Begin Transaction"
+  },
+  "Rollback Transaction": {
+    "prefix": "rt",
+    "body": [
+      "ROLLBACK"
+    ],
+    "description": "Rollback Transaction"
+  },
+  "Commit": {
+    "prefix": "ct",
+    "body": [
+      "COMMIT"
+    ],
+    "description": "Commit"
+  },
+  "Select * from table": {
+    "prefix": "ssf",
+    "body": [
+      "SELECT * FROM $0"
+    ],
+    "description": "Select * from table"
+  },
+  "Select": {
+    "prefix": "s",
+    "body": [
+      "SELECT $0"
+    ],
+    "description": "Select"
+  },
+  "Select count(*) from table": {
+    "prefix": "sct",
+    "body": [
+      "SELECT COUNT(*) FROM $0"
+    ],
+    "description": "Select count(*) from table"
+  },
+  "Select count(*) from table where ...": {
+    "prefix": "scw",
+    "body": [
+      "SELECT COUNT(*) FROM $1 WHERE $0"
+    ],
+    "description": "Select count(*) from table where ..."
+  },
+  "Select * from table where ...": {
+    "prefix": "sfw",
+    "body": [
+      "SELECT *",
+      "FROM $1",
+      "WHERE $0"
+    ],
+    "description": "Select * from table where ..."
+  },
+  "Update from table where ...": {
+    "prefix": "ufw",
+    "body": [
+      "UPDATE T",
+      "   SET $0",
+      "FROM $1 T",
+      "WHERE $2"
+    ],
+    "description": "Update from table where ..."
+  },
+  "Insert into table with values": {
+    "prefix": "iv",
+    "body": [
+      "INSERT INTO $0 ($1)",
+      "VALUES ($2)"
+    ],
+    "description": "Insert into table with values"
+  },
+  "Insert into table with select statement": {
+    "prefix": "is",
+    "body": [
+      "INSERT INTO $0 ($1)",
+      "  SELECT * FROM $2"
+    ],
+    "description": "Insert into table with select statement"
+  },
+  "Insert into table with select statement where ...": {
+    "prefix": "isw",
+    "body": [
+      "INSERT INTO $0 ($1)",
+      "  SELECT *",
+      "  FROM $2",
+      "  WHERE $3"
+    ],
+    "description": "Insert into table with select statement where ..."
+  },
+  "From ...": {
+    "prefix": "ft",
+    "body": [
+      "FROM $0"
+    ],
+    "description": "From ..."
+  },
+  "Where ...": {
+    "prefix": "wh",
+    "body": [
+      "WHERE $0 = $1"
+    ],
+    "description": "Where ..."
+  },
+  "Where Id ...": {
+    "prefix": "wi",
+    "body": [
+      "WHERE ${1:}Id = $0"
+    ],
+    "description": "Where Id ..."
+  },
+  "Join ...": {
+    "prefix": "j",
+    "body": [
+      "JOIN $1",
+      "  ON $0"
+    ],
+    "description": "Join ..."
+  },
+  "Left join ...": {
+    "prefix": "lj",
+    "body": [
+      "LEFT JOIN $1",
+      "       ON $0"
+    ],
+    "description": "Left join ..."
+  },
+  "Right join ...": {
+    "prefix": "rj",
+    "body": [
+      "RIGHT JOIN $1",
+      "        ON $0"
+    ],
+    "description": "Right join ..."
+  },
+  "Full join": {
+    "prefix": "fj",
+    "body": [
+      "FULL JOIN $1",
+      "       ON $0"
+    ],
+    "description": "Full join"
+  },
+  "Cross Join": {
+    "prefix": "cj",
+    "body": [
+      "CROSS JOIN $0"
+    ],
+    "description": "Cross Join"
+  },
+  "Order by": {
+    "prefix": "ob",
+    "body": [
+      "ORDER BY $0"
+    ],
+    "description": "Order by"
+  },
+  "Group by": {
+    "prefix": "gb",
+    "body": [
+      "GROUP BY $0"
+    ],
+    "description": "Group by"
+  },
+  "Having ...": {
+    "prefix": "hv",
+    "body": [
+      "HAVING $0"
+    ],
+    "description": "Having ..."
+  },
+  "Is null test": {
+    "prefix": "isn",
+    "body": [
+      "IS NULL"
+    ],
+    "description": "Is null test"
+  },
+  "Is not null test": {
+    "prefix": "isnn",
+    "body": [
+      "IS NOT NULL"
+    ],
+    "description": "Is not null test"
+  },
+  "Execute ...": {
+    "prefix": "ex",
+    "body": [
+      "EXEC $0"
+    ],
+    "description": "Execute ..."
+  },
+  "Exists": {
+    "prefix": "exi",
+    "body": [
+      "EXISTS($0)"
+    ],
+    "description": "Exists"
+  },
+  "Not Exists": {
+    "prefix": "nex",
+    "body": [
+      "NOT EXISTS($0)"
+    ],
+    "description": "Not Exists"
+  },
+  "Print statement": {
+    "prefix": "pr",
+    "body": [
+      "PRINT '$0'"
+    ],
+    "description": "Print statement"
+  },
+  "dbo prefix": {
+    "prefix": "d",
+    "body": [
+      "dbo.$0"
+    ],
+    "description": "dbo prefix"
+  },
+  "Multi-line comment": {
+    "prefix": "--",
+    "body": [
+      "--------------------------------------------------------------------------------",
+      "-- $0",
+      "--------------------------------------------------------------------------------"
+    ],
+    "description": "Multi-line comment"
+  },
+  "declare uniqueidentifier": {
+    "prefix": "du",
+    "body": [
+      "DECLARE @$0 UNIQUEIDENTIFIER"
+    ],
+    "description": "declare uniqueidentifier"
+  },
+  "declare integer": {
+    "prefix": "di",
+    "body": [
+      "DECLARE @$0 INT"
+    ],
+    "description": "declare integer"
+  },
+  "declare varchar max": {
+    "prefix": "dv",
+    "body": [
+      "DECLARE @$0 VARCHAR(MAX)"
+    ],
+    "description": "declare varchar max"
+  },
+  "declare numeric": {
+    "prefix": "dn",
+    "body": [
+      "DECLARE @$0 NUMERIC(12,4)"
+    ],
+    "description": "declare numeric"
+  },
+  "declare money": {
+    "prefix": "dm",
+    "body": [
+      "DECLARE @$0 MONEY"
+    ],
+    "description": "declare money"
+  },
+  "declare datetime": {
+    "prefix": "ddt",
+    "body": [
+      "DECLARE @$0 DATETIME"
+    ],
+    "description": "declare datetime"
+  },
+  "declare time": {
+    "prefix": "dt",
+    "body": [
+      "DECLARE @$0 TIME"
+    ],
+    "description": "declare time"
+  },
+  "declare date": {
+    "prefix": "dd",
+    "body": [
+      "DECLARE @$0 DATE"
+    ],
+    "description": "declare date"
+  },
+  "declare xml": {
+    "prefix": "dx",
+    "body": [
+      "DECLARE @$0 XML"
+    ],
+    "description": "declare xml"
+  },
+  "declare integer with assignment": {
+    "prefix": "die",
+    "body": [
+      "DECLARE @$0 INT = $1"
+    ],
+    "description": "declare integer with assignment"
+  },
+  "declare varchar max with assignment": {
+    "prefix": "dve",
+    "body": [
+      "DECLARE @$0 VARCHAR(MAX) = '$1'"
+    ],
+    "description": "declare varchar max with assignment"
+  },
+  "declare numeric with assignment": {
+    "prefix": "dne",
+    "body": [
+      "DECLARE @$0 NUMERIC(12,4) = $1"
+    ],
+    "description": "declare numeric with assignment"
+  },
+  "declare uniqueidentifier with assignment": {
+    "prefix": "due",
+    "body": [
+      "DECLARE @$0 UNIQUEIDENTIFIER = $1"
+    ],
+    "description": "declare uniqueidentifier with assignment"
+  },
+  "declare money with assignment": {
+    "prefix": "dme",
+    "body": [
+      "DECLARE @$0 MONEY = $1"
+    ],
+    "description": "declare money with assignment"
+  },
+  "declare datetime with assignment": {
+    "prefix": "ddte",
+    "body": [
+      "DECLARE @$0 DATETIME = $1"
+    ],
+    "description": "declare datetime with assignment"
+  },
+  "declare time with assignment": {
+    "prefix": "dte",
+    "body": [
+      "DECLARE @$0 TIME = $1"
+    ],
+    "description": "declare time with assignment"
+  },
+  "declare date with assignment": {
+    "prefix": "dde",
+    "body": [
+      "DECLARE @$0 DATE = $1"
+    ],
+    "description": "declare date with assignment"
+  },
+  "declare xml with assignment": {
+    "prefix": "dxe",
+    "body": [
+      "DECLARE @$1 XML = CONVERT(XML, '$0')"
+    ],
+    "description": "declare xml with assignment"
+  },
+  "Case when statement": {
+    "prefix": "cw",
+    "body": [
+      "CASE WHEN $1 THEN $0 END"
+    ],
+    "description": "Case when statement"
+  },
+  "Case when/else statement": {
+    "prefix": "cwe",
+    "body": [
+      "CASE WHEN $1 THEN $2 ELSE $0 END"
+    ],
+    "description": "Case when/else statement"
+  },
+  "Case when/then fragment": {
+    "prefix": "wt",
+    "body": [
+      "WHEN $1 THEN $0"
+    ],
+    "description": "Case when/then fragment"
+  },
+  "If block": {
+    "prefix": "ib",
+    "body": [
+      "IF $1",
+      "BEGIN",
+      "",
+      "  $0",
+      "",
+      "END"
+    ],
+    "description": "If block"
+  },
+  "If block with else": {
+    "prefix": "ibe",
+    "body": [
+      "IF $0",
+      "BEGIN",
+      "",
+      "  $1",
+      "",
+      "END",
+      "ELSE",
+      "BEGIN",
+      "",
+      "  $2",
+      "",
+      "END"
+    ],
+    "description": "If block with else"
+  },
+  "Count Star": {
+    "prefix": "cs",
+    "body": [
+      "COUNT(*)"
+    ],
+    "description": "Count Star"
+  },
+  "Foreach Table": {
+    "prefix": "fet",
+    "body": [
+      "sp_msforeachtable '$0 ?'"
+    ],
+    "description": "Foreach Table run a piece of sql"
+  },
+  "Order by descending": {
+    "prefix": "obd",
+    "body": [
+      "ORDER BY $0 DESC"
+    ],
+    "description": "Order By Descending"
+  },
+  "sp_HelpText": {
+    "prefix": "sph",
+    "body": [
+      "sp_helptext '$0'"
+    ],
+    "description": "sp_HelpText"
+  },
+  "UNIQUEIDENTIFIER": {
+    "prefix": "uid",
+    "body": [
+      "UNIQUEIDENTIFIER"
+    ],
+    "description": "UNIQUEIDENTIFIER"
+  },
+  "Group By Having": {
+    "prefix": "gbh",
+    "body": [
+      "GROUP BY $1 HAVING $0"
+    ],
+    "description": "Group By Having"
+  },
+  "Select Duplicates": {
+    "prefix": "sd",
+    "body": [
+      "SELECT Id, COUNT(*) FROM $1 GROUP BY Id HAVING COUNT(*) > 1"
+    ],
+    "description": "finds duplicates by Id"
+  },
+  "Set Isolation Level": {
+    "prefix": "sil",
+    "body": [
+      "SET TRANSACTION ISOLATION LEVEL ${0|READ UNCOMMITTED,READ COMMITTED,REPEATABLE READ,SNAPSHOT,SERIALIZABLE|}"
+    ],
+    "description": "Set Transaction Isolation Level"
+  },
+  "Common Table Expression": {
+    "prefix": "cte",
+    "body": [
+      "WITH ${1:CTE_Name} AS",
+      "(",
+      "  SELECT $2",
+      "  FROM $3",
+      "  WHERE $4",
+      ")",
+      "SELECT *",
+      "FROM ${1:CTE_Name}",
+      "WHERE $0"
+    ],
+    "description": "Common Table Expression (CTE)"
+  },
+  "Recursive CTE": {
+    "prefix": "rcte",
+    "body": [
+      "WITH ${1:CTE_Name} AS",
+      "(",
+      "  -- Anchor member",
+      "  SELECT $2",
+      "  FROM $3",
+      "  WHERE $4",
+      "  ",
+      "  UNION ALL",
+      "  ",
+      "  -- Recursive member",
+      "  SELECT $5",
+      "  FROM ${1:CTE_Name} cte",
+      "  JOIN $6 ON $7",
+      ")",
+      "SELECT *",
+      "FROM ${1:CTE_Name}",
+      "WHERE $0"
+    ],
+    "description": "Recursive Common Table Expression"
+  },
+  "Row Number": {
+    "prefix": "rn",
+    "body": [
+      "ROW_NUMBER() OVER (PARTITION BY $1 ORDER BY $2) AS $0"
+    ],
+    "description": "ROW_NUMBER() window function"
+  },
+  "Union All": {
+    "prefix": "ua",
+    "body": [
+      "UNION ALL",
+      "",
+      "SELECT $0"
+    ],
+    "description": "UNION ALL"
+  },
+  "Cross Apply": {
+    "prefix": "ap",
+    "body": [
+      "CROSS APPLY $0"
+    ],
+    "description": "CROSS APPLY"
+  },
+  "Outer Apply": {
+    "prefix": "oa",
+    "body": [
+      "OUTER APPLY $0"
+    ],
+    "description": "OUTER APPLY"
+  },
+  "Try Catch": {
+    "prefix": "tc",
+    "body": [
+      "BEGIN TRY",
+      "  $0",
+      "END TRY",
+      "BEGIN CATCH",
+      "  SELECT",
+      "    ERROR_NUMBER() AS ErrorNumber,",
+      "    ERROR_MESSAGE() AS ErrorMessage,",
+      "    ERROR_SEVERITY() AS ErrorSeverity,",
+      "    ERROR_STATE() AS ErrorState,",
+      "    ERROR_PROCEDURE() AS ErrorProcedure,",
+      "    ERROR_LINE() AS ErrorLine",
+      "END CATCH"
+    ],
+    "description": "TRY CATCH block"
+  },
+  "While Loop": {
+    "prefix": "wl",
+    "body": [
+      "WHILE $1",
+      "BEGIN",
+      "  $0",
+      "END"
+    ],
+    "description": "WHILE loop"
+  },
+  "Throw Error": {
+    "prefix": "th",
+    "body": [
+      "THROW $1, '$2', $0;"
+    ],
+    "description": "THROW error"
+  },
+  "Raise Error": {
+    "prefix": "re",
+    "body": [
+      "RAISERROR('$1', $2, $3)"
+    ],
+    "description": "RAISERROR"
+  },
+  "Delete From": {
+    "prefix": "df",
+    "body": [
+      "DELETE FROM $0"
+    ],
+    "description": "DELETE FROM table"
+  },
+  "Delete From Where": {
+    "prefix": "dfw",
+    "body": [
+      "DELETE FROM $1",
+      "WHERE $0"
+    ],
+    "description": "DELETE FROM table WHERE"
+  },
+  "Truncate Table": {
+    "prefix": "tr",
+    "body": [
+      "TRUNCATE TABLE $0"
+    ],
+    "description": "TRUNCATE TABLE"
+  },
+  "Create Temp Table": {
+    "prefix": "tt",
+    "body": [
+      "CREATE TABLE #${1:TempTable}",
+      "(",
+      "  ${2:Id} INT NOT NULL,",
+      "  $0",
+      ")"
+    ],
+    "description": "CREATE #TempTable"
+  },
+  "Declare Table Variable": {
+    "prefix": "tv",
+    "body": [
+      "DECLARE @${1:TableName} TABLE",
+      "(",
+      "  ${2:Id} INT NOT NULL,",
+      "  $0",
+      ")"
+    ],
+    "description": "DECLARE @TableVariable"
+  },
+  "Drop Table If Exists": {
+    "prefix": "dt",
+    "body": [
+      "DROP TABLE IF EXISTS $0"
+    ],
+    "description": "DROP TABLE IF EXISTS"
+  },
+  "Insert with Output": {
+    "prefix": "io",
+    "body": [
+      "INSERT INTO $1 ($2)",
+      "OUTPUT INSERTED.$3",
+      "VALUES ($0)"
+    ],
+    "description": "INSERT with OUTPUT clause"
+  },
+  "Update with Output": {
+    "prefix": "uo",
+    "body": [
+      "UPDATE $1",
+      "   SET $2",
+      "OUTPUT INSERTED.$3, DELETED.$4",
+      "WHERE $0"
+    ],
+    "description": "UPDATE with OUTPUT clause"
+  },
+  "Delete with Output": {
+    "prefix": "do",
+    "body": [
+      "DELETE FROM $1",
+      "OUTPUT DELETED.$2",
+      "WHERE $0"
+    ],
+    "description": "DELETE with OUTPUT clause"
+  },
+  "IsNull": {
+    "prefix": "isnull",
+    "body": [
+      "ISNULL($1, $0)"
+    ],
+    "description": "ISNULL function"
+  },
+  "Coalesce": {
+    "prefix": "coal",
+    "body": [
+      "COALESCE($1, $2, $0)"
+    ],
+    "description": "COALESCE function"
+  },
+  "DateAdd": {
+    "prefix": "da",
+    "body": [
+      "DATEADD(${1|DAY,MONTH,YEAR,HOUR,MINUTE,SECOND|}, $2, $0)"
+    ],
+    "description": "DATEADD function"
+  },
+  "DateDiff": {
+    "prefix": "ddf",
+    "body": [
+      "DATEDIFF(${1|DAY,MONTH,YEAR,HOUR,MINUTE,SECOND|}, $2, $0)"
+    ],
+    "description": "DATEDIFF function"
+  },
+  "GetDate": {
+    "prefix": "gd",
+    "body": [
+      "GETDATE()"
+    ],
+    "description": "GETDATE()"
+  },
+  "Cast": {
+    "prefix": "cast",
+    "body": [
+      "CAST($1 AS ${2|INT,VARCHAR,DATETIME,DECIMAL,BIT|})"
+    ],
+    "description": "CAST function"
+  },
+  "Convert": {
+    "prefix": "conv",
+    "body": [
+      "CONVERT(${1|INT,VARCHAR,DATETIME,DECIMAL,BIT|}, $0)"
+    ],
+    "description": "CONVERT function"
+  },
+  "Create Table": {
+    "prefix": "crt",
+    "body": [
+      "CREATE TABLE ${1:dbo}.${2:TableName}",
+      "(",
+      "  ${3:Id} INT IDENTITY(1,1) NOT NULL,",
+      "  $0",
+      "  CONSTRAINT PK_${2:TableName} PRIMARY KEY CLUSTERED (${3:Id})",
+      ")"
+    ],
+    "description": "CREATE TABLE skeleton"
+  },
+  "Alter Table Add Column": {
+    "prefix": "alt",
+    "body": [
+      "ALTER TABLE ${1:dbo}.${2:TableName}",
+      "  ADD ${3:ColumnName} ${4|INT,VARCHAR(MAX),DATETIME,BIT,DECIMAL(18,2)|} ${5|NULL,NOT NULL|}"
+    ],
+    "description": "ALTER TABLE ADD COLUMN"
+  },
+  "Create Index": {
+    "prefix": "cri",
+    "body": [
+      "CREATE ${1|NONCLUSTERED,CLUSTERED,UNIQUE NONCLUSTERED|} INDEX IX_${2:TableName}_${3:ColumnName}",
+      "  ON ${4:dbo}.${2:TableName} (${3:ColumnName})"
+    ],
+    "description": "CREATE INDEX"
+  },
+  "Create Procedure": {
+    "prefix": "crp",
+    "body": [
+      "CREATE PROCEDURE ${1:dbo}.${2:ProcedureName}",
+      "  @${3:ParamName} ${4|INT,VARCHAR(MAX),DATETIME,BIT|}",
+      "AS",
+      "BEGIN",
+      "  SET NOCOUNT ON;",
+      "",
+      "  $0",
+      "END"
+    ],
+    "description": "CREATE PROCEDURE skeleton"
+  },
+  "Create Function": {
+    "prefix": "crf",
+    "body": [
+      "CREATE FUNCTION ${1:dbo}.${2:FunctionName}",
+      "(",
+      "  @${3:ParamName} ${4|INT,VARCHAR(MAX),DATETIME,BIT|}",
+      ")",
+      "RETURNS ${5|INT,VARCHAR(MAX),TABLE|}",
+      "AS",
+      "BEGIN",
+      "  $0",
+      "  ",
+      "  RETURN @Result",
+      "END"
+    ],
+    "description": "CREATE FUNCTION skeleton"
+  },
+  "Create View": {
+    "prefix": "crv",
+    "body": [
+      "CREATE VIEW ${1:dbo}.${2:ViewName}",
+      "AS",
+      "  SELECT $0",
+      "  FROM ${3:TableName}"
+    ],
+    "description": "CREATE VIEW"
+  },
+  "Merge Statement": {
+    "prefix": "mrg",
+    "body": [
+      "MERGE ${1:TargetTable} AS target",
+      "USING ${2:SourceTable} AS source",
+      "  ON target.${3:Id} = source.${3:Id}",
+      "WHEN MATCHED THEN",
+      "  UPDATE SET $4",
+      "WHEN NOT MATCHED BY TARGET THEN",
+      "  INSERT ($5)",
+      "  VALUES ($6)",
+      "WHEN NOT MATCHED BY SOURCE THEN",
+      "  DELETE",
+      "OUTPUT $action, INSERTED.*, DELETED.*;"
+    ],
+    "description": "MERGE statement"
+  },
+  "Pivot": {
+    "prefix": "pv",
+    "body": [
+      "SELECT *",
+      "FROM (",
+      "",
+      "  SELECT $1",
+      "  FROM $2",
+      ") AS SourceTable",
+      "PIVOT (",
+      "",
+      "  ${3|SUM,COUNT,AVG,MIN,MAX|}($4)",
+      "  FOR $5 IN ([$6], [$7])",
+      ") AS PivotTable"
+    ],
+    "description": "PIVOT"
+  },
+  "UnPivot": {
+    "prefix": "upv",
+    "body": [
+      "SELECT *",
+      "FROM $1",
+      "UNPIVOT (",
+      "",
+      "  $2",
+      "  FOR $3 IN ([$4], [$5])",
+      ") AS $6"
+    ],
+    "description": "UNPIVOT"
+  },
+  "Scope Identity": {
+    "prefix": "sid",
+    "body": [
+      "SCOPE_IDENTITY()"
+    ],
+    "description": "SCOPE_IDENTITY()"
+  },
+  "Row Count": {
+    "prefix": "rc",
+    "body": [
+      "@@ROWCOUNT"
+    ],
+    "description": "@@ROWCOUNT"
+  },
+  "Transaction Count": {
+    "prefix": "xact",
+    "body": [
+      "@@TRANCOUNT"
+    ],
+    "description": "@@TRANCOUNT"
+  },
+  "Substring": {
+    "prefix": "sub",
+    "body": [
+      "SUBSTRING($1, $2, $0)"
+    ],
+    "description": "SUBSTRING function"
+  },
+  "CharIndex": {
+    "prefix": "ci",
+    "body": [
+      "CHARINDEX('$1', $0)"
+    ],
+    "description": "CHARINDEX function"
+  },
+  "Replace": {
+    "prefix": "rep",
+    "body": [
+      "REPLACE($1, '$2', '$0')"
+    ],
+    "description": "REPLACE function"
+  },
+  "Stuff": {
+    "prefix": "stf",
+    "body": [
+      "STUFF($1, $2, $3, '$0')"
+    ],
+    "description": "STUFF function"
+  },
+  "Top N": {
+    "prefix": "top",
+    "body": [
+      "TOP ($0)"
+    ],
+    "description": "TOP (N)"
+  },
+  "Set NoCount On": {
+    "prefix": "snc",
+    "body": [
+      "SET NOCOUNT ON;"
+    ],
+    "description": "SET NOCOUNT ON"
+  },
+  "Select Top 1000": {
+    "prefix": "st",
+    "body": [
+      "SELECT TOP 1000 *",
+      "FROM $0"
+    ],
+    "description": "SELECT TOP 1000"
+  },
+  "If Exists": {
+    "prefix": "ife",
+    "body": [
+      "IF EXISTS (SELECT 1 FROM $1 WHERE $2)",
+      "BEGIN",
+      "  $0",
+      "END"
+    ],
+    "description": "IF EXISTS block"
+  },
+  "If Not Exists": {
+    "prefix": "ifne",
+    "body": [
+      "IF NOT EXISTS (SELECT 1 FROM $1 WHERE $2)",
+      "BEGIN",
+      "  $0",
+      "END"
+    ],
+    "description": "IF NOT EXISTS block"
+  }
+}

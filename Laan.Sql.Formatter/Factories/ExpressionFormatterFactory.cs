@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-using Laan.Sql.Parser;
 using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Formatter
@@ -28,13 +27,16 @@ namespace Laan.Sql.Formatter
 
         public static IExpressionFormatter GetFormatter(IIndentable indentable, Expression expression)
         {
-            Type formatterType;
-            if (!_formatters.TryGetValue(expression.GetType(), out formatterType))
-                return new DefaultExpressionFormatter(expression);
+            if (!_formatters.TryGetValue(expression.GetType(), out var formatterType))
+                return new DefaultExpressionFormatter(expression, indentable);
 
-            var formatter = Activator.CreateInstance(formatterType, expression) as IExpressionFormatter;
-            (formatter as IIndentable).IndentLevel = indentable.IndentLevel;
-            (formatter as IIndentable).Indent = indentable.Indent;
+            var formatter = Activator.CreateInstance(formatterType, expression, indentable) as IExpressionFormatter;
+            var indentableFormatter = formatter as IIndentable;
+            if (indentableFormatter != null)
+            {
+                indentableFormatter.IndentLevel = indentable.IndentLevel;
+                indentableFormatter.Indent = indentable.Indent;
+            }
 
             if (formatter == null)
                 throw new ArgumentNullException("Formatter not instantiated: " + formatterType.Name);

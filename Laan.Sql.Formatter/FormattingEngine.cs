@@ -9,9 +9,26 @@ namespace Laan.Sql.Formatter
 {
     public class FormattingEngine : IFormattingEngine
     {
-        public FormattingEngine()
+        public FormattingEngine() : this(new FormattingOptions())
         {
-            UseTabChar = false;
+        }
+
+        public FormattingEngine(FormattingOptions options)
+        {
+            Options = options ?? new FormattingOptions();
+            Options.Validate();
+        }
+
+        /// <summary>
+        /// Creates a FormattingEngine with options loaded from a config file
+        /// </summary>
+        public static FormattingEngine CreateWithConfigFile(string configPath = null)
+        {
+            var options = configPath != null
+                ? FormattingOptionsLoader.LoadFromFile(configPath)
+                : FormattingOptionsLoader.TryLoadFromHierarchy();
+            
+            return new FormattingEngine(options);
         }
 
         public string Execute(string sql)
@@ -19,7 +36,7 @@ namespace Laan.Sql.Formatter
             var outSql = new StringBuilder(sql.Length * 2);
             var statements = ParserFactory.Execute(sql);
 
-            var indentation = new Indentation();
+            var indentation = new Indentation(Options);
 
             foreach (var statement in statements)
             {
@@ -33,8 +50,19 @@ namespace Laan.Sql.Formatter
             return outSql.ToString();
         }
 
-        public int IndentStep { get; set; }
-        public int TabSize { get; set; }
-        public bool UseTabChar { get; set; }
+        public FormattingOptions Options { get; private set; }
+
+        // Legacy properties for backward compatibility
+        public int TabSize 
+        { 
+            get { return Options.IndentSize; }
+            set { Options.IndentSize = value; }
+        }
+        
+        public bool UseTabChar 
+        { 
+            get { return !Options.UseSpaces; }
+            set { Options.UseSpaces = !value; }
+        }
     }
 }

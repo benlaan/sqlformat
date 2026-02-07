@@ -11,12 +11,16 @@ namespace Laan.Sql.Formatter
         {
         }
 
+        public NestedExpressionFormatter(NestedExpression expression, IIndentable parent) : base(expression, parent)
+        {
+        }
+
         public override string Execute()
         {
             string formattedValue = _expression.Expression.FormattedValue(0, this).Replace(Environment.NewLine, " ");
             if (CanInlineExpression(_expression.Expression, Offset + formattedValue.Length))
             {
-                return BaseFormatter.FormatBrackets(formattedValue);
+                return BaseFormatter.FormatBrackets(formattedValue, Options.BracketSpacing);
             }
             else
             {

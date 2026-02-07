@@ -16,7 +16,6 @@ namespace Laan.Sql.Formatter.Web.Blazor
             builder.Services
               .AddBlazorise(options =>
              {
-                 options.ChangeTextOnKeyPress = true;
              })
               .AddBootstrapProviders()
               .AddFontAwesomeIcons();

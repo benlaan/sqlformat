@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Laan.Sql.Parser;
 using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Formatter
@@ -16,7 +17,7 @@ namespace Laan.Sql.Formatter
 
         public void Execute()
         {
-            IndentAppend("DECLARE");
+            IndentAppendKeyword(Constants.Declare);
 
             var formatter = new VariableDefinitionFormatter(_statement.Definitions, this, _sql);
             formatter.Execute();

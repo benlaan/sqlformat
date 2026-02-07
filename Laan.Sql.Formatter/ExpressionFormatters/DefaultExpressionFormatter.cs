@@ -12,6 +12,12 @@ namespace Laan.Sql.Formatter
 
         }
 
+        public DefaultExpressionFormatter( Expression expression, IIndentable parent )
+            : base( expression, parent )
+        {
+
+        }
+
         public override string Execute()
         {
             return _expression.Value;

@@ -9,22 +9,27 @@ namespace Laan.Sql.Formatter
 {
     public class CustomExpressionFormatter<T> : IIndentable, IExpressionFormatter where T : Expression
     {
-        private const int MaxColumnWidth = 80;
-        private const int TabSize = 4;
-
         protected T _expression;
+        private IIndentable _parent;
+        private FormattingOptions _options;
 
-        public CustomExpressionFormatter(T expression)
+        public CustomExpressionFormatter(T expression) : this(expression, null)
         {
-            Indent = GetSpaces(TabSize);
+        }
+
+        public CustomExpressionFormatter(T expression, IIndentable parent)
+        {
             _expression = expression;
+            _parent = parent;
+            _options = parent?.Options ?? new FormattingOptions();
+            Indent = _options.UseSpaces ? new string(' ', _options.IndentSize) : "\t";
         }
 
         protected bool CanInlineExpression(Expression expr, int offset)
         {
             return expr is IInlineFormattable
                 && ((IInlineFormattable)expr).CanInline
-                && expr.Value.Length < MaxColumnWidth - offset;
+                && expr.Value.Length < _options.MaxLineLength - offset;
         }
 
         protected int GetCurrentColumn(StringBuilder sql)
@@ -45,6 +50,11 @@ namespace Laan.Sql.Formatter
         protected static string GetSpaces(int offset)
         {
             return new string(' ', offset);
+        }
+
+        protected string Keyword(string keyword)
+        {
+            return KeywordTransform.Apply(keyword, Options.KeywordCasing);
         }
 
         protected T _statement;
@@ -68,6 +78,11 @@ namespace Laan.Sql.Formatter
         public void DecreaseIndent()
         {
             IndentLevel--;
+        }
+
+        public FormattingOptions Options
+        {
+            get { return _options; }
         }
     }
 }

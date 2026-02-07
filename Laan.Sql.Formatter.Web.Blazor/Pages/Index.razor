@@ -1,55 +1,183 @@
 ﻿@page "/"
 @using Laan.Sql.Formatter;
+@using System.Text.Json;
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.Web;
 @inject IJSRuntime JSRuntime;
 
 <Container class="container-main flex-parent">
 
     <NavBar />
 
-    <Row Class="@((ExpandedPane == ExpandedMode.Raw ? "expand " : "shrink ") + "flex-parent flex-fill")" @onclick="e => ToggleExpandedPane(ExpandedMode.Raw)">
-        <Card Background="Background.None">
-            <CardHeader>Input Sql</CardHeader>
-
-            <CardBody>
-                <MemoEdit Class="flex-fill" @bind-Text="@RawSql"></MemoEdit>
-            </CardBody>
-
-            <CardFooter>
-                <Buttons Orientation="Orientation.Horizontal" Float="Float.Right">
-                    <Button class="@(!String.IsNullOrEmpty(RawSql) ? "" : "disabled")" Clicked="e => Convert()">
-                        <Icon Name="IconName.Random"  />
-                        <Tooltip Text="Runs the sql formatter" />
-                    </Button>
-                </Buttons>
-            </CardFooter>
-        </Card>
-    </Row>
-
-    <Row Class="@((ExpandedPane == ExpandedMode.Formatted ? "expand " : "shrink ") + "flex-parent flex-fill")" Style="padding-bottom:20px">
-        <Card Background="Background.None" @onclick="e => ToggleExpandedPane(ExpandedMode.Formatted)">
-
-            <CardHeader>Formatted Sql</CardHeader>
-            <CardBody>
-            <div class="output-sql flex-parent flex-fill">
-                <pre class="code prettyprint flex-fill" id="formattedCode">
-                @foreach (var line in FormattedSql)
+    <Tabs @bind-SelectedTab="@selectedTab" Pills="true">
+        <Items>
+            <Tab Name="formatter">
+                <Icon Name="IconName.Code" />
+                Formatter
+            </Tab>
+            <Tab Name="options">
+                <Icon Name="IconName.Wrench" />
+                Options
+            </Tab>
+        </Items>
+        <Content>
+            <TabPanel Name="formatter">
+                @if (!IsInputCollapsed)
                 {
-@line
+                    <Row Class="@((ExpandedPane == ExpandedMode.Raw ? "expand " : "shrink ") + "flex-parent flex-fill")" @onclick="e => ToggleExpandedPane(ExpandedMode.Raw)">
+                        <Card Background="Background.None">
+                            <CardHeader>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span>Input Sql</span>
+                                    <Button Size="ButtonSize.Small" Color="Color.Secondary" Clicked="@(() => IsInputCollapsed = true)" style="padding: 2px 8px;">
+                                        <Icon Name="IconName.SortUp" />
+                                    </Button>
+                                </div>
+                            </CardHeader>
+
+                            <CardBody @onclick:stopPropagation="true">
+                                <MemoEdit Class="flex-fill" @bind-Text="@RawSql" @onkeydown="HandleKeyDown"></MemoEdit>
+                            </CardBody>
+
+                            <CardFooter>
+                                <Buttons Orientation="Orientation.Horizontal" Float="Float.Right">
+                                    <Tooltip Text="Runs the sql formatter (Ctrl+Enter)" Placement="Placement.Top">
+                                        <Button class="@(!String.IsNullOrEmpty(RawSql) ? "" : "disabled")" Clicked="e => Convert()">
+                                            <Icon Name="IconName.Random"  />
+                                        </Button>
+                                    </Tooltip>
+                                </Buttons>
+                            </CardFooter>
+                        </Card>
+                    </Row>
                 }
-                </pre>
-            </div>
-            </CardBody>
-            <CardFooter>
-                <Buttons Orientation="Orientation.Horizontal" Float="Float.Right">
-                    <Button class="@(FormattedSql.Count > 0 ? "" : "disabled")" Clicked="e => Copy()">
-                        <Icon Name="IconName.Edit"  />
-                        <Tooltip Text="copies the formatted sql to the clipboard" />
-                    </Button>
-                </Buttons>
-                @("Time Taken: " + TimeTaken)
-            </CardFooter>
-        </Card>
-    </Row>
+                else
+                {
+                    <Row class="collapsed-input-row">
+                        <Button Color="Color.Light" Clicked="@(() => IsInputCollapsed = false)" Block="true">
+                            <Icon Name="IconName.SortDown" /> Show Input Sql
+                        </Button>
+                    </Row>
+                }
+
+                <Row Class="@((ExpandedPane == ExpandedMode.Formatted ? "expand " : "shrink ") + "flex-parent flex-fill")" Style="padding-bottom:20px" @onclick="e => ToggleExpandedPane(ExpandedMode.Formatted)">
+                    <Card Background="Background.None">
+
+                        <CardHeader>Formatted Sql</CardHeader>
+                        <CardBody>
+                        <div class="output-sql flex-parent flex-fill" id="outputContainer">
+                            <pre class="code prettyprint flex-fill" id="formattedCode">@((MarkupString)FormattedSqlHtml)</pre>
+                        </div>
+                        </CardBody>
+                        <CardFooter>
+                            <Buttons Orientation="Orientation.Horizontal" Float="Float.Right">
+                                <Tooltip Text="Copies the formatted sql to the clipboard" Placement="Placement.Top">
+                                    <Button class="@(!String.IsNullOrEmpty(FormattedSqlHtml) ? "" : "disabled")" Clicked="e => Copy()">
+                                        <Icon Name="IconName.Edit"  />
+                                    </Button>
+                                </Tooltip>
+                            </Buttons>
+                            @("Time Taken: " + TimeTaken)
+                        </CardFooter>
+                    </Card>
+                </Row>
+            </TabPanel>
+            
+            <TabPanel Name="options">
+                <Row Class="flex-parent">
+                    <Card Background="Background.None">
+                        <CardHeader>Formatting Options</CardHeader>
+
+                        <CardBody Style="max-height: 600px; overflow-y: auto;">
+                            <Row>
+                                <Column ColumnSize="ColumnSize.Is6">
+                                    <Field Horizontal="true">
+                                        <FieldLabel ColumnSize="ColumnSize.Is6">Indent Size:</FieldLabel>
+                                        <FieldBody ColumnSize="ColumnSize.Is6">
+                                            <NumericEdit TValue="int" @bind-Value="@IndentSize" Min="0" Max="16" />
+                                        </FieldBody>
+                                    </Field>
+
+                                    <Field Horizontal="true">
+                                        <FieldLabel ColumnSize="ColumnSize.Is6">Use Spaces:</FieldLabel>
+                                        <FieldBody ColumnSize="ColumnSize.Is6">
+                                            <InputCheckbox TValue="bool" @bind-Value="@UseSpaces" />
+                                        </FieldBody>
+                                    </Field>
+
+                                    <Field Horizontal="true">
+                                        <FieldLabel ColumnSize="ColumnSize.Is6">Max Line Length:</FieldLabel>
+                                        <FieldBody ColumnSize="ColumnSize.Is6">
+                                            <NumericEdit TValue="int" @bind-Value="@MaxLineLength" Min="20" Max="1000" />
+                                        </FieldBody>
+                                    </Field>
+
+                                    <Field Horizontal="true">
+                                        <FieldLabel ColumnSize="ColumnSize.Is6">Blank Lines Between Clauses:</FieldLabel>
+                                        <FieldBody ColumnSize="ColumnSize.Is6">
+                                            <NumericEdit TValue="int" @bind-Value="@BlankLinesBetweenClauses" Min="0" Max="5" />
+                                        </FieldBody>
+                                    </Field>
+                                </Column>
+
+                                <Column ColumnSize="ColumnSize.Is6">
+                                    <Field Horizontal="true">
+                                        <FieldLabel ColumnSize="ColumnSize.Is6">Keyword Casing:</FieldLabel>
+                                        <FieldBody ColumnSize="ColumnSize.Is6">
+                                            <Select TValue="KeywordCasing" @bind-SelectedValue="@KeywordCasing">
+                                                <SelectItem Value="@Laan.Sql.Formatter.KeywordCasing.Upper">UPPERCASE</SelectItem>
+                                                <SelectItem Value="@Laan.Sql.Formatter.KeywordCasing.Lower">lowercase</SelectItem>
+                                                <SelectItem Value="@Laan.Sql.Formatter.KeywordCasing.Pascal">PascalCase</SelectItem>
+                                            </Select>
+                                        </FieldBody>
+                                    </Field>
+
+                                    <Field Horizontal="true">
+                                        <FieldLabel ColumnSize="ColumnSize.Is6">Bracket Spacing:</FieldLabel>
+                                        <FieldBody ColumnSize="ColumnSize.Is6">
+                                            <Select TValue="BracketSpacing" @bind-SelectedValue="@BracketSpacing">
+                                                <SelectItem Value="@Laan.Sql.Formatter.BracketSpacing.NoSpaces">(value)</SelectItem>
+                                                <SelectItem Value="@Laan.Sql.Formatter.BracketSpacing.WithSpaces">( value )</SelectItem>
+                                            </Select>
+                                        </FieldBody>
+                                    </Field>
+
+                                    <Field Horizontal="true">
+                                        <FieldLabel ColumnSize="ColumnSize.Is6">Max Inline SELECT Columns:</FieldLabel>
+                                        <FieldBody ColumnSize="ColumnSize.Is6">
+                                            <NumericEdit TValue="int" @bind-Value="@MaxInlineSelectColumns" Min="0" Max="20" />
+                                        </FieldBody>
+                                    </Field>
+
+                                    <Field Horizontal="true">
+                                        <FieldLabel ColumnSize="ColumnSize.Is6">Max Inline INSERT Columns:</FieldLabel>
+                                        <FieldBody ColumnSize="ColumnSize.Is6">
+                                            <NumericEdit TValue="int" @bind-Value="@MaxInlineInsertColumns" Min="0" Max="20" />
+                                        </FieldBody>
+                                    </Field>
+                                </Column>
+                            </Row>
+
+                            <Row>
+                                <Column>
+                                    <Buttons>
+                                        <Button Color="Color.Primary" Clicked="@SaveOptions">
+                                            <Icon Name="IconName.Save" />
+                                            Save Options
+                                        </Button>
+                                        <Button Color="Color.Secondary" Clicked="@ResetOptions">
+                                            <Icon Name="IconName.Undo" />
+                                            Reset to Defaults
+                                        </Button>
+                                    </Buttons>
+                                </Column>
+                            </Row>
+                        </CardBody>
+                    </Card>
+                </Row>
+            </TabPanel>
+        </Content>
+    </Tabs>
 
     <Row>
         <Column ColumnSize="ColumnSize.Is10" Padding="Padding.Is1">
@@ -67,12 +195,39 @@
     enum ExpandedMode { Raw, Formatted }
 
     private ExpandedMode ExpandedPane = ExpandedMode.Raw;
+    private bool IsInputCollapsed = false;
 
     private string? Message;
     private IconName MessageType;
     private string RawSql = "SELECT * FROM dbo.[SomeTable] WHERE Name = Value";
-    private IList<string> FormattedSql = new List<string>();
+    private string FormattedSqlHtml = "";
     private TimeSpan TimeTaken = TimeSpan.Zero;
+
+    // Tab state
+    private string selectedTab = "formatter";
+    
+    // Formatting options with defaults
+    private int IndentSize = 4;
+    private bool UseSpaces = true;
+    private int MaxLineLength = 80;
+    private KeywordCasing KeywordCasing = KeywordCasing.Upper;
+    private BracketSpacing BracketSpacing = BracketSpacing.NoSpaces;
+    private int BlankLinesBetweenClauses = 1;
+    private int MaxInlineSelectColumns = 1;
+    private int MaxInlineInsertColumns = 4;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadOptions();
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.CtrlKey && e.Key == "Enter")
+        {
+            Convert();
+        }
+    }
 
     private void ToggleExpandedPane(ExpandedMode mode)
     {
@@ -82,9 +237,25 @@
         System.Console.WriteLine(mode);
     }
 
+    private FormattingOptions GetCurrentOptions()
+    {
+        return new FormattingOptions
+        {
+            IndentSize = IndentSize,
+            UseSpaces = UseSpaces,
+            MaxLineLength = MaxLineLength,
+            KeywordCasing = KeywordCasing,
+            BracketSpacing = BracketSpacing,
+            BlankLinesBetweenClauses = BlankLinesBetweenClauses,
+            MaxInlineSelectColumns = MaxInlineSelectColumns,
+            MaxInlineInsertColumns = MaxInlineInsertColumns
+        };
+    }
+
     private async void Convert()
     {
-        var engine = new FormattingEngine();
+        var options = GetCurrentOptions();
+        var engine = new FormattingEngine(options);
         var timer = new System.Diagnostics.Stopwatch();
 
         var output = "";
@@ -92,15 +263,17 @@
         try
         {
             output = engine.Execute(RawSql);
-
-            FormattedSql = output.TrimEnd().Split(new[] { "\r\n" }, StringSplitOptions.None);
             TimeTaken = timer.Elapsed;
+
+            // Get prettified HTML from JavaScript
+            FormattedSqlHtml = await JSRuntime.InvokeAsync<string>("getPrettifiedHtml", output);
+            
+            // Expand the output panel and collapse input
+            ExpandedPane = ExpandedMode.Formatted;
             StateHasChanged();
 
-            await Task.Delay(500);
-            StateHasChanged();
-
-            // await JSRuntime.InvokeAsync<bool>("prettify", Array.Empty<object>());
+            // Scroll to output
+            await JSRuntime.InvokeVoidAsync("scrollToOutput");
         }
         catch (Exception ex)
         {
@@ -130,6 +303,63 @@
         await Task.Delay(5000);
 
         Message = "";
+        StateHasChanged();
+    }
+
+    private async Task LoadOptions()
+    {
+        try
+        {
+            var json = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "sqlFormatterOptions");
+            if (!string.IsNullOrEmpty(json))
+            {
+                var options = JsonSerializer.Deserialize<FormattingOptions>(json);
+                if (options != null)
+                {
+                    IndentSize = options.IndentSize;
+                    UseSpaces = options.UseSpaces;
+                    MaxLineLength = options.MaxLineLength;
+                    KeywordCasing = options.KeywordCasing;
+                    BracketSpacing = options.BracketSpacing;
+                    BlankLinesBetweenClauses = options.BlankLinesBetweenClauses;
+                    MaxInlineSelectColumns = options.MaxInlineSelectColumns;
+                    MaxInlineInsertColumns = options.MaxInlineInsertColumns;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine("Failed to load options: " + ex.Message);
+        }
+    }
+
+    private async Task SaveOptions()
+    {
+        try
+        {
+            var options = GetCurrentOptions();
+            var json = JsonSerializer.Serialize(options);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "sqlFormatterOptions", json);
+            await ShowNotification("Options saved successfully!", IconName.Check);
+        }
+        catch (Exception ex)
+        {
+            await ShowNotification("Failed to save options: " + ex.Message, IconName.ExclamationCircle);
+        }
+    }
+
+    private async Task ResetOptions()
+    {
+        IndentSize = 4;
+        UseSpaces = true;
+        MaxLineLength = 80;
+        KeywordCasing = KeywordCasing.Upper;
+        BracketSpacing = BracketSpacing.NoSpaces;
+        BlankLinesBetweenClauses = 1;
+        MaxInlineSelectColumns = 1;
+        MaxInlineInsertColumns = 4;
+
+        await SaveOptions();
         StateHasChanged();
     }
 

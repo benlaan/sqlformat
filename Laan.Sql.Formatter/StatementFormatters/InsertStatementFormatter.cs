@@ -11,8 +11,6 @@ namespace Laan.Sql.Formatter
 {
     public class InsertStatementFormatter : CustomStatementFormatter<InsertStatement>, IStatementFormatter
     {
-        private const int MaxOneLineColumnCount = 4;
-
         public InsertStatementFormatter(IIndentable indentable, StringBuilder sql, InsertStatement statement)
             : base(indentable, sql, statement)
         {
@@ -32,7 +30,7 @@ namespace Laan.Sql.Formatter
 
         private void FormatInsert()
         {
-            IndentAppendFormat("{0} {1} {2}", Constants.Insert, Constants.Into, _statement.TableName);
+            IndentAppendFormat("{0} {1} {2}", Keyword(Constants.Insert), Keyword(Constants.Into), _statement.TableName);
         }
 
         private string FormatColumnWithSeparator(int index)
@@ -48,16 +46,16 @@ namespace Laan.Sql.Formatter
             {
                 string text = _statement.Columns.ToCsv();
                 var lines = new List<string>();
-                if (_statement.Columns.Count <= MaxOneLineColumnCount && FitsOnRow(text))
-                    _sql.AppendFormat(" {0}\n", FormatBrackets(text));
+                if (_statement.Columns.Count <= Options.MaxInlineInsertColumns && FitsOnRow(text))
+                    _sql.AppendFormat(" {0}{1}", FormatBrackets(text), Environment.NewLine);
                 else
                 {
-                    if (text.Length > WrapMarginColumn)
+                    if (text.Length > Options.MaxLineLength)
                     {
-                        string line = "";
+                        string line = String.Empty;
                         for (int index = 0; index < _statement.Columns.Count; index++)
                         {
-                            if (line.Length + _statement.Columns[index].Length >= WrapMarginColumn)
+                            if (line.Length + _statement.Columns[index].Length >= Options.MaxLineLength)
                             {
                                 lines.Add(line);
                                 line = "";
@@ -127,7 +125,7 @@ namespace Laan.Sql.Formatter
                     {
                         IndentAppendFormat(
                             "{0} {1}{2}",
-                            values == first ? Constants.Values : new string(' ', Constants.Values.Length),
+                            values == first ? Keyword(Constants.Values) : new string(' ', Constants.Values.Length),
                             FormatBrackets(GetValues(values)),
                             values == last ? String.Empty : ",\n"
                         );
