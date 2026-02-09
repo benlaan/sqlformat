@@ -32,7 +32,8 @@ namespace Laan.Sql.Formatter
                 { typeof( ExecStatement ), typeof( ExecStatementFormatter ) },
                 { typeof( CreateViewStatement ), typeof( CreateViewStatementFormatter ) },
                 { typeof( CreateProcedureStatement ), typeof( CreateProcedureStatementFormatter ) },
-                { typeof( CommonTableExpressionStatement ), typeof( CommonTableExpressionStatementFormatter ) }
+                { typeof( CommonTableExpressionStatement ), typeof( CommonTableExpressionStatementFormatter ) },
+                { typeof( UseStatement ), typeof( UseStatementFormatter ) }
             };
         }
 

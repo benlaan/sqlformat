@@ -127,6 +127,7 @@ namespace Laan.Sql.Parser
         public const string Unique = "UNIQUE";
         public const string Update = "UPDATE";
         public const string UpdLock = "UPDLOCK";
+        public const string Use = "USE";
         public const string Values = "VALUES";
         public const string View = "VIEW";
         public const string When = "WHEN";

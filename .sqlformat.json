@@ -3,7 +3,7 @@
   "indentSize": 2,
   "useSpaces": true,
   "maxLineLength": 120,
-  "keywordCasing": "Lower",
+  "keywordCasing": "Upper",
   "bracketSpacing": "NoSpaces",
   "blankLinesBetweenClauses": 1,
   "maxInlineSelectColumns": 1,

@@ -18,7 +18,7 @@ namespace Laan.Sql.Formatter
 
         public override string Execute()
         {
-            if (_expression.CanInline)
+        if (_expression.CanInline)
                 return String.Format(
                     "{0} {1}BETWEEN {2} AND {3}",
                     _expression.Expression.FormattedValue(Offset, this),
