@@ -1,148 +1,153 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
 
-  
-  <?define ProductVersion="!(bind.FileVersion.Laan.AddIns.Ssms.dll)" ?>
-  <Product
-      Id="*"
-      Name="Laan Sql Add-In for SSMS"
-      Language="1033"
-      Version="$(var.ProductVersion)"
-      Manufacturer="Laan Software"
-      UpgradeCode="20D691F1-81A2-4A35-83FC-23E7C7E9DF97">
+    <?include Version.wxi ?>
+    <?define Configuration="Release" ?>
 
-    <Package
-      InstallerVersion="200"
-      InstallScope="perMachine"
-      Compressed="yes"
-      InstallPrivileges="elevated"
-      Platform="x86"
-    />
+    <Package Name="Laan Sql Tools" Manufacturer="Laan Software" Version="$(var.ProductVersion)" UpgradeCode="003b391c-5307-414a-ab71-1552a663603c">
+        <Property Id="SSMS18_INSTALLED">
+            <DirectorySearch Id="CheckSSMS18" Path="[ProgramFilesFolder]Microsoft SQL Server Management Studio 18" />
+        </Property>
+        <Property Id="SSMS19_INSTALLED">
+            <DirectorySearch Id="CheckSSMS19" Path="[ProgramFilesFolder]Microsoft SQL Server Management Studio 19" />
+        </Property>
+        <Property Id="SSMS20_INSTALLED">
+            <DirectorySearch Id="CheckSSMS20" Path="[ProgramFilesFolder]Microsoft SQL Server Management Studio 20" />
+        </Property>
 
-    <Media Id="1" Cabinet="setup.cab" EmbedCab="yes" />
+        <Media Id="1" Cabinet="Laan.Sql.Tools.cab" EmbedCab="yes" />
+        <ui:WixUI Id="WixUI_FeatureTree" />
 
-    <PropertyRef Id="NETFRAMEWORK40FULL"/>
-    
-    <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again.">
-      <![CDATA[Installed OR NETFRAMEWORK40FULL]]>
-    </Condition>
+        <ComponentGroup Id="SqlFormat.ConsoleApp">
+            <ComponentRef Id="Formatter.sqlformat.exe" />
+            <ComponentRef Id="Formatter.sqlformat.dll" />
+            <ComponentRef Id="Formatter.Laan.Sql.Parser.dll" />
+            <ComponentRef Id="Formatter.Laan.Sql.Formatter.dll" />
+        </ComponentGroup>
 
-    <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
-        <Directory Id="LaanSoftwareBin" Name="Laan Software">
-          <Directory Id="INSTALLLOCATION" Name="Laan SQL Add-In for SSMS"/>
-        </Directory>
-      </Directory>
-      <Directory Id="CommonAppDataFolder">
-        <Directory Id="Microsoft" Name="Microsoft">
-          <Directory Id="MSEnvShared" Name="MSEnvShared">
-            <Directory Id="AddIns" Name="AddIns">
-              <Component Id="AddinFile" Guid="{B2457704-C7B4-496F-BA1A-80B4CB0121D7}">
-                <File Id="Laan.AddIns.Core.AddIn" Source="$(var.Laan.AddIns.Ssms.ProjectDir)Laan.AddIns.Core.AddIn" />
-                <util:XmlFile 
-                  Id='XmlSettings1' 
-                  File='[#Laan.AddIns.Core.AddIn]' 
-                  Action='setValue' 
-                  Value='[#Laan.AddIns.Ssms.dll]' 
-                  ElementPath='/Extensibility/Addin/Assembly' 
-                  Sequence='1' />
-              </Component>
+        <ComponentGroup Id="VsExtension2018">
+            <ComponentRef Id="VsExtension.Laan.AddIns.Ssms.VsExtension2018" />
+            <ComponentRef Id="VsExtension.Laan.Sql.Formatter2018" />
+            <ComponentRef Id="VsExtension.Laan.Sql.Parser2018" />
+            <ComponentRef Id="extension.vsixmanifest2018" />
+            <ComponentRef Id="Laan.AddIns.Ssms.vsix2018" />
+        </ComponentGroup>
+
+        <ComponentGroup Id="VsExtension2019">
+            <ComponentRef Id="VsExtension.Laan.AddIns.Ssms.VsExtension2019" />
+            <ComponentRef Id="VsExtension.Laan.Sql.Formatter2019" />
+            <ComponentRef Id="VsExtension.Laan.Sql.Parser2019" />
+            <ComponentRef Id="extension.vsixmanifest2019" />
+            <ComponentRef Id="Laan.AddIns.Ssms.vsix2019" />
+        </ComponentGroup>
+
+        <ComponentGroup Id="VsExtension2020">
+            <ComponentRef Id="VsExtension.Laan.AddIns.Ssms.VsExtension2020" />
+            <ComponentRef Id="VsExtension.Laan.Sql.Formatter2020" />
+            <ComponentRef Id="VsExtension.Laan.Sql.Parser2020" />
+            <ComponentRef Id="extension.vsixmanifest2020" />
+            <ComponentRef Id="Laan.AddIns.Ssms.vsix2020" />
+        </ComponentGroup>
+
+        <DirectoryRef Id="Laan.Sql.Tools">
+            <Component Id="Formatter.sqlformat.exe"><File Source="..\Laan.Sql.Formatter.Console\bin\$(var.Configuration)\net9.0\sqlformat.exe" /></Component>
+            <Component Id="Formatter.sqlformat.dll"><File Source="..\Laan.Sql.Formatter.Console\bin\$(var.Configuration)\net9.0\sqlformat.dll" /></Component>
+            <Component Id="Formatter.Laan.Sql.Parser.dll"><File Source="..\Laan.Sql.Formatter.Console\bin\$(var.Configuration)\net9.0\Laan.Sql.Parser.dll" /></Component>
+            <Component Id="Formatter.Laan.Sql.Formatter.dll"><File Source="..\Laan.Sql.Formatter.Console\bin\$(var.Configuration)\net9.0\Laan.Sql.Formatter.dll" /></Component>
+        </DirectoryRef>
+
+        <StandardDirectory Id="ProgramFilesFolder">
+            <Directory Name="Microsoft SQL Server Management Studio 18">
+                <Directory Name="Common7">
+                    <Directory Name="IDE">
+                        <Directory Name="Extensions">
+                            <Directory Name="Laan.Sql.Tools">
+                                <Component Id="VsExtension.Laan.AddIns.Ssms.VsExtension2018" Condition="SSMS18_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\Laan.AddIns.Ssms.dll" />
+                                </Component>
+                                <Component Id="VsExtension.Laan.Sql.Formatter2018" Condition="SSMS18_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\Laan.Sql.Formatter.dll" />
+                                </Component>
+                                <Component Id="VsExtension.Laan.Sql.Parser2018" Condition="SSMS18_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\Laan.Sql.Parser.dll" />
+                                </Component>
+                                <Component Id="extension.vsixmanifest2018" Condition="SSMS18_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\extension.vsixmanifest" />
+                                </Component>
+                                <Component Id="Laan.AddIns.Ssms.vsix2018" Condition="SSMS18_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\Laan.AddIns.Ssms.pkgdef" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                    </Directory>
+                </Directory>
             </Directory>
-          </Directory>
-        </Directory>
-      </Directory>
-    </Directory>
 
-    <DirectoryRef Id="INSTALLLOCATION">
-      <Component Id="SSms.AddIn" Guid="{432CEE6E-36B0-4C83-95B4-41E00C01B840}">
-        <File Id="Laan.AddIns.Ssms.dll" Source="$(var.Laan.AddIns.Ssms.TargetDir)Laan.AddIns.Ssms.dll" DiskId="1"/>
-        <File Source="$(var.Laan.AddIns.Ssms.TargetDir)Laan.AddIns.Ssms.pdb" />
+            <Directory Name="Microsoft SQL Server Management Studio 19">
+                <Directory Name="Common7">
+                    <Directory Name="IDE">
+                        <Directory Name="Extensions">
+                            <Directory Name="Laan.Sql.Tools">
+                                <Component Id="VsExtension.Laan.AddIns.Ssms.VsExtension2019" Condition="SSMS19_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\Laan.AddIns.Ssms.dll" />
+                                </Component>
+                                <Component Id="VsExtension.Laan.Sql.Formatter2019" Condition="SSMS19_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\Laan.Sql.Formatter.dll" />
+                                </Component>
+                                <Component Id="VsExtension.Laan.Sql.Parser2019" Condition="SSMS19_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\Laan.Sql.Parser.dll" />
+                                </Component>
+                                <Component Id="extension.vsixmanifest2019" Condition="SSMS19_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\extension.vsixmanifest" />
+                                </Component>
+                                <Component Id="Laan.AddIns.Ssms.vsix2019" Condition="SSMS19_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\Laan.AddIns.Ssms.pkgdef" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                    </Directory>
+                </Directory>
+            </Directory>
 
-        <RegistryKey Root="HKLM" Key="SOFTWARE">
+            <Directory Name="Microsoft SQL Server Management Studio 20">
+                <Directory Name="Common7">
+                    <Directory Name="IDE">
+                        <Directory Name="Extensions">
+                            <Directory Name="Laan.Sql.Tools">
+                                <Component Id="VsExtension.Laan.AddIns.Ssms.VsExtension2020" Condition="SSMS20_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\Laan.AddIns.Ssms.dll" />
+                                </Component>
+                                <Component Id="VsExtension.Laan.Sql.Formatter2020" Condition="SSMS20_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\Laan.Sql.Formatter.dll" />
+                                </Component>
+                                <Component Id="VsExtension.Laan.Sql.Parser2020" Condition="SSMS20_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\Laan.Sql.Parser.dll" />
+                                </Component>
+                                <Component Id="extension.vsixmanifest2020" Condition="SSMS20_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\extension.vsixmanifest" />
+                                </Component>
+                                <Component Id="Laan.AddIns.Ssms.vsix2020" Condition="SSMS20_INSTALLED">
+                                    <File Source="..\Laan.AddIns.Ssms.VsExtension\bin\$(var.Configuration)\Laan.AddIns.Ssms.pkgdef" />
+                                </Component>
+                             </Directory>
+                        </Directory>
+                    </Directory>
+                </Directory>
+            </Directory>
 
-          <RegistryKey Key="Microsoft\Microsoft SQL Server">
+            <Directory Name="Laan Software">
+                <Directory Id="Laan.Sql.Tools" Name="SqlFormat" />
+            </Directory>
 
-            <!-- 2005 -->
-            <RegistryKey Key="90\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
-              <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
-            </RegistryKey>
+        </StandardDirectory>
 
-            <!-- 2008/R2 -->
-            <RegistryKey Key="100\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
-              <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
-            </RegistryKey>
+        <Feature Id="SMS.Integration" Title="SSMS Integration" Level="1">
+            <ComponentGroupRef Id="VsExtension2018" />
+            <ComponentGroupRef Id="VsExtension2019" />
+            <ComponentGroupRef Id="VsExtension2020" />
+        </Feature>
 
-            <!-- 2012 -->
-            <RegistryKey Key="110\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
-              <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
-            </RegistryKey>
-
-            <!-- 2014 -->
-            <RegistryKey Key="120\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
-              <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
-            </RegistryKey>
-
-            <!-- 2016 -->
-            <RegistryKey Key="130\Tools\Shell\Addins\Laan.Addins.Core.AddIn">
-              <RegistryValue Name="LoadBehavior" Value="1" Type="integer" Action="write" />
-            </RegistryKey>
-
-          </RegistryKey>
-
-          <RegistryKey Key="Classes\CLSID\{CC5866B2-5695-4557-AA26-A7AFB5072533}">
-            <RegistryValue Value="Laan.AddIns.Core.AddIn" Type="string" />
-
-            <RegistryKey Key="ProgId">
-              <RegistryValue Value="Laan.AddIns" Type="string" />
-            </RegistryKey>
-            <RegistryKey Key="InprocServer32">
-              <RegistryValue Value="mscoree.dll" Type="string" />
-              <RegistryValue Name="CodeBase" Value="file:///[#Laan.AddIns.Ssms.dll]" Type="string"/>
-              <RegistryValue Name="Assembly" Value="Laan.AddIns.Ssms, Version=$(var.ProductVersion), Culture=neutral, PublicKeyToken=null" Type="string"/>
-              <RegistryValue Name="Class" Value="Laan.AddIns.Core.AddIn" Type="string"/>
-              <RegistryValue Name="ThreadingModel" Value="Both" Type="string"/>
-              <RegistryValue Name="RuntimeVersion" Value="v2.0.50727" Type="string"/>
-
-              <RegistryKey Key="$(var.ProductVersion)">
-                <RegistryValue Name="CodeBase" Value="file:///[#Laan.AddIns.Ssms.dll]" Type="string"/>
-                <RegistryValue Name="Class" Value="Laan.AddIns.Core.AddIn" Type="string" />
-                <RegistryValue Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
-                <RegistryValue Name="Assembly" Value="Laan.AddIns.Ssms, Version=$(var.ProductVersion), Culture=neutral, PublicKeyToken=null" Type="string" />
-              </RegistryKey>
-
-            </RegistryKey>
-          </RegistryKey>
-        </RegistryKey>
-
-        <Class Id="{CC5866B2-5695-4557-AA26-A7AFB5072533}" SafeForScripting="yes" Advertise="no" Context="InprocServer32" Description="Laan Sql Formatter SSMS AddIn" ThreadingModel="both" ForeignServer="mscoree.dll" Control="yes">
-          <ProgId Id="Laan.AddIns.Core.AddIn" Description="Laan Sql Formatter SSMS AddIn" />
-        </Class>
-
-      </Component>
-      <Component Id="Formatter" Guid="{1CA04D29-A6BE-4F68-940D-3B2285C8B3BD}">
-        <File Id="Laan.Sql.Formatter.dll" Source="$(var.Laan.Sql.Formatter.TargetDir)Laan.Sql.Formatter.dll" DiskId="1"/>
-        <File Source="$(var.Laan.Sql.Formatter.TargetDir)Laan.Sql.Formatter.pdb" />
-      </Component>
-      <Component Id="Parser" Guid="{D668D5B7-0EC5-40A1-8148-6DBCA6E6FFA6}">
-        <File Id="Laan.Sql.Parser.dll" Source="$(var.Laan.Sql.Parser.TargetDir)Laan.Sql.Parser.dll" DiskId="1"/>
-        <File Source="$(var.Laan.Sql.Parser.TargetDir)Laan.Sql.Parser.pdb" />
-      </Component>
-    </DirectoryRef>
-
-    <!--<DirectoryRef Id="TARGETDIR">
-      <Component Id="RegistryEntries" Guid="{04D2B77F-D05E-494C-A675-25FC7D6F1559}">
-
-
-      </Component>
-    </DirectoryRef>-->
-
-    <Feature Id="Main" Title="Main AddIn" Level="1">
-      <ComponentRef Id="SSms.AddIn"/>
-      <ComponentRef Id="Formatter"/>
-      <ComponentRef Id="Parser"/>
-      <!--<ComponentRef Id="RegistryEntries"/>-->
-      <ComponentRef Id="AddinFile"/>
-    </Feature>
-
-  </Product>
+        <Feature Id="SqlFormat.CommandLine" Title="Sql Format command line tool">
+            <ComponentGroupRef Id="SqlFormat.ConsoleApp" />
+        </Feature>
+    </Package>
 </Wix>

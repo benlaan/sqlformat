@@ -2,7 +2,7 @@
   "profiles": {
     "Laan.Sql.Formatter.Console": {
       "commandName": "Project",
-      "commandLineArgs": " -Diagnostics -Output formatted.sql -Sql \"SELECT 1\""
+      "commandLineArgs": ""
     }
   }
 }

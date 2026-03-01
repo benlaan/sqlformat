@@ -1,10 +1,10 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Import Project=".\Build\VersionInfo.props" />
+  <Import Project="..\Build\VersionInfo.props" />
 
   <!-- Default Properties shared by All Projects, for both Debug and Release Configurations -->
   <PropertyGroup>
-    <TargetFrameworks>net472;net481;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <StyleCopTreatErrorsAsWarnings>true</StyleCopTreatErrorsAsWarnings>
@@ -12,7 +12,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Platform>AnyCPU</Platform>
     <Configuration>Debug</Configuration>
-    <NoWarn>1701;1702;NU1301;NU1902;NU1903</NoWarn>
+    <NoWarn>1701;1702;NU1301</NoWarn>
   </PropertyGroup>
 
   <!-- Properties shared by All Projects, for Debug Configuration -->

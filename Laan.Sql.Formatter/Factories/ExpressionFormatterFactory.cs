@@ -1,43 +1,64 @@
 using System;
 using System.Collections.Generic;
 
-using Laan.Sql.Parser;
 using Laan.Sql.Parser.Expressions;
 
 namespace Laan.Sql.Formatter
 {
     public class ExpressionFormatterFactory
     {
-        private static Dictionary<Type, Type> _formatters;
-
-        static ExpressionFormatterFactory()
+        public static IExpressionFormatter GetFormatter(IIndentable indentable, Expression expression)
         {
-            _formatters = new Dictionary<Type, Type>
+            IExpressionFormatter formatter = null;
+            switch (expression)
             {
-                { typeof( CriteriaExpression ), typeof( CriteriaExpressionFormatter ) },
-                { typeof( CaseSwitchExpression ), typeof( CaseSwitchExpressionFormatter ) },
-                { typeof( CaseWhenExpression ), typeof( CaseWhenExpressionFormatter ) },
-                { typeof( FunctionExpression ), typeof( FunctionExpressionFormatter ) },
-                { typeof( NestedExpression ), typeof( NestedExpressionFormatter ) },
-                { typeof( SelectExpression ), typeof( SelectExpressionFormatter ) },
-                { typeof( ExpressionList ), typeof( ExpressionListFormatter ) },
-                { typeof( BetweenExpression ), typeof( BetweenExpressionFormatter ) },
-                { typeof( NegationExpression ), typeof( NegationExpressionFormatter ) },
-            };
-        }
+                case CriteriaExpression criteriaExpression:
+                    formatter = new CriteriaExpressionFormatter(criteriaExpression);
+                    break;
 
-        public static IExpressionFormatter GetFormatter( IIndentable indentable, Expression expression )
-        {
-            Type formatterType;
-            if ( !_formatters.TryGetValue( expression.GetType(), out formatterType ) )
-                return new DefaultExpressionFormatter( expression );
+                case CaseSwitchExpression caseSwitchExpression:
+                    formatter = new CaseSwitchExpressionFormatter(caseSwitchExpression);
+                    break;
 
-            var formatter = Activator.CreateInstance( formatterType, expression ) as IExpressionFormatter;
-            ( formatter as IIndentable ).IndentLevel = indentable.IndentLevel;
-            ( formatter as IIndentable ).Indent = indentable.Indent;
+                case CaseWhenExpression caseWhenExpression:
+                    formatter = new CaseWhenExpressionFormatter(caseWhenExpression);
+                    break;
 
-            if ( formatter == null )
-                throw new ArgumentNullException( "Formatter not instantiated: " + formatterType.Name );
+                case FunctionExpression functionExpression:
+                    formatter = new FunctionExpressionFormatter(functionExpression);
+                    break;
+
+                case NestedExpression nestedExpression:
+                    formatter = new NestedExpressionFormatter(nestedExpression);
+                    break;
+
+                case SelectExpression selectExpression:
+                    formatter = new SelectExpressionFormatter(selectExpression);
+                    break;
+
+                case ExpressionList expressionList:
+                    formatter = new ExpressionListFormatter(expressionList);
+                    break;
+
+                case BetweenExpression betweenExpression:
+                    formatter = new BetweenExpressionFormatter(betweenExpression);
+                    break;
+
+                case NegationExpression negationExpression:
+                    formatter = new NegationExpressionFormatter(negationExpression);
+                    break;
+
+                default:
+                    formatter = new DefaultExpressionFormatter(expression);
+                    break;
+            }
+
+            var indentableFormatter = formatter as IIndentable;
+            if (indentableFormatter != null)
+            {
+                indentableFormatter.IndentLevel = indentable.IndentLevel;
+                indentableFormatter.Indent = indentable.Indent;
+            }
 
             return formatter;
         }

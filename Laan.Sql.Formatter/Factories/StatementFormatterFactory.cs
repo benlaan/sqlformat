@@ -10,51 +10,64 @@ namespace Laan.Sql.Formatter
 {
     public class StatementFormatterFactory
     {
-        private static Dictionary<Type, Type> _formatters;
-
-        static StatementFormatterFactory()
-        {
-            _formatters = new Dictionary<Type, Type>
-            {
-                { typeof( SelectStatement ), typeof( SelectStatementFormatter ) },
-                { typeof( UpdateStatement ), typeof( UpdateStatementFormatter ) },
-                { typeof( CreateIndexStatement), typeof( CreateIndexStatementFormatter ) },
-                { typeof( DeleteStatement ), typeof( DeleteStatementFormatter ) },
-                { typeof( InsertStatement ), typeof( InsertStatementFormatter ) },
-                { typeof( DeclareStatement ), typeof( DeclareStatementFormatter ) },
-                { typeof( GoTerminator ), typeof( GoTerminatorFormatter ) },
-                { typeof( IfStatement ), typeof( IfStatementFormatter ) },
-                { typeof( BeginTransactionStatement ), typeof( BeginTransactionStatementFormatter ) },
-                { typeof( RollbackTransactionStatement ), typeof( RollbackTransactionStatementFormatter ) },
-                { typeof( CommitTransactionStatement ), typeof( CommitTransactionStatementFormatter ) },
-                { typeof( BlockStatement ), typeof( BlockStatementFormatter ) },
-                { typeof( ExecuteSqlStatement ), typeof( ExecuteSqlStatementFormatter ) },
-                { typeof( ExecStatement ), typeof( ExecStatementFormatter ) },
-                { typeof( CreateViewStatement ), typeof( CreateViewStatementFormatter ) },
-                { typeof( CreateProcedureStatement ), typeof( CreateProcedureStatementFormatter ) },
-                { typeof( CommonTableExpressionStatement ), typeof( CommonTableExpressionStatementFormatter ) }
-            };
-        }
-
         public static IStatementFormatter GetFormatter(IIndentable indentable, StringBuilder outSql, IStatement statement)
         {
-            Type formatterType;
-            if (!_formatters.TryGetValue(statement.GetType(), out formatterType))
-                throw new FormatterNotImplementedException(
-                    "Formatter not implemented for statement: " + statement.GetType().Name
-                );
+            switch (statement)
+            {
+                case SelectStatement selectStatement:
+                    return new SelectStatementFormatter(indentable, outSql, selectStatement);
 
-            var formatter = Activator.CreateInstance(
-                formatterType,
-                indentable,
-                outSql,
-                statement
-            ) as IStatementFormatter;
+                case UpdateStatement updateStatement:
+                    return new UpdateStatementFormatter(indentable, outSql, updateStatement);
 
-            if (formatter == null)
-                throw new ArgumentNullException("Formatter not instantiated: " + formatterType.Name);
+                case CreateIndexStatement createIndexStatement:
+                    return new CreateIndexStatementFormatter(indentable, outSql, createIndexStatement);
 
-            return formatter;
+                case DeleteStatement deleteStatement:
+                    return new DeleteStatementFormatter(indentable, outSql, deleteStatement);
+
+                case InsertStatement insertStatement:
+                    return new InsertStatementFormatter(indentable, outSql, insertStatement);
+
+                case DeclareStatement declareStatement:
+                    return new DeclareStatementFormatter(indentable, outSql, declareStatement);
+
+                case GoTerminator goTerminator:
+                    return new GoTerminatorFormatter(indentable, outSql, goTerminator);
+
+                case IfStatement ifStatement:
+                    return new IfStatementFormatter(indentable, outSql, ifStatement);
+
+                case BeginTransactionStatement beginTransactionStatement:
+                    return new BeginTransactionStatementFormatter(indentable, outSql, beginTransactionStatement);
+
+                case RollbackTransactionStatement rollbackTransactionStatement:
+                    return new RollbackTransactionStatementFormatter(indentable, outSql, rollbackTransactionStatement);
+
+                case CommitTransactionStatement commitTransactionStatement:
+                    return new CommitTransactionStatementFormatter(indentable, outSql, commitTransactionStatement);
+
+                case BlockStatement blockStatement:
+                    return new BlockStatementFormatter(indentable, outSql, blockStatement);
+
+                case ExecuteSqlStatement executeSqlStatement:
+                    return new ExecuteSqlStatementFormatter(indentable, outSql, executeSqlStatement);
+
+                case ExecStatement execStatement:
+                    return new ExecStatementFormatter(indentable, outSql, execStatement);
+
+                case CreateViewStatement createViewStatement:
+                    return new CreateViewStatementFormatter(indentable, outSql, createViewStatement);
+
+                case CreateProcedureStatement createProcedureStatement:
+                    return new CreateProcedureStatementFormatter(indentable, outSql, createProcedureStatement);
+
+                case CommonTableExpressionStatement commonTableExpressionStatement:
+                    return new CommonTableExpressionStatementFormatter(indentable, outSql, commonTableExpressionStatement);
+
+                default:
+                    throw new FormatterNotImplementedException("Formatter not implemented for statement: " + statement.GetType().Name);
+            }
         }
     }
 }

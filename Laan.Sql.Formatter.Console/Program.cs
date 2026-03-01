@@ -4,12 +4,10 @@ using System.Text;
 
 using Laan.Sql.Formatter;
 
-internal static class Program
+public static class Program
 {
-    // TODO: Implement a proper argument class for passing SQL, or a file, as well as output
     private static void Main(string[] args)
     {
-        var argument = new Argument(args);
         var engine = new FormattingEngine();
 
         var timer = new System.Diagnostics.Stopwatch();
@@ -18,15 +16,31 @@ internal static class Program
         {
             string sql = null;
 
-            if (argument.Sql != null)
-                sql = argument.Sql;
+            var argument = new Argument(args);
+
+            if (Console.IsInputRedirected)
+            {
+                sql = Console.In.ReadToEnd();
+            }
             else
-                if (argument.File != null && File.Exists(argument.File))
-                sql = File.ReadAllText(argument.File);
+            {
+                if (args.Length == 0)
+                {
+                    Console.WriteLine("usage: sqlformat.exe -File (file) -Sql (sql) [-Output (output)] [-Diagnostics]");
+                    Environment.Exit(1);
+                    return;
+                }
+
+                if (argument.Sql != null)
+                    sql = argument.Sql;
+                else
+                    if (argument.File != null && File.Exists(argument.File))
+                    sql = File.ReadAllText(argument.File);
+            }
 
             if (sql == null)
             {
-                Console.WriteLine("No SQL found - either supply -Sql or -File arguments");
+                Console.WriteLine("No SQL found - either supply -Sql or -File arguments, or via stdin");
                 Environment.Exit(2);
                 return;
             }

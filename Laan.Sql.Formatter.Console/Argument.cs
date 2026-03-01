@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 
 public class Argument
 {
@@ -11,39 +10,40 @@ public class Argument
     /// <param name="args"></param>
     public Argument(string[] args)
     {
-        PropertyInfo property = null;
-        var typeConverter = new TypeConverter();
-
-        void SetValue(object value)
-        {
-            property.SetValue(this, value);
-            property = null;
-        }
-
-        if (args.Length == 0)
-        {
-            Console.WriteLine("usage: sqlformat.exe -File (file) -Sql (sql) [-Output (output)] [-Diagnostics]");
-            Environment.Exit(1);
-            return;
-        }
-
         foreach (string arg in args)
         {
-            if (property == null)
+            if (arg.StartsWith("-"))
             {
-                if (arg.StartsWith("-"))
+                var propertyName = arg.Trim('-');
+                switch (propertyName.ToLower())
                 {
-                    property = GetType().GetProperties().SingleOrDefault(p => String.Compare(p.Name, arg.Trim('-'), StringComparison.OrdinalIgnoreCase) == 0);
+                    case "file":
+                        File = ReadValue(args, arg);
+                        break;
 
-                    if (property?.PropertyType == typeof(bool))
-                        SetValue(true);
+                    case "sql":
+                        Sql = ReadValue(args, arg);
+                        break;
+
+                    case "output":
+                        Output = ReadValue(args, arg);
+                        break;
+
+                    case "diagnostics":
+                        Diagnostics = true;
+                        break;
                 }
             }
-            else
-            {
-                SetValue(property.PropertyType != typeof(string) ? typeConverter.ConvertFromString(arg) : arg);
-            }
         }
+    }
+
+    private string ReadValue(string[] args, string currentArg)
+    {
+        var currentIndex = Array.IndexOf(args, currentArg);
+        if (currentIndex < 0 || currentIndex >= args.Length - 1)
+            return null;
+
+        return args[currentIndex + 1];
     }
 
     public bool Diagnostics { get; set; }

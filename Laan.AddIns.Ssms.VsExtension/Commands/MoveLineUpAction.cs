@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 
-
 using Microsoft.VisualStudio.Shell;
 
 namespace Laan.AddIns.Ssms.VsExtension.Commands
