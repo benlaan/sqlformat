@@ -20,7 +20,7 @@ namespace Laan.Sql.Formatter
             if ( String.Compare( _expression.Name, Constants.Exists, true ) == 0 )
             {
                 StringBuilder sql = new StringBuilder();
-                sql.AppendFormat( "{0}(\r\n", _expression.Name );
+                sql.AppendFormat( "{0}({1}", _expression.Name, Environment.NewLine );
                 sql.AppendLine();
                 using ( new IndentScope( this ) )
                 {
@@ -36,7 +36,7 @@ namespace Laan.Sql.Formatter
                     .Select( arg => arg.FormattedValue( Offset, this ) )
                     .ToArray();
 
-                bool canInline = _expression.Value.Length <= 40;
+                bool canInline = _expression.CanInline;
                 string comma = Constants.Comma + ( canInline ? " " : "" );
 
                 StringBuilder sql = new StringBuilder();

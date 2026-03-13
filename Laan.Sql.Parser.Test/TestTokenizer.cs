@@ -117,9 +117,11 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [TestCase("N'1\r\n2\r\n'", new[] { "N'1\r\n2\r\n'" })]
-        public void Can_Tokenize_MultiLine_Strings_With_N_Prefix(string input, string[] tokens)
+        public void Can_Tokenize_MultiLine_Strings_With_N_Prefix()
         {
+            var nl = Environment.NewLine;
+            var input = $"N'1{nl}2{nl}'";
+            var tokens = new[] { $"N'1{nl}2{nl}'" };
             Verify(input, tokens);
         }
 
@@ -173,7 +175,6 @@ namespace Laan.Sql.Parser.Test
         //[TestCase("/* * */", new[] { "/* * */" })]
         //[TestCase("/* / */", new[] { "/* / */" })]
         [TestCase("/* !@#$%^ */", new[] { "/* !@#$%^ */" })]
-        [TestCase("/* A\r\nB */\r\nC", new[] { "/* A\r\nB */", "C" })]
         [TestCase("select * from /* dbo.table t */ dbo.otherTable t", new[] { "select", "*", "from", "/* dbo.table t */", "dbo", ".", "otherTable", "t" })]
         public void Can_Tokenize_Strings_With_Block_Comment_With_Symbols_In_Comments(string input, string[] tokens)
         {
@@ -183,13 +184,38 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
-        [TestCase( "SELECT * /* Get All\r\nFields */\r\nFROM dbo.Table", new[] { "SELECT", "*", "/* Get All\r\nFields */", "FROM", "dbo", ".", "Table" } )]
-        [TestCase("/* A\r\nB */\r\nC", new[] { "/* A\r\nB */", "C" })]
+        public void Can_Tokenize_Strings_With_Block_Comment_With_Symbols_In_Comments_Multiline()
+        {
+            var nl = Environment.NewLine;
+            var input = $"/* A{nl}B */{nl}C";
+            var tokens = new[] { $"/* A{nl}B */", "C" };
+            Verify(input, tokens, false);
+        }
+
+        [Test]
         [TestCase("select * from /* dbo.table t */ dbo.otherTable t", new[] { "select", "*", "from", "/* dbo.table t */", "dbo", ".", "otherTable", "t" })]
         public void Can_Tokenize_Strings_With_Block_Comment(string input, string[] tokens)
         {
             // Hack: Change the Skip flag for comments so they can be tested..
             //       Eventually, when comments are processed correctly, this can be removed!
+            Verify(input, tokens, false);
+        }
+
+        [Test]
+        public void Can_Tokenize_Strings_With_Block_Comment_Multiline_1()
+        {
+            var nl = Environment.NewLine;
+            var input = $"SELECT * /* Get All{nl}Fields */{nl}FROM dbo.Table";
+            var tokens = new[] { "SELECT", "*", $"/* Get All{nl}Fields */", "FROM", "dbo", ".", "Table" };
+            Verify(input, tokens, false);
+        }
+
+        [Test]
+        public void Can_Tokenize_Strings_With_Block_Comment_Multiline_2()
+        {
+            var nl = Environment.NewLine;
+            var input = $"/* A{nl}B */{nl}C";
+            var tokens = new[] { $"/* A{nl}B */", "C" };
             Verify(input, tokens, false);
         }
     }

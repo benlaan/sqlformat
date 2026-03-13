@@ -4,7 +4,7 @@
 
   <!-- Default Properties shared by All Projects, for both Debug and Release Configurations -->
   <PropertyGroup>
-    <TargetFrameworks>net472;net481;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net472;net481;net8.0;net9.0;net10.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <StyleCopTreatErrorsAsWarnings>true</StyleCopTreatErrorsAsWarnings>

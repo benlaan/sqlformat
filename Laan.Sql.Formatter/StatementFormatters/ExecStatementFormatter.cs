@@ -37,7 +37,7 @@ namespace Laan.Sql.Formatter
                     var lastArgument = _statement.Arguments.Last();
                     foreach (var argument in _statement.Arguments)
                     {
-                        var lineEnding = (argument != lastArgument ? ",\n\r" : "");
+                        var lineEnding = (argument != lastArgument ? "," + Environment.NewLine : "");
                         IndentAppend(GetArgumentFormatted(argument) + lineEnding);
                     }
                 }
