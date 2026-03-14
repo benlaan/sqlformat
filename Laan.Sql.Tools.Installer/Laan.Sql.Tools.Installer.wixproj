@@ -1,4 +1,9 @@
-﻿<Project Sdk="WixToolset.Sdk/5.0.2">
+﻿<Project>
+    <!-- Manually import WiX SDK only on Windows using proper SDK paths -->
+    <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+        <WixToolsetSdkRoot>$(MSBuildSDKsPath)\WixToolset.Sdk\5.0.2\</WixToolsetSdkRoot>
+    </PropertyGroup>
+    <Import Project="$(WixToolsetSdkRoot)Sdk.props" Condition="'$(OS)' == 'Windows_NT' And Exists('$(WixToolsetSdkRoot)Sdk.props')" />
     <PropertyGroup>
         <WixAssemblyInfoFile>Version.wxi</WixAssemblyInfoFile>
     </PropertyGroup>
@@ -39,5 +44,29 @@
     <Target Name="BuildAssemblyInfo" BeforeTargets="BeforeBuild">
         <CallTarget Targets="CalculateRepoInfo; WriteWixAssemblyInfoFile" />
     </Target>
+
+    <!-- Override build targets on non-Windows platforms to do nothing -->
+    <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+        <BuildDependsOn></BuildDependsOn>
+        <CleanDependsOn></CleanDependsOn>
+        <RebuildDependsOn></RebuildDependsOn>
+        <CompileDependsOn></CompileDependsOn>
+    </PropertyGroup>
+
+    <Target Name="Build" Condition="'$(OS)' != 'Windows_NT'">
+        <Message Importance="high" Text="Skipping Laan.Sql.Tools.Installer build on non-Windows platform" />
+    </Target>
+    <Target Name="Rebuild" Condition="'$(OS)' != 'Windows_NT'">
+        <Message Importance="high" Text="Skipping Laan.Sql.Tools.Installer rebuild on non-Windows platform" />
+    </Target>
+    <Target Name="Clean" Condition="'$(OS)' != 'Windows_NT'">
+        <Message Importance="high" Text="Skipping Laan.Sql.Tools.Installer clean on non-Windows platform" />
+    </Target>
+
+    <!-- Import override targets on non-Windows to completely replace WiX SDK targets -->
+    <Import Project="NonWindows.targets" Condition="'$(OS)' != 'Windows_NT'" />
+
+    <!-- Import WiX SDK targets only on Windows -->
+    <Import Project="$(WixToolsetSdkRoot)Sdk.targets" Condition="'$(OS)' == 'Windows_NT' And Exists('$(WixToolsetSdkRoot)Sdk.targets')" />
 
 </Project>

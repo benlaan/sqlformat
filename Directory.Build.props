@@ -12,7 +12,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Platform>AnyCPU</Platform>
     <Configuration>Debug</Configuration>
-    <NoWarn>1701;1702;NU1301;NU1902;NU1903</NoWarn>
+    <NoWarn>1701;1702;NU1301;NU1902;NU1903;NU1503</NoWarn>
   </PropertyGroup>
 
   <!-- Properties shared by All Projects, for Debug Configuration -->

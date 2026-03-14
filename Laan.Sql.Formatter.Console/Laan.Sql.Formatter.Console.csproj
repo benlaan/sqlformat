@@ -4,11 +4,11 @@
         <StartupObject>Program</StartupObject>
         <AssemblyName>sqlformat</AssemblyName>
         <IsPackable>false</IsPackable>
-        <TargetFrameworks>net9.0</TargetFrameworks>
+        <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
         <!-- Make binary standalone -->
         <PublishSingleFile>true</PublishSingleFile>
         <SelfContained>true</SelfContained>
-        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
         <PublishTrimmed>true</PublishTrimmed>
         <!-- <PublishAot>true</PublishAot> -->
     </PropertyGroup>

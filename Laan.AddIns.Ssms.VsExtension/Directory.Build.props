@@ -2,6 +2,11 @@
 
   <Import Project="..\Build\VersionInfo.props" />
 
+  <!-- Skip this project on non-Windows platforms -->
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <ExcludeFromBuild>true</ExcludeFromBuild>
+  </PropertyGroup>
+
   <!-- Default Properties shared by All Projects, for both Debug and Release Configurations -->
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
