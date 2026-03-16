@@ -1,0 +1,9 @@
+<Project>
+  <!-- Completely disable this project on non-Windows platforms -->
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <ExcludeFromBuild>true</ExcludeFromBuild>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <NoWarn>$(NoWarn);WIX0000</NoWarn>
+  </PropertyGroup>
+</Project>

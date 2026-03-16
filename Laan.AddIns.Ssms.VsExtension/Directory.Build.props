@@ -1,20 +1,15 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <PropertyGroup>
-    <Major>0</Major>
-    <Minor>3</Minor>
-    <Build>3</Build>
-    <Revision>0</Revision>
+  <Import Project="..\Build\VersionInfo.props" />
+
+  <!-- Skip this project on non-Windows platforms -->
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <ExcludeFromBuild>true</ExcludeFromBuild>
   </PropertyGroup>
-
-  <Import Project=".\Build\VersionInfo.props" />
-
 
   <!-- Default Properties shared by All Projects, for both Debug and Release Configurations -->
   <PropertyGroup>
-    <!-- Ensure SolutionDir is set even when building individual projects -->
-    <SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)</SolutionDir>
-    <TargetFrameworks>net472;net481;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <StyleCopTreatErrorsAsWarnings>true</StyleCopTreatErrorsAsWarnings>
@@ -22,7 +17,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Platform>AnyCPU</Platform>
     <Configuration>Debug</Configuration>
-    <NoWarn>1701;1702;NU1301;NU1902;NU1903;NU1503</NoWarn>
+    <NoWarn>1701;1702;NU1301</NoWarn>
   </PropertyGroup>
 
   <!-- Properties shared by All Projects, for Debug Configuration -->

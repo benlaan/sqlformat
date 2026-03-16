@@ -23,15 +23,14 @@ namespace Laan.Sql.Formatter
 
             var json = File.ReadAllText(filePath);
 
-            var jsonOptions = new JsonSerializerOptions
+            var jsonOptions = new JsonSerializerOptions(FormattingOptionsJsonContext.Default.Options)
             {
-                PropertyNameCaseInsensitive = true,
                 ReadCommentHandling = JsonCommentHandling.Skip,
                 AllowTrailingCommas = true
             };
             jsonOptions.Converters.Add(new JsonStringEnumConverter());
 
-            var options = JsonSerializer.Deserialize<FormattingOptions>(json, jsonOptions);
+            var options = JsonSerializer.Deserialize(json, typeof(FormattingOptions), jsonOptions) as FormattingOptions;
             if (options == null)
                 throw new InvalidOperationException($"Failed to parse configuration file: {filePath}");
 
@@ -103,11 +102,7 @@ namespace Laan.Sql.Formatter
         {
             options.Validate();
 
-            var json = JsonSerializer.Serialize(options, new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            var json = JsonSerializer.Serialize(options, typeof(FormattingOptions), FormattingOptionsJsonContext.Default);
 
             File.WriteAllText(filePath, json);
         }

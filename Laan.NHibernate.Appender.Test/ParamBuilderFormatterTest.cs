@@ -35,9 +35,12 @@ command 0:INSERT INTO dbo.[Table] (Version, TypeID, Name, ShortName, Data, UserN
             // Act
             string result = sut.Execute(sample);
 
+            // Normalize line endings for cross-platform comparison
+            var normalizedExpected = expected.Replace("\r\n", "\n").Replace("\r", "\n");
+            var normalizedResult = result.Replace("\r\n", "\n").Replace("\r", "\n");
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(normalizedExpected, normalizedResult);
         }
     }
 }

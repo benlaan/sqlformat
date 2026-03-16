@@ -49,7 +49,16 @@ namespace Laan.Sql.Formatter.Test
 
         protected static void Compare( string actual, string[] expected )
         {
-            var actualAsList = actual.Replace("\r", "" ).Split( new string[] { "\n" }, StringSplitOptions.None );
+            // Normalize line endings: handle \r\n (Windows), \n (Unix/Linux), and \r (old Mac)
+            var normalizedActual = actual.Replace( "\r\n", "\n" ).Replace( "\r", "\n" );
+            var actualAsList = normalizedActual.Split( '\n' );
+            
+            // Remove trailing empty string if present (from trailing newline)
+            if ( actualAsList.Length > 0 && actualAsList[ actualAsList.Length - 1 ] == "" )
+            {
+                actualAsList = actualAsList.Take( actualAsList.Length - 1 ).ToArray();
+            }
+            
             Assert.AreEqual( expected, actualAsList, DisplayLists( expected, actualAsList ) );
         }
     }

@@ -5,6 +5,12 @@
         <AssemblyName>sqlformat</AssemblyName>
         <IsPackable>false</IsPackable>
         <TargetFrameworks>net10.0</TargetFrameworks>
+        <!-- Make binary standalone -->
+        <PublishSingleFile>true</PublishSingleFile>
+        <SelfContained>true</SelfContained>
+        <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+        <PublishTrimmed>true</PublishTrimmed>
+        <!-- <PublishAot>true</PublishAot> -->
     </PropertyGroup>
 
     <ItemGroup>

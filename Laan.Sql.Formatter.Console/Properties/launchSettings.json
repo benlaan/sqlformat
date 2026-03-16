@@ -2,7 +2,7 @@
   "profiles": {
     "Laan.Sql.Formatter.Console": {
       "commandName": "Project",
-      "commandLineArgs": "-Sql \"SELECT * FROM dbo.Table T JOIN Other O ON O.Id = T.OtherId\""
+      "commandLineArgs": " -Diagnostics -Output formatted.sql -Sql \"SELECT 1\""
     }
   }
 }

@@ -1,0 +1,20 @@
+<Project>
+  <!-- Override WiX targets to do nothing on non-Windows platforms -->
+  <Target Name="Build">
+    <Message Importance="high" Text="Skipping Laan.Sql.Tools.Installer - WiX is Windows-only" />
+  </Target>
+
+  <Target Name="Rebuild">
+    <Message Importance="high" Text="Skipping Laan.Sql.Tools.Installer - WiX is Windows-only" />
+  </Target>
+
+  <Target Name="Clean">
+    <Message Importance="high" Text="Skipping Laan.Sql.Tools.Installer - WiX is Windows-only" />
+  </Target>
+
+  <Target Name="Restore">
+  </Target>
+
+  <Target Name="Compile">
+  </Target>
+</Project>

@@ -41,15 +41,68 @@ namespace Laan.Sql.Parser
         internal static IParser GetParser(ITokenizer _tokenizer)
         {
             // this is a quick and dirty service locator that maps tokens to parsers
-            Type parserType;
-            if (_parsers.TryGetValue(_tokenizer.Current.Value.ToUpper(), out parserType))
+            IParser parser = null;
+            switch (_tokenizer.Current.Value.ToUpper())
+            {
+                case Constants.Select:
+                    parser = new SelectStatementParser(_tokenizer);
+                    break;
+                case Constants.Insert:
+                    parser = new InsertStatementParser(_tokenizer);
+                    break;
+                case Constants.Update:
+                    parser = new UpdateStatementParser(_tokenizer);
+                    break;
+                case Constants.Delete:
+                    parser = new DeleteStatementParser(_tokenizer);
+                    break;
+                case Constants.Grant:
+                    parser = new GrantStatementParser(_tokenizer);
+                    break;
+                case Constants.Go:
+                    parser = new GoTerminatorParser(_tokenizer);
+                    break;
+                case Constants.Create:
+                    parser = new CreateStatementParser(_tokenizer);
+                    break;
+                case Constants.Alter:
+                    parser = new AlterStatementParser(_tokenizer);
+                    break;
+                case Constants.Declare:
+                    parser = new DeclareStatementParser(_tokenizer);
+                    break;
+                case Constants.If:
+                    parser = new IfStatementParser(_tokenizer);
+                    break;
+                case Constants.Begin:
+                    parser = new BeginStatementParser(_tokenizer);
+                    break;
+                case Constants.Commit:
+                    parser = new CommitStatementParser(_tokenizer);
+                    break;
+                case Constants.Rollback:
+                    parser = new RollbackStatementParser(_tokenizer);
+                    break;
+                case Constants.Set:
+                    parser = new SetStatementParser(_tokenizer);
+                    break;
+                case Constants.Exec:
+                    parser = new ExecStatementParser(_tokenizer);
+                    break;
+                case Constants.With:
+                    parser = new CommonTableExpressionStatementParser(_tokenizer);
+                    break;
+                case Constants.Use:
+                    parser = new UseStatementParser(_tokenizer);
+                    break;
+            }
+
+            if (parser != null)
             {
                 _tokenizer.ReadNextToken();
-
-                object instance = Activator.CreateInstance(parserType, _tokenizer);
-                return (IParser)instance;
             }
-            return null;
+
+            return parser;
         }
 
         /// <summary>
@@ -81,7 +134,7 @@ namespace Laan.Sql.Parser
                     result.Add(parser.Execute());
                 else
                     if (ensureParserIsFound)
-                    throw new ParserNotImplementedException("No parser exists for statement type: " + tokenizer.Current.Value);
+                    	throw new ParserNotImplementedException("No parser exists for statement type: " + tokenizer.Current.Value);
                 else
                     break;
             }

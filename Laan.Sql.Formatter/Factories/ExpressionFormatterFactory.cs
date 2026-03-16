@@ -7,39 +7,58 @@ namespace Laan.Sql.Formatter
 {
     public class ExpressionFormatterFactory
     {
-        private static Dictionary<Type, Type> _formatters;
-
-        static ExpressionFormatterFactory()
-        {
-            _formatters = new Dictionary<Type, Type>
-            {
-                { typeof( CriteriaExpression ), typeof( CriteriaExpressionFormatter ) },
-                { typeof( CaseSwitchExpression ), typeof( CaseSwitchExpressionFormatter ) },
-                { typeof( CaseWhenExpression ), typeof( CaseWhenExpressionFormatter ) },
-                { typeof( FunctionExpression ), typeof( FunctionExpressionFormatter ) },
-                { typeof( NestedExpression ), typeof( NestedExpressionFormatter ) },
-                { typeof( SelectExpression ), typeof( SelectExpressionFormatter ) },
-                { typeof( ExpressionList ), typeof( ExpressionListFormatter ) },
-                { typeof( BetweenExpression ), typeof( BetweenExpressionFormatter ) },
-                { typeof( NegationExpression ), typeof( NegationExpressionFormatter ) },
-            };
-        }
-
         public static IExpressionFormatter GetFormatter(IIndentable indentable, Expression expression)
         {
-            if (!_formatters.TryGetValue(expression.GetType(), out var formatterType))
-                return new DefaultExpressionFormatter(expression, indentable);
+            IExpressionFormatter formatter = null;
+            switch (expression)
+            {
+                case CriteriaExpression criteriaExpression:
+                    formatter = new CriteriaExpressionFormatter(criteriaExpression);
+                    break;
 
-            var formatter = Activator.CreateInstance(formatterType, expression, indentable) as IExpressionFormatter;
+                case CaseSwitchExpression caseSwitchExpression:
+                    formatter = new CaseSwitchExpressionFormatter(caseSwitchExpression);
+                    break;
+
+                case CaseWhenExpression caseWhenExpression:
+                    formatter = new CaseWhenExpressionFormatter(caseWhenExpression);
+                    break;
+
+                case FunctionExpression functionExpression:
+                    formatter = new FunctionExpressionFormatter(functionExpression);
+                    break;
+
+                case NestedExpression nestedExpression:
+                    formatter = new NestedExpressionFormatter(nestedExpression);
+                    break;
+
+                case SelectExpression selectExpression:
+                    formatter = new SelectExpressionFormatter(selectExpression);
+                    break;
+
+                case ExpressionList expressionList:
+                    formatter = new ExpressionListFormatter(expressionList);
+                    break;
+
+                case BetweenExpression betweenExpression:
+                    formatter = new BetweenExpressionFormatter(betweenExpression);
+                    break;
+
+                case NegationExpression negationExpression:
+                    formatter = new NegationExpressionFormatter(negationExpression);
+                    break;
+
+                default:
+                    formatter = new DefaultExpressionFormatter(expression);
+                    break;
+            }
+
             var indentableFormatter = formatter as IIndentable;
             if (indentableFormatter != null)
             {
                 indentableFormatter.IndentLevel = indentable.IndentLevel;
                 indentableFormatter.Indent = indentable.Indent;
             }
-
-            if (formatter == null)
-                throw new ArgumentNullException("Formatter not instantiated: " + formatterType.Name);
 
             return formatter;
         }
