@@ -8,6 +8,10 @@
     <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="readme.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
+
   <Import Project="$(SolutionDir)Build\AssemblyInfo.targets" />
   <Import Project="$(SolutionDir)Build\Version.targets" />
   <Import Project="$(SolutionDir)Build\Nuget.targets" />

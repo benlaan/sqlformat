@@ -68,6 +68,9 @@ namespace Laan.Sql.Formatter
 				case UseStatement useStatement:
                     return new UseStatementFormatter(indentable, outSql, useStatement);
 
+                case SetVariableStatement setVariableStatement:
+                    return new SetVariableStatementFormatter(indentable, outSql, setVariableStatement);
+
                 default:
                     throw new FormatterNotImplementedException("Formatter not implemented for statement: " + statement.GetType().Name);
             }
