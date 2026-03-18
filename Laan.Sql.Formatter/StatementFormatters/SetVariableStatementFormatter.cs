@@ -1,5 +1,8 @@
-﻿using Laan.Sql.Parser.Entities;
+﻿using System;
 using System.Text;
+
+using Laan.Sql.Parser;
+using Laan.Sql.Parser.Entities;
 
 namespace Laan.Sql.Formatter
 {
@@ -12,8 +15,15 @@ namespace Laan.Sql.Formatter
 
         public void Execute()
         {
-            var formatter = new VariableAssignmentFormatter(_statement.Variable, _statement.Assignment, this, _sql);
-            formatter.Execute();
+            var variableAssignment = String.Format(
+                "{0} {1} = {2}",
+                Keyword(Constants.Set),
+                _statement.Variable,
+                _statement.Assignment.FormattedValue(0, this)
+            );
+
+            IndentAppend(variableAssignment);
+            FormatTerminator();
         }
     }
 }

@@ -39,13 +39,14 @@ namespace Laan.Sql.Parser
                 "IMPLICIT_TRANSACTIONS",
                 "REMOTE_PROC_TRANSACTIONS",
                 "XACT_ABORT"
-            };        
+            };
         }
 
         private void ReadAssignment( SetStatement statement )
         {
             var parser = new ExpressionParser( Tokenizer );
             statement.Assignment = parser.Execute();
+            statement.Terminated = HasTerminator();
         }
 
         public override SetStatement Execute()
@@ -54,10 +55,10 @@ namespace Laan.Sql.Parser
 
             if ( identifier.StartsWith( "@" ) )
             {
-                var variableStatement = new SetVariableStatement();
-                variableStatement.Variable = identifier;
+                var variableStatement = new SetVariableStatement { Variable = identifier };
                 Tokenizer.ExpectToken( Constants.Assignment );
                 variableStatement.Assignment = new ExpressionParser( Tokenizer ).Execute();
+                variableStatement.Terminated = HasTerminator();
 
                 return variableStatement;
             }
