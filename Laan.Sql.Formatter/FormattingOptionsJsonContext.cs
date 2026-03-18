@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Laan.Sql.Formatter
 {
+#if NET6_0_OR_GREATER
     /// <summary>
     /// JSON source generation context for FormattingOptions
     /// </summary>
@@ -15,4 +16,5 @@ namespace Laan.Sql.Formatter
     internal partial class FormattingOptionsJsonContext : JsonSerializerContext
     {
     }
+#endif
 }

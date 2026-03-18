@@ -23,6 +23,7 @@ namespace Laan.Sql.Formatter
 
             var json = File.ReadAllText(filePath);
 
+#if NET6_0_OR_GREATER
             var jsonOptions = new JsonSerializerOptions(FormattingOptionsJsonContext.Default.Options)
             {
                 ReadCommentHandling = JsonCommentHandling.Skip,
@@ -31,6 +32,19 @@ namespace Laan.Sql.Formatter
             jsonOptions.Converters.Add(new JsonStringEnumConverter());
 
             var options = JsonSerializer.Deserialize(json, typeof(FormattingOptions), jsonOptions) as FormattingOptions;
+#else
+            var jsonOptions = new JsonSerializerOptions
+            {
+                ReadCommentHandling = JsonCommentHandling.Skip,
+                AllowTrailingCommas = true,
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true
+            };
+            jsonOptions.Converters.Add(new JsonStringEnumConverter());
+            var options = JsonSerializer.Deserialize(json, typeof(FormattingOptions), jsonOptions) as FormattingOptions;
+#endif
+
             if (options == null)
                 throw new InvalidOperationException($"Failed to parse configuration file: {filePath}");
 
@@ -101,8 +115,18 @@ namespace Laan.Sql.Formatter
         public static void SaveToFile(FormattingOptions options, string filePath)
         {
             options.Validate();
-
+#if NET6_0_OR_GREATER
             var json = JsonSerializer.Serialize(options, typeof(FormattingOptions), FormattingOptionsJsonContext.Default);
+#else
+            var jsonOptions = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                PropertyNameCaseInsensitive = true
+            };
+            jsonOptions.Converters.Add(new JsonStringEnumConverter());
+            var json = JsonSerializer.Serialize(options, typeof(FormattingOptions), jsonOptions);
+#endif
 
             File.WriteAllText(filePath, json);
         }
