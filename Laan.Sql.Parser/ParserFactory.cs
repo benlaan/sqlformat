@@ -160,7 +160,10 @@ namespace Laan.Sql.Parser
         // clean NHibernate info from front of SQL statement
         public static string TrimBatchMetadata(string sql)
         {
-            const string batchCommands = "Batch commands:\r\n";
+            // Normalize line endings
+            sql = sql.Replace("\r\n", "\n").Replace("\r", "\n");
+
+            const string batchCommands = "Batch commands:\n";
             if (sql.StartsWith(batchCommands))
             {
                 sql = sql.Remove(0, batchCommands.Length);
