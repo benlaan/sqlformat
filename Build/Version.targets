@@ -46,7 +46,7 @@
 
     <Target Name="CalculateRepoInfo" DependsOnTargets="GetRepoInfo">
         <PropertyGroup>
-            <RepositoryInfo >+$(CommitId) ($(BranchName))</RepositoryInfo>
+            <RepositoryInfo>+$(CommitId) ($(BranchName))</RepositoryInfo>
             <RepositoryRevisionId>$(CommitId)</RepositoryRevisionId>
             <RepositoryType>git</RepositoryType>
             <RepositoryUrl Condition="'$(GitRepositoryUrl)' != ''">$(GitRepositoryUrl)</RepositoryUrl>
