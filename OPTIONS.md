@@ -28,28 +28,38 @@ The formatter searches for config files in this order:
 
 ### 2. Console App Command-Line Arguments
 
+The CLI is built on [`System.CommandLine`](https://www.nuget.org/packages/System.CommandLine) and uses
+POSIX-style `--long`/`-short` options.
+
 ```bash
 # Lowercase keywords with 2-space indent
-sqlformat -File input.sql -KeywordCasing Lower -IndentSize 2
+sqlformat --file input.sql --keyword-casing lower --indent-size 2
 
 # Use tabs and 120-char line length
-sqlformat -Sql "SELECT * FROM Users" -UseTabs -MaxLineLength 120
+sqlformat --sql "SELECT * FROM Users" --use-tabs --max-line-length 120
 
 # Specify config file explicitly
-sqlformat -File input.sql -ConfigFile custom-format.json
+sqlformat --file input.sql --config-file custom-format.json
 
 # Pipe input with options
-cat query.sql | sqlformat -KeywordCasing Pascal -IndentSize 4
+cat query.sql | sqlformat --keyword-casing pascal --indent-size 4
+
+# Built-in help
+sqlformat --help
 ```
 
 Available command-line options:
-- `-IndentSize <number>` - Spaces/tabs per indent level (default: 4)
-- `-UseSpaces` - Use spaces for indentation (default: true)
-- `-UseTabs` - Use tabs for indentation
-- `-MaxLineLength <number>` - Max line length before wrapping (default: 80)
-- `-KeywordCasing <style>` - Upper, Lower, or Pascal (default: Upper)
-- `-BracketSpacing <style>` - NoSpaces or WithSpaces (default: NoSpaces)
-- `-ConfigFile <path>` - Path to .sqlformat.json config file
+- `--sql`, `-s <text>` - SQL text to format
+- `--file`, `-f <path>` - Path to a SQL file to format
+- `--output`, `-o <path>` - Path to write the formatted output (defaults to stdout)
+- `--diagnostics`, `-d` - Print elapsed formatting time
+- `--indent-size <number>` - Spaces/tabs per indent level (default: 4)
+- `--use-spaces` - Use spaces for indentation (default: true)
+- `--use-tabs` - Use tabs for indentation
+- `--max-line-length <number>` - Max line length before wrapping (default: 80)
+- `--keyword-casing <style>` - Upper, Lower, or Pascal (default: Upper)
+- `--bracket-spacing <style>` - NoSpaces or WithSpaces (default: NoSpaces)
+- `--config-file <path>` - Path to .sqlformat.json config file
 
 ### 3. Blazor Web UI
 

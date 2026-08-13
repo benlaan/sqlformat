@@ -16,4 +16,8 @@
     <ItemGroup>
         <ProjectReference Include="$(SolutionDir)Laan.Sql.Formatter\Laan.Sql.Formatter.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.CommandLine" Version="2.0.11" />
+    </ItemGroup>
 </Project>
