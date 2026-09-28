@@ -85,17 +85,26 @@ namespace Laan.Sql.Formatter
                             join.Alias.Value,
                             FormatHints(join)
                         );
-                        NewLine();
 
                         var isLastJoin = join == table.Joins.Last();
 
-                        IndentAppendFormat(
-                            "{0}{1} {2}{3}",
-                            new string(' ', join.Length - Constants.On.Length),
-                            Keyword(Constants.On),
-                            join.Condition.FormattedValue(join.Length, this),
-                            (!isLastFrom && isLastJoin) ? Constants.Comma + "\n" : ""
-                        );
+                        // CROSS JOIN has no ON condition
+                        if (join.Type == JoinType.CrossJoin)
+                        {
+                            if (!isLastFrom && isLastJoin)
+                                Append(Constants.Comma);
+                        }
+                        else
+                        {
+                            NewLine();
+                            IndentAppendFormat(
+                                "{0}{1} {2}{3}",
+                                new string(' ', join.Length - Constants.On.Length),
+                                Keyword(Constants.On),
+                                join.Condition.FormattedValue(join.Length, this),
+                                (!isLastFrom && isLastJoin) ? Constants.Comma + "\n" : ""
+                            );
+                        }
                     }
                 }
             }

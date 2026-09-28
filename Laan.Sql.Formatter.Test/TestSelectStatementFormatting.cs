@@ -161,6 +161,28 @@ namespace Laan.Sql.Formatter.Test
         }
 
         [Test]
+        public void Can_Format_Select_Statement_With_Cross_Join()
+        {
+            // Setup
+            var sut = new FormattingEngine();
+
+            // Exercise
+            var actual = sut.Execute( "SELECT A.* FROM ATable A CROSS JOIN BTable B" );
+
+            // Verify outcome
+            var expected = new[]
+            {
+               @"SELECT A.*",
+                "",
+                "FROM ATable A",
+                "",
+                "CROSS JOIN BTable B",
+            };
+
+            Compare( actual, expected );
+        }
+
+        [Test]
         public void Can_Format_Select_Statement_With_Order_By_One_Column()
         {
             // Setup

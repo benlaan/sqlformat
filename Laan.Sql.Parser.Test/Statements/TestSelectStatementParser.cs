@@ -679,6 +679,35 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
+        public void Select_With_Cross_Join()
+        {
+            // Exercise
+            var statement = ParserFactory.Execute<SelectStatement>(@"
+                SELECT A.*
+                FROM ATable A
+                CROSS JOIN BTable B
+            ").First();
+
+            // Verify outcome
+            Assert.IsNotNull(statement);
+            Assert.AreEqual(1, statement.From.Count);
+            Assert.AreEqual("ATable", statement.From[0].Name);
+            Assert.AreEqual("A", statement.From[0].Alias.Name);
+
+            Assert.AreEqual(1, statement.From[0].Joins.Count);
+
+            var join = statement.From[0].Joins[0];
+
+            Assert.AreEqual(JoinType.CrossJoin, join.Type);
+            Assert.AreEqual("BTable", join.Name);
+            Assert.AreEqual("B", join.Alias.Name);
+
+            // A CROSS JOIN has no ON condition
+            var condition = join.Condition as CriteriaExpression;
+            Assert.IsTrue(condition == null || condition.Operator == null);
+        }
+
+        [Test]
         [TestCase("union", SetType.Union)]
         [TestCase("union all", SetType.UnionAll)]
         [TestCase("except", SetType.Except)]

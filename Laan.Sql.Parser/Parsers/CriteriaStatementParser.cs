@@ -271,13 +271,18 @@ namespace Laan.Sql.Parser.Parsers
                 }
 
                 ProcessTableHints(join);
-                ExpectToken(Constants.On);
-                Expression expr = ProcessExpression();
 
-                if (!(expr is CriteriaExpression) && !(expr is NestedExpression && (expr as NestedExpression).Expression is CriteriaExpression))
-                    throw new SyntaxException("Expected Criteria Expression");
+                // CROSS JOIN has no ON clause
+                if (joinType.Value != JoinType.CrossJoin)
+                {
+                    ExpectToken(Constants.On);
+                    var expr = ProcessExpression();
 
-                join.Condition = expr;
+                    if (!(expr is CriteriaExpression) && !(expr is NestedExpression && (expr as NestedExpression).Expression is CriteriaExpression))
+                        throw new SyntaxException("Expected Criteria Expression");
+
+                    join.Condition = expr;
+                }
 
                 table.Joins.Add(join);
             }
