@@ -708,6 +708,51 @@ namespace Laan.Sql.Parser.Test
         }
 
         [Test]
+        public void Select_With_Cross_Join_And_No_Alias()
+        {
+            // Exercise
+            var statement = ParserFactory.Execute<SelectStatement>(@"
+                SELECT A.*
+                FROM ATable A
+                CROSS JOIN BTable
+                WHERE A.Id = 1
+            ").First();
+
+            // Verify outcome
+            Assert.AreEqual(1, statement.From[0].Joins.Count);
+
+            var join = statement.From[0].Joins[0];
+
+            Assert.AreEqual(JoinType.CrossJoin, join.Type);
+            Assert.AreEqual("BTable", join.Name);
+
+            // A CROSS JOIN never has an ON clause, so the alias probe must not consume
+            // the token following the table name
+            Assert.IsNull(join.Alias.Name);
+            Assert.IsNotNull(statement.Where);
+        }
+
+        [Test]
+        public void Select_With_Cross_Join_And_No_Alias_At_End_Of_Statement()
+        {
+            // Exercise
+            var statement = ParserFactory.Execute<SelectStatement>(@"
+                SELECT A.*
+                FROM ATable A
+                CROSS JOIN BTable
+            ").First();
+
+            // Verify outcome
+            Assert.AreEqual(1, statement.From[0].Joins.Count);
+
+            var join = statement.From[0].Joins[0];
+
+            Assert.AreEqual(JoinType.CrossJoin, join.Type);
+            Assert.AreEqual("BTable", join.Name);
+            Assert.IsNull(join.Alias.Name);
+        }
+
+        [Test]
         [TestCase("union", SetType.Union)]
         [TestCase("union all", SetType.UnionAll)]
         [TestCase("except", SetType.Except)]

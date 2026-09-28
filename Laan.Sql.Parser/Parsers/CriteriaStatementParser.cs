@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -22,7 +23,27 @@ namespace Laan.Sql.Parser.Parsers
         protected string[] FieldTerminatorSet = { Constants.From, Constants.Comma, Constants.Having, Constants.Go, Constants.SemiColon, Constants.End, Constants.Into, Constants.Union, Constants.Intersect, Constants.Except, Constants.CloseBracket };
         protected string[] FromTerminatorSet = { Constants.Inner, Constants.Join, Constants.Left, Constants.Right, Constants.Full, Constants.Comma, Constants.CloseBracket, Constants.Order, Constants.Group, Constants.Where, Constants.Cross };
 
-        protected CriteriaStatementParser(ITokenizer tokenizer) : base(tokenizer) { }
+        // Tokens that end the statement outright, i.e. a FROM clause has run out
+        private static readonly string[] StatementTerminatorSet =
+        {
+            Constants.SemiColon, Constants.Go, Constants.Select, Constants.Insert,
+            Constants.Update, Constants.Delete, Constants.Create, Constants.Alter,
+            Constants.Union, Constants.Else, Constants.Commit, Constants.Rollback,
+            Constants.End, Constants.Except, Constants.Intersect
+        };
+
+        // Tokens that cannot be a table alias. ON covers joins that carry a condition;
+        // CROSS JOIN never has an ON, so it also needs the FROM and statement terminators.
+        private readonly string[] JoinAliasTerminatorSet;
+
+        protected CriteriaStatementParser(ITokenizer tokenizer) : base(tokenizer)
+        {
+            JoinAliasTerminatorSet = FromTerminatorSet
+                .Concat(StatementTerminatorSet)
+                .Concat(new[] { Constants.On, Constants.Having })
+                .Distinct()
+                .ToArray();
+        }
 
         private SortedField GetOrderByField(Expression token)
         {
@@ -164,12 +185,7 @@ namespace Laan.Sql.Parser.Parsers
 
         private bool IsTerminatingFromExpression()
         {
-            return Tokenizer.IsNextToken(
-                Constants.SemiColon, Constants.Go, Constants.Select, Constants.Insert,
-                Constants.Update, Constants.Delete, Constants.Create, Constants.Alter,
-                Constants.Union, Constants.Else, Constants.Commit, Constants.Rollback,
-                Constants.End, Constants.Except, Constants.Intersect
-            );
+            return Tokenizer.IsNextToken(StatementTerminatorSet);
         }
 
         protected void ProcessFrom()
@@ -264,7 +280,8 @@ namespace Laan.Sql.Parser.Parsers
                     Tokenizer.ReadNextToken();
                 }
 
-                if (alias.Type != AliasType.Implicit || !Tokenizer.IsNextToken(Constants.On))
+                if (alias.Type != AliasType.Implicit
+                    || (Tokenizer.HasMoreTokens && !Tokenizer.IsNextToken(JoinAliasTerminatorSet)))
                 {
                     alias.Name = GetIdentifier();
                     join.Alias = alias;
@@ -273,7 +290,7 @@ namespace Laan.Sql.Parser.Parsers
                 ProcessTableHints(join);
 
                 // CROSS JOIN has no ON clause
-                if (joinType.Value != JoinType.CrossJoin)
+                if (join.Type != JoinType.CrossJoin)
                 {
                     ExpectToken(Constants.On);
                     var expr = ProcessExpression();
