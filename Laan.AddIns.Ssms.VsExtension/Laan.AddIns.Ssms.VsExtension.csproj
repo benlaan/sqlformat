@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VSSDK>$(USERPROFILE)\.nuget\packages\microsoft.vssdk.buildtools\17.13.49-preview1\tools\VSSDK</VSSDK>
+    <VSSDK>$(USERPROFILE)\.nuget\packages\microsoft.vssdk.buildtools\16.7.3065\tools\VSSDK</VSSDK>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
