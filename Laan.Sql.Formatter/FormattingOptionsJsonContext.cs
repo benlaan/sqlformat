@@ -10,7 +10,10 @@ namespace Laan.Sql.Formatter
     [JsonSourceGenerationOptions(
         WriteIndented = true,
         PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
-        PropertyNameCaseInsensitive = true
+        PropertyNameCaseInsensitive = true,
+        AllowTrailingCommas = true,
+        ReadCommentHandling = JsonCommentHandling.Skip,
+        UseStringEnumConverter = true
     )]
     [JsonSerializable(typeof(FormattingOptions))]
     internal partial class FormattingOptionsJsonContext : JsonSerializerContext

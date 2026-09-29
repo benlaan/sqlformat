@@ -24,14 +24,7 @@ namespace Laan.Sql.Formatter
             var json = File.ReadAllText(filePath);
 
 #if NET6_0_OR_GREATER
-            var jsonOptions = new JsonSerializerOptions(FormattingOptionsJsonContext.Default.Options)
-            {
-                ReadCommentHandling = JsonCommentHandling.Skip,
-                AllowTrailingCommas = true
-            };
-            jsonOptions.Converters.Add(new JsonStringEnumConverter());
-
-            var options = JsonSerializer.Deserialize(json, typeof(FormattingOptions), jsonOptions) as FormattingOptions;
+            var options = JsonSerializer.Deserialize(json, FormattingOptionsJsonContext.Default.FormattingOptions);
 #else
             var jsonOptions = new JsonSerializerOptions
             {
@@ -116,7 +109,7 @@ namespace Laan.Sql.Formatter
         {
             options.Validate();
 #if NET6_0_OR_GREATER
-            var json = JsonSerializer.Serialize(options, typeof(FormattingOptions), FormattingOptionsJsonContext.Default);
+            var json = JsonSerializer.Serialize(options, FormattingOptionsJsonContext.Default.FormattingOptions);
 #else
             var jsonOptions = new JsonSerializerOptions
             {
