@@ -116,7 +116,9 @@ Write-Host "Updating package.json version to $version..." -ForegroundColor Yello
 
 $packageJson = Get-Content $packageJsonPath -Raw | ConvertFrom-Json
 $packageJson.version = $version
-$packageJson | ConvertTo-Json -Depth 100 | Set-Content $packageJsonPath -Encoding UTF8
+$packageJson | ConvertTo-Json -Depth 100 | Set-Content $packageJsonPath -Encoding UTF8 -NoNewline
+# Ensure no BOM is written (Set-Content -Encoding UTF8 adds one in Windows PowerShell), since vsce's JSON parser rejects it
+[System.IO.File]::WriteAllText($packageJsonPath, [System.IO.File]::ReadAllText($packageJsonPath), (New-Object System.Text.UTF8Encoding($false)))
 
 Write-Host ""
 
