@@ -1,0 +1,16 @@
+{
+  "solution": {
+    "path": "Laan.Sql.Tools.sln",
+    "projects": [
+      "Laan.Sql.Parser\\Laan.Sql.Parser.csproj",
+      "Laan.Sql.Formatter\\Laan.Sql.Formatter.csproj",
+      "Laan.NHibernate.Appender\\Laan.NHibernate.Appender.csproj",
+      "Laan.Sql.Parser.Test\\Laan.Sql.Parser.Test.csproj",
+      "Laan.Sql.Formatter.Test\\Laan.Sql.Formatter.Test.csproj",
+      "Laan.NHibernate.Appender.Test\\Laan.NHibernate.Appender.Test.csproj",
+      "Laan.Sql.Formatter.Web.Blazor\\Laan.Sql.Formatter.Web.Blazor.csproj",
+      "Laan.Sql.Formatter.Console\\Laan.Sql.Formatter.Console.csproj",
+      "Laan.Sql.Tools.Installer\\Laan.Sql.Tools.Installer.wixproj"
+    ]
+  }
+}
