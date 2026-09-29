@@ -49,7 +49,7 @@ $platforms = @(
 )
 
 $consoleProject = ".\Laan.Sql.Formatter.Console\Laan.Sql.Formatter.Console.csproj"
-$vscodeExtPath = ".\Laan.SqlFormatter.VsCode"
+$vscodeExtPath = "$PSScriptRoot\..\Laan.SqlFormatter.VsCode"
 $binPath = Join-Path $vscodeExtPath "bin"
 
 # Clean and create bin directory structure
