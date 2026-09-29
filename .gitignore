@@ -10,6 +10,7 @@ node_modules
 .cr
 /.vs*
 /Build/VersionAssemblyInfo.cs
-/dist
 /.test-results
 Generated
+/Laan.SqlFormatter.VsCode/dist
+/Laan.SqlFormatter.VsCode/*.vsix

@@ -2,6 +2,7 @@
   "name": "sqlformat",
   "displayName": "SQL Format",
   "description": "Format SQL using sqlformat command-line tool",
+  "icon": "media/icon.png",
   "version": "0.3.3",
   "publisher": "benlaan",
   "repository": {
