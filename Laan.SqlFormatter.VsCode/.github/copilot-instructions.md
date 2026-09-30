@@ -5,7 +5,7 @@ This is a VS Code extension called "laan.sqlformat" that formats SQL code using 
 
 ## Requirements
 - The `sqlformat` tool must be installed and available in the system PATH
-- The tool accepts the following command: `sqlformat -Sql "(sql text)"`
+- The tool accepts the following command: `sqlformat --sql "(sql text)"`
 
 ## Project Structure
 - `src/extension.ts` - Main extension code
@@ -30,6 +30,6 @@ This is a VS Code extension called "laan.sqlformat" that formats SQL code using 
 
 ## How It Works
 1. User selects SQL text (or nothing for entire file)
-2. Extension invokes `sqlformat -Sql "(selected text)"`
+2. Extension invokes `sqlformat --sql "(selected text)"`
 3. On success: formatted SQL replaces selection
 4. On error: error details appear in "SQL Format" output channel

@@ -135,45 +135,45 @@ function findConfigFile(): string | null {
  * Build command-line arguments from formatting options
  */
 function buildCommandArgs(text: string, options: SqlFormattingOptions): string[] {
-	const args: string[] = ['-Sql', text];
+	const args: string[] = ['--sql', text];
 	
 	// Check for config file first
 	if (options.configFile && options.configFile.trim().length > 0) {
 		// Explicit config file specified
-		args.push('-ConfigFile', options.configFile);
+		args.push('--config-file', options.configFile);
 		return args;
 	}
 	
 	// Check for auto-discovered config file
 	const autoConfigFile = findConfigFile();
 	if (autoConfigFile) {
-		args.push('-ConfigFile', autoConfigFile);
+		args.push('--config-file', autoConfigFile);
 		return args;
 	}
 	
 	// Otherwise, use individual options from VS Code settings
 	if (options.indentSize !== undefined) {
-		args.push('-IndentSize', options.indentSize.toString());
+		args.push('--indent-size', options.indentSize.toString());
 	}
 	
 	if (options.useSpaces !== undefined) {
 		if (options.useSpaces) {
-			args.push('-UseSpaces');
+			args.push('--use-spaces');
 		} else {
-			args.push('-UseTabs');
+			args.push('--use-tabs');
 		}
 	}
 	
 	if (options.maxLineLength !== undefined) {
-		args.push('-MaxLineLength', options.maxLineLength.toString());
+		args.push('--max-line-length', options.maxLineLength.toString());
 	}
 	
 	if (options.keywordCasing) {
-		args.push('-KeywordCasing', options.keywordCasing);
+		args.push('--keyword-casing', options.keywordCasing);
 	}
 	
 	if (options.bracketSpacing) {
-		args.push('-BracketSpacing', options.bracketSpacing);
+		args.push('--bracket-spacing', options.bracketSpacing);
 	}
 	
 	return args;
