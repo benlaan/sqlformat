@@ -8,6 +8,20 @@ const execFileAsync = promisify(execFile);
 
 let outputChannel: vscode.OutputChannel;
 
+interface ExecError {
+	code?: string | number;
+	stderr?: string;
+	stdout?: string;
+	message?: string;
+}
+
+function toExecError(error: unknown): Required<Pick<ExecError, 'message'>> & ExecError {
+	if (error instanceof Error) {
+		return error as Error & ExecError;
+	}
+	return { message: String(error) };
+}
+
 interface SqlFormattingOptions {
 	indentSize?: number;
 	useSpaces?: boolean;
@@ -28,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// Register the format command
 	const disposable = vscode.commands.registerTextEditorCommand(
 		'laan.sqlformat.formatSelection',
-		async (textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
+		async (textEditor: vscode.TextEditor) => {
 			await formatSelection(textEditor, context);
 		}
 	);
@@ -232,37 +246,38 @@ async function formatSelection(textEditor: vscode.TextEditor, context: vscode.Ex
 			vscode.window.showWarningMessage('SQL formatted with warnings. Check output for details.');
 		}
 
-	} catch (error: any) {
+	} catch (error) {
 		// Handle errors - show in output channel
+		const { code, stderr, stdout, message } = toExecError(error);
 		outputChannel.clear();
 		outputChannel.appendLine('SQL Format Error:');
 		outputChannel.appendLine('─'.repeat(50));
 		
-		if (error.code === 'ENOENT') {
+		if (code === 'ENOENT') {
 			outputChannel.appendLine('ERROR: sqlformat command not found in PATH');
 			outputChannel.appendLine('Please ensure the sqlformat tool is installed and available in your system PATH.');
 			vscode.window.showErrorMessage('sqlformat tool not found in PATH');
 		}
-        else if (error.code === 'ETIMEDOUT') {
+        else if (code === 'ETIMEDOUT') {
 			outputChannel.appendLine('ERROR: sqlformat command timed out');
 			vscode.window.showErrorMessage('SQL formatting timed out');
 		}
         else {
 			// Show exit code and error output
-			if (error.code) {
-				outputChannel.appendLine(`Exit Code: ${error.code}`);
+			if (code !== undefined) {
+				outputChannel.appendLine(`Exit Code: ${code}`);
 			}
-			if (error.stderr) {
+			if (stderr) {
 				outputChannel.appendLine('Standard Error:');
-				outputChannel.appendLine(error.stderr);
+				outputChannel.appendLine(stderr);
 			}
-			if (error.stdout) {
+			if (stdout) {
 				outputChannel.appendLine('Standard Output:');
-				outputChannel.appendLine(error.stdout);
+				outputChannel.appendLine(stdout);
 			}
-			if (error.message) {
+			if (message) {
 				outputChannel.appendLine('Error Message:');
-				outputChannel.appendLine(error.message);
+				outputChannel.appendLine(message);
 			}
 			
 			vscode.window.showErrorMessage('SQL formatting failed. Check output for details.');
@@ -280,8 +295,8 @@ class SqlFormattingProvider implements vscode.DocumentFormattingEditProvider {
 
 	async provideDocumentFormattingEdits(
 		document: vscode.TextDocument,
-		options: vscode.FormattingOptions,
-		token: vscode.CancellationToken
+		_options: vscode.FormattingOptions,
+		_token: vscode.CancellationToken
 	): Promise<vscode.TextEdit[]> {
 		const text = document.getText();
 
@@ -313,21 +328,22 @@ class SqlFormattingProvider implements vscode.DocumentFormattingEditProvider {
 			);
 
 			return [vscode.TextEdit.replace(fullRange, stdout)];
-		} catch (error: any) {
+		} catch (error) {
 			// Handle errors
+			const { code, stderr, message } = toExecError(error);
 			outputChannel.clear();
 			outputChannel.appendLine('SQL Format Error:');
 			outputChannel.appendLine('─'.repeat(50));
 
-			if (error.code === 'ENOENT') {
+			if (code === 'ENOENT') {
 				outputChannel.appendLine('ERROR: sqlformat command not found');
 				vscode.window.showErrorMessage('sqlformat tool not found');
-			} else if (error.stderr) {
+			} else if (stderr) {
 				outputChannel.appendLine('Error output:');
-				outputChannel.appendLine(error.stderr);
+				outputChannel.appendLine(stderr);
 				vscode.window.showErrorMessage('SQL formatting failed. Check output for details.');
 			} else {
-				outputChannel.appendLine(error.message || String(error));
+				outputChannel.appendLine(message);
 				vscode.window.showErrorMessage('SQL formatting failed');
 			}
 
