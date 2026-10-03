@@ -5,6 +5,6 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>$(Major).$(Minor).$(Build)</Version>
     <Authors>Ben Laan</Authors>
-    <Company>benlaan.com</Company>
+    <Company>benlaan.net</Company>
   </PropertyGroup>
 </Project>
